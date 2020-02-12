@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import styles from './FormPage.less';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
 import router from 'umi/router';
@@ -21,7 +22,8 @@ import {
   message,
   Modal,
   Tree,
-  Cascader
+  Cascader,
+  Breadcrumb
 } from 'antd';
 
 const { TextArea } = Input;
@@ -32,11 +34,25 @@ const { RangePicker } = DatePicker;
 const { TreeNode } = Tree;
 
 export interface FormPageProps {
-  title:string;
-  loading: boolean;
   api?: string;
-  layout?: [];
-  items?: [];
+  content: {
+    title:string,
+    subTitle:string,
+    description:string,
+    breadcrumb:any,
+    body:{
+      form: {
+        title:string,
+        layout:any,
+        items:any,
+        action:string,
+        disableSubmit:any,
+        disableReset:any
+      }
+    }
+  };
+  routes:any;
+  loading: boolean;
   submitting: boolean;
   dispatch: Dispatch<any>;
 }
@@ -44,11 +60,10 @@ export interface FormPageProps {
 const FormPage: React.SFC<FormPageProps> = props => {
 
   const {
-    title,
-    loading,
     api,
-    layout,
-    items,
+    content,
+    routes,
+    loading,
     dispatch
   } = props;
 
@@ -74,76 +89,87 @@ const FormPage: React.SFC<FormPageProps> = props => {
     dispatch({
       type: 'form/submit',
       payload: {
-        actionUrl: 'admin/login',
+        actionUrl: content.body.form.action,
         ...values
       }
     });
   };
 
   return (
-    <Spin spinning={loading} tip="Loading..." style={{background:'#fff'}}>
-      <Card
-        size="small"
-        title={title}
-        bordered={false}
-        extra={<Button type="link" onClick={(e) => router.go(-1)}>返回上一页</Button>}
+    <Spin spinning={loading} tip="Loading..." style={{width:'100%',marginTop:'200px'}}>
+      {content ?
+      <PageHeaderWrapper
+        title={content ? content.title : false}
+        subTitle={content.subTitle}
+        content={content.description}
+        breadcrumb={{routes}}
       >
-        <Form {...layout} form={form} onFinish={onFinish}>
-          {!!items && items.map((item:any) => {
-            if(item.component == 'input') {
-              return (
-                <Form.Item
-                  key={item.name}
-                  label={item.label}
-                  name={item.name}
-                  rules={item.rules}
+        <Card
+          size="small"
+          title={content.body.form.title}
+          bordered={false}
+          extra={<Button type="link" onClick={(e) => router.go(-1)}>返回上一页</Button>}
+        >
+          <Form {...content.body.form.layout} form={form} onFinish={onFinish}>
+            {!!content.body.form.items && content.body.form.items.map((item:any) => {
+              if(item.component == 'input') {
+                return (
+                  <Form.Item
+                    key={item.name}
+                    label={item.label}
+                    name={item.name}
+                    rules={item.rules}
+                  >
+                    <Input
+                      placeholder={item.placeholder}
+                      style={item.style ? item.style : []}
+                    />
+                  </Form.Item>
+                )
+              }
+            })}
+            <Form.Item
+              wrapperCol={
+                { offset: 3, span: 21 }
+              }
+            >
+              {content.body.form.disableSubmit ? null :
+                <Button
+                  type="primary"
+                  htmlType="submit"
                 >
-                  <Input
-                    placeholder={item.placeholder}
-                    style={item.style ? item.style : []}
-                  />
-                </Form.Item>
-              )
-            }
-          })}
-          <Form.Item
-            wrapperCol={
-              { offset: 3, span: 21 }
-            }
-          >
-            <Button
-              type="primary"
-              htmlType="submit"
-            >
-              提交
-            </Button>
-            <Button 
-              htmlType="button"
-              onClick={onReset}
-              style={{marginLeft:'8px'}}
-            >
-              重置
-            </Button>
-          </Form.Item>
-        </Form>
-      </Card>
+                  提交
+                </Button>
+              }
+              {content.body.form.disableReset ? null :
+                <Button
+                  htmlType="button"
+                  onClick={onReset}
+                  style={{marginLeft:'8px'}}
+                >
+                  重置
+                </Button>
+              }
+            </Form.Item>
+          </Form>
+        </Card>
+      </PageHeaderWrapper>
+      : null}
     </Spin>
   );
 };
 
 function mapStateToProps(state:any) {
   const {
-    title,
+    content,
+    routes,
     loading,
-    layout,
-    items,
   } = state.form;
 
   return {
-    title,
+    content,
+    routes,
     loading,
-    layout,
-    items,
   };
 }
 

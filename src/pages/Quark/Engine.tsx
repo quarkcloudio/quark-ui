@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import FormPage from '@/components/QuarkUI/FormPage';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { stringify } from 'qs';
 
 class Engine extends PureComponent {
@@ -16,9 +15,7 @@ class Engine extends PureComponent {
 
   render() {
     return (
-      <PageHeaderWrapper title={false}>
-        <FormPage api={this.state.api} />
-      </PageHeaderWrapper>
+      <FormPage api={this.state.api} />
     );
   }
 }

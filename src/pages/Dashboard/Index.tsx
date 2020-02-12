@@ -49,7 +49,7 @@ class IndexPage extends Component<IProps> {
     this.setState({ loading: true });
 
     this.props.dispatch({
-      type: 'form/info',
+      type: 'request/get',
       payload: {
         actionUrl: 'admin/dashboard/index',
       },
@@ -66,7 +66,7 @@ class IndexPage extends Component<IProps> {
   checkUpdate() {
     // 调用model
     this.props.dispatch({
-      type: 'form/info',
+      type: 'request/get',
       payload: {
         actionUrl: 'admin/dashboard/update',
       },

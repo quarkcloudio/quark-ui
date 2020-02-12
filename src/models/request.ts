@@ -10,39 +10,23 @@ import {
 export interface ModelType {
   namespace: string;
   state: {
-    content?:any,
-    routes?:any,
     loading:boolean,
   };
   subscriptions:{ setup: Subscription };
   effects: {
-    info: Effect;
-    submit: Effect;
+    get: Effect;
+    post: Effect;
   };
   reducers: {
-    updateForm: Reducer<{}>;
-    resetForm: Reducer<{}>;
+    updateData: Reducer<{}>;
+    resetData: Reducer<{}>;
     changePageLoading: Reducer<{}>;
   };
 }
 
 const form: ModelType = {
-  namespace: 'form',
+  namespace: 'request',
   state: {
-    content:{
-      title:false,
-      subTitle:false,
-      description:false,
-      breadcrumb:false,
-      body:{
-        form:{
-          title:false,
-          layout:false,
-          items:[]
-        }
-      }
-    },
-    routes:[],
     loading:true,
   },
   subscriptions: {
@@ -53,7 +37,7 @@ const form: ModelType = {
     },
   },
   effects: {
-    *info({ payload, callback }, { put, call }) {
+    *get({ payload, callback }, { put, call }) {
       yield put({
         type: 'changePageLoading',
         payload: { loading:true},
@@ -63,9 +47,9 @@ const form: ModelType = {
         return false;
       }
       if (response.status === 'success') {
-        const data = { ...response.data, routes:response.data.content.breadcrumb,loading:false };
+        const data = { ...response.data, loading:false };
         yield put({
-          type: 'updateForm',
+          type: 'updateData',
           payload: data,
         });
         if (callback && typeof callback === 'function') {
@@ -73,7 +57,7 @@ const form: ModelType = {
         }
       }
     },
-    *submit({ payload, callback }, { put, call }) {
+    *post({ payload, callback }, { put, call }) {
       const response = yield call(post, payload);
       if(!response) {
         return false;
@@ -95,12 +79,12 @@ const form: ModelType = {
     },
   },
   reducers: {
-    updateForm(state, action) {
+    updateData(state, action) {
       return {
         ...action.payload,
       };
     },
-    resetForm(state, action) {
+    resetData(state, action) {
       let resetState = {
           content:[],
           loading:true,

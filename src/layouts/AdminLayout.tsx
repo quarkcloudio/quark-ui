@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Dispatch } from 'redux';
 import { Dropdown, Avatar, Menu, Spin } from 'antd';
-import ProLayout, {
-  PageHeaderWrapper
-} from '@ant-design/pro-layout';
+import ProLayout from '@ant-design/pro-layout';
 import router from 'umi/router';
 import {
   SettingOutlined,
