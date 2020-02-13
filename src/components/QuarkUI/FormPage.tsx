@@ -53,7 +53,6 @@ export interface FormPageProps {
   };
   routes:any;
   loading: boolean;
-  submitting: boolean;
   dispatch: Dispatch<any>;
 }
 
@@ -128,20 +127,18 @@ const FormPage: React.SFC<FormPageProps> = props => {
                 )
               }
             })}
-            <Form.Item
-              wrapperCol={
-                { offset: 3, span: 21 }
-              }
-            >
-              {content.body.form.disableSubmit ? null :
+            {(!content.body.form.disableSubmit && !content.body.form.disableReset) ? 
+              <Form.Item
+                wrapperCol={
+                  { offset: 3, span: 21 }
+                }
+              >
                 <Button
                   type="primary"
                   htmlType="submit"
                 >
                   提交
                 </Button>
-              }
-              {content.body.form.disableReset ? null :
                 <Button
                   htmlType="button"
                   onClick={onReset}
@@ -149,8 +146,36 @@ const FormPage: React.SFC<FormPageProps> = props => {
                 >
                   重置
                 </Button>
-              }
-            </Form.Item>
+              </Form.Item>
+            : null}
+            {(!content.body.form.disableSubmit && content.body.form.disableReset) ?
+              <Form.Item
+                wrapperCol={
+                  { offset: 3, span: 21 }
+                }
+              >
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                >
+                  提交
+                </Button>
+              </Form.Item>
+            : null}
+            {(content.body.form.disableSubmit && !content.body.form.disableReset) ? 
+              <Form.Item
+                wrapperCol={
+                  { offset: 3, span: 21 }
+                }
+              >
+                <Button
+                  htmlType="button"
+                  onClick={onReset}
+                >
+                  重置
+                </Button>
+              </Form.Item>
+            : null}
           </Form>
         </Card>
       </PageHeaderWrapper>

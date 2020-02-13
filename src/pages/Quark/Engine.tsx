@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import FormPage from '@/components/QuarkUI/FormPage';
 import { stringify } from 'qs';
 
-class Engine extends PureComponent {
+class Engine extends PureComponent<any> {
 
   state = {
     api: this.props.location.query.api,
