@@ -52,7 +52,7 @@ const login : ModelType = {
       // 操作成功
       if (response.status === 'success') {
         // 记录登录凭据
-        sessionStorage.setItem('token', response.token);
+        sessionStorage.setItem('token', response.data.token);
         // 跳转到后台
         router.push('/index');
       }

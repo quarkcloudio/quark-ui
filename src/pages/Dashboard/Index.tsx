@@ -331,37 +331,6 @@ class IndexPage extends Component<IProps> {
             </Card>
           </Col>
         </Row>
-        <div className={styles.line}></div>
-        <Row gutter={16}>
-          <Col span={12}>
-            <Card title="用户统计" bordered={false}>
-              <Chart height={300} data={this.state.data.user_data} forceFit>
-                <Axis name="month" />
-                <Axis name="count" />
-                <Tooltip
-                  crosshairs={{
-                    type: 'y',
-                  }}
-                />
-                <Geom type="interval" position="month*count" />
-              </Chart>
-            </Card>
-          </Col>
-          <Col span={12}>
-            <Card title="最近7天订单增长情况" bordered={false}>
-              <Chart height={300} data={this.state.data.order_data} forceFit>
-                <Axis name="date" />
-                <Axis name="money" />
-                <Tooltip
-                  crosshairs={{
-                    type: 'y',
-                  }}
-                />
-                <Geom type="interval" position="date*money" />
-              </Chart>
-            </Card>
-          </Col>
-        </Row>
       </div>
     );
   }
