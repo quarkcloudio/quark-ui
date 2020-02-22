@@ -53,6 +53,7 @@ export interface TablePageProps {
         title:string,
         columns:any,
         dataSource:any,
+        pagination:any,
         disableCreateButton:any,
         disableExport:any,
         disableActions:any,
@@ -83,17 +84,17 @@ const TablePage: React.SFC<TablePageProps> = props => {
   const columnActionMenu = (
     <Menu>
       <Menu.Item>
-        <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
+        <a target="_blank">
           编辑
         </a>
       </Menu.Item>
       <Menu.Item>
-        <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
+        <a target="_blank">
          显示
         </a>
       </Menu.Item>
       <Menu.Item>
-        <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
+        <a target="_blank">
           删除
         </a>
       </Menu.Item>
@@ -102,9 +103,6 @@ const TablePage: React.SFC<TablePageProps> = props => {
 
   if(content.body.table.columns) {
     content.body.table.columns.map((column:any,key:any) => {
-
-      console.log(column);
-
       if(column.key == 'actions') {
         column.render = (text:any, row:any) => (
           <span>
@@ -119,6 +117,19 @@ const TablePage: React.SFC<TablePageProps> = props => {
       columns[key] = column;
     })
   }
+
+  // rowSelection objects indicates the need for row selection
+  const rowSelection = {
+    onChange: (selectedRowKeys:any, selectedRows:any) => {
+      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+    },
+    onSelect: (record:any, selected:any, selectedRows:any) => {
+      console.log(record, selected, selectedRows);
+    },
+    onSelectAll: (selected:any, selectedRows:any, changeRows:any) => {
+      console.log(selected, selectedRows, changeRows);
+    },
+  };
 
   const [form] = Form.useForm();
 
@@ -264,6 +275,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
           <div>
             <Table
               columns={content.body.table.columns}
+              rowSelection={rowSelection}
               dataSource={content.body.table.dataSource}
               pagination={content.body.table.pagination}
             />
