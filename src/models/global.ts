@@ -2,17 +2,25 @@ import { routerRedux } from 'dva/router';
 import { Reducer } from 'redux';
 import { Effect,Subscription } from 'dva';
 import router from 'umi/router';
+import { parse, stringify } from 'qs';
 import { message } from 'antd';
 import { 
   get,
   post,
 } from '@/services/action';
 
+export function getPageQuery(): {
+  [key: string]: string;
+} {
+  return parse(window.location.href.split('?')[1]);
+}
+
 export interface ModelType {
   namespace: string;
   state: {};
   reducers: {
     storeMenus: Reducer<{}>;
+    setEngineApi: Reducer<{}>;
   };
   effects: {
     getMenus: Effect;
@@ -23,12 +31,22 @@ export interface ModelType {
 const global : ModelType = {
   namespace: 'global',
   state: {
-    menus:[]
+    menus:[],
+    engine:{
+      api:null,
+      component:null
+    },
   },
   reducers: {
     storeMenus(state, action) {
       return {
         menus:action.payload,
+      };
+    },
+    setEngineApi(state:any, action) {
+      state.engine = action.payload;
+      return {
+        ...state,
       };
     }
   },
@@ -53,6 +71,17 @@ const global : ModelType = {
   subscriptions: {
     setup({ dispatch, history }) {
       return history.listen(({ pathname }) => {
+        const params = getPageQuery();
+        let { api,component } = params;
+        if (api) {
+          dispatch({
+            type: 'setEngineApi',
+            payload: {
+              api: api,
+              component:component
+            }
+          });
+        }
         if (!sessionStorage['token'] && pathname !== '/login') {
           router.push('/login');
         }

@@ -4,7 +4,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
 import router from 'umi/router';
-import { PlusCircleOutlined, ExportOutlined, UpOutlined, DownOutlined } from '@ant-design/icons';
+import { PlusCircleOutlined, ExportOutlined, UpOutlined, DownOutlined, MoreOutlined} from '@ant-design/icons';
 
 import {
   Table,
@@ -28,7 +28,10 @@ import {
   Modal,
   Tree,
   Cascader,
-  Breadcrumb
+  Breadcrumb,
+  Popconfirm,
+  Dropdown,
+  Menu
 } from 'antd';
 
 const { TextArea } = Input;
@@ -74,6 +77,48 @@ const TablePage: React.SFC<TablePageProps> = props => {
     loading,
     dispatch
   } = props;
+
+  var columns = [];
+
+  const columnActionMenu = (
+    <Menu>
+      <Menu.Item>
+        <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
+          编辑
+        </a>
+      </Menu.Item>
+      <Menu.Item>
+        <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
+         显示
+        </a>
+      </Menu.Item>
+      <Menu.Item>
+        <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
+          删除
+        </a>
+      </Menu.Item>
+    </Menu>
+  );  
+
+  if(content.body.table.columns) {
+    content.body.table.columns.map((column:any,key:any) => {
+
+      console.log(column);
+
+      if(column.key == 'actions') {
+        column.render = (text:any, row:any) => (
+          <span>
+            <Dropdown overlay={columnActionMenu} trigger={['click']}>
+              <a onClick={e => e.preventDefault()} style={{ fontSize:16, fontWeight: 'bolder' }}>
+                <MoreOutlined/>
+              </a>
+            </Dropdown>
+          </span>
+        );
+      }
+      columns[key] = column;
+    })
+  }
 
   const [form] = Form.useForm();
 
@@ -220,6 +265,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
             <Table
               columns={content.body.table.columns}
               dataSource={content.body.table.dataSource}
+              pagination={content.body.table.pagination}
             />
           </div>
         </div>

@@ -40,7 +40,8 @@ const table: ModelType = {
         table:{
           title:false,
           columns:[],
-          dataSource:[]
+          dataSource:[],
+          pagination:[]
         }
       }
     },
