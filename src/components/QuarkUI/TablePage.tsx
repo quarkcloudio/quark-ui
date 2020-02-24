@@ -131,7 +131,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
     },
   };
 
-  const [form] = Form.useForm();
+  const [searchForm] = Form.useForm();
 
   /**
    * constructor
@@ -146,7 +146,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
   }, [dispatch, api]);
 
   const onReset = () => {
-    form.resetFields();
+    searchForm.resetFields();
   };
 
   const onFinish = (values:any) => {
@@ -186,7 +186,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
               <Col span={12}>
                 <div className={styles.right}>
                   {!content.body.table.disableCreateButton ? 
-                    <Button type="primary" icon={<PlusCircleOutlined />}>
+                    <Button type="primary" href={"#/admin/quark/engine?api="+api.replace(/\/index/g, '/create')+"&component=form"} icon={<PlusCircleOutlined />}>
                       新增
                     </Button>
                   : null}
@@ -223,7 +223,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
               <Col span={16}>
               {!content.body.table.disableSearch && !content.body.table.disableAdvancedSearch ?
                 <div className={styles.right}>
-                  <Form layout="inline">
+                  <Form layout="inline" form={searchForm} onFinish={onFinish}>
                     <Form.Item>
                       <Input />
                     </Form.Item>
