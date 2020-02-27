@@ -8,7 +8,8 @@ class Engine extends PureComponent<any> {
 
   state = {
     api: this.props.location.query.api,
-    component:this.props.location.query.component
+    component:this.props.location.query.component,
+    search:this.props.location.query.search
   };
 
 
@@ -20,15 +21,15 @@ class Engine extends PureComponent<any> {
       <div>
         {engine ?
           <div>
-            {!!engine.component && engine.component =='form' ? <FormPage api={engine.api} /> : null}
-            {!!engine.component && engine.component =='table' ? <TablePage api={engine.api} /> : null}
-            {!!engine.component && engine.component =='show' ? <TablePage api={engine.api} /> : null}
+            {!!engine.component && engine.component =='form' ? <FormPage api={engine.api} search={engine.search} /> : null}
+            {!!engine.component && engine.component =='table' ? <TablePage api={engine.api} search={engine.search} /> : null}
+            {!!engine.component && engine.component =='show' ? <TablePage api={engine.api} search={engine.search} /> : null}
           </div>
         : 
           <div>
-            {!!this.state.component && this.state.component =='form' ? <FormPage api={this.state.api} /> : null}
-            {!!this.state.component && this.state.component =='table' ? <TablePage api={this.state.api} /> : null}
-            {!!this.state.component && this.state.component =='show' ? <TablePage api={this.state.api} /> : null}
+            {!!this.state.component && this.state.component =='form' ? <FormPage api={this.state.api} search={this.state.search} /> : null}
+            {!!this.state.component && this.state.component =='table' ? <TablePage api={this.state.api} search={this.state.search} /> : null}
+            {!!this.state.component && this.state.component =='show' ? <TablePage api={this.state.api} search={this.state.search} /> : null}
           </div>
         }
       </div>

@@ -34,7 +34,8 @@ const global : ModelType = {
     menus:[],
     engine:{
       api:null,
-      component:null
+      component:null,
+      search:[]
     },
   },
   reducers: {
@@ -72,13 +73,14 @@ const global : ModelType = {
     setup({ dispatch, history }) {
       return history.listen(({ pathname }) => {
         const params = getPageQuery();
-        let { api,component } = params;
+        let { api,component,search } = params;
         if (api) {
           dispatch({
             type: 'setEngineApi',
             payload: {
               api: api,
-              component:component
+              component:component,
+              search:search
             }
           });
         }

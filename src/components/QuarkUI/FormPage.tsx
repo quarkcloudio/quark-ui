@@ -34,7 +34,8 @@ const { RangePicker } = DatePicker;
 const { TreeNode } = Tree;
 
 export interface FormPageProps {
-  api?: string;
+  api: string;
+  search:[];
   content: {
     title:string,
     subTitle:string,
@@ -60,6 +61,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
 
   const {
     api,
+    search,
     content,
     routes,
     loading,
@@ -76,9 +78,13 @@ const FormPage: React.SFC<FormPageProps> = props => {
       type: 'form/info',
       payload: {
         actionUrl: api,
-      }
+        ...search
+      },
+      callback: (res:any) => {
+        form.setFieldsValue(res.data.content.body.form.data);
+      },
     });
-  }, [dispatch, api]);
+  }, [dispatch, api, search, form]);
 
   const onReset = () => {
     form.resetFields();
@@ -111,15 +117,29 @@ const FormPage: React.SFC<FormPageProps> = props => {
         >
           <Form {...content.body.form.layout} form={form} onFinish={onFinish}>
             {!!content.body.form.items && content.body.form.items.map((item:any) => {
+              if(item.component == 'id') {
+                return (
+                  <Form.Item
+                    style={{display:'none'}}
+                    key={item.name}
+                    name={item.name}
+                  >
+                    <Input
+                      value={item.value}
+                    />
+                  </Form.Item>
+                )
+              }
+
               if(item.component == 'input') {
                 return (
                   <Form.Item
                     key={item.name}
                     label={item.label}
                     name={item.name}
-                    rules={item.rules}
                   >
                     <Input
+                      value={item.value}
                       placeholder={item.placeholder}
                       style={item.style ? item.style : []}
                     />

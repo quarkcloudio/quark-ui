@@ -42,7 +42,8 @@ const { RangePicker } = DatePicker;
 const { TreeNode } = Tree;
 
 export interface TablePageProps {
-  api?:string;
+  api:string;
+  search:[];
   content:{
     title:string,
     subTitle:string,
@@ -72,6 +73,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
 
   const {
     api,
+    search,
     content,
     routes,
     searchExpand,
@@ -81,32 +83,33 @@ const TablePage: React.SFC<TablePageProps> = props => {
 
   var columns = [];
 
-  const columnActionMenu = (
-    <Menu>
-      <Menu.Item>
-        <a target="_blank">
-          编辑
-        </a>
-      </Menu.Item>
-      <Menu.Item>
-        <a target="_blank">
-         显示
-        </a>
-      </Menu.Item>
-      <Menu.Item>
-        <a target="_blank">
-          删除
-        </a>
-      </Menu.Item>
-    </Menu>
-  );  
-
   if(content.body.table.columns) {
     content.body.table.columns.map((column:any,key:any) => {
       if(column.key == 'actions') {
         column.render = (text:any, row:any) => (
           <span>
-            <Dropdown overlay={columnActionMenu} trigger={['click']}>
+            <Dropdown
+              overlay={
+                <Menu>
+                  <Menu.Item>
+                    <a href={"#/admin/quark/engine?api="+api.replace(/\/index/g, '/edit')+"&component=form"+"&search[id]="+row.key}>
+                      编辑
+                    </a>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <a target="_blank">
+                    显示
+                    </a>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <a target="_blank">
+                      删除
+                    </a>
+                  </Menu.Item>
+                </Menu>
+              }
+              trigger={['click']}
+            >
               <a onClick={e => e.preventDefault()} style={{ fontSize:16, fontWeight: 'bolder' }}>
                 <MoreOutlined/>
               </a>
@@ -153,7 +156,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
     dispatch({
       type: 'table/submit',
       payload: {
-        actionUrl: content.body.table.action,
+        actionUrl: content.body.table,
         ...values
       }
     });
@@ -164,6 +167,20 @@ const TablePage: React.SFC<TablePageProps> = props => {
       type: 'table/searchExpand',
       payload: {
         searchExpand : !searchExpand
+      }
+    });
+  };
+
+  // 分页切换
+  const changePagination = (pagination:any, filters:any, sorter:any) => {
+    dispatch({
+      type: 'table/info',
+      payload: {
+        actionUrl: api,
+        page: pagination.current, // 当前页码
+        sortField: sorter.field, // 排序字段
+        sortOrder: sorter.order, // 排序规则
+        ...filters, // 筛选
       }
     });
   };
@@ -278,6 +295,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
               rowSelection={rowSelection}
               dataSource={content.body.table.dataSource}
               pagination={content.body.table.pagination}
+              onChange={changePagination}
             />
           </div>
         </div>
