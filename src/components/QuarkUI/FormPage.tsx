@@ -115,7 +115,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
           bordered={false}
           extra={<Button type="link" onClick={(e) => router.go(-1)}>返回上一页</Button>}
         >
-          <Form {...content.body.form.layout} form={form} onFinish={onFinish}>
+          <Form {...content.body.form.layout} form={form} onFinish={onFinish} initialValues={{sex:1}}>
             {!!content.body.form.items && content.body.form.items.map((item:any) => {
               if(item.component == 'id') {
                 return (
@@ -124,9 +124,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
                     key={item.name}
                     name={item.name}
                   >
-                    <Input
-                      value={item.value}
-                    />
+                    <Input/>
                   </Form.Item>
                 )
               }
@@ -137,15 +135,29 @@ const FormPage: React.SFC<FormPageProps> = props => {
                     key={item.name}
                     label={item.label}
                     name={item.name}
+                    rules={item.rules}
                   >
                     <Input
-                      value={item.value}
                       placeholder={item.placeholder}
                       style={item.style ? item.style : []}
                     />
                   </Form.Item>
                 )
               }
+
+              if(item.component == 'radio') {
+                return (
+                  <Form.Item
+                    key={item.name}
+                    label={item.label}
+                    name={item.name}
+                    rules={item.rules}
+                  >
+                    <Radio.Group options={item.options} />
+                  </Form.Item>
+                )
+              }
+
             })}
             {(!content.body.form.disableSubmit && !content.body.form.disableReset) ? 
               <Form.Item
