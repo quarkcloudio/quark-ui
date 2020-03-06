@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import styles from './FormPage.less';
+import styles from './ShowPage.less';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
@@ -23,7 +23,9 @@ import {
   Modal,
   Tree,
   Cascader,
-  Breadcrumb
+  Breadcrumb,
+  Popconfirm,
+  Row, Col
 } from 'antd';
 
 const { TextArea } = Input;
@@ -33,23 +35,21 @@ const RadioGroup = Radio.Group;
 const { RangePicker } = DatePicker;
 const { TreeNode } = Tree;
 
-export interface FormPageProps {
+export interface ShowPageProps {
   api: string;
-  search:[];
+  search:{id:any};
   content: {
     title:string,
     subTitle:string,
     description:string,
     breadcrumb:any,
     body:{
-      form: {
+      show: {
         title:string,
         layout:any,
         items:any,
-        action:string,
         disableSubmit:any,
-        disableReset:any,
-        initialValues:[]
+        disableReset:any
       }
     }
   };
@@ -58,7 +58,7 @@ export interface FormPageProps {
   dispatch: Dispatch<any>;
 }
 
-const FormPage: React.SFC<FormPageProps> = props => {
+const ShowPage: React.SFC<ShowPageProps> = props => {
 
   const {
     api,
@@ -69,34 +69,32 @@ const FormPage: React.SFC<FormPageProps> = props => {
     dispatch
   } = props;
 
-  const [form] = Form.useForm();
-
   /**
    * constructor
    */
   useEffect(() => {
     dispatch({
-      type: 'form/info',
+      type: 'show/info',
       payload: {
         actionUrl: api,
         ...search
-      },
-      callback: (res:any) => {
-        form.setFieldsValue(res.data.content.body.form.data);
       }
     });
-  }, [dispatch, api, search, form]);
+  }, [dispatch, api, search]);
 
-  const onReset = () => {
-    form.resetFields();
-  };
-
-  const onFinish = (values:any) => {
+  const destroy = () => {
     dispatch({
-      type: 'form/submit',
+      type: 'show/submit',
       payload: {
-        actionUrl: content.body.form.action,
-        ...values
+        actionUrl: api.replace(/\/show/g, '/destroy'),
+        id:search.id
+      },
+      callback: (res:any) => {
+        // 操作成功
+        if (res.status === 'success') {
+          // 页面跳转
+          router.push("#/admin/quark/engine?api="+api.replace(/\/show/g, '/index')+"&component=table");
+        }
       }
     });
   };
@@ -112,55 +110,25 @@ const FormPage: React.SFC<FormPageProps> = props => {
       >
         <Card
           size="small"
-          title={content.body.form.title}
+          title={content.body.show.title}
           bordered={false}
           extra={<Button type="link" onClick={(e) => router.go(-1)}>返回上一页</Button>}
         >
-          <Form {...content.body.form.layout} form={form} onFinish={onFinish} initialValues={content.body.form.initialValues}>
-            {!!content.body.form.items && content.body.form.items.map((item:any) => {
-              if(item.component == 'id') {
-                return (
-                  <Form.Item
-                    style={{display:'none'}}
-                    key={item.name}
-                    name={item.name}
-                  >
-                    <Input/>
-                  </Form.Item>
-                )
-              }
-
-              if(item.component == 'input') {
+          <Form {...content.body.show.layout} style={{marginTop:'20px'}}>
+            {!!content.body.show.items && content.body.show.items.map((item:any) => {
+              if(item.component == 'text') {
                 return (
                   <Form.Item
                     key={item.name}
                     label={item.label}
                     name={item.name}
-                    rules={item.rules}
                   >
-                    <Input
-                      placeholder={item.placeholder}
-                      style={item.style ? item.style : []}
-                    />
+                    <div>{item.value}</div>
                   </Form.Item>
                 )
               }
-
-              if(item.component == 'radio') {
-                return (
-                  <Form.Item
-                    key={item.name}
-                    label={item.label}
-                    name={item.name}
-                    rules={item.rules}
-                  >
-                    <Radio.Group options={item.options} />
-                  </Form.Item>
-                )
-              }
-
             })}
-            {(!content.body.form.disableSubmit && !content.body.form.disableReset) ? 
+            {(!content.body.show.disableSubmit && !content.body.show.disableReset) ? 
               <Form.Item
                 wrapperCol={
                   { offset: 3, span: 21 }
@@ -168,20 +136,28 @@ const FormPage: React.SFC<FormPageProps> = props => {
               >
                 <Button
                   type="primary"
-                  htmlType="submit"
+                  href={"#/admin/quark/engine?api="+api.replace(/\/show/g, '/edit')+"&component=form"+"&search[id]="+search.id}
                 >
-                  提交
+                  编辑
                 </Button>
+                <Popconfirm title="确定删除吗？" onConfirm={destroy} okText="确认" cancelText="取消">
+                  <Button
+                    type="primary"
+                    style={{marginLeft:'8px'}}
+                    danger
+                  >
+                    删除
+                  </Button>
+                </Popconfirm>
                 <Button
-                  htmlType="button"
-                  onClick={onReset}
                   style={{marginLeft:'8px'}}
+                  href={"#/admin/quark/engine?api="+api.replace(/\/show/g, '/index')+"&component=table"}
                 >
-                  重置
+                  查看列表
                 </Button>
               </Form.Item>
             : null}
-            {(!content.body.form.disableSubmit && content.body.form.disableReset) ?
+            {(!content.body.show.disableSubmit && content.body.show.disableReset) ?
               <Form.Item
                 wrapperCol={
                   { offset: 3, span: 21 }
@@ -195,7 +171,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
                 </Button>
               </Form.Item>
             : null}
-            {(content.body.form.disableSubmit && !content.body.form.disableReset) ? 
+            {(content.body.show.disableSubmit && !content.body.show.disableReset) ? 
               <Form.Item
                 wrapperCol={
                   { offset: 3, span: 21 }
@@ -203,7 +179,6 @@ const FormPage: React.SFC<FormPageProps> = props => {
               >
                 <Button
                   htmlType="button"
-                  onClick={onReset}
                 >
                   重置
                 </Button>
@@ -222,7 +197,7 @@ function mapStateToProps(state:any) {
     content,
     routes,
     loading,
-  } = state.form;
+  } = state.show;
 
   return {
     content,
@@ -231,4 +206,4 @@ function mapStateToProps(state:any) {
   };
 }
 
-export default connect(mapStateToProps)(FormPage);
+export default connect(mapStateToProps)(ShowPage);

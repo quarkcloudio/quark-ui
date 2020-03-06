@@ -12,7 +12,6 @@ export interface ModelType {
   state: {
     content?:any,
     routes?:any,
-    searchExpand:boolean;
     loading:boolean,
   };
   subscriptions:{ setup: Subscription };
@@ -23,7 +22,6 @@ export interface ModelType {
   reducers: {
     updateTable: Reducer<{}>;
     resetTable: Reducer<{}>;
-    searchExpand: Reducer<{}>;
     changePageLoading: Reducer<{}>;
   };
 }
@@ -46,7 +44,6 @@ const table: ModelType = {
       }
     },
     routes:[],
-    searchExpand:false,
     loading:true,
   },
   subscriptions: {
@@ -106,17 +103,11 @@ const table: ModelType = {
     },
     resetTable(state:any, action) {
       let resetState = {
-          content:[],
-          loading:true,
-        }
-        return {
-          ...resetState,
-        };
-      },
-    searchExpand(state:any, action) {
-      state.searchExpand = action.payload.searchExpand;
+        content:[],
+        loading:true,
+      }
       return {
-        ...state,
+        ...resetState,
       };
     },
     changePageLoading(state:any, action) {

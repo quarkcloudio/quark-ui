@@ -20,14 +20,13 @@ export interface ModelType {
     submit: Effect;
   };
   reducers: {
-    updateForm: Reducer<{}>;
-    resetForm: Reducer<{}>;
+    updateShow: Reducer<{}>;
     changePageLoading: Reducer<{}>;
   };
 }
 
-const form: ModelType = {
-  namespace: 'form',
+const show: ModelType = {
+  namespace: 'show',
   state: {
     content:{
       title:false,
@@ -35,11 +34,10 @@ const form: ModelType = {
       description:false,
       breadcrumb:false,
       body:{
-        form:{
+        show:{
           title:false,
           layout:false,
-          items:[],
-          initialValues:[]
+          items:[]
         }
       }
     },
@@ -66,7 +64,7 @@ const form: ModelType = {
       if (response.status === 'success') {
         const data = { ...response.data, routes:response.data.content.breadcrumb,loading:false };
         yield put({
-          type: 'updateForm',
+          type: 'updateShow',
           payload: data,
         });
         if (callback && typeof callback === 'function') {
@@ -96,20 +94,11 @@ const form: ModelType = {
     },
   },
   reducers: {
-    updateForm(state, action) {
+    updateShow(state, action) {
       return {
         ...action.payload,
       };
     },
-    resetForm(state, action) {
-      let resetState = {
-          content:[],
-          loading:true,
-        }
-        return {
-          ...resetState,
-        };
-      },
     changePageLoading(state, action) {
       let pageLoading = {
         loading:action.payload.loading
@@ -121,4 +110,4 @@ const form: ModelType = {
   },
 };
 
-export default form;
+export default show;
