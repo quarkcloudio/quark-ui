@@ -82,10 +82,14 @@ const FormPage: React.SFC<FormPageProps> = props => {
         ...search
       },
       callback: (res:any) => {
-        form.setFieldsValue(res.data.content.body.form.data);
+        initFormValue(res.data.content.body.form.data);
       }
     });
-  }, [dispatch, api, form, search]);
+  }, [dispatch, api, search, initFormValue]);
+
+  const initFormValue = (data:any) => {
+    form.setFieldsValue(data);
+  };
 
   const onReset = () => {
     form.resetFields();
