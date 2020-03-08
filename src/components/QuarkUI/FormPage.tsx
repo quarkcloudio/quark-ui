@@ -82,14 +82,10 @@ const FormPage: React.SFC<FormPageProps> = props => {
         ...search
       },
       callback: (res:any) => {
-        initFormValue(res.data.content.body.form.data);
+        form.setFieldsValue(res.data.content.body.form.data);
       }
     });
-  }, [dispatch, api, search, initFormValue]);
-
-  const initFormValue = (data:any) => {
-    form.setFieldsValue(data);
-  };
+  }, [dispatch, api, search]); // eslint-disable-line 
 
   const onReset = () => {
     form.resetFields();
