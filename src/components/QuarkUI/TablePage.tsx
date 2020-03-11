@@ -4,7 +4,17 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
 import router from 'umi/router';
-import { PlusCircleOutlined, ExportOutlined, UpOutlined, DownOutlined, MoreOutlined, ExclamationCircleOutlined, QrcodeOutlined} from '@ant-design/icons';
+import { 
+  PlusCircleOutlined,
+  ExportOutlined,
+  UpOutlined,
+  DownOutlined,
+  MoreOutlined,
+  ExclamationCircleOutlined,
+  QrcodeOutlined,
+  RedoOutlined,
+  ImportOutlined
+} from '@ant-design/icons';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 
 import {
@@ -37,6 +47,13 @@ import {
   Popover
 } from 'antd';
 
+const IconMap:any = {
+  export: <ExportOutlined />,
+  plusCircle: <PlusCircleOutlined />,
+  redo: <RedoOutlined />,
+  import: <ImportOutlined />
+};
+
 const { TextArea } = Input;
 const TabPane = Tabs.TabPane;
 const Option = Select.Option;
@@ -60,13 +77,11 @@ export interface TablePageProps {
         columns:any,
         dataSource:any,
         pagination:any,
-        disableCreateButton:any,
-        disableExport:any,
         disableActions:any,
+        actions:any,
         disableSearch:any,
         disableAdvancedSearch:any,
-        search:any,
-        advancedSearch:any
+        search:any
       }
     }
   };
@@ -91,6 +106,12 @@ const TablePage: React.SFC<TablePageProps> = props => {
 
   // 创建selectedRowKeys状态，并将其初始化为“[]”
   const [selectedRowKeys, changeSelectedRowKey] = useState([]);
+
+  // 创建modal显示状态，并将其初始化为“true”
+  const [modalVisible, changeModalVisible] = useState(false);
+
+  // 初始modal数据，并将其初始化为“[]”
+  const [modalData, changeModalData] = useState({title:'',okText:'确定',cancelText:'取消',width:undefined,form:{action:null,layout:[],items:[],initialValues:[]}});
 
   var columns = [];
 
@@ -199,6 +220,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
   };
 
   const [searchForm] = Form.useForm();
+  const [form] = Form.useForm();
 
   /**
    * constructor
@@ -208,37 +230,48 @@ const TablePage: React.SFC<TablePageProps> = props => {
       type: 'table/info',
       payload: {
         actionUrl: api,
+      },
+      callback: (res:any) => {
+        changeSearchExpand(res.data.content.body.table.search.expand);
       }
     });
-  }, [dispatch, api]);
+  }, [dispatch, api]); // eslint-disable-line 
 
   const onReset = () => {
     searchForm.resetFields();
   };
 
+  const modalOk = () =>{
+    const values = form.getFieldsValue();
+    dispatch({
+      type: 'form/submit',
+      payload: {
+        actionUrl: modalData.form.action,
+        ...values
+      },
+      callback: (res:any) => {
+        if(res.status == 'success') {
+          form.resetFields();
+          changeModalVisible(false);
+          loadTableData(1,[],[],[]);
+        }
+      }
+    });
+
+  }
+
+  const showModal = (modal:any) => {
+    changeModalVisible(!modalVisible);
+    changeModalData(modal);
+  }
+
+  const modalCancel = () =>{
+    changeModalVisible(false);
+  }
+
   const onSearch = (values:any) => {
 
     content.body.table.search.items.map((item:any,key:any) => {
-      if(item.component == 'datetime') {
-        if(item.operator == 'between') {
-          if (values[item.name]) {
-            if (values[item.name][0] && values[item.name][1]) {
-              // 时间标准化
-              let dateStart = values[item.name][0].format('YYYY-MM-DD HH:mm:ss');
-              let dateEnd = values[item.name][1].format('YYYY-MM-DD HH:mm:ss');
-              // 先清空对象
-              values[item.name] = [];
-              // 重新赋值对象
-              values[item.name] = [dateStart, dateEnd];
-            }
-          }
-        } else {
-          values[item.name] = values[item.name].format('YYYY-MM-DD HH:mm:ss');
-        }
-      }
-    })
-
-    content.body.table.advancedSearch.items.map((item:any,key:any) => {
       if(item.component == 'datetime') {
         if(item.operator == 'between') {
           if (values[item.name]) {
@@ -314,7 +347,14 @@ const TablePage: React.SFC<TablePageProps> = props => {
 
   // 分页切换
   const changePagination = (pagination:any, filters:any, sorter:any) => {
-    loadTableData(pagination.current,[],filters,sorter);
+    const search = searchForm.getFieldsValue();
+    loadTableData(pagination.current,search,filters,sorter);
+  };
+
+  // 刷新页面
+  const refresh = () => {
+    searchForm.resetFields();
+    loadTableData(1,[],[],[]);
   };
 
   // 加载Table数据
@@ -343,11 +383,11 @@ const TablePage: React.SFC<TablePageProps> = props => {
             >
               <InputGroup compact>
                 <Form.Item
-                  key={item.name+'[0]'}
-                  name={item.name+'[0]'}
+                  key={item.name+'_start'}
+                  name={item.name+'_start'}
                 >
                   <Input
-                    style={{ 
+                    style={{
                       textAlign: 'center',
                       ...item.style
                     }}
@@ -366,8 +406,8 @@ const TablePage: React.SFC<TablePageProps> = props => {
                   disabled
                 />
                 <Form.Item
-                  key={item.name+'[1]'}
-                  name={item.name+'[1]'}
+                  key={item.name+'_end'}
+                  name={item.name+'_end'}
                 >
                   <Input
                     className={styles.searchInputRight}
@@ -408,7 +448,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
               style={item.style ? item.style : []}
               placeholder={item.placeholder}
             >
-              {item.options.map((option:any) => {
+              {!!item.options && item.options.map((option:any) => {
                 return (
                   <Option key={option.value} value={option.value}>{option.label}</Option>
                 )
@@ -430,7 +470,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
               style={item.style ? item.style : []}
               placeholder={item.placeholder}
             >
-              {item.options.map((option:any) => {
+              {!!item.options && item.options.map((option:any) => {
                 return (
                   <Option key={option.value} value={option.value}>{option.label}</Option>
                 )
@@ -476,6 +516,43 @@ const TablePage: React.SFC<TablePageProps> = props => {
         }
 
         break;
+
+      case 'inputGroup':
+        return (
+          <Form.Item
+            key={item.name}
+            label={item.label}
+          >
+            <InputGroup compact>
+              <Form.Item
+                key={item.name+"_start"}
+                name={item.name+'_start'}
+              >
+                <Select
+                  style={{ width : (item.style.width[0] ? item.style.width[0] : null)}}
+                  defaultValue='all'
+                >
+                  {!!item.options && item.options.map((option:any) => {
+                    return (
+                      <Option key={option.value} value={option.value}>{option.label}</Option>
+                    )
+                  })}
+                </Select>
+              </Form.Item>
+              <Form.Item
+                key={item.name+'_end'}
+                name={item.name+'_end'}
+              >
+                <Input
+                  style={{ width : (item.style.width[1] ? item.style.width[1] : null)}}
+                  placeholder={item.placeholder}
+                />
+              </Form.Item>
+            </InputGroup>
+          </Form.Item>
+        )
+        break;
+
       default:
         console.log('component can not be null!');
     }
@@ -498,17 +575,41 @@ const TablePage: React.SFC<TablePageProps> = props => {
               </Col>
               <Col span={12}>
                 <div className={styles.right}>
-                  {!content.body.table.disableCreateButton ? 
-                    <Button type="primary" href={"#/admin/quark/engine?api="+api.replace(/\/index/g, '/create')+"&component=form"} icon={<PlusCircleOutlined />}>
-                      新增
-                    </Button>
-                  : null}
-                  &nbsp;&nbsp;&nbsp;&nbsp;
-                  {!content.body.table.disableExport ? 
-                    <Button icon={<ExportOutlined />}>
-                      导出
-                    </Button>
-                  : null}
+                  {!!content.body.table.actions && content.body.table.actions.items.map((item:any) => {
+                    switch (item.actionType) {
+                      case 'create':
+                        return (
+                          <Button key={item.name} style={{marginLeft:'8px'}} type={item.type} href={item.url ? item.url : "#/admin/quark/engine?api="+api.replace(/\/index/g, '/create')+"&component=form"} icon={item.icon && IconMap[item.icon]}>
+                            {item.label}
+                          </Button>
+                        );
+                        break;
+                    
+                      case 'refresh':
+                        return (
+                          <Button key={item.name} style={{marginLeft:'8px'}} type={item.type} onClick={() => refresh()} icon={item.icon && IconMap[item.icon]}>
+                            {item.label}
+                          </Button>
+                        );
+                        break;
+
+                      case 'modal':
+                        return (
+                          <Button key={item.name} style={{marginLeft:'8px'}} type={item.type} onClick={() => showModal(item.modal)} icon={item.icon && IconMap[item.icon]}>
+                            {item.label}
+                          </Button>
+                        );
+                        break;
+
+                      default:
+                        return (
+                          <Button key={item.name} style={{marginLeft:'8px'}} type={item.type} href={item.url ? item.url : null} icon={item.icon && IconMap[item.icon]}>
+                            {item.label}
+                          </Button>
+                        );
+                        break;
+                    }
+                  })}
                 </div>
               </Col>
             </Row>
@@ -540,7 +641,9 @@ const TablePage: React.SFC<TablePageProps> = props => {
                 <div className={styles.right}>
                   <Form layout="inline" form={searchForm} onFinish={onSearch}>
                     {!!content.body.table.search && content.body.table.search.items.map((item:any) => {
-                      return searchComponent(item);
+                      if(!item.advanced) {
+                        return searchComponent(item);
+                      }
                     })}
                     <Form.Item>
                       <Button htmlType="submit">
@@ -577,11 +680,23 @@ const TablePage: React.SFC<TablePageProps> = props => {
             <Row>
               <Col span={24}>
                 <Form layout="inline" form={searchForm} onFinish={onSearch}>
-                  {!!content.body.table.advancedSearch && content.body.table.advancedSearch.items.map((item:any) => {
-                    return searchComponent(item);
+                  {!!content.body.table.search && content.body.table.search.items.map((item:any) => {
+                    if(item.advanced) {
+                      return searchComponent(item);
+                    }
                   })}
                   <Form.Item>
-                    <Button htmlType="submit">
+                    <Button
+                      htmlType="button"
+                      onClick={onReset}
+                    >
+                      重置
+                    </Button>
+                    <Button
+                      htmlType="submit"
+                      type="primary"
+                      style={{marginLeft:'8px'}}
+                    >
                       搜索
                     </Button>
                   </Form.Item>
@@ -599,6 +714,63 @@ const TablePage: React.SFC<TablePageProps> = props => {
             />
           </div>
         </div>
+
+        <Modal
+          title={modalData.title}
+          visible={modalVisible}
+          onOk={modalOk}
+          onCancel={modalCancel}
+          okText={modalData.okText ? modalData.okText : '确定'}
+          cancelText={modalData.cancelText ? modalData.cancelText : '取消'}
+          width={modalData.width ? modalData.width : undefined}
+        >
+          <Form {...modalData.form.layout} form={form} initialValues={modalData.form.initialValues}>
+            {!!modalData.form.items && modalData.form.items.map((item:any) => {
+              if(item.component == 'id') {
+                return (
+                  <Form.Item
+                    style={{display:'none'}}
+                    key={item.name}
+                    name={item.name}
+                  >
+                    <Input/>
+                  </Form.Item>
+                )
+              }
+
+              if(item.component == 'input') {
+                return (
+                  <Form.Item
+                    key={item.name}
+                    label={item.label}
+                    name={item.name}
+                    rules={item.rules}
+                  >
+                    <Input
+                      placeholder={item.placeholder}
+                      style={item.style ? item.style : []}
+                    />
+                  </Form.Item>
+                )
+              }
+
+              if(item.component == 'radio') {
+                return (
+                  <Form.Item
+                    key={item.name}
+                    label={item.label}
+                    name={item.name}
+                    rules={item.rules}
+                  >
+                    <Radio.Group options={item.options} />
+                  </Form.Item>
+                )
+              }
+
+            })}
+          </Form>
+        </Modal>
+
       </PageHeaderWrapper>
       : null}
     </Spin>
