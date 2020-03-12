@@ -44,7 +44,8 @@ import {
   Dropdown,
   Menu,
   Tag,
-  Popover
+  Popover,
+  Typography
 } from 'antd';
 
 const IconMap:any = {
@@ -54,6 +55,7 @@ const IconMap:any = {
   import: <ImportOutlined />
 };
 
+const { Text } = Typography;
 const { TextArea } = Input;
 const TabPane = Tabs.TabPane;
 const Option = Select.Option;
@@ -242,11 +244,13 @@ const TablePage: React.SFC<TablePageProps> = props => {
   };
 
   const modalOk = () =>{
+
     const values = form.getFieldsValue();
     dispatch({
       type: 'form/submit',
       payload: {
         actionUrl: modalData.form.action,
+        id:selectedRowKeys,
         ...values
       },
       callback: (res:any) => {
@@ -724,19 +728,9 @@ const TablePage: React.SFC<TablePageProps> = props => {
           cancelText={modalData.cancelText ? modalData.cancelText : '取消'}
           width={modalData.width ? modalData.width : undefined}
         >
+          {!!selectedRowKeys.length && <Text strong>已选择 <Text type="danger">{selectedRowKeys.length}</Text> 条，要操作的记录！<br/><br/></Text>}
           <Form {...modalData.form.layout} form={form} initialValues={modalData.form.initialValues}>
             {!!modalData.form.items && modalData.form.items.map((item:any) => {
-              if(item.component == 'id') {
-                return (
-                  <Form.Item
-                    style={{display:'none'}}
-                    key={item.name}
-                    name={item.name}
-                  >
-                    <Input/>
-                  </Form.Item>
-                )
-              }
 
               if(item.component == 'input') {
                 return (
