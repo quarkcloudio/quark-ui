@@ -136,7 +136,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
                     key={item.name}
                     label={item.label}
                     name={item.name}
-                    rules={item.rules}
+                    rules={item.frontendRules}
                   >
                     <Input
                       placeholder={item.placeholder}
@@ -152,7 +152,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
                     key={item.name}
                     label={item.label}
                     name={item.name}
-                    rules={item.rules}
+                    rules={item.frontendRules}
                   >
                     <Radio.Group options={item.options} />
                   </Form.Item>

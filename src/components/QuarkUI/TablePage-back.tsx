@@ -1,10 +1,9 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
+import React, { useEffect,useState } from 'react';
 import styles from './TablePage.less';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
 import router from 'umi/router';
-
 import { 
   PlusCircleOutlined,
   ExportOutlined,
@@ -65,87 +64,6 @@ const { RangePicker } = DatePicker;
 const { TreeNode } = Tree;
 const InputGroup = Input.Group;
 const { confirm } = Modal;
-
-const EditableContext = React.createContext<any>(null);
-
-const EditableRow: React.FC<any> = ({ index, ...props }) => {
-  const [form] = Form.useForm();
-  return (
-    <Form form={form} component={false}>
-      <EditableContext.Provider value={form}>
-        <tr {...props} />
-      </EditableContext.Provider>
-    </Form>
-  );
-};
-
-interface EditableCellProps {
-  title: React.ReactNode;
-  editable: boolean;
-  children: React.ReactNode;
-  dataIndex: string;
-  record: any;
-  handleSave: (record: any) => void;
-}
-
-const EditableCell: React.FC<EditableCellProps> = ({
-  title,
-  editable,
-  children,
-  dataIndex,
-  record,
-  handleSave,
-  ...restProps
-}) => {
-  const [editing, setEditing] = useState(false);
-  const inputRef:any = useRef();
-  const form:any = useContext(EditableContext);
-
-  useEffect(() => {
-    if (editing) {
-      inputRef.current.focus();
-    }
-  }, [editing]);
-
-  const toggleEdit = () => {
-    setEditing(!editing);
-    form.setFieldsValue({ [dataIndex]: record[dataIndex] });
-  };
-
-  const save = async (e:any) => {
-    try {
-      const values = await form.validateFields();
-      toggleEdit();
-      console.log(editable);
-      handleSave({ ...record, ...values });
-    } catch (errInfo) {
-      console.log('Save failed:', errInfo);
-    }
-  };
-
-  let childNode = children;
-
-  if (editable) {
-    childNode = editing ? (
-      <Form.Item
-        style={{ margin: 0 }}
-        name={dataIndex}
-      >
-        <Input
-          ref={inputRef}
-          onPressEnter={save}
-          onBlur={save}
-        />
-      </Form.Item>
-    ) : (
-      <div className={styles.editableCellValueWrap} style={{ paddingRight: 24 }} onClick={toggleEdit}>
-        {children}
-      </div>
-    );
-  }
-
-  return <td {...restProps}>{childNode}</td>;
-};
 
 export interface TablePageProps {
   api:string;
@@ -220,7 +138,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
   const [batchActionSelect, changeBatchActionSelect] = useState('batchAction|');
   const [extendActionSelect, changeExtendActionSelect] = useState('extendAction|');
 
-  var columns:any = [];
+  var columns = [];
 
   if(content.body.table.columns) {
     content.body.table.columns.map((column:any,key:any) => {
@@ -268,22 +186,6 @@ const TablePage: React.SFC<TablePageProps> = props => {
       columns[key] = column;
     })
   }
-
-  content.body.table.columns = columns.map((column:any) => {
-    if (!column.editable) {
-      return column;
-    }
-    return {
-      ...column,
-      onCell: (record:any) => ({
-        record,
-        editable: column.editable,
-        dataIndex: column.dataIndex,
-        title: column.title,
-        handleSave: handleSave,
-      }),
-    };
-  });
 
   const columnRender = (column:any, text:any, row:any,usingText:any = null) => {
 
@@ -340,16 +242,6 @@ const TablePage: React.SFC<TablePageProps> = props => {
 
     return columnRender;
   }
-
-  const handleSave = (row:any) => {
-    // const newData = [...state.dataSource];
-    // const index = newData.findIndex(item => row.key === item.key);
-    // const item = newData[index];
-    // newData.splice(index, 1, {
-    //   ...item,
-    //   ...row,
-    // });
-  };
 
   // rowSelection
   const rowSelection = {
@@ -933,13 +825,6 @@ const TablePage: React.SFC<TablePageProps> = props => {
     }
   }
 
-  const components:any = {
-    body: {
-      row: EditableRow,
-      cell: EditableCell,
-    },
-  };
-
   return (
     <Spin spinning={loading} tip="Loading..." style={{width:'100%',marginTop:'200px'}}>
       {content ?
@@ -1080,8 +965,6 @@ const TablePage: React.SFC<TablePageProps> = props => {
           </div>
           <div>
             <Table
-              rowClassName={styles.editableRow}
-              components={components}
               columns={content.body.table.columns}
               rowSelection={rowSelection}
               dataSource={content.body.table.dataSource}
