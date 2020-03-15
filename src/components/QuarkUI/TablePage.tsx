@@ -81,7 +81,7 @@ const EditableRow: React.FC<any> = ({ index, ...props }) => {
 
 interface EditableCellProps {
   title: React.ReactNode;
-  editable: boolean;
+  editable: any;
   children: React.ReactNode;
   dataIndex: string;
   record: any;
@@ -117,6 +117,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
       const values = await form.validateFields();
       toggleEdit();
       console.log(editable);
+      console.log(values);
       handleSave({ ...record, ...values });
     } catch (errInfo) {
       console.log('Save failed:', errInfo);
@@ -126,22 +127,62 @@ const EditableCell: React.FC<EditableCellProps> = ({
   let childNode = children;
 
   if (editable) {
-    childNode = editing ? (
-      <Form.Item
-        style={{ margin: 0 }}
-        name={dataIndex}
-      >
-        <Input
-          ref={inputRef}
-          onPressEnter={save}
-          onBlur={save}
-        />
-      </Form.Item>
-    ) : (
-      <div className={styles.editableCellValueWrap} style={{ paddingRight: 24 }} onClick={toggleEdit}>
-        {children}
-      </div>
-    );
+    switch (editable.name) {
+      case 'text':
+        childNode = editing ? (
+          <Form.Item
+            style={{ margin: 0 }}
+            name={dataIndex}
+          >
+            <Input
+              ref={inputRef}
+              onPressEnter={save}
+              onBlur={save}
+            />
+          </Form.Item>
+        ) : (
+          <div className={styles.editableCellValueWrap} style={{ paddingRight: 24 }} onClick={toggleEdit}>
+            {children}
+          </div>
+        );
+        break;
+    
+      case 'switch':
+        childNode = (
+          <Form.Item
+            style={{ margin: 0 }}
+            name={dataIndex}
+          >
+            <Switch
+              ref={inputRef}
+              onChange={save}
+              checkedChildren="正常"
+              unCheckedChildren="禁用"
+              defaultChecked
+            />
+          </Form.Item>
+        );
+        break;
+
+      default:
+        childNode = editing ? (
+          <Form.Item
+            style={{ margin: 0 }}
+            name={dataIndex}
+          >
+            <Input
+              ref={inputRef}
+              onPressEnter={save}
+              onBlur={save}
+            />
+          </Form.Item>
+        ) : (
+          <div className={styles.editableCellValueWrap} style={{ paddingRight: 24 }} onClick={toggleEdit}>
+            {children}
+          </div>
+        );
+        break;
+    }
   }
 
   return <td {...restProps}>{childNode}</td>;
