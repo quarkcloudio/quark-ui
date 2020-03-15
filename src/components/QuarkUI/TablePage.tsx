@@ -114,11 +114,22 @@ const EditableCell: React.FC<EditableCellProps> = ({
 
   const save = async (e:any) => {
     try {
-      const values = await form.validateFields();
+      const values = await form.getFieldsValue();
+      let value = null;
       toggleEdit();
-      console.log(editable);
-      console.log(values);
-      handleSave({ ...record, ...values });
+      if(editable.name == 'switch') {
+        if(values[dataIndex] == true) {
+          value = editable.option.on.value;
+        } else {
+          value = editable.option.off.value;
+        }
+      } else {
+        value = values[dataIndex];
+      }
+      
+      let getValues:any = [];
+      getValues[dataIndex] = value;
+      handleSave({id:record.id, values:getValues, editable:editable });
     } catch (errInfo) {
       console.log('Save failed:', errInfo);
     }
@@ -156,9 +167,9 @@ const EditableCell: React.FC<EditableCellProps> = ({
             <Switch
               ref={inputRef}
               onChange={save}
-              checkedChildren="正常"
-              unCheckedChildren="禁用"
-              defaultChecked
+              checkedChildren={editable.option.on.text}
+              unCheckedChildren={editable.option.off.text}
+              checked={(record[dataIndex] == editable.option.on.value) ? true : false}
             />
           </Form.Item>
         );
@@ -308,23 +319,24 @@ const TablePage: React.SFC<TablePageProps> = props => {
 
       columns[key] = column;
     })
-  }
 
-  content.body.table.columns = columns.map((column:any) => {
-    if (!column.editable) {
-      return column;
-    }
-    return {
-      ...column,
-      onCell: (record:any) => ({
-        record,
-        editable: column.editable,
-        dataIndex: column.dataIndex,
-        title: column.title,
-        handleSave: handleSave,
-      }),
-    };
-  });
+    content.body.table.columns = columns.map((column:any) => {
+      if (!column.editable) {
+        return column;
+      }
+      return {
+        ...column,
+        onCell: (record:any) => ({
+          record,
+          editable: column.editable,
+          dataIndex: column.dataIndex,
+          title: column.title,
+          handleSave: editableSave,
+        }),
+      };
+    });
+
+  }
 
   const columnRender = (column:any, text:any, row:any,usingText:any = null) => {
 
@@ -382,14 +394,21 @@ const TablePage: React.SFC<TablePageProps> = props => {
     return columnRender;
   }
 
-  const handleSave = (row:any) => {
-    // const newData = [...state.dataSource];
-    // const index = newData.findIndex(item => row.key === item.key);
-    // const item = newData[index];
-    // newData.splice(index, 1, {
-    //   ...item,
-    //   ...row,
-    // });
+  const editableSave = (data:any) => {
+    dispatch({
+      type: 'form/submit',
+      payload: {
+        actionName: 'editable',
+        actionUrl: data.editable.action,
+        id: data.id,
+        ...data.values
+      },
+      callback: (res:any) => {
+        if(res.status == 'success') {
+          loadTableData(1,[],[],[]);
+        }
+      }
+    });
   };
 
   // rowSelection
@@ -721,7 +740,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
   };
 
   // 加载Table数据
-  const loadTableData = (currentPage:any, search:any, filters:any, sorter:any) => {
+  const loadTableData=(currentPage:any, search:any, filters:any, sorter:any) => {
     
     changeSelectedRowKey([]);
     changeBatchActionSelect('batchAction|');
