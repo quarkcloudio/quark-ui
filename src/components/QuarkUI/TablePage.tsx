@@ -19,6 +19,7 @@ import {
 import locale from 'antd/es/date-picker/locale/zh_CN';
 
 import {
+  ConfigProvider,
   Table,
   Divider,
   Card,
@@ -49,6 +50,8 @@ import {
   Typography
 } from 'antd';
 
+import zhCN from 'antd/es/locale/zh_CN';
+
 const IconMap:any = {
   export: <ExportOutlined />,
   plusCircle: <PlusCircleOutlined />,
@@ -69,10 +72,10 @@ const { confirm } = Modal;
 const EditableContext = React.createContext<any>(null);
 
 const EditableRow: React.FC<any> = ({ index, ...props }) => {
-  const [form] = Form.useForm();
+  const [editableForm] = Form.useForm();
   return (
-    <Form form={form} component={false}>
-      <EditableContext.Provider value={form}>
+    <Form form={editableForm} component={false}>
+      <EditableContext.Provider value={editableForm}>
         <tr {...props} />
       </EditableContext.Provider>
     </Form>
@@ -99,7 +102,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
 }) => {
   const [editing, setEditing] = useState(false);
   const inputRef:any = useRef();
-  const form:any = useContext(EditableContext);
+  const editableForm:any = useContext(EditableContext);
 
   useEffect(() => {
     if (editing) {
@@ -109,22 +112,39 @@ const EditableCell: React.FC<EditableCellProps> = ({
 
   const toggleEdit = () => {
     setEditing(!editing);
-    form.setFieldsValue({ [dataIndex]: record[dataIndex] });
+    editableForm.setFieldsValue({ [dataIndex]: record[dataIndex]});
   };
 
   const save = async (e:any) => {
     try {
-      const values = await form.getFieldsValue();
+      const values = await editableForm.getFieldsValue();
+
       let value = null;
-      toggleEdit();
-      if(editable.name == 'switch') {
-        if(values[dataIndex] == true) {
-          value = editable.option.on.value;
-        } else {
-          value = editable.option.off.value;
-        }
-      } else {
-        value = values[dataIndex];
+
+      switch (editable.name) {
+        case 'text':
+          toggleEdit();
+          value = values[dataIndex];
+          break;
+      
+        case 'switch':
+          if(values[dataIndex] == true) {
+            value = editable.options.on.value;
+          } else {
+            value = editable.options.off.value;
+          }
+          editableForm.setFieldsValue({ [dataIndex]: record[dataIndex]});
+          break;
+
+        case 'select':
+          value = values[dataIndex];
+          editableForm.setFieldsValue({ [dataIndex]: record[dataIndex].toString()});
+          break;
+
+        default:
+          toggleEdit();
+          value = values[dataIndex];
+          break;
       }
       
       let getValues:any = [];
@@ -167,13 +187,52 @@ const EditableCell: React.FC<EditableCellProps> = ({
             <Switch
               ref={inputRef}
               onChange={save}
-              checkedChildren={editable.option.on.text}
-              unCheckedChildren={editable.option.off.text}
-              checked={(record[dataIndex] == editable.option.on.value) ? true : false}
+              checkedChildren={editable.options.on.text}
+              unCheckedChildren={editable.options.off.text}
+              checked={(record[dataIndex] == editable.options.on.value) ? true : false}
             />
           </Form.Item>
         );
         break;
+
+      case 'select':
+        childNode = (
+          <Form.Item
+            style={{ margin: 0 }}
+            name={dataIndex}
+          >
+            <Select
+              ref={inputRef}
+              onChange={save}
+              bordered={false}
+            >
+              {!!editable.options && editable.options.map((option:any) => {
+                return (
+                  <Option value={option.value.toString()}>{option.label}</Option>
+                )
+              })}
+            </Select>
+          </Form.Item>
+        );
+        editableForm.setFieldsValue({ [dataIndex]: record[dataIndex].toString() });
+        break;
+
+        case 'switch':
+          childNode = (
+            <Form.Item
+              style={{ margin: 0 }}
+              name={dataIndex}
+            >
+              <Switch
+                ref={inputRef}
+                onChange={save}
+                checkedChildren={editable.option.on.text}
+                unCheckedChildren={editable.option.off.text}
+                checked={(record[dataIndex] == editable.option.on.value) ? true : false}
+              />
+            </Form.Item>
+          );
+          break;
 
       default:
         childNode = editing ? (
@@ -693,7 +752,6 @@ const TablePage: React.SFC<TablePageProps> = props => {
   }
 
   const onConfirm = (actionName:any,actionUrl:any,confirmProperty:any,id:any=null) => {
-
     confirm({
       title: confirmProperty.title,
       icon: <ExclamationCircleOutlined />,
@@ -767,9 +825,10 @@ const TablePage: React.SFC<TablePageProps> = props => {
     switch (names[1]) {
       case 'edit':
         return (
-          <Menu.Item>
+          <Menu.Item
+            key={item.name}
+          >
             <a
-              key={item.name}
               style={style}
               href={item.url ? item.url : "#/admin/quark/engine?api="+api.replace(/\/index/g, '/edit')+"&component=form"+"&search[id]="+id}
             >
@@ -781,9 +840,10 @@ const TablePage: React.SFC<TablePageProps> = props => {
     
       case 'show':
         return (
-          <Menu.Item>
+          <Menu.Item
+            key={item.name}
+          >
             <a
-              key={item.name}
               style={style}
               href={item.url ? item.url : "#/admin/quark/engine?api="+api.replace(/\/index/g, '/show')+"&component=show"+"&search[id]="+id}
             >
@@ -796,9 +856,10 @@ const TablePage: React.SFC<TablePageProps> = props => {
       default:
         let menu = null;
         if(item.modal) {
-          menu =  <Menu.Item>
-                    <a 
-                      key={item.name}
+          menu =  <Menu.Item
+                    key={item.name}
+                  >
+                    <a
                       style={style}
                       onClick={() => showModal(item.name,item.modal,id)}
                     >
@@ -807,9 +868,10 @@ const TablePage: React.SFC<TablePageProps> = props => {
                   </Menu.Item>
 
         } else if(item.confirm) {
-          menu =  <Menu.Item>
+          menu =  <Menu.Item
+                    key={item.name}
+                  >
                     <a
-                      key={item.name}
                       style={style}
                       onClick={() => onConfirm(item.name,item.action,item.confirm,id)}
                     >
@@ -818,9 +880,10 @@ const TablePage: React.SFC<TablePageProps> = props => {
                   </Menu.Item>
 
         } else {
-          menu =  <Menu.Item>
+          menu =  <Menu.Item
+                    key={item.name}
+                  >
                     <a
-                      key={item.name}
                       style={style}
                       onClick={() => action(item.name,item.action,id)}
                     >
@@ -1001,205 +1064,207 @@ const TablePage: React.SFC<TablePageProps> = props => {
   };
 
   return (
-    <Spin spinning={loading} tip="Loading..." style={{width:'100%',marginTop:'200px'}}>
-      {content ?
-      <PageHeaderWrapper
-        title={content ? content.title : false}
-        subTitle={content.subTitle}
-        content={content.description}
-        breadcrumb={{routes}}
-      >
-        <div className={styles.container}>
-          <div className={styles.header}>
-            <Row justify="start">
-              <Col span={12}>
-                <h5 className={styles.title}>{content.body.table.title}</h5>
-              </Col>
-              <Col span={12}>
-                <div className={styles.right}>
-                  {!!content.body.table.actions && content.body.table.actions.items.map((item:any) => {
-                    return buttonComponent(item,content.body.table.batchActions.style);
-                  })}
-                </div>
-              </Col>
-            </Row>
-          </div>
-          <Divider style={{ marginBottom: 10,marginTop: 10 }} />
-          <div className={styles.toolbar}>
-            <Row justify="start">
-              <Col span={8}>
+    <ConfigProvider locale={zhCN}>
+      <Spin spinning={loading} tip="Loading..." style={{width:'100%',marginTop:'200px'}}>
+        {content ?
+        <PageHeaderWrapper
+          title={content ? content.title : false}
+          subTitle={content.subTitle}
+          content={content.description}
+          breadcrumb={{routes}}
+        >
+          <div className={styles.container}>
+            <div className={styles.header}>
+              <Row justify="start">
+                <Col span={12}>
+                  <h5 className={styles.title}>{content.body.table.title}</h5>
+                </Col>
+                <Col span={12}>
+                  <div className={styles.right}>
+                    {!!content.body.table.actions && content.body.table.actions.items.map((item:any) => {
+                      return buttonComponent(item,content.body.table.batchActions.style);
+                    })}
+                  </div>
+                </Col>
+              </Row>
+            </div>
+            <Divider style={{ marginBottom: 10,marginTop: 10 }} />
+            <div className={styles.toolbar}>
+              <Row justify="start">
+                <Col span={8}>
 
-                {!!content.body.table.batchActions && content.body.table.batchActions.showStyle == 'button' ?
-                  <span>
-                    {content.body.table.batchActions.items.map((item:any) => {
-                        return buttonComponent(item,content.body.table.batchActions.style);
-                    })}
-                  </span>
-                : null}
-                {!!content.body.table.batchActions && content.body.table.batchActions.showStyle == 'select' ?
-                  <Select
-                    style={content.body.table.batchActions.style}
-                    placeholder={content.body.table.batchActions.placeholder}
-                    value={batchActionSelect}
-                    onChange={onSelectChange}
-                  >
-                    {content.body.table.batchActions.items.map((item:any) => {
-                      return <Option key={item.name} value={item.name}>{item.label}</Option>
-                    })}
-                  </Select>
-                : null}
+                  {!!content.body.table.batchActions && content.body.table.batchActions.showStyle == 'button' ?
+                    <span>
+                      {content.body.table.batchActions.items.map((item:any) => {
+                          return buttonComponent(item,content.body.table.batchActions.style);
+                      })}
+                    </span>
+                  : null}
+                  {!!content.body.table.batchActions && content.body.table.batchActions.showStyle == 'select' ?
+                    <Select
+                      style={content.body.table.batchActions.style}
+                      placeholder={content.body.table.batchActions.placeholder}
+                      value={batchActionSelect}
+                      onChange={onSelectChange}
+                    >
+                      {content.body.table.batchActions.items.map((item:any) => {
+                        return <Option key={item.name} value={item.name}>{item.label}</Option>
+                      })}
+                    </Select>
+                  : null}
 
-                {!!content.body.table.extendActions && content.body.table.extendActions.showStyle == 'button' ?
-                  <span>
-                    {content.body.table.extendActions.items.map((item:any) => {
-                        return buttonComponent(item,content.body.table.batchActions.style);
-                    })}
-                  </span>
-                : null}
+                  {!!content.body.table.extendActions && content.body.table.extendActions.showStyle == 'button' ?
+                    <span>
+                      {content.body.table.extendActions.items.map((item:any) => {
+                          return buttonComponent(item,content.body.table.batchActions.style);
+                      })}
+                    </span>
+                  : null}
 
-                {!!content.body.table.extendActions && content.body.table.extendActions.showStyle == 'select' ?
-                  <Select
-                    style={content.body.table.extendActions.style}
-                    placeholder={content.body.table.extendActions.placeholder}
-                    value={extendActionSelect}
-                    onChange={onSelectChange}
-                  >
-                    {content.body.table.extendActions.items.map((item:any) => {
-                      return <Option key={item.name} value={'extendAction|'+item.name}>{item.label}</Option>
-                    })}
-                  </Select>
+                  {!!content.body.table.extendActions && content.body.table.extendActions.showStyle == 'select' ?
+                    <Select
+                      style={content.body.table.extendActions.style}
+                      placeholder={content.body.table.extendActions.placeholder}
+                      value={extendActionSelect}
+                      onChange={onSelectChange}
+                    >
+                      {content.body.table.extendActions.items.map((item:any) => {
+                        return <Option key={item.name} value={'extendAction|'+item.name}>{item.label}</Option>
+                      })}
+                    </Select>
+                  : null}
+                </Col>
+                <Col span={16}>
+                {!content.body.table.disableSearch && !content.body.table.disableAdvancedSearch ?
+                  <div className={styles.right}>
+                    <Form layout="inline" form={searchForm} onFinish={onSearch}>
+                      {!!content.body.table.search && content.body.table.search.items.map((item:any) => {
+                        if(!item.advanced) {
+                          return searchComponent(item);
+                        }
+                      })}
+                      <Form.Item>
+                        <Button htmlType="submit">
+                          搜索
+                        </Button>
+                        <a type="link" style={{ fontSize: 12,marginLeft:15 }} onClick={() => changeSearchExpand(!searchExpand)}>
+                          高级搜索 {searchExpand ? <UpOutlined /> : <DownOutlined />}
+                        </a>
+                      </Form.Item>
+                    </Form>
+                  </div>
                 : null}
-              </Col>
-              <Col span={16}>
-              {!content.body.table.disableSearch && !content.body.table.disableAdvancedSearch ?
-                <div className={styles.right}>
+                {!content.body.table.disableSearch && content.body.table.disableAdvancedSearch ?
+                  <div className={styles.right}>
+                    <Form layout="inline" form={searchForm} onFinish={onSearch}>
+                      {!!content.body.table.search && content.body.table.search.items.map((item:any) => {
+                        return searchComponent(item);
+                      })}
+                      <Form.Item>
+                        <Button htmlType="submit">
+                          搜索
+                        </Button>
+                      </Form.Item>
+                    </Form>
+                  </div>
+                : null}
+                </Col>
+              </Row>
+            </div>
+            <div
+              className={styles.advancedSearch}
+              style={{ display: searchExpand ? 'block' : 'none'}}
+            >
+              <Row>
+                <Col span={24}>
                   <Form layout="inline" form={searchForm} onFinish={onSearch}>
                     {!!content.body.table.search && content.body.table.search.items.map((item:any) => {
-                      if(!item.advanced) {
+                      if(item.advanced) {
                         return searchComponent(item);
                       }
                     })}
                     <Form.Item>
-                      <Button htmlType="submit">
-                        搜索
+                      <Button
+                        htmlType="button"
+                        onClick={onReset}
+                      >
+                        重置
                       </Button>
-                      <a type="link" style={{ fontSize: 12,marginLeft:15 }} onClick={() => changeSearchExpand(!searchExpand)}>
-                        高级搜索 {searchExpand ? <UpOutlined /> : <DownOutlined />}
-                      </a>
-                    </Form.Item>
-                  </Form>
-                </div>
-              : null}
-              {!content.body.table.disableSearch && content.body.table.disableAdvancedSearch ?
-                <div className={styles.right}>
-                  <Form layout="inline" form={searchForm} onFinish={onSearch}>
-                    {!!content.body.table.search && content.body.table.search.items.map((item:any) => {
-                      return searchComponent(item);
-                    })}
-                    <Form.Item>
-                      <Button htmlType="submit">
+                      <Button
+                        htmlType="submit"
+                        type="primary"
+                        style={{marginLeft:'8px'}}
+                      >
                         搜索
                       </Button>
                     </Form.Item>
                   </Form>
-                </div>
-              : null}
-              </Col>
-            </Row>
+                </Col>
+              </Row>
+            </div>
+            <div>
+              <Table
+                rowClassName={styles.editableRow}
+                components={components}
+                columns={content.body.table.columns}
+                rowSelection={rowSelection}
+                dataSource={content.body.table.dataSource}
+                pagination={content.body.table.pagination}
+                onChange={changePagination}
+              />
+            </div>
           </div>
-          <div
-            className={styles.advancedSearch}
-            style={{ display: searchExpand ? 'block' : 'none'}}
+
+          <Modal
+            title={modalData.title}
+            visible={modalVisible}
+            onOk={modalOk}
+            onCancel={modalCancel}
+            okText={modalData.okText ? modalData.okText : '确定'}
+            cancelText={modalData.cancelText ? modalData.cancelText : '取消'}
+            width={modalData.width ? modalData.width : undefined}
           >
-            <Row>
-              <Col span={24}>
-                <Form layout="inline" form={searchForm} onFinish={onSearch}>
-                  {!!content.body.table.search && content.body.table.search.items.map((item:any) => {
-                    if(item.advanced) {
-                      return searchComponent(item);
-                    }
-                  })}
-                  <Form.Item>
-                    <Button
-                      htmlType="button"
-                      onClick={onReset}
+            {!!selectedRowKeys.length && <Text strong>已选择 <Text type="danger">{selectedRowKeys.length}</Text> 条，要操作的记录！<br/><br/></Text>}
+            <Form {...modalData.form.layout} form={form} initialValues={modalData.form.initialValues}>
+              {!!modalData.form.items && modalData.form.items.map((item:any) => {
+
+                if(item.component == 'input') {
+                  return (
+                    <Form.Item
+                      key={item.name}
+                      label={item.label}
+                      name={item.name}
+                      rules={item.frontendRules}
                     >
-                      重置
-                    </Button>
-                    <Button
-                      htmlType="submit"
-                      type="primary"
-                      style={{marginLeft:'8px'}}
+                      <Input
+                        placeholder={item.placeholder}
+                        style={item.style ? item.style : []}
+                      />
+                    </Form.Item>
+                  )
+                }
+
+                if(item.component == 'radio') {
+                  return (
+                    <Form.Item
+                      key={item.name}
+                      label={item.label}
+                      name={item.name}
+                      rules={item.frontendRules}
                     >
-                      搜索
-                    </Button>
-                  </Form.Item>
-                </Form>
-              </Col>
-            </Row>
-          </div>
-          <div>
-            <Table
-              rowClassName={styles.editableRow}
-              components={components}
-              columns={content.body.table.columns}
-              rowSelection={rowSelection}
-              dataSource={content.body.table.dataSource}
-              pagination={content.body.table.pagination}
-              onChange={changePagination}
-            />
-          </div>
-        </div>
+                      <Radio.Group options={item.options} />
+                    </Form.Item>
+                  )
+                }
 
-        <Modal
-          title={modalData.title}
-          visible={modalVisible}
-          onOk={modalOk}
-          onCancel={modalCancel}
-          okText={modalData.okText ? modalData.okText : '确定'}
-          cancelText={modalData.cancelText ? modalData.cancelText : '取消'}
-          width={modalData.width ? modalData.width : undefined}
-        >
-          {!!selectedRowKeys.length && <Text strong>已选择 <Text type="danger">{selectedRowKeys.length}</Text> 条，要操作的记录！<br/><br/></Text>}
-          <Form {...modalData.form.layout} form={form} initialValues={modalData.form.initialValues}>
-            {!!modalData.form.items && modalData.form.items.map((item:any) => {
+              })}
+            </Form>
+          </Modal>
 
-              if(item.component == 'input') {
-                return (
-                  <Form.Item
-                    key={item.name}
-                    label={item.label}
-                    name={item.name}
-                    rules={item.frontendRules}
-                  >
-                    <Input
-                      placeholder={item.placeholder}
-                      style={item.style ? item.style : []}
-                    />
-                  </Form.Item>
-                )
-              }
-
-              if(item.component == 'radio') {
-                return (
-                  <Form.Item
-                    key={item.name}
-                    label={item.label}
-                    name={item.name}
-                    rules={item.frontendRules}
-                  >
-                    <Radio.Group options={item.options} />
-                  </Form.Item>
-                )
-              }
-
-            })}
-          </Form>
-        </Modal>
-
-      </PageHeaderWrapper>
-      : null}
-    </Spin>
+        </PageHeaderWrapper>
+        : null}
+      </Spin>
+    </ConfigProvider>
   );
 };
 
