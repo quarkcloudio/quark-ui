@@ -34,8 +34,10 @@ const { RangePicker } = DatePicker;
 const { TreeNode } = Tree;
 
 export interface FormPageProps {
+  type:string;
   api: string;
   search:[];
+  closeModal:any;
   content: {
     title:string,
     subTitle:string,
@@ -61,6 +63,7 @@ export interface FormPageProps {
 const FormPage: React.SFC<FormPageProps> = props => {
 
   const {
+    type,
     api,
     search,
     content,
@@ -97,121 +100,140 @@ const FormPage: React.SFC<FormPageProps> = props => {
       payload: {
         actionUrl: content.body.form.action,
         ...values
+      },
+      callback: (res:any) => {
+        if(type == 'modal') {
+          props.closeModal();
+        }
       }
     });
   };
 
+  let formComponent = null;
+  if(content) {
+    formComponent =
+    <Form {...content.body.form.layout} form={form} onFinish={onFinish} initialValues={content.body.form.initialValues}>
+      {!!content.body.form.items && content.body.form.items.map((item:any) => {
+        if(item.component == 'id') {
+          return (
+            <Form.Item
+              style={{display:'none'}}
+              key={item.name}
+              name={item.name}
+            >
+              <Input/>
+            </Form.Item>
+          )
+        }
+
+        if(item.component == 'input') {
+          return (
+            <Form.Item
+              key={item.name}
+              label={item.label}
+              name={item.name}
+              rules={item.frontendRules}
+            >
+              <Input
+                placeholder={item.placeholder}
+                style={item.style ? item.style : []}
+              />
+            </Form.Item>
+          )
+        }
+
+        if(item.component == 'radio') {
+          return (
+            <Form.Item
+              key={item.name}
+              label={item.label}
+              name={item.name}
+              rules={item.frontendRules}
+            >
+              <Radio.Group options={item.options} />
+            </Form.Item>
+          )
+        }
+
+      })}
+      {(!content.body.form.disableSubmit && !content.body.form.disableReset) ? 
+        <Form.Item
+          wrapperCol={
+            { offset: 3, span: 21 }
+          }
+        >
+          <Button
+            type="primary"
+            htmlType="submit"
+          >
+            提交
+          </Button>
+          <Button
+            htmlType="button"
+            onClick={onReset}
+            style={{marginLeft:'8px'}}
+          >
+            重置
+          </Button>
+        </Form.Item>
+      : null}
+      {(!content.body.form.disableSubmit && content.body.form.disableReset) ?
+        <Form.Item
+          wrapperCol={
+            { offset: 3, span: 21 }
+          }
+        >
+          <Button
+            type="primary"
+            htmlType="submit"
+          >
+            提交
+          </Button>
+        </Form.Item>
+      : null}
+      {(content.body.form.disableSubmit && !content.body.form.disableReset) ? 
+        <Form.Item
+          wrapperCol={
+            { offset: 3, span: 21 }
+          }
+        >
+          <Button
+            htmlType="button"
+            onClick={onReset}
+          >
+            重置
+          </Button>
+        </Form.Item>
+      : null}
+    </Form>
+  }
+
   return (
     <Spin spinning={loading} tip="Loading..." style={{width:'100%',marginTop:'200px'}}>
       {content ?
-      <PageHeaderWrapper
-        title={content ? content.title : false}
-        subTitle={content.subTitle}
-        content={content.description}
-        breadcrumb={{routes}}
-      >
-        <Card
-          size="small"
-          title={content.body.form.title}
-          bordered={false}
-          extra={<Button type="link" onClick={(e) => router.go(-1)}>返回上一页</Button>}
-        >
-          <Form {...content.body.form.layout} form={form} onFinish={onFinish} initialValues={content.body.form.initialValues}>
-            {!!content.body.form.items && content.body.form.items.map((item:any) => {
-              if(item.component == 'id') {
-                return (
-                  <Form.Item
-                    style={{display:'none'}}
-                    key={item.name}
-                    name={item.name}
-                  >
-                    <Input/>
-                  </Form.Item>
-                )
-              }
-
-              if(item.component == 'input') {
-                return (
-                  <Form.Item
-                    key={item.name}
-                    label={item.label}
-                    name={item.name}
-                    rules={item.frontendRules}
-                  >
-                    <Input
-                      placeholder={item.placeholder}
-                      style={item.style ? item.style : []}
-                    />
-                  </Form.Item>
-                )
-              }
-
-              if(item.component == 'radio') {
-                return (
-                  <Form.Item
-                    key={item.name}
-                    label={item.label}
-                    name={item.name}
-                    rules={item.frontendRules}
-                  >
-                    <Radio.Group options={item.options} />
-                  </Form.Item>
-                )
-              }
-
-            })}
-            {(!content.body.form.disableSubmit && !content.body.form.disableReset) ? 
-              <Form.Item
-                wrapperCol={
-                  { offset: 3, span: 21 }
-                }
+        <span>
+          {(type == 'page') ?
+            <PageHeaderWrapper
+              title={content ? content.title : false}
+              subTitle={content.subTitle}
+              content={content.description}
+              breadcrumb={{routes}}
+            >
+              <Card
+                size="small"
+                title={content.body.form.title}
+                bordered={false}
+                extra={<Button type="link" onClick={(e) => router.go(-1)}>返回上一页</Button>}
               >
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                >
-                  提交
-                </Button>
-                <Button
-                  htmlType="button"
-                  onClick={onReset}
-                  style={{marginLeft:'8px'}}
-                >
-                  重置
-                </Button>
-              </Form.Item>
-            : null}
-            {(!content.body.form.disableSubmit && content.body.form.disableReset) ?
-              <Form.Item
-                wrapperCol={
-                  { offset: 3, span: 21 }
-                }
-              >
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                >
-                  提交
-                </Button>
-              </Form.Item>
-            : null}
-            {(content.body.form.disableSubmit && !content.body.form.disableReset) ? 
-              <Form.Item
-                wrapperCol={
-                  { offset: 3, span: 21 }
-                }
-              >
-                <Button
-                  htmlType="button"
-                  onClick={onReset}
-                >
-                  重置
-                </Button>
-              </Form.Item>
-            : null}
-          </Form>
-        </Card>
-      </PageHeaderWrapper>
+                {formComponent}
+              </Card>
+            </PageHeaderWrapper>
+          :
+            <span>
+              {formComponent}
+            </span>
+          }
+        </span>
       : null}
     </Spin>
   );

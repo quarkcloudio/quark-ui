@@ -4,7 +4,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
 import router from 'umi/router';
-import ModalForm from '@/components/QuarkUI/ModalForm';
+import FormPage from '@/components/QuarkUI/FormPage';
 
 import { 
   PlusCircleOutlined,
@@ -1230,7 +1230,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
           footer={modalData.disableFooter ? null : undefined}
         >
           {modalData.form.url ? 
-            <ModalForm closeModal={closeModal} api={modalData.form.url+'?id='+rowKey} />
+            <FormPage type={'modal'} api={modalData.form.url+'?id='+rowKey} closeModal={closeModal} />
           :
           <span>
             {!!selectedRowKeys.length && <Text strong>已选择 <Text type="danger">{selectedRowKeys.length}</Text> 条，要操作的记录！<br/><br/></Text>}
