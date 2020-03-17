@@ -155,6 +155,19 @@ const FormPage: React.SFC<FormPageProps> = props => {
           )
         }
 
+        if(item.component == "textArea") {
+          return (
+            <Form.Item
+              key={item.name}
+              label={item.labelName}
+              extra={item.extra}
+              rules={item.frontendRules}
+            >
+              <TextArea style={item.style} rows={item.rows} placeholder={item.placeholder} />
+            </Form.Item>
+          );
+        }
+
       })}
       {(!content.body.form.disableSubmit && !content.body.form.disableReset) ? 
         <Form.Item
