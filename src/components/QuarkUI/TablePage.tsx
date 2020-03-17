@@ -4,6 +4,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
 import router from 'umi/router';
+import ModalForm from '@/components/QuarkUI/ModalForm';
 
 import { 
   PlusCircleOutlined,
@@ -19,7 +20,6 @@ import {
 import locale from 'antd/es/date-picker/locale/zh_CN';
 
 import {
-  ConfigProvider,
   Table,
   Divider,
   Card,
@@ -49,8 +49,6 @@ import {
   Popover,
   Typography
 } from 'antd';
-
-import zhCN from 'antd/es/locale/zh_CN';
 
 const IconMap:any = {
   export: <ExportOutlined />,
@@ -316,11 +314,13 @@ const TablePage: React.SFC<TablePageProps> = props => {
     okText:'确定',
     cancelText:'取消',
     width:undefined,
+    disableFooter:false,
     form:{
       action:null,
       layout:[],
       items:[],
-      initialValues:[]
+      initialValues:[],
+      url:null
     }
   });
 
@@ -350,14 +350,14 @@ const TablePage: React.SFC<TablePageProps> = props => {
         );
       }
 
-      if(column.key == 'actions') {
+      if(column.rowActions) {
         column.render = (text:any, row:any) => (
-          content.body.table.rowActions.showStyle == 'dropdown' ? 
+          column.rowActions.showStyle == 'dropdown' ? 
             <Dropdown
               overlay={
                 <Menu>
-                  {content.body.table.rowActions.items.map((item:any) => {
-                      return menuComponent(item,content.body.table.rowActions.style,row.key);
+                  {column.rowActions.items.map((item:any) => {
+                      return menuComponent(item,column.rowActions.style,row.key);
                   })}
                 </Menu>
               }
@@ -369,8 +369,8 @@ const TablePage: React.SFC<TablePageProps> = props => {
             </Dropdown>
           : 
           <span>
-            {content.body.table.rowActions.items.map((item:any) => {
-                return buttonComponent(item,content.body.table.rowActions.style,row.key);
+            {column.rowActions.items.map((item:any) => {
+                return buttonComponent(item,column.rowActions.style,row.key);
             })}
           </span>
         );
@@ -751,6 +751,11 @@ const TablePage: React.SFC<TablePageProps> = props => {
     changeModalVisible(false);
   }
 
+  const closeModal = () =>{
+    changeModalVisible(false);
+    loadTableData(1,[],[],[]);
+  }
+
   const onConfirm = (actionName:any,actionUrl:any,confirmProperty:any,id:any=null) => {
     confirm({
       title: confirmProperty.title,
@@ -1064,166 +1069,170 @@ const TablePage: React.SFC<TablePageProps> = props => {
   };
 
   return (
-    <ConfigProvider locale={zhCN}>
-      <Spin spinning={loading} tip="Loading..." style={{width:'100%',marginTop:'200px'}}>
-        {content ?
-        <PageHeaderWrapper
-          title={content ? content.title : false}
-          subTitle={content.subTitle}
-          content={content.description}
-          breadcrumb={{routes}}
-        >
-          <div className={styles.container}>
-            <div className={styles.header}>
-              <Row justify="start">
-                <Col span={12}>
-                  <h5 className={styles.title}>{content.body.table.title}</h5>
-                </Col>
-                <Col span={12}>
-                  <div className={styles.right}>
-                    {!!content.body.table.actions && content.body.table.actions.items.map((item:any) => {
-                      return buttonComponent(item,content.body.table.batchActions.style);
+    <Spin spinning={loading} tip="Loading..." style={{width:'100%',marginTop:'200px'}}>
+      {content ?
+      <PageHeaderWrapper
+        title={content ? content.title : false}
+        subTitle={content.subTitle}
+        content={content.description}
+        breadcrumb={{routes}}
+      >
+        <div className={styles.container}>
+          <div className={styles.header}>
+            <Row justify="start">
+              <Col span={12}>
+                <h5 className={styles.title}>{content.body.table.title}</h5>
+              </Col>
+              <Col span={12}>
+                <div className={styles.right}>
+                  {!!content.body.table.actions && content.body.table.actions.items.map((item:any) => {
+                    return buttonComponent(item,content.body.table.batchActions.style);
+                  })}
+                </div>
+              </Col>
+            </Row>
+          </div>
+          <Divider style={{ marginBottom: 10,marginTop: 10 }} />
+          <div className={styles.toolbar}>
+            <Row justify="start">
+              <Col span={8}>
+
+                {!!content.body.table.batchActions && content.body.table.batchActions.showStyle == 'button' ?
+                  <span>
+                    {content.body.table.batchActions.items.map((item:any) => {
+                        return buttonComponent(item,content.body.table.batchActions.style);
                     })}
-                  </div>
-                </Col>
-              </Row>
-            </div>
-            <Divider style={{ marginBottom: 10,marginTop: 10 }} />
-            <div className={styles.toolbar}>
-              <Row justify="start">
-                <Col span={8}>
-
-                  {!!content.body.table.batchActions && content.body.table.batchActions.showStyle == 'button' ?
-                    <span>
-                      {content.body.table.batchActions.items.map((item:any) => {
-                          return buttonComponent(item,content.body.table.batchActions.style);
-                      })}
-                    </span>
-                  : null}
-                  {!!content.body.table.batchActions && content.body.table.batchActions.showStyle == 'select' ?
-                    <Select
-                      style={content.body.table.batchActions.style}
-                      placeholder={content.body.table.batchActions.placeholder}
-                      value={batchActionSelect}
-                      onChange={onSelectChange}
-                    >
-                      {content.body.table.batchActions.items.map((item:any) => {
-                        return <Option key={item.name} value={item.name}>{item.label}</Option>
-                      })}
-                    </Select>
-                  : null}
-
-                  {!!content.body.table.extendActions && content.body.table.extendActions.showStyle == 'button' ?
-                    <span>
-                      {content.body.table.extendActions.items.map((item:any) => {
-                          return buttonComponent(item,content.body.table.batchActions.style);
-                      })}
-                    </span>
-                  : null}
-
-                  {!!content.body.table.extendActions && content.body.table.extendActions.showStyle == 'select' ?
-                    <Select
-                      style={content.body.table.extendActions.style}
-                      placeholder={content.body.table.extendActions.placeholder}
-                      value={extendActionSelect}
-                      onChange={onSelectChange}
-                    >
-                      {content.body.table.extendActions.items.map((item:any) => {
-                        return <Option key={item.name} value={'extendAction|'+item.name}>{item.label}</Option>
-                      })}
-                    </Select>
-                  : null}
-                </Col>
-                <Col span={16}>
-                {!content.body.table.disableSearch && !content.body.table.disableAdvancedSearch ?
-                  <div className={styles.right}>
-                    <Form layout="inline" form={searchForm} onFinish={onSearch}>
-                      {!!content.body.table.search && content.body.table.search.items.map((item:any) => {
-                        if(!item.advanced) {
-                          return searchComponent(item);
-                        }
-                      })}
-                      <Form.Item>
-                        <Button htmlType="submit">
-                          搜索
-                        </Button>
-                        <a type="link" style={{ fontSize: 12,marginLeft:15 }} onClick={() => changeSearchExpand(!searchExpand)}>
-                          高级搜索 {searchExpand ? <UpOutlined /> : <DownOutlined />}
-                        </a>
-                      </Form.Item>
-                    </Form>
-                  </div>
+                  </span>
                 : null}
-                {!content.body.table.disableSearch && content.body.table.disableAdvancedSearch ?
-                  <div className={styles.right}>
-                    <Form layout="inline" form={searchForm} onFinish={onSearch}>
-                      {!!content.body.table.search && content.body.table.search.items.map((item:any) => {
-                        return searchComponent(item);
-                      })}
-                      <Form.Item>
-                        <Button htmlType="submit">
-                          搜索
-                        </Button>
-                      </Form.Item>
-                    </Form>
-                  </div>
+                {!!content.body.table.batchActions && content.body.table.batchActions.showStyle == 'select' ?
+                  <Select
+                    style={content.body.table.batchActions.style}
+                    placeholder={content.body.table.batchActions.placeholder}
+                    value={batchActionSelect}
+                    onChange={onSelectChange}
+                  >
+                    {content.body.table.batchActions.items.map((item:any) => {
+                      return <Option key={item.name} value={item.name}>{item.label}</Option>
+                    })}
+                  </Select>
                 : null}
-                </Col>
-              </Row>
-            </div>
-            <div
-              className={styles.advancedSearch}
-              style={{ display: searchExpand ? 'block' : 'none'}}
-            >
-              <Row>
-                <Col span={24}>
+
+                {!!content.body.table.extendActions && content.body.table.extendActions.showStyle == 'button' ?
+                  <span>
+                    {content.body.table.extendActions.items.map((item:any) => {
+                        return buttonComponent(item,content.body.table.batchActions.style);
+                    })}
+                  </span>
+                : null}
+
+                {!!content.body.table.extendActions && content.body.table.extendActions.showStyle == 'select' ?
+                  <Select
+                    style={content.body.table.extendActions.style}
+                    placeholder={content.body.table.extendActions.placeholder}
+                    value={extendActionSelect}
+                    onChange={onSelectChange}
+                  >
+                    {content.body.table.extendActions.items.map((item:any) => {
+                      return <Option key={item.name} value={'extendAction|'+item.name}>{item.label}</Option>
+                    })}
+                  </Select>
+                : null}
+              </Col>
+              <Col span={16}>
+              {!content.body.table.disableSearch && !content.body.table.disableAdvancedSearch ?
+                <div className={styles.right}>
                   <Form layout="inline" form={searchForm} onFinish={onSearch}>
                     {!!content.body.table.search && content.body.table.search.items.map((item:any) => {
-                      if(item.advanced) {
+                      if(!item.advanced) {
                         return searchComponent(item);
                       }
                     })}
                     <Form.Item>
-                      <Button
-                        htmlType="button"
-                        onClick={onReset}
-                      >
-                        重置
+                      <Button htmlType="submit">
+                        搜索
                       </Button>
-                      <Button
-                        htmlType="submit"
-                        type="primary"
-                        style={{marginLeft:'8px'}}
-                      >
+                      <a type="link" style={{ fontSize: 12,marginLeft:15 }} onClick={() => changeSearchExpand(!searchExpand)}>
+                        高级搜索 {searchExpand ? <UpOutlined /> : <DownOutlined />}
+                      </a>
+                    </Form.Item>
+                  </Form>
+                </div>
+              : null}
+              {!content.body.table.disableSearch && content.body.table.disableAdvancedSearch ?
+                <div className={styles.right}>
+                  <Form layout="inline" form={searchForm} onFinish={onSearch}>
+                    {!!content.body.table.search && content.body.table.search.items.map((item:any) => {
+                      return searchComponent(item);
+                    })}
+                    <Form.Item>
+                      <Button htmlType="submit">
                         搜索
                       </Button>
                     </Form.Item>
                   </Form>
-                </Col>
-              </Row>
-            </div>
-            <div>
-              <Table
-                rowClassName={styles.editableRow}
-                components={components}
-                columns={content.body.table.columns}
-                rowSelection={rowSelection}
-                dataSource={content.body.table.dataSource}
-                pagination={content.body.table.pagination}
-                onChange={changePagination}
-              />
-            </div>
+                </div>
+              : null}
+              </Col>
+            </Row>
           </div>
-
-          <Modal
-            title={modalData.title}
-            visible={modalVisible}
-            onOk={modalOk}
-            onCancel={modalCancel}
-            okText={modalData.okText ? modalData.okText : '确定'}
-            cancelText={modalData.cancelText ? modalData.cancelText : '取消'}
-            width={modalData.width ? modalData.width : undefined}
+          <div
+            className={styles.advancedSearch}
+            style={{ display: searchExpand ? 'block' : 'none'}}
           >
+            <Row>
+              <Col span={24}>
+                <Form layout="inline" form={searchForm} onFinish={onSearch}>
+                  {!!content.body.table.search && content.body.table.search.items.map((item:any) => {
+                    if(item.advanced) {
+                      return searchComponent(item);
+                    }
+                  })}
+                  <Form.Item>
+                    <Button
+                      htmlType="button"
+                      onClick={onReset}
+                    >
+                      重置
+                    </Button>
+                    <Button
+                      htmlType="submit"
+                      type="primary"
+                      style={{marginLeft:'8px'}}
+                    >
+                      搜索
+                    </Button>
+                  </Form.Item>
+                </Form>
+              </Col>
+            </Row>
+          </div>
+          <div>
+            <Table
+              rowClassName={styles.editableRow}
+              components={components}
+              columns={content.body.table.columns}
+              rowSelection={rowSelection}
+              dataSource={content.body.table.dataSource}
+              pagination={content.body.table.pagination}
+              onChange={changePagination}
+            />
+          </div>
+        </div>
+
+        <Modal
+          title={modalData.title}
+          visible={modalVisible}
+          onOk={modalOk}
+          onCancel={modalCancel}
+          okText={modalData.okText ? modalData.okText : '确定'}
+          cancelText={modalData.cancelText ? modalData.cancelText : '取消'}
+          width={modalData.width ? modalData.width : undefined}
+          footer={modalData.disableFooter ? null : undefined}
+        >
+          {modalData.form.url ? 
+            <ModalForm closeModal={closeModal} api={modalData.form.url+'?id='+rowKey} />
+          :
+          <span>
             {!!selectedRowKeys.length && <Text strong>已选择 <Text type="danger">{selectedRowKeys.length}</Text> 条，要操作的记录！<br/><br/></Text>}
             <Form {...modalData.form.layout} form={form} initialValues={modalData.form.initialValues}>
               {!!modalData.form.items && modalData.form.items.map((item:any) => {
@@ -1259,12 +1268,13 @@ const TablePage: React.SFC<TablePageProps> = props => {
 
               })}
             </Form>
-          </Modal>
+          </span>
+          }
+        </Modal>
 
-        </PageHeaderWrapper>
-        : null}
-      </Spin>
-    </ConfigProvider>
+      </PageHeaderWrapper>
+      : null}
+    </Spin>
   );
 };
 
