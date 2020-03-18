@@ -357,7 +357,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
               overlay={
                 <Menu>
                   {column.rowActions.items.map((item:any) => {
-                      return menuComponent(item,column.rowActions.style,row.key);
+                      return menuComponent(item,column.rowActions.style,row.id);
                   })}
                 </Menu>
               }
@@ -370,7 +370,8 @@ const TablePage: React.SFC<TablePageProps> = props => {
           : 
           <span>
             {column.rowActions.items.map((item:any) => {
-                return buttonComponent(item,column.rowActions.style,row.key);
+              console.log(row.id);
+                return buttonComponent(item,column.rowActions.style,row.id);
             })}
           </span>
         );
@@ -442,7 +443,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
 
     if(column.link) {
       if(column.link == true) {
-        columnRender = <a href={"#/admin/quark/engine?api="+api.replace(/\/index/g, '/edit')+"&component=form"+"&search[id]="+row.key}>
+        columnRender = <a href={"#/admin/quark/engine?api="+api.replace(/\/index/g, '/edit')+"&component=form"+"&search[id]="+row.id}>
                         {columnRender}
                        </a>
       } else {
@@ -1208,6 +1209,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
           </div>
           <div>
             <Table
+              rowKey={record => record.id}
               rowClassName={styles.editableRow}
               components={components}
               columns={content.body.table.columns}
