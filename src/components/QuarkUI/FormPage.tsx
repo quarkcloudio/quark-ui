@@ -243,9 +243,6 @@ const FormPage: React.SFC<FormPageProps> = props => {
 
           // 多图片上传模式
           if(item.mode == "multiple") {
-            if(item.value) {
-              changeMultipleFile(item.value);
-            }
 
             let uploadButton = (
               <div>
@@ -316,20 +313,9 @@ const FormPage: React.SFC<FormPageProps> = props => {
                 >
                   {formMultipleFiles[item.name] >= 3 ? null : uploadButton}
                 </Upload>
-                <Modal
-                  visible={previewVisible}
-                  footer={null}
-                  onCancel={handleCancel}
-                >
-                  <img style={{ width: '100%' }} src={previewImage} />
-                </Modal>
               </Form.Item>
             );
           } else {
-
-            if(item.value) {
-              changeSingleFile(item.value);
-            }
 
             // 单图片上传模式
             let uploadButton = (
@@ -441,6 +427,13 @@ const FormPage: React.SFC<FormPageProps> = props => {
           </Button>
         </Form.Item>
       : null}
+      <Modal
+        visible={previewVisible}
+        footer={null}
+        onCancel={handleCancel}
+      >
+        <img style={{ width: '100%' }} src={previewImage} />
+      </Modal>
     </Form>
   }
 
