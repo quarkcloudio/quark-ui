@@ -54,7 +54,8 @@ export interface FormPageProps {
         action:string,
         disableSubmit:any,
         disableReset:any,
-        initialValues:[]
+        initialValues:[],
+        data:[]
       }
     }
   };
@@ -66,8 +67,8 @@ export interface FormPageProps {
 const FormPage: React.SFC<FormPageProps> = props => {
 
   // 上传图片文件
-  const [formSingleFiles, changeSingleFile] = useState([]);
-  const [formMultipleFiles, changeMultipleFile] = useState([]);
+  const [formSingleImages, changeSingleImage] = useState([]);
+  const [formMultipleImages, changeMultipleImage] = useState([]);
   const [previewVisible, changePreviewVisible] = useState(false);
   const [previewImage, changePreviewImage] = useState('');
 
@@ -109,11 +110,11 @@ const FormPage: React.SFC<FormPageProps> = props => {
       if(item.component == 'image') {
         if(item.mode == "multiple") {
           // 多图
-          if(formMultipleFiles[item.name]) {
+          if(formMultipleImages[item.name]) {
             let list:any = [];
-            let multipleFiles:any = [];
-            multipleFiles = formMultipleFiles[item.name];
-            multipleFiles.map((fileInfo:any,fileKey:any) => {
+            let multipleImages:any = [];
+            multipleImages = formMultipleImages[item.name];
+            multipleImages.map((fileInfo:any,fileKey:any) => {
               let getFileInfo:any = [];
               getFileInfo['id'] = fileInfo.id;
               getFileInfo['name'] = fileInfo.name;
@@ -127,8 +128,8 @@ const FormPage: React.SFC<FormPageProps> = props => {
           }
         } else {
           // 单图
-          if(formSingleFiles[item.name]) {
-            values[item.name] = formSingleFiles[item.name];
+          if(formSingleImages[item.name]) {
+            values[item.name] = formSingleImages[item.name];
           } else {
             values[item.name] = [];
           }
@@ -250,6 +251,21 @@ const FormPage: React.SFC<FormPageProps> = props => {
                 <div className="ant-upload-text">{item.button}</div>
               </div>
             );
+
+            let multipleImages:any = [];
+
+            if(formMultipleImages[item.name]) {
+              multipleImages = formMultipleImages[item.name]
+            } else {
+              if(content.body.form.data) {
+                if(content.body.form.data[item.name]) {
+                  multipleImages = content.body.form.data[item.name]
+                }
+              } else {
+                multipleImages = formMultipleImages[item.name]
+              }
+            }
+
             return (
               <Form.Item 
                 key={item.name}
@@ -260,7 +276,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
                 <Upload
                   name={'file'}
                   listType={"picture-card"}
-                  fileList={formMultipleFiles[item.name]}
+                  fileList={multipleImages}
                   multiple={true}
                   onPreview={(file:any) => {
                     changePreviewImage(file.url || file.thumbUrl);
@@ -308,10 +324,10 @@ const FormPage: React.SFC<FormPageProps> = props => {
 
                     let getFileList:any = [];
                     getFileList[item.name] = fileList;
-                    changeMultipleFile(getFileList);
+                    changeMultipleImage(getFileList);
                   }}
                 >
-                  {formMultipleFiles[item.name] >= 3 ? null : uploadButton}
+                  {multipleImages >= 3 ? null : uploadButton}
                 </Upload>
               </Form.Item>
             );
@@ -324,6 +340,20 @@ const FormPage: React.SFC<FormPageProps> = props => {
                 <div className="ant-upload-text">{item.button}</div>
               </div>
             );
+
+            let singleImages:any = [];
+
+            if(formSingleImages[item.name]) {
+              singleImages = formSingleImages[item.name]
+            } else {
+              if(content.body.form.data) {
+                if(content.body.form.data[item.name]) {
+                  singleImages = content.body.form.data[item.name]
+                }
+              } else {
+                singleImages = formSingleImages[item.name]
+              }
+            }
 
             return (
               <Form.Item
@@ -361,15 +391,15 @@ const FormPage: React.SFC<FormPageProps> = props => {
                         let fileInfo:any = [];
                         fileInfo[item.name] = info.file.response.data;
                         console.log(fileInfo);
-                        changeSingleFile(fileInfo);
+                        changeSingleImage(fileInfo);
                       } else {
                         message.error(info.file.response.msg);
                       }
                     }
                   }}
                 >
-                  {formSingleFiles[item.name] ? (
-                    <img src={formSingleFiles[item.name].url} alt={formSingleFiles[item.name].name} width={80} />
+                  {singleImages ? (
+                    <img src={singleImages.url} alt={singleImages.name} width={80} />
                   ) : (uploadButton)}
                 </Upload>
               </Form.Item>
