@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Dispatch } from 'redux';
 import { Dropdown, Avatar, Menu, Spin } from 'antd';
+import logo from '../assets/logo.png';
 import ProLayout from '@ant-design/pro-layout';
 import router from 'umi/router';
 import {
@@ -105,6 +106,7 @@ class AdminLayout extends Component<IProps> {
             height:'100vh',
           }}
           title={'Quark'}
+          logo={logo}
           menuDataRender={() => menus}
           fixedHeader={true}
           fixSiderbar={true}

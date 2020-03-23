@@ -230,7 +230,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
           return (
             <Form.Item
               key={item.name}
-              label={item.labelName}
+              label={item.label}
               name={item.name}
               extra={item.extra}
               rules={item.frontendRules}
@@ -240,20 +240,34 @@ const FormPage: React.SFC<FormPageProps> = props => {
           );
         }
 
-        if(item.component == "image") {
+        if(item.component == "tree") {
+          return (
+            <Form.Item
+              key={item.name}
+              label={item.label}
+              name={item.name}
+              valuePropName={"defaultCheckedKeys"}
+              trigger={"onCheck"}
+              rules={item.frontendRules}
+            >
+              <Tree
+                checkable
+                treeData={item.treeData}
+              />
+            </Form.Item>
+          );
+        }
 
+        if(item.component == "image") {
           // 多图片上传模式
           if(item.mode == "multiple") {
-
             let uploadButton = (
               <div>
                 <PlusOutlined />
                 <div className="ant-upload-text">{item.button}</div>
               </div>
             );
-
             let multipleImages:any = [];
-
             if(formMultipleImages[item.name]) {
               multipleImages = formMultipleImages[item.name]
             } else {
@@ -265,7 +279,6 @@ const FormPage: React.SFC<FormPageProps> = props => {
                 multipleImages = formMultipleImages[item.name]
               }
             }
-
             return (
               <Form.Item 
                 key={item.name}
@@ -332,7 +345,6 @@ const FormPage: React.SFC<FormPageProps> = props => {
               </Form.Item>
             );
           } else {
-
             // 单图片上传模式
             let uploadButton = (
               <div>
@@ -340,9 +352,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
                 <div className="ant-upload-text">{item.button}</div>
               </div>
             );
-
             let singleImages:any = [];
-
             if(formSingleImages[item.name]) {
               singleImages = formSingleImages[item.name]
             } else {
@@ -354,7 +364,6 @@ const FormPage: React.SFC<FormPageProps> = props => {
                 singleImages = formSingleImages[item.name]
               }
             }
-
             return (
               <Form.Item
                 key={item.name}

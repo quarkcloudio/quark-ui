@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Dispatch } from 'redux';
-import logo from '../assets/logo.svg';
+import logo from '../assets/logo.png';
 import styles from './LoginLayout.less';
 
 interface IProps {
