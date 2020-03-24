@@ -7,6 +7,21 @@ import router from 'umi/router';
 import { Editor } from '@tinymce/tinymce-react';
 import { 
   PlusOutlined,
+  AccountBookOutlined,
+  AimOutlined,
+  AlertOutlined,
+  ApartmentOutlined,
+  ApiOutlined,
+  AppstoreAddOutlined,
+  AppstoreOutlined,
+  AudioOutlined,
+  AudioMutedOutlined,
+  AuditOutlined,
+  BankOutlined,
+  BarcodeOutlined,
+  BarsOutlined,
+  BellOutlined,
+  BlockOutlined,
 } from '@ant-design/icons';
 
 import {
@@ -170,6 +185,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
       },
       callback: (res:any) => {
         if(type == 'modal') {
+          form.resetFields();
           props.closeModal();
         }
       }
@@ -209,10 +225,32 @@ const FormPage: React.SFC<FormPageProps> = props => {
               label={item.label}
               name={item.name}
               rules={item.frontendRules}
+              help={item.help ? item.help : undefined}
             >
               <Input
                 placeholder={item.placeholder}
                 style={item.style ? item.style : []}
+              />
+            </Form.Item>
+          )
+        }
+
+        if(item.component == 'inputNumber') {
+          return (
+            <Form.Item
+              key={item.name}
+              label={item.label}
+              name={item.name}
+              rules={item.frontendRules}
+              help={item.help ? item.help : undefined}
+            >
+              <InputNumber
+                size={item.size}
+                style={item.style}
+                max={item.max}
+                min={item.min}
+                step={item.step}
+                placeholder={item.placeholder}
               />
             </Form.Item>
           )
@@ -225,9 +263,64 @@ const FormPage: React.SFC<FormPageProps> = props => {
               label={item.label}
               name={item.name}
               rules={item.frontendRules}
-              style={item.style ? item.style : []}
+              help={item.help ? item.help : undefined}
             >
-              <Radio.Group options={item.options} />
+              <Radio.Group style={item.style ? item.style : []} options={item.options} />
+            </Form.Item>
+          )
+        }
+
+        if(item.component == 'select') {
+          return (
+            <Form.Item
+              key={item.name}
+              label={item.label}
+              name={item.name}
+              rules={item.frontendRules}
+              help={item.help ? item.help : undefined}
+            >
+              <Select mode={item.mode} style={item.style ? item.style : []}>
+                {item.options.map((item:any) => {
+                  return (<Option key={item.value} value={item.value}>{item.label}</Option>)
+                })}
+              </Select>
+            </Form.Item>
+          )
+        }
+
+        if(item.component == 'icon') {
+          return (
+            <Form.Item
+              key={item.name}
+              label={item.label}
+              name={item.name}
+              rules={item.frontendRules}
+              help={item.help ? item.help : undefined}
+            >
+              <Select style={item.style ? item.style : []}>
+                {item.options.map((item:any) => {
+                  return (<Option key={item} value={item}>{item}</Option>)
+                })}
+              </Select>
+            </Form.Item>
+          )
+        }
+
+        if(item.component == 'switch') {
+          return (
+            <Form.Item
+              key={item.name}
+              label={item.label}
+              name={item.name}
+              extra={item.extra}
+              help={item.help ? item.help : undefined}
+              rules={item.frontendRules}
+              valuePropName={'checked'}
+            >
+              <Switch
+                checkedChildren={item.options.on}
+                unCheckedChildren={item.options.off}
+              />
             </Form.Item>
           )
         }
@@ -239,8 +332,8 @@ const FormPage: React.SFC<FormPageProps> = props => {
               label={item.label}
               name={item.name}
               extra={item.extra}
+              help={item.help ? item.help : undefined}
               rules={item.frontendRules}
-              style={item.style ? item.style : []}
             >
               <TextArea style={item.style} rows={item.rows} placeholder={item.placeholder} />
             </Form.Item>
@@ -256,10 +349,11 @@ const FormPage: React.SFC<FormPageProps> = props => {
               valuePropName={"defaultCheckedKeys"}
               trigger={"onCheck"}
               rules={item.frontendRules}
-              style={item.style ? item.style : []}
+              help={item.help ? item.help : undefined}
             >
               <Tree
                 checkable
+                style={item.style ? item.style : []}
                 treeData={item.treeData}
               />
             </Form.Item>
@@ -273,7 +367,6 @@ const FormPage: React.SFC<FormPageProps> = props => {
               label={item.label}
               name={item.name}
               rules={item.frontendRules}
-              style={item.style ? item.style : []}
             >
               <Editor
                 initialValue="<p>This is the initial content of the editor</p>"
