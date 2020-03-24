@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@ant-design/pro-layout": "^5.0.0",
+    "@tinymce/tinymce-react": "^3.5.0",
     "@types/qs": "^6.9.0",
     "antd": "^4.0.0-rc.1",
     "bizcharts": "^3.5.6",

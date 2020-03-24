@@ -4,6 +4,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
 import router from 'umi/router';
+import { Editor } from '@tinymce/tinymce-react';
 import { 
   PlusOutlined,
 } from '@ant-design/icons';
@@ -180,6 +181,10 @@ const FormPage: React.SFC<FormPageProps> = props => {
     changePreviewImage('');
   };
 
+  const handleEditorChange = (content:any, editor:any) => {
+    console.log('Content was updated:', content);
+  }
+
   let formComponent = null;
   if(content) {
     formComponent =
@@ -220,6 +225,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
               label={item.label}
               name={item.name}
               rules={item.frontendRules}
+              style={item.style ? item.style : []}
             >
               <Radio.Group options={item.options} />
             </Form.Item>
@@ -234,6 +240,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
               name={item.name}
               extra={item.extra}
               rules={item.frontendRules}
+              style={item.style ? item.style : []}
             >
               <TextArea style={item.style} rows={item.rows} placeholder={item.placeholder} />
             </Form.Item>
@@ -249,10 +256,41 @@ const FormPage: React.SFC<FormPageProps> = props => {
               valuePropName={"defaultCheckedKeys"}
               trigger={"onCheck"}
               rules={item.frontendRules}
+              style={item.style ? item.style : []}
             >
               <Tree
                 checkable
                 treeData={item.treeData}
+              />
+            </Form.Item>
+          );
+        }
+
+        if(item.component == "editor") {
+          return (
+            <Form.Item
+              key={item.name}
+              label={item.label}
+              name={item.name}
+              rules={item.frontendRules}
+              style={item.style ? item.style : []}
+            >
+              <Editor
+                initialValue="<p>This is the initial content of the editor</p>"
+                init={{
+                  height: 500,
+                  menubar: false,
+                  plugins: [
+                    'advlist autolink lists link image charmap print preview anchor',
+                    'searchreplace visualblocks code fullscreen',
+                    'insertdatetime media table paste code help wordcount'
+                  ],
+                  toolbar:
+                    'undo redo | formatselect | bold italic backcolor | \
+                    alignleft aligncenter alignright alignjustify | \
+                    bullist numlist outdent indent | removeformat | help'
+                }}
+                onEditorChange={handleEditorChange}
               />
             </Form.Item>
           );
