@@ -7,7 +7,7 @@ import { Form, Input, Button, Row, Col} from 'antd';
 import { createFromIconfontCN } from '@ant-design/icons';
 
 const Iconfont = createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/font_1615691_8i0ao5hvrm.js', // 在 iconfont.cn 上生成
+  scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js', // 在 iconfont.cn 上生成
 });
 
 interface IProps {

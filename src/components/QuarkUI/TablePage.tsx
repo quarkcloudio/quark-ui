@@ -6,17 +6,12 @@ import { connect } from 'dva';
 import router from 'umi/router';
 import FormPage from '@/components/QuarkUI/FormPage';
 
-import { 
-  PlusCircleOutlined,
-  ExportOutlined,
-  UpOutlined,
-  DownOutlined,
+import {
+  createFromIconfontCN,
   MoreOutlined,
   ExclamationCircleOutlined,
-  QrcodeOutlined,
-  RedoOutlined,
-  ImportOutlined
 } from '@ant-design/icons';
+
 import locale from 'antd/es/date-picker/locale/zh_CN';
 
 import {
@@ -50,12 +45,9 @@ import {
   Typography
 } from 'antd';
 
-const IconMap:any = {
-  export: <ExportOutlined />,
-  plusCircle: <PlusCircleOutlined />,
-  redo: <RedoOutlined />,
-  import: <ImportOutlined />
-};
+const Iconfont = createFromIconfontCN({
+  scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js', // 在 iconfont.cn 上生成
+});
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -437,7 +429,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
       }
 
       columnRender = <Popover placement="left" content={img}>
-                      <QrcodeOutlined style={{cursor:'pointer',fontSize:'18px'}} />
+                      <Iconfont type={'icon-qrcode'} style={{cursor:'pointer',fontSize:'18px'}} />
                     </Popover>
     }
 
@@ -918,7 +910,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
             type={item.type}
             size={item.size}
             href={item.url ? item.url : "#/admin/quark/engine?api="+api.replace(/\/index/g, '/create')+"&component=form"}
-            icon={item.icon && IconMap[item.icon]}
+            icon={item.icon && <Iconfont type={item.icon} />}
           >
             {item.label}
           </Button>
@@ -933,7 +925,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
             type={item.type}
             size={item.size}
             onClick={() => refresh()}
-            icon={item.icon && IconMap[item.icon]}
+            icon={item.icon && <Iconfont type={item.icon} />}
           >
             {item.label}
           </Button>
@@ -947,7 +939,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
             type={item.type}
             size={item.size}
             href={item.url ? item.url : "#/admin/quark/engine?api="+api.replace(/\/index/g, '/edit')+"&component=form"+"&search[id]="+id}
-            icon={item.icon && IconMap[item.icon]}
+            icon={item.icon && <Iconfont type={item.icon} />}
           >
             {item.label}
           </Button>
@@ -962,7 +954,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
             type={item.type}
             size={item.size}
             href={item.url ? item.url : "#/admin/quark/engine?api="+api.replace(/\/index/g, '/show')+"&component=show"+"&search[id]="+id}
-            icon={item.icon && IconMap[item.icon]}
+            icon={item.icon && <Iconfont type={item.icon} />}
           >
             {item.label}
           </Button>
@@ -978,7 +970,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
                       type={item.type}
                       size={item.size}
                       danger={item.danger}
-                      onClick={() => showModal(item.name,item.modal,id)} icon={item.icon && IconMap[item.icon]}
+                      onClick={() => showModal(item.name,item.modal,id)} icon={item.icon && <Iconfont type={item.icon} />}
                     >
                       {item.label}
                     </Button>
@@ -996,7 +988,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
                         type={item.type}
                         size={item.size}
                         danger={item.danger}
-                        href={item.url ? item.url : null} icon={item.icon && IconMap[item.icon]}
+                        href={item.url ? item.url : null} icon={item.icon && <Iconfont type={item.icon} />}
                       >
                         {item.label}
                       </Button>
@@ -1009,7 +1001,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
                       size={item.size}
                       danger={item.danger}
                       onClick={() => onConfirm(item.name,item.action,item.confirm,id)}
-                      icon={item.icon && IconMap[item.icon]}
+                      icon={item.icon && <Iconfont type={item.icon} />}
                     >
                       {item.label}
                     </Button>
@@ -1021,7 +1013,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
                       size={item.size}
                       danger={item.danger}
                       onClick={() => action(item.name,item.action,id)}
-                      icon={item.icon && IconMap[item.icon]}
+                      icon={item.icon && <Iconfont type={item.icon} />}
                     >
                       {item.label}
                     </Button>
@@ -1153,7 +1145,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
                         搜索
                       </Button>
                       <a type="link" style={{ fontSize: 12,marginLeft:15 }} onClick={() => changeSearchExpand(!searchExpand)}>
-                        高级搜索 {searchExpand ? <UpOutlined /> : <DownOutlined />}
+                        高级搜索 {searchExpand ? <Iconfont type={'icon-up'} /> : <Iconfont type={'icon-down'} />}
                       </a>
                     </Form.Item>
                   </Form>

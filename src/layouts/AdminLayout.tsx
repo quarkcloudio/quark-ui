@@ -5,11 +5,16 @@ import { Dropdown, Avatar, Menu, Spin } from 'antd';
 import logo from '../assets/logo.png';
 import ProLayout from '@ant-design/pro-layout';
 import router from 'umi/router';
+
 import {
-  SettingOutlined,
-  LogoutOutlined
+  createFromIconfontCN,
 } from '@ant-design/icons';
+
 import styles from './AdminLayout.less';
+
+const Iconfont = createFromIconfontCN({
+  scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js', // 在 iconfont.cn 上生成
+});
 
 interface IProps {
   dispatch:Dispatch<any>;
@@ -86,10 +91,10 @@ class AdminLayout extends Component<IProps> {
     const menu = (
       <Menu onClick={this.onAvatarMenuClick}>
         <Menu.Item key="settings">
-          <SettingOutlined /> 个人设置
+          <Iconfont type={'icon-setting'} /> 个人设置
         </Menu.Item>
         <Menu.Item key="logout">
-          <LogoutOutlined /> 退出登录
+          <Iconfont type={'icon-logout'} /> 退出登录
         </Menu.Item>
       </Menu>
     );

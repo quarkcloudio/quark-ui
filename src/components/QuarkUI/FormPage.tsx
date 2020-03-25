@@ -5,23 +5,8 @@ import { Dispatch } from 'redux';
 import { connect } from 'dva';
 import router from 'umi/router';
 import { Editor } from '@tinymce/tinymce-react';
-import { 
-  PlusOutlined,
-  AccountBookOutlined,
-  AimOutlined,
-  AlertOutlined,
-  ApartmentOutlined,
-  ApiOutlined,
-  AppstoreAddOutlined,
-  AppstoreOutlined,
-  AudioOutlined,
-  AudioMutedOutlined,
-  AuditOutlined,
-  BankOutlined,
-  BarcodeOutlined,
-  BarsOutlined,
-  BellOutlined,
-  BlockOutlined,
+import {
+  createFromIconfontCN,
 } from '@ant-design/icons';
 
 import {
@@ -44,6 +29,10 @@ import {
   Cascader,
   Breadcrumb
 } from 'antd';
+
+const Iconfont = createFromIconfontCN({
+  scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js', // 在 iconfont.cn 上生成
+});
 
 const { TextArea } = Input;
 const TabPane = Tabs.TabPane;
@@ -299,7 +288,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
             >
               <Select style={item.style ? item.style : []}>
                 {item.options.map((item:any) => {
-                  return (<Option key={item} value={item}>{item}</Option>)
+                  return (<Option key={item} value={item}><Iconfont type={item} /> {item}</Option>)
                 })}
               </Select>
             </Form.Item>
@@ -394,7 +383,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
           if(item.mode == "multiple") {
             let uploadButton = (
               <div>
-                <PlusOutlined />
+                <Iconfont type={'icon-plus-circle'} />
                 <div className="ant-upload-text">{item.button}</div>
               </div>
             );
@@ -479,7 +468,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
             // 单图片上传模式
             let uploadButton = (
               <div>
-                <PlusOutlined />
+                <Iconfont type={'icon-plus-circle'} />
                 <div className="ant-upload-text">{item.button}</div>
               </div>
             );
