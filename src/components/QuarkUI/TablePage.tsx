@@ -742,10 +742,12 @@ const TablePage: React.SFC<TablePageProps> = props => {
 
   const modalCancel = () =>{
     changeModalVisible(false);
+    changeRowKey(null);
   }
 
   const closeModal = () =>{
     changeModalVisible(false);
+    changeRowKey(null);
     loadTableData(1,[],[],[]);
   }
 
@@ -1224,7 +1226,7 @@ const TablePage: React.SFC<TablePageProps> = props => {
           footer={modalData.disableFooter ? null : undefined}
         >
           {modalData.form.url ? 
-            <FormPage type={'modal'} api={modalData.form.url+'?id='+rowKey} closeModal={closeModal} />
+            <FormPage type={'modal'} api={modalData.form.url} search={{id:rowKey}} closeModal={closeModal} />
           :
           <span>
             {!!selectedRowKeys.length && <Text strong>已选择 <Text type="danger">{selectedRowKeys.length}</Text> 条，要操作的记录！<br/><br/></Text>}
