@@ -277,6 +277,24 @@ const FormPage: React.SFC<FormPageProps> = props => {
           )
         }
 
+        if(item.component == "checkbox") {
+          return (
+            <Form.Item 
+              key={item.name}
+              label={item.label}
+              name={item.name}
+              rules={item.frontendRules}
+              help={item.help ? item.help : undefined}
+            >
+              <Checkbox.Group style={item.style ? item.style : []}>
+                {!!item.options && item.options.map((item:any) => {
+                return (<Checkbox key={item.value} value={item.value}>{item.label}</Checkbox>)
+                })}
+              </Checkbox.Group>
+            </Form.Item>
+          );
+        }
+
         if(item.component == 'icon') {
           return (
             <Form.Item
@@ -335,7 +353,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
               key={item.name}
               label={item.label}
               name={item.name}
-              valuePropName={"defaultCheckedKeys"}
+              valuePropName={"checkedKeys"}
               trigger={"onCheck"}
               rules={item.frontendRules}
               help={item.help ? item.help : undefined}

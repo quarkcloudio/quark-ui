@@ -127,6 +127,17 @@ const ShowPage: React.SFC<ShowPageProps> = props => {
                   </Form.Item>
                 )
               }
+              if(item.component == 'image') {
+                return (
+                  <Form.Item
+                    key={item.name}
+                    label={item.label}
+                    name={item.name}
+                  >
+                    <div><img src={item.value} width={item.image.width} height={item.image.height} /></div>
+                  </Form.Item>
+                )
+              }
             })}
             {(!content.body.show.disableSubmit && !content.body.show.disableReset) ? 
               <Form.Item
