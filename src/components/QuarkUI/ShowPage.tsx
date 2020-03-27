@@ -48,8 +48,9 @@ export interface ShowPageProps {
         title:string,
         layout:any,
         items:any,
-        disableSubmit:any,
-        disableReset:any
+        disableEdit:any,
+        disableDelete:any,
+        disableReturnList:any,
       }
     }
   };
@@ -139,7 +140,7 @@ const ShowPage: React.SFC<ShowPageProps> = props => {
                 )
               }
             })}
-            {(!content.body.show.disableSubmit && !content.body.show.disableReset) ? 
+            {(!content.body.show.disableEdit && !content.body.show.disableDelete && !content.body.show.disableReturnList) ? 
               <Form.Item
                 wrapperCol={
                   { offset: 3, span: 21 }
@@ -168,7 +169,30 @@ const ShowPage: React.SFC<ShowPageProps> = props => {
                 </Button>
               </Form.Item>
             : null}
-            {(!content.body.show.disableSubmit && content.body.show.disableReset) ?
+            {(content.body.show.disableEdit && !content.body.show.disableDelete && !content.body.show.disableReturnList) ?
+              <Form.Item
+                wrapperCol={
+                  { offset: 3, span: 21 }
+                }
+              >
+                <Popconfirm title="确定删除吗？" onConfirm={destroy} okText="确认" cancelText="取消">
+                  <Button
+                    type="primary"
+                    style={{marginLeft:'8px'}}
+                    danger
+                  >
+                    删除
+                  </Button>
+                </Popconfirm>
+                <Button
+                  style={{marginLeft:'8px'}}
+                  href={"#/admin/quark/engine?api="+api.replace(/\/show/g, '/index')+"&component=table"}
+                >
+                  查看列表
+                </Button>
+              </Form.Item>
+            : null}
+            {(!content.body.show.disableEdit && content.body.show.disableDelete && !content.body.show.disableReturnList) ?
               <Form.Item
                 wrapperCol={
                   { offset: 3, span: 21 }
@@ -176,22 +200,15 @@ const ShowPage: React.SFC<ShowPageProps> = props => {
               >
                 <Button
                   type="primary"
-                  htmlType="submit"
+                  href={"#/admin/quark/engine?api="+api.replace(/\/show/g, '/edit')+"&component=form"+"&search[id]="+search.id}
                 >
-                  提交
+                  编辑
                 </Button>
-              </Form.Item>
-            : null}
-            {(content.body.show.disableSubmit && !content.body.show.disableReset) ? 
-              <Form.Item
-                wrapperCol={
-                  { offset: 3, span: 21 }
-                }
-              >
                 <Button
-                  htmlType="button"
+                  style={{marginLeft:'8px'}}
+                  href={"#/admin/quark/engine?api="+api.replace(/\/show/g, '/index')+"&component=table"}
                 >
-                  重置
+                  查看列表
                 </Button>
               </Form.Item>
             : null}
