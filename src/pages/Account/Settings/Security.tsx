@@ -30,15 +30,11 @@ class SecurityPage extends Component<IProps> {
 
   onFinish = (values:any) => {
     const { dispatch } = this.props;
-    this.formRef.current.validateFields((err:any, values:any) => {
-      console.log(values);
-      if (!err) {
-        dispatch({
-          type: 'account/changeAccountPassword',
-          payload: {
-            ...values,
-          },
-        });
+    dispatch({
+      type: 'request/post',
+      payload: {
+        actionUrl: 'admin/account/password',
+        ...values
       }
     });
   };
@@ -86,23 +82,35 @@ class SecurityPage extends Component<IProps> {
             <div>
               <span className={styles.title}>账户安全</span>
             </div>
-            <div>
-              <Form onFinish={this.onFinish}>
-                <Form.Item style={{ marginBottom: 8 }} {...formItemLayout} label="原密码">
+            <div style={{ marginTop: 20 }}>
+              <Form ref={this.formRef} onFinish={this.onFinish}>
+                <Form.Item
+                  {...formItemLayout}
+                  label="原密码" 
+                  name={'oldPassword'}
+                >
                   <Input
                     className={styles.smallItem}
                     type="password"
                     placeholder="请输入原密码"
                   />
                 </Form.Item>
-                <Form.Item style={{ marginBottom: 8 }} {...formItemLayout} label="新密码">
+                <Form.Item 
+                  label="新密码"
+                  name={'password'}
+                  {...formItemLayout}
+                >
                   <Input
                     className={styles.smallItem}
                     type="password"
                     placeholder="请输入新密码"
                   />
                 </Form.Item>
-                <Form.Item style={{ marginBottom: 8 }} {...formItemLayout} label="确认密码">
+                <Form.Item
+                  {...formItemLayout}
+                  label="确认密码"
+                  name={'repassword'}
+                >
                   <Input
                     className={styles.smallItem}
                     type="password"

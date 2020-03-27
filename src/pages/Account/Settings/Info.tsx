@@ -32,35 +32,31 @@ class InfoPage extends Component<IProps> {
   componentDidMount() {
     // loading
     this.setState({ loading: true });
-
-    // 调用model
     this.props.dispatch({
-      type: 'account/getAccountInfo',
+      type: 'request/get',
+      payload: {
+        actionUrl: 'admin/account/info'
+      },
       callback: (res: any) => {
         // 执行成功后，进行回调
         if (res) {
           // 接口得到数据，放到state里
+          this.formRef.current.setFieldsValue(res.data);
           this.setState({ data: res.data, loading: false });
         }
-      },
+      }
     });
   }
 
   onFinish = (values:any) => {
     const { dispatch } = this.props;
-
-    this.formRef.current.validateFields((err:any, values:any) => {
-      console.log(values);
-      if (!err) {
-        dispatch({
-          type: 'account/changeAccountProfile',
-          payload: {
-            ...values,
-          },
-        });
+    dispatch({
+      type: 'request/post',
+      payload: {
+        actionUrl: 'admin/account/profile',
+        ...values
       }
     });
-    
   };
 
   handleMenuClick = (e: any) => {
@@ -107,15 +103,27 @@ class InfoPage extends Component<IProps> {
             <div>
               <span className={styles.title}>基本信息</span>
             </div>
-            <div>
-              <Form onFinish={this.onFinish}>
-                <Form.Item style={{ marginBottom: 8 }} {...formItemLayout} label="用户名">
+            <div style={{ marginTop: 20 }}>
+              <Form ref={this.formRef} onFinish={this.onFinish}>
+                <Form.Item
+                  label="用户名"
+                  name={'username'}
+                  {...formItemLayout}
+                >
                   <span>{this.state.data.username}</span>
                 </Form.Item>
-                <Form.Item style={{ marginBottom: 8 }} {...formItemLayout} label="昵称">
+                <Form.Item
+                  label="昵称"
+                  name={'nickname'}
+                  {...formItemLayout}
+                >
                   <Input className={styles.smallItem} placeholder="请输入昵称" />
                 </Form.Item>
-                <Form.Item style={{ marginBottom: 8 }} {...formItemLayout} label="邮箱">
+                <Form.Item
+                  label="邮箱"
+                  name={'email'}
+                  {...formItemLayout}
+                >
                   <Input className={styles.smallItem} placeholder="请输入邮箱" />
                 </Form.Item>
                 <Form.Item wrapperCol={{ span: 12, offset: 5 }}>
@@ -137,7 +145,7 @@ class InfoPage extends Component<IProps> {
 }
 
 function mapStateToProps(state:any) {
-  const { submitting } = state.login;
+  const { submitting } = state.request;
   return {
     submitting
   };
