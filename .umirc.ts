@@ -20,24 +20,10 @@ const config: IConfig =  {
         { path: '/index', component: '../pages/Dashboard/Index' },
         { path: '/dashboard/index', component: '../pages/Dashboard/Index' },
         { path: '/quark/engine', component: '../pages/Quark/Engine' },
-        {
-          path: '/account/settings',
-          name: 'settings',
-          routes: [
-            {
-              path: '/account/settings',
-              redirect: '/account/settings/info',
-            },
-            {
-              path: '/account/settings/info',
-              component: './Account/Settings/Info',
-            },
-            {
-              path: '/account/settings/security',
-              component: './Account/Settings/Security',
-            },
-          ],
-        },
+        { path: '/account',component: './Account/Settings/info' },
+        { path: '/account/settings',component: './Account/Settings/info' },
+        { path: '/account/settings/info',component: './Account/Settings/Info' },
+        { path: '/account/settings/security',component: './Account/Settings/Security' },
       ]
     }
   ],

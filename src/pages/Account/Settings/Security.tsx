@@ -65,7 +65,7 @@ class SecurityPage extends Component<IProps> {
     };
 
     return (
-      <PageHeaderWrapper title={false}>
+      <PageHeaderWrapper title={'个人设置'}>
         <div className={styles.container}>
           <div className={styles.sider}>
             <Menu
