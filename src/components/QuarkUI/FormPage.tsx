@@ -4,6 +4,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
 import router from 'umi/router';
+import tinymce from 'tinymce/tinymce';
 import { Editor } from '@tinymce/tinymce-react';
 import {
   createFromIconfontCN,
@@ -387,7 +388,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
                 rules={item.frontendRules}
               >
                 <DatePicker
-                  showTime={item.showTime}
+                  showTime={...item.showTime}
                   size={item.size}
                   locale={locale}
                   format={item.format}
@@ -408,7 +409,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
                 rules={item.frontendRules}
               >
                 <RangePicker
-                  showTime={item.showTime}
+                  showTime={...item.showTime}
                   size={item.size}
                   locale={locale}
                   format={item.format}
@@ -466,7 +467,6 @@ const FormPage: React.SFC<FormPageProps> = props => {
                 <Editor
                   init={{
                     height: 500,
-                    menubar: false,
                     plugins: [
                       'advlist autolink lists link image charmap print preview anchor',
                       'searchreplace visualblocks code fullscreen',
@@ -822,7 +822,9 @@ const FormPage: React.SFC<FormPageProps> = props => {
             </PageHeaderWrapper>
           :
             <span>
-              {formItem(content.body.form.items)}
+              <Form {...content.body.form.layout} form={form} onFinish={onFinish} initialValues={content.body.form.initialValues}>
+                {formItem(content.body.form.items)}
+              </Form>
             </span>
           }
         </span>

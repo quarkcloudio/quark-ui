@@ -2,6 +2,7 @@ import { Reducer } from 'redux';
 import { Effect,Subscription } from 'dva';
 import router from 'umi/router';
 import { message } from 'antd';
+import moment from 'moment';
 import { 
   get,
   post,
@@ -70,6 +71,52 @@ const form: ModelType = {
           payload: data,
         });
         if (callback && typeof callback === 'function') {
+
+          if(response.data.content.body.form.tab) {
+            response.data.content.body.form.tab.map((tab:any,key:any) => {
+              tab.items.map((item:any,key:any) => {
+      
+                if(item.component == 'datePicker') {
+                  if(item.value) {
+                    response.data.content.body.form.data[item.name] = moment(item.value, item.format);
+                  }
+                }
+          
+  
+                if(item.component == 'rangePicker') {
+                  if(item.value[0] && item.value[1]) {
+                    response.data.content.body.form.data[item.name] = 
+                    [
+                      moment(item.value[0], item.format),
+                      moment(item.value[1], item.format)
+                    ]
+                  }
+                }
+          
+              })
+            })
+          } else {
+            response.data.content.body.form.items.map((item:any,key:any) => {
+      
+              if(item.component == 'datePicker') {
+                if(item.value) {
+                  response.data.content.body.form.data[item.name] = moment(item.value, item.format);
+                }
+              }
+        
+              if(item.component == 'rangePicker') {
+                if(item.value[0] && item.value[1]) {
+                  response.data.content.body.form.data[item.name] = 
+                  [
+                    moment(item.value[0], item.format),
+                    moment(item.value[1], item.format)
+                  ]
+                }
+              }
+        
+            })
+          }
+
           callback(response); // 返回结果
         }
       }
