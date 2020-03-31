@@ -186,8 +186,13 @@ const FormPage: React.SFC<FormPageProps> = props => {
       }
 
       if(item.component == 'editor') {
-        values[item.name] = values[item.name].toHTML();
+        if (values[item.name]) {
+          if(values[item.name].level) {
+            values[item.name] = values[item.name].level.content;
+          }
+        }
       }
+
     })
 
     return values;
@@ -222,10 +227,6 @@ const FormPage: React.SFC<FormPageProps> = props => {
     changePreviewVisible(false);
     changePreviewImage('');
   };
-
-  const handleEditorChange = (content:any, editor:any) => {
-    console.log('Content was updated:', content);
-  }
 
   const formItem = (items:any) => {
     let formItem = null;
@@ -464,10 +465,10 @@ const FormPage: React.SFC<FormPageProps> = props => {
                 extra={item.extra}
               >
                 <Editor
-                  tinymceScriptSrc='/tinymce/tinymce.min.js'
                   init={{
                     language: 'zh_CN',
-                    height: 500,
+                    height: item.height ? item.height : 500 ,
+                    width: item.width ? item.width :'100%',
                     plugins: [
                       'advlist autolink lists link image charmap print preview anchor',
                       'searchreplace visualblocks code fullscreen',
@@ -484,9 +485,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
                     //     callback('myimage.jpg', {alt: 'My alt text'});
                     //   }
                     // }
-                    automatic_uploads:true,
                   }}
-                  onEditorChange={handleEditorChange}
                 />
               </Form.Item>
             );
@@ -587,7 +586,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
                   <div className="ant-upload-text">{item.button}</div>
                 </div>
               );
-              let singleImages:any = [];
+              let singleImages:any = false;
               if(formSingleImages[item.name]) {
                 singleImages = formSingleImages[item.name]
               } else {
@@ -599,6 +598,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
                   singleImages = formSingleImages[item.name]
                 }
               }
+
               return (
                 <Form.Item
                   key={item.name}

@@ -45,12 +45,16 @@ const config: IConfig =  {
           /components\//,
         ],
       },
+
+      headScripts: [
+        { src: '<%= PUBLIC_PATH %>tinymce/tinymce.min.js' },
+      ],
     }],
   ],
   proxy: {
     '/api': {
       // target: 'http://www.project.com/',
-      target: 'http://www.admin.com/',
+      target: 'http://www.develop.com/',
       changeOrigin: true,
       pathRewrite: { '^/api': '/api' },
     }

@@ -40,11 +40,11 @@
     "umi-types": "^0.3.0"
   },
   "lint-staged": {
-    "*.{ts,tsx}": [
+    "{src,mock,tests}/**/*.{ts,tsx}": [
       "eslint --fix",
       "git add"
     ],
-    "*.{js,jsx}": [
+    "{src,mock,tests}/**/*.{js,jsx}": [
       "eslint --fix",
       "git add"
     ]
