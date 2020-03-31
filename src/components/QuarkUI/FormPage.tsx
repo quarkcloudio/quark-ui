@@ -4,7 +4,6 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
 import router from 'umi/router';
-import tinymce from 'tinymce/tinymce';
 import { Editor } from '@tinymce/tinymce-react';
 import {
   createFromIconfontCN,
@@ -465,7 +464,9 @@ const FormPage: React.SFC<FormPageProps> = props => {
                 extra={item.extra}
               >
                 <Editor
+                  tinymceScriptSrc='/tinymce/tinymce.min.js'
                   init={{
+                    language: 'zh_CN',
                     height: 500,
                     plugins: [
                       'advlist autolink lists link image charmap print preview anchor',
@@ -475,7 +476,15 @@ const FormPage: React.SFC<FormPageProps> = props => {
                     toolbar:
                       'undo redo | formatselect | bold italic backcolor | \
                       alignleft aligncenter alignright alignjustify | \
-                      bullist numlist outdent indent | removeformat | help'
+                      bullist numlist outdent indent | removeformat | help',
+                    fontsize_formats: '8pt 10pt 12pt 14pt 18pt 24pt 36pt',
+                    // file_picker_types: 'image',
+                    // file_picker_callback: function (callback:any, value:any, meta:any) {
+                    //   if (meta.filetype == 'image') {
+                    //     callback('myimage.jpg', {alt: 'My alt text'});
+                    //   }
+                    // }
+                    automatic_uploads:true,
                   }}
                   onEditorChange={handleEditorChange}
                 />
