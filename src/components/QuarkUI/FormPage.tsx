@@ -27,10 +27,17 @@ import {
   Modal,
   Tree,
   Cascader,
-  Breadcrumb
+  Breadcrumb,
+  Row,
+  Col,
+  Divider,
+  Menu
 } from 'antd';
 
 import locale from 'antd/es/date-picker/locale/zh_CN';
+
+const { SubMenu } = Menu;
+const { Meta } = Card;
 
 const Iconfont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js', // 在 iconfont.cn 上生成
@@ -79,6 +86,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
   const [formMultipleImages, changeMultipleImage] = useState([]);
   const [previewVisible, changePreviewVisible] = useState(false);
   const [previewImage, changePreviewImage] = useState('');
+  const [pictureBoxVisible, changePictureBoxVisible] = useState(false);
 
   // 上传文件
   const [formFiles, changeFile] = useState([]);
@@ -130,7 +138,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
               getFileInfo['name'] = fileInfo.name;
               getFileInfo['size'] = fileInfo.size;
               getFileInfo['url'] = fileInfo.url;
-              list[fileKey] = getFileInfo;
+              list[fileKey] = fileInfo.id;
             })
             values[item.name] = list;
           } else {
@@ -139,29 +147,39 @@ const FormPage: React.SFC<FormPageProps> = props => {
         } else {
           // 单图
           if(formSingleImages[item.name]) {
-            values[item.name] = formSingleImages[item.name];
+            values[item.name] = formSingleImages[item.name]['id'];
           } else {
-            values[item.name] = [];
+            values[item.name] = 0;
           }
         }
       }
 
       if(item.component == 'file') {
-        if(formFiles[item.name]) {
-          let list:any = [];
-          let files:any = [];
-          files = formFiles[item.name];
-          files.map((fileInfo:any,fileKey:any) => {
-            let getFileInfo:any = [];
-            getFileInfo['id'] = fileInfo.id;
-            getFileInfo['name'] = fileInfo.name;
-            getFileInfo['size'] = fileInfo.size;
-            getFileInfo['url'] = fileInfo.url;
-            list[fileKey] = getFileInfo;
-          })
-          values[item.name] = list;
+        if(item.mode == "multiple") {
+          // 多文件
+          if(formFiles[item.name]) {
+            let list:any = [];
+            let files:any = [];
+            files = formFiles[item.name];
+            files.map((fileInfo:any,fileKey:any) => {
+              let getFileInfo:any = [];
+              getFileInfo['id'] = fileInfo.id;
+              getFileInfo['name'] = fileInfo.name;
+              getFileInfo['size'] = fileInfo.size;
+              getFileInfo['url'] = fileInfo.url;
+              list[fileKey] = fileInfo.id;
+            })
+            values[item.name] = list;
+          } else {
+            values[item.name] = [];
+          }
         } else {
-          values[item.name] = [];
+          // 单文件
+          if(formFiles[item.name]) {
+            values[item.name] = formFiles[item.name][0]['id'];
+          } else {
+            values[item.name] = 0;
+          }
         }
       }
 
@@ -221,6 +239,14 @@ const FormPage: React.SFC<FormPageProps> = props => {
         }
       }
     });
+  };
+
+  const selectPicture = (e:any) => {
+    console.log(e);
+  };
+
+  const closePictureBox = (e:any) => {
+    changePictureBoxVisible(false);
   };
 
   const handleCancel = () => {
@@ -377,7 +403,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
             )
           }
   
-          if(item.component == "datePicker") {
+          if(item.component == "datetime") {
             return (
               <Form.Item 
                 key={item.name}
@@ -472,19 +498,43 @@ const FormPage: React.SFC<FormPageProps> = props => {
                     plugins: [
                       'advlist autolink lists link image charmap print preview anchor',
                       'searchreplace visualblocks code fullscreen',
-                      'insertdatetime media table paste code help wordcount'
+                      'insertdatetime media table paste code help wordcount axupimgs'
                     ],
                     toolbar:
-                      'undo redo | formatselect | bold italic backcolor | \
+                      'axupimgs undo redo | formatselect | bold italic backcolor | \
                       alignleft aligncenter alignright alignjustify | \
                       bullist numlist outdent indent | removeformat | help',
                     fontsize_formats: '8pt 10pt 12pt 14pt 18pt 24pt 36pt',
-                    // file_picker_types: 'image',
-                    // file_picker_callback: function (callback:any, value:any, meta:any) {
-                    //   if (meta.filetype == 'image') {
-                    //     callback('myimage.jpg', {alt: 'My alt text'});
-                    //   }
-                    // }
+                    file_picker_types: 'image',
+                    file_picker_callback: function (callback:any, value:any, meta:any) {
+                      if (meta.filetype == 'image') {
+                        changePictureBoxVisible(true);
+                        callback('myimage.jpg', {alt: 'My alt text'});
+                      }
+                    },
+                    images_upload_handler: function (blobInfo:any, succFun:any, failFun:any) {
+                        var xhr:any, formData;
+                        var file = blobInfo.blob();//转化为易于理解的file对象
+                        xhr = new XMLHttpRequest();
+                        xhr.open('POST', '/api/admin/picture/upload');
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + sessionStorage['token']);
+                        xhr.onload = function() {
+                            var json;
+                            if (xhr.status != 200) {
+                                failFun('HTTP Error: ' + xhr.status);
+                                return;
+                            }
+                            json = JSON.parse(xhr.responseText);
+                            if (!json || typeof json.location != 'string') {
+                                failFun('Invalid JSON: ' + xhr.responseText);
+                                return;
+                            }
+                            succFun(json.location);
+                        };
+                        formData = new FormData();
+                        formData.append('file', file, file.name );
+                        xhr.send(formData);
+                    }
                   }}
                 />
               </Form.Item>
@@ -615,6 +665,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
                     beforeUpload = {(file:any) => {
                       let canUpload = false;
                       for(var i = 0; i < item.limitType.length; i++) {
+                        console.log(file.type);
                         if(item.limitType[i] == file.type) {
                           canUpload = true;
                         }
@@ -680,6 +731,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
                   beforeUpload = {(file:any) => {
                     let canUpload = false;
                     for(var i = 0; i < item.limitType.length; i++) {
+                      console.log(file.type);
                       if(item.limitType[i] == file.type) {
                         canUpload = true;
                       }
@@ -838,6 +890,58 @@ const FormPage: React.SFC<FormPageProps> = props => {
           }
         </span>
       : null}
+
+      <Modal
+        title="图片管理"
+        visible={pictureBoxVisible}
+        onOk={selectPicture}
+        onCancel={closePictureBox}
+        zIndex={1400}
+        width={1200}
+      >
+        <Row gutter={16}>
+          <Col span={4}>
+            <Menu
+              style={{ width: '100%' }}
+              defaultSelectedKeys={['1']}
+              mode="inline"
+            >
+              <Menu.Item key="0">所有图片</Menu.Item>
+              <Menu.Item key="1">默认分类</Menu.Item>
+              <Menu.Item key="2">水果</Menu.Item>
+              <Menu.Item key="3">蔬菜</Menu.Item>
+            </Menu>
+          </Col>
+          <Col span={20}>
+
+            <Row gutter={16}>
+              <Col span={24}>
+                <RangePicker style={{zIndex:1401}} popupStyle={{zIndex:1402}} />
+              </Col>
+            </Row>
+            <Divider />
+            <Card
+              style={{ width: 200 }}
+              cover={
+                <img
+                  alt="example"
+                  src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                />
+              }
+              actions={[
+                <Iconfont type={'icon-edit'} />,
+                <Iconfont type={'icon-edit'} />,
+                <Iconfont type={'icon-delete'} />,
+              ]}
+            >
+              <Meta
+                title="Card title"
+              />
+            </Card>
+          </Col>
+        </Row>
+      </Modal>
+
     </Spin>
   );
 };
