@@ -6,6 +6,7 @@ import { connect } from 'dva';
 import router from 'umi/router';
 import { Editor } from '@tinymce/tinymce-react';
 import {
+  UploadOutlined,
   createFromIconfontCN,
 } from '@ant-design/icons';
 
@@ -31,7 +32,8 @@ import {
   Row,
   Col,
   Divider,
-  Menu
+  Menu,
+  Pagination
 } from 'antd';
 
 import locale from 'antd/es/date-picker/locale/zh_CN';
@@ -87,6 +89,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
   const [previewVisible, changePreviewVisible] = useState(false);
   const [previewImage, changePreviewImage] = useState('');
   const [pictureBoxVisible, changePictureBoxVisible] = useState(false);
+  const [tinymceEditor, setTinymceEditor] = useState({insertContent(value:any){return value;}});
 
   // 上传文件
   const [formFiles, changeFile] = useState([]);
@@ -102,7 +105,8 @@ const FormPage: React.SFC<FormPageProps> = props => {
   } = props;
 
   const [form] = Form.useForm();
-
+  const [searchPictureForm] = Form.useForm();
+  
   /**
    * constructor
    */
@@ -183,7 +187,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
         }
       }
 
-      if(item.component == 'datePicker') {
+      if(item.component == 'datetime') {
         if(values[item.name]) {
           values[item.name] = values[item.name].format('YYYY-MM-DD HH:mm:ss');
         }
@@ -241,8 +245,23 @@ const FormPage: React.SFC<FormPageProps> = props => {
     });
   };
 
-  const selectPicture = (e:any) => {
-    console.log(e);
+  const getPictures = (search:any = null) => {
+    dispatch({
+      type: 'picture/info',
+      payload: {
+        actionUrl: 'admin/picture/getLists',
+        ...search
+      },
+      callback: (res:any) => {
+
+      }
+    });
+  };
+
+  const insertPicture = (e:any) => {
+    if(tinymceEditor) {
+      tinymceEditor.insertContent('xxx');
+    }
   };
 
   const closePictureBox = (e:any) => {
@@ -252,6 +271,32 @@ const FormPage: React.SFC<FormPageProps> = props => {
   const handleCancel = () => {
     changePreviewVisible(false);
     changePreviewImage('');
+  };
+
+  const editorExecCommand = (content:any, editor:any) => {
+    if(sessionStorage['editorCommand'] == 'multipleimage') {
+      changePictureBoxVisible(true);
+      getPictures();
+      setTinymceEditor(editor);
+      sessionStorage.removeItem('editorCommand');
+    }
+  };
+
+  const onSearchPicture = (values:any) => {
+
+    if (values['pictureSearchDate']) {
+      if (values['pictureSearchDate'][0] && values['pictureSearchDate'][1]) {
+        // 时间标准化
+        let dateStart = values['pictureSearchDate'][0].format('YYYY-MM-DD HH:mm:ss');
+        let dateEnd = values['pictureSearchDate'][1].format('YYYY-MM-DD HH:mm:ss');
+        // 先清空对象
+        values['pictureSearchDate'] = [];
+        // 重新赋值对象
+        values['pictureSearchDate'] = [dateStart, dateEnd];
+      }
+    }
+
+    getPictures(values);
   };
 
   const formItem = (items:any) => {
@@ -491,51 +536,26 @@ const FormPage: React.SFC<FormPageProps> = props => {
                 extra={item.extra}
               >
                 <Editor
+                  key={item.name}
                   init={{
                     language: 'zh_CN',
                     height: item.height ? item.height : 500 ,
                     width: item.width ? item.width :'100%',
                     plugins: [
-                      'advlist autolink lists link image charmap print preview anchor',
+                      'advlist autolink lists link charmap print preview anchor',
                       'searchreplace visualblocks code fullscreen',
-                      'insertdatetime media table paste code help wordcount axupimgs'
+                      'insertdatetime media table paste code help wordcount multipleimage'
                     ],
+                    menu: {
+                        insert: {title: '插入', items: 'multipleimage link media template codesample inserttable | charmap emoticons hr | pagebreak nonbreaking anchor toc | insertdatetime'},
+                    },
                     toolbar:
-                      'axupimgs undo redo | formatselect | bold italic backcolor | \
+                      'undo redo | formatselect | bold italic backcolor | \
                       alignleft aligncenter alignright alignjustify | \
                       bullist numlist outdent indent | removeformat | help',
-                    fontsize_formats: '8pt 10pt 12pt 14pt 18pt 24pt 36pt',
-                    file_picker_types: 'image',
-                    file_picker_callback: function (callback:any, value:any, meta:any) {
-                      if (meta.filetype == 'image') {
-                        changePictureBoxVisible(true);
-                        callback('myimage.jpg', {alt: 'My alt text'});
-                      }
-                    },
-                    images_upload_handler: function (blobInfo:any, succFun:any, failFun:any) {
-                        var xhr:any, formData;
-                        var file = blobInfo.blob();//转化为易于理解的file对象
-                        xhr = new XMLHttpRequest();
-                        xhr.open('POST', '/api/admin/picture/upload');
-                        xhr.setRequestHeader('Authorization', 'Bearer ' + sessionStorage['token']);
-                        xhr.onload = function() {
-                            var json;
-                            if (xhr.status != 200) {
-                                failFun('HTTP Error: ' + xhr.status);
-                                return;
-                            }
-                            json = JSON.parse(xhr.responseText);
-                            if (!json || typeof json.location != 'string') {
-                                failFun('Invalid JSON: ' + xhr.responseText);
-                                return;
-                            }
-                            succFun(json.location);
-                        };
-                        formData = new FormData();
-                        formData.append('file', file, file.name );
-                        xhr.send(formData);
-                    }
+                    fontsize_formats: '8pt 10pt 12pt 14pt 18pt 24pt 36pt'
                   }}
+                  onExecCommand={editorExecCommand}
                 />
               </Form.Item>
             );
@@ -894,9 +914,8 @@ const FormPage: React.SFC<FormPageProps> = props => {
       <Modal
         title="图片管理"
         visible={pictureBoxVisible}
-        onOk={selectPicture}
+        onOk={insertPicture}
         onCancel={closePictureBox}
-        zIndex={1400}
         width={1200}
       >
         <Row gutter={16}>
@@ -913,31 +932,76 @@ const FormPage: React.SFC<FormPageProps> = props => {
             </Menu>
           </Col>
           <Col span={20}>
-
             <Row gutter={16}>
               <Col span={24}>
-                <RangePicker style={{zIndex:1401}} popupStyle={{zIndex:1402}} />
+                <span style={{float:'left'}}>
+                  <Form layout="inline" form={searchPictureForm} onFinish={onSearchPicture}>
+                    <Form.Item>
+                      <Button>
+                        全选
+                      </Button>
+                    </Form.Item>
+                    <Form.Item
+                      name='pictureSearchDate'
+                    >
+                      <RangePicker />
+                    </Form.Item>
+                    <Form.Item
+                      name='pictureSearchName'
+                    >
+                      <Input placeholder="文件名称" />
+                    </Form.Item>
+                    <Form.Item>
+                      <Button
+                        htmlType="submit"
+                        type="primary"
+                      >
+                        搜索
+                      </Button>
+                    </Form.Item>
+                  </Form>
+                </span>
+                <span style={{float:'right'}}>
+                  <Button type="primary" danger>
+                    删除
+                  </Button>
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                  <Button type="primary" icon={<UploadOutlined />}>
+                    上传图片
+                  </Button>
+                </span>
               </Col>
             </Row>
             <Divider />
-            <Card
-              style={{ width: 200 }}
-              cover={
-                <img
-                  alt="example"
-                  src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                />
-              }
-              actions={[
-                <Iconfont type={'icon-edit'} />,
-                <Iconfont type={'icon-edit'} />,
-                <Iconfont type={'icon-delete'} />,
-              ]}
-            >
-              <Meta
-                title="Card title"
-              />
-            </Card>
+            <Row>
+              <Col span={24}>
+                <Card
+                  size={'small'}
+                  style={{ width: 200 }}
+                  cover={
+                    <img
+                      alt="example"
+                      src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                    />
+                  }
+                  actions={[
+                    <Checkbox value="id">选择</Checkbox>,
+                    <span><Iconfont type={'icon-edit'} /> 编辑</span>,
+                    <span><Iconfont type={'icon-delete'} /> 删除</span>,
+                  ]}
+                >
+                  <Meta
+                    title="Card title"
+                  />
+                </Card>
+              </Col>
+            </Row>
+            <Divider />
+            <Row>
+              <Col span={24} style={{textAlign:'right'}}>
+                <Pagination style={{margin:'0 auto'}} defaultCurrent={1} total={50} />
+              </Col>
+            </Row>
           </Col>
         </Row>
       </Modal>
@@ -952,6 +1016,10 @@ function mapStateToProps(state:any) {
     routes,
     loading,
   } = state.form;
+
+  const {
+    picture,
+  } = state.picture;
 
   return {
     content,

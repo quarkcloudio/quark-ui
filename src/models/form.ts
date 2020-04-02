@@ -76,7 +76,7 @@ const form: ModelType = {
             response.data.content.body.form.tab.map((tab:any,key:any) => {
               tab.items.map((item:any,key:any) => {
       
-                if(item.component == 'datePicker') {
+                if(item.component == 'datetime') {
                   if(item.value) {
                     response.data.content.body.form.data[item.name] = moment(item.value, item.format);
                   }
@@ -98,7 +98,7 @@ const form: ModelType = {
           } else {
             response.data.content.body.form.items.map((item:any,key:any) => {
       
-              if(item.component == 'datePicker') {
+              if(item.component == 'datetime') {
                 if(item.value) {
                   response.data.content.body.form.data[item.name] = moment(item.value, item.format);
                 }
