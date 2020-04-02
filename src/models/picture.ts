@@ -26,7 +26,7 @@ export interface ModelType {
 const picture: ModelType = {
   namespace: 'picture',
   state: {
-    picture:[],
+    picture:null,
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -60,7 +60,7 @@ const picture: ModelType = {
   reducers: {
     updateData(state, action) {
       return {
-        ...action.payload,
+        picture:action.payload,
       };
     },
   },

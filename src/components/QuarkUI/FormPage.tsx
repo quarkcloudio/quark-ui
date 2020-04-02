@@ -76,6 +76,7 @@ export interface FormPageProps {
       }
     }
   };
+  picture:any;
   routes:any;
   loading: boolean;
   dispatch: Dispatch<any>;
@@ -99,6 +100,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
     api,
     search,
     content,
+    picture,
     routes,
     loading,
     dispatch
@@ -106,6 +108,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
 
   const [form] = Form.useForm();
   const [searchPictureForm] = Form.useForm();
+  const [checkPictureForm] = Form.useForm();
   
   /**
    * constructor
@@ -245,11 +248,12 @@ const FormPage: React.SFC<FormPageProps> = props => {
     });
   };
 
-  const getPictures = (search:any = null) => {
+  const getPictures = (page:any = 1,search:any = null) => {
     dispatch({
       type: 'picture/info',
       payload: {
         actionUrl: 'admin/picture/getLists',
+        page:page,
         ...search
       },
       callback: (res:any) => {
@@ -260,8 +264,23 @@ const FormPage: React.SFC<FormPageProps> = props => {
 
   const insertPicture = (e:any) => {
     if(tinymceEditor) {
-      tinymceEditor.insertContent('xxx');
+      const checkPictures = checkPictureForm.getFieldValue('checkPictures');
+
+      if(checkPictures) {
+        let html = '';
+        checkPictures.map((item:any) => {
+          picture.lists.map((pictureItem:any) => {
+            if(pictureItem.id==item) {
+              html = html+'<img src="'+pictureItem.path+'" />'
+            }
+          })
+        })
+        tinymceEditor.insertContent(html);
+      }
     }
+
+    checkPictureForm.resetFields();
+    changePictureBoxVisible(false);
   };
 
   const closePictureBox = (e:any) => {
@@ -296,7 +315,12 @@ const FormPage: React.SFC<FormPageProps> = props => {
       }
     }
 
-    getPictures(values);
+    getPictures(1,values);
+  };
+
+  // 分页切换
+  const changePagination = (page:any) => {
+    getPictures(page);
   };
 
   const formItem = (items:any) => {
@@ -542,7 +566,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
                     height: item.height ? item.height : 500 ,
                     width: item.width ? item.width :'100%',
                     plugins: [
-                      'advlist autolink lists link charmap print preview anchor',
+                      'advlist autolink lists link charmap print preview anchor image',
                       'searchreplace visualblocks code fullscreen',
                       'insertdatetime media table paste code help wordcount multipleimage'
                     ],
@@ -916,9 +940,9 @@ const FormPage: React.SFC<FormPageProps> = props => {
         visible={pictureBoxVisible}
         onOk={insertPicture}
         onCancel={closePictureBox}
-        width={1200}
+        width={1100}
       >
-        <Row gutter={16}>
+        <Row gutter={20}>
           <Col span={4}>
             <Menu
               style={{ width: '100%' }}
@@ -926,9 +950,9 @@ const FormPage: React.SFC<FormPageProps> = props => {
               mode="inline"
             >
               <Menu.Item key="0">所有图片</Menu.Item>
-              <Menu.Item key="1">默认分类</Menu.Item>
-              <Menu.Item key="2">水果</Menu.Item>
-              <Menu.Item key="3">蔬菜</Menu.Item>
+              {!!picture && picture.categorys.map((category:any) => {
+                return(<Menu.Item key={category.id}>{category.title}</Menu.Item>)
+              })}
             </Menu>
           </Col>
           <Col span={20}>
@@ -966,40 +990,78 @@ const FormPage: React.SFC<FormPageProps> = props => {
                     删除
                   </Button>
                   &nbsp;&nbsp;&nbsp;&nbsp;
-                  <Button type="primary" icon={<UploadOutlined />}>
-                    上传图片
-                  </Button>
+
+                  <Upload
+                    showUploadList={false}
+                    name={'file'}
+                    multiple={true}
+                    action={'/api/admin/picture/upload'}
+                    headers={{authorization: 'Bearer ' + sessionStorage['token']}}
+                    onChange = {(info:any) => {
+                      getPictures();
+                    }}
+                  >
+                    <Button type="primary" icon={<UploadOutlined />}>
+                      上传图片
+                    </Button>
+                  </Upload>
                 </span>
               </Col>
             </Row>
             <Divider />
-            <Row>
-              <Col span={24}>
-                <Card
-                  size={'small'}
-                  style={{ width: 200 }}
-                  cover={
-                    <img
-                      alt="example"
-                      src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                    />
-                  }
-                  actions={[
-                    <Checkbox value="id">选择</Checkbox>,
-                    <span><Iconfont type={'icon-edit'} /> 编辑</span>,
-                    <span><Iconfont type={'icon-delete'} /> 删除</span>,
-                  ]}
-                >
-                  <Meta
-                    title="Card title"
-                  />
-                </Card>
-              </Col>
-            </Row>
+            <Form form={checkPictureForm}>
+              <Form.Item
+                name='checkPictures'
+              >
+                <Checkbox.Group style={{ width: '100%' }}>
+                  <Row gutter={[16, 16]}>
+                    {!!picture && picture.lists.map((item:any) => {
+                      return(
+                        <Col span={4}>
+                          <Card
+
+                            hoverable={true}
+                            size={'small'}
+                            style={{ width: '100%' }}
+                            cover={
+                              <img
+                                alt={item.name}
+                                src={item.path}
+                                width={'100%'}
+                                height={120}
+                              />
+                            }
+                            actions={[
+                              <Checkbox value={item.id}>选择</Checkbox>,
+                              <span><Iconfont type={'icon-delete'} /> 删除</span>,
+                            ]}
+                          >
+                            <Meta
+                              title={item.name}
+                            />
+                          </Card>
+                        </Col>
+                      )
+                    })}
+                  </Row>
+                </Checkbox.Group>
+              </Form.Item>
+            </Form>
             <Divider />
             <Row>
               <Col span={24} style={{textAlign:'right'}}>
-                <Pagination style={{margin:'0 auto'}} defaultCurrent={1} total={50} />
+                {picture ?
+                  <Pagination
+                    style={{margin:'0 auto'}}
+                    defaultCurrent={picture.pagination.defaultCurrent}
+                    pageSize={picture.pagination.pageSize}
+                    current={picture.pagination.current}
+                    total={picture.pagination.total}
+                    onChange={changePagination}
+                  />
+                :
+                  null
+                }
               </Col>
             </Row>
           </Col>
@@ -1023,6 +1085,7 @@ function mapStateToProps(state:any) {
 
   return {
     content,
+    picture,
     routes,
     loading,
   };
