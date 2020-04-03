@@ -49,12 +49,23 @@ const picture: ModelType = {
           payload: data,
         });
         if (callback && typeof callback === 'function') {
-          callback(response); // 返回结果
+          callback(response);
         }
       }
     },
     *delete({ payload, callback }, { put, call }) {
-
+      const response = yield call(post, payload);
+      if(!response) {
+        return false;
+      }
+      if (response.status === 'success') {
+        message.success(response.msg, 3);
+        if (callback && typeof callback === 'function') {
+          callback(response);
+        }
+      } else {
+        message.error(response.msg, 3);
+      }
     },
   },
   reducers: {

@@ -46,15 +46,17 @@ const login : ModelType = {
         return false;
       }
 
-      // 提示信息
-      message.success(response.msg, 3);
-
       // 操作成功
       if (response.status === 'success') {
+
+        message.success(response.msg, 3);
+
         // 记录登录凭据
         sessionStorage.setItem('token', response.data.token);
         // 跳转到后台
         router.push('/index');
+      } else {
+        message.error(response.msg, 3);
       }
 
       yield put({
