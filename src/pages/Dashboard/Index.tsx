@@ -68,7 +68,7 @@ class IndexPage extends Component<IProps> {
     this.props.dispatch({
       type: 'request/get',
       payload: {
-        actionUrl: 'admin/dashboard/update',
+        actionUrl: 'admin/upgrade/index',
       },
       callback: (res:any) => {
         if (res) {
@@ -228,13 +228,13 @@ class IndexPage extends Component<IProps> {
                     <div className={styles.gutterNum}>
                     {this.state.canUpdate ? 
                         <Badge dot>
-                          <a className={styles.updateSystem} href="#/console/update">
+                          <a className={styles.updateSystem} href="#/upgrade/index">
                             {this.state.data.app_version}
                           </a>
                           <ArrowUpOutlined />
                         </Badge>
                       : 
-                        <a className={styles.updateSystem} href="#/console/update">
+                        <a className={styles.updateSystem} href="#/upgrade/index">
                           {this.state.data.app_version}
                         </a>
                       }
