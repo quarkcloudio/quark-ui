@@ -13,7 +13,10 @@ export interface ModelType {
   state: {
     content?:any,
     routes?:any,
+    formImages:any,
+    formFiles:any,
     loading:boolean,
+    pageRandom:any,
   };
   subscriptions:{ setup: Subscription };
   effects: {
@@ -21,6 +24,8 @@ export interface ModelType {
     submit: Effect;
   };
   reducers: {
+    updateImages: Reducer<{}>;
+    updateFiles: Reducer<{}>;
     updateForm: Reducer<{}>;
     resetForm: Reducer<{}>;
     changePageLoading: Reducer<{}>;
@@ -45,7 +50,10 @@ const form: ModelType = {
       }
     },
     routes:[],
+    formImages:[],
+    formFiles:[],
     loading:true,
+    pageRandom:1
   },
   subscriptions: {
     setup({ dispatch, history }) {
@@ -65,24 +73,42 @@ const form: ModelType = {
         return false;
       }
       if (response.status === 'success') {
-        const data = { ...response.data, routes:response.data.content.breadcrumb,loading:false };
-        yield put({
-          type: 'updateForm',
-          payload: data,
-        });
+
+        let formImages:any = [];
+        let formFiles:any = [];
+
         if (callback && typeof callback === 'function') {
 
           if(response.data.content.body.form.tab) {
             response.data.content.body.form.tab.map((tab:any,key:any) => {
               tab.items.map((item:any,key:any) => {
-      
+
+                if(item.component == 'image') {
+                  if(response.data.content.body.form.data[item.name]) {
+                    formImages[item.name] = response.data.content.body.form.data[item.name];
+                  }
+
+                  if(item.value) {
+                    formImages[item.name] = item.value;
+                  }
+                }
+
+                if(item.component == 'file') {
+                  if(response.data.content.body.form.data[item.name]) {
+                    formFiles[item.name] = response.data.content.body.form.data[item.name];
+                  }
+
+                  if(item.value) {
+                    formFiles[item.name] = item.value;
+                  }
+                }
+
                 if(item.component == 'datetime') {
                   if(item.value) {
                     response.data.content.body.form.data[item.name] = moment(item.value, item.format);
                   }
                 }
-          
-  
+
                 if(item.component == 'rangePicker') {
                   if(item.value[0] && item.value[1]) {
                     response.data.content.body.form.data[item.name] = 
@@ -98,6 +124,26 @@ const form: ModelType = {
           } else {
             response.data.content.body.form.items.map((item:any,key:any) => {
       
+              if(item.component == 'image') {
+                if(response.data.content.body.form.data[item.name]) {
+                  formImages[item.name] = response.data.content.body.form.data[item.name];
+                }
+
+                if(item.value) {
+                  formImages[item.name] = item.value;
+                }
+              }
+
+              if(item.component == 'file') {
+                if(response.data.content.body.form.data[item.name]) {
+                  formFiles[item.name] = response.data.content.body.form.data[item.name];
+                }
+
+                if(item.value) {
+                  formFiles[item.name] = item.value;
+                }
+              }
+
               if(item.component == 'datetime') {
                 if(item.value) {
                   response.data.content.body.form.data[item.name] = moment(item.value, item.format);
@@ -119,6 +165,13 @@ const form: ModelType = {
 
           callback(response); // 返回结果
         }
+
+        const data = { ...response.data, routes:response.data.content.breadcrumb,loading:false,formImages: formImages,formFiles:formFiles};
+        yield put({
+          type: 'updateForm',
+          payload: data,
+        });
+
       }
     },
     *submit({ payload, callback }, { put, call }) {
@@ -143,6 +196,21 @@ const form: ModelType = {
     },
   },
   reducers: {
+    updateImages(state:any, action:any) {
+      state.formImages[action.payload.itemName] = action.payload.images;
+      state.pageRandom = Math.random();
+      return {
+        ...state,
+      };
+    },
+    updateFiles(state:any, action:any) {
+      state.formFiles[action.payload.itemName] = action.payload.files;
+      state.pageRandom = Math.random();
+      console.log(action.payload.files)
+      return {
+        ...state,
+      };
+    },
     updateForm(state, action) {
       return {
         ...action.payload,

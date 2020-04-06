@@ -33,8 +33,7 @@ import {
   Col,
   Divider,
   Menu,
-  Pagination,
-  Popconfirm
+  Pagination
 } from 'antd';
 
 import locale from 'antd/es/date-picker/locale/zh_CN';
@@ -77,24 +76,22 @@ export interface FormPageProps {
       }
     }
   };
+  formImages:any;
+  formFiles:any;
   picture:any;
   routes:any;
   loading: boolean;
   dispatch: Dispatch<any>;
+  pageRandom:string;
 }
 
 const FormPage: React.SFC<FormPageProps> = props => {
 
   // 上传图片文件
-  const [formSingleImages, changeSingleImage] = useState([]);
-  const [formMultipleImages, changeMultipleImage] = useState([]);
   const [previewVisible, changePreviewVisible] = useState(false);
   const [previewImage, changePreviewImage] = useState('');
   const [pictureBoxVisible, changePictureBoxVisible] = useState(false);
   const [tinymceEditor, setTinymceEditor] = useState({insertContent(value:any){return value;}});
-
-  // 上传文件
-  const [formFiles, changeFile] = useState([]);
 
   const {
     type,
@@ -103,8 +100,11 @@ const FormPage: React.SFC<FormPageProps> = props => {
     content,
     picture,
     routes,
+    formImages,
+    formFiles,
     loading,
-    dispatch
+    dispatch,
+    pageRandom
   } = props;
 
   const [form] = Form.useForm();
@@ -136,10 +136,10 @@ const FormPage: React.SFC<FormPageProps> = props => {
       if(item.component == 'image') {
         if(item.mode == "multiple") {
           // 多图
-          if(formMultipleImages[item.name]) {
+          if(formImages[item.name]) {
             let list:any = [];
             let multipleImages:any = [];
-            multipleImages = formMultipleImages[item.name];
+            multipleImages = formImages[item.name];
             multipleImages.map((fileInfo:any,fileKey:any) => {
               let getFileInfo:any = [];
               getFileInfo['id'] = fileInfo.id;
@@ -154,8 +154,8 @@ const FormPage: React.SFC<FormPageProps> = props => {
           }
         } else {
           // 单图
-          if(formSingleImages[item.name]) {
-            values[item.name] = formSingleImages[item.name]['id'];
+          if(formImages[item.name]) {
+            values[item.name] = formImages[item.name]['id'];
           } else {
             values[item.name] = 0;
           }
@@ -277,6 +277,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
       }
     }
 
+    checkPictureForm.resetFields();
     changePictureBoxVisible(false);
   };
 
@@ -294,7 +295,6 @@ const FormPage: React.SFC<FormPageProps> = props => {
       changePictureBoxVisible(true);
       getPictures();
       setTinymceEditor(editor);
-      checkPictureForm.resetFields();
       sessionStorage.removeItem('editorCommand');
     }
   };
@@ -319,56 +319,6 @@ const FormPage: React.SFC<FormPageProps> = props => {
   // 分页切换
   const changePagination = (page:any) => {
     getPictures(page);
-  };
-
-  const toggleChecked = (id:any) => {
-    let checkPictures = checkPictureForm.getFieldValue('checkPictures');
-    if(checkPictures) {
-      let pos = checkPictures.indexOf(id);
-      if (pos < 0) {
-        checkPictures.push(id);
-      } else {
-        checkPictures.splice(pos, 1);
-      }
-    } else {
-      checkPictures = [];
-      checkPictures.push(id);
-    }
-
-    let data:any = []
-    checkPictures.map(function (item:any) {
-      data.push(item)
-      console.log(item);
-    })
-
-    checkPictureForm.setFieldsValue({'checkPictures':data});
-  };
-
-  const onDeletePicture = (id:any = null) => {
-
-    let ids = null;
-
-    if(id == null) {
-      ids = checkPictureForm.getFieldValue('checkPictures');
-    } else {
-      ids = id;
-    }
-
-    if(ids == null) {
-      message.error('请选择数据', 3);
-      return false;
-    }
-
-    dispatch({
-      type: 'picture/delete',
-      payload: {
-        actionUrl: 'admin/picture/delete',
-        id:ids
-      },
-      callback: (res:any) => {
-        getPictures(1);
-      }
-    });
   };
 
   const formItem = (items:any) => {
@@ -642,18 +592,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
                   <div className="ant-upload-text">{item.button}</div>
                 </div>
               );
-              let multipleImages:any = [];
-              if(formMultipleImages[item.name]) {
-                multipleImages = formMultipleImages[item.name]
-              } else {
-                if(content.body.form.data) {
-                  if(content.body.form.data[item.name]) {
-                    multipleImages = content.body.form.data[item.name]
-                  }
-                } else {
-                  multipleImages = formMultipleImages[item.name]
-                }
-              }
+
               return (
                 <Form.Item 
                   key={item.name}
@@ -665,7 +604,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
                   <Upload
                     name={'file'}
                     listType={"picture-card"}
-                    fileList={multipleImages}
+                    fileList={formImages[item.name]}
                     multiple={true}
                     onPreview={(file:any) => {
                       changePreviewImage(file.url || file.thumbUrl);
@@ -710,13 +649,18 @@ const FormPage: React.SFC<FormPageProps> = props => {
                         }
                         return true;
                       });
-  
-                      let getFileList:any = [];
-                      getFileList[item.name] = fileList;
-                      changeMultipleImage(getFileList);
+
+                      dispatch({
+                        type: 'form/updateImages',
+                        payload: {
+                          images : fileList,
+                          itemName : item.name
+                        }
+                      });
+
                     }}
                   >
-                    {multipleImages >= 3 ? null : uploadButton}
+                    {formImages[item.name] >= 3 ? null : uploadButton}
                   </Upload>
                 </Form.Item>
               );
@@ -728,18 +672,6 @@ const FormPage: React.SFC<FormPageProps> = props => {
                   <div className="ant-upload-text">{item.button}</div>
                 </div>
               );
-              let singleImages:any = false;
-              if(formSingleImages[item.name]) {
-                singleImages = formSingleImages[item.name]
-              } else {
-                if(content.body.form.data) {
-                  if(content.body.form.data[item.name]) {
-                    singleImages = content.body.form.data[item.name]
-                  }
-                } else {
-                  singleImages = formSingleImages[item.name]
-                }
-              }
 
               return (
                 <Form.Item
@@ -777,17 +709,25 @@ const FormPage: React.SFC<FormPageProps> = props => {
                       if (info.file.status === 'done') {
                         if (info.file.response.status === 'success') {
                           let fileInfo:any = [];
+
                           fileInfo[item.name] = info.file.response.data;
-                          console.log(fileInfo);
-                          changeSingleImage(fileInfo);
+
+                          dispatch({
+                            type: 'form/updateImages',
+                            payload: {
+                              images : info.file.response.data,
+                              itemName : item.name
+                            }
+                          });
+
                         } else {
                           message.error(info.file.response.msg);
                         }
                       }
                     }}
                   >
-                    {singleImages ? (
-                      <img src={singleImages.url} alt={singleImages.name} width={80} />
+                    {formImages[item.name] ? (
+                      <img src={formImages[item.name].url} alt={formImages[item.name].name} width={80} />
                     ) : (uploadButton)}
                   </Upload>
                 </Form.Item>
@@ -796,18 +736,6 @@ const FormPage: React.SFC<FormPageProps> = props => {
           }
   
           if(item.component=='file') {
-            let files:any = [];
-            if(formFiles[item.name]) {
-              files = formFiles[item.name]
-            } else {
-              if(content.body.form.data) {
-                if(content.body.form.data[item.name]) {
-                  files = content.body.form.data[item.name]
-                }
-              } else {
-                files = formFiles[item.name]
-              }
-            }
             return (
               <Form.Item 
                 label={item.label}
@@ -816,7 +744,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
               >
                 <Upload
                   name={'file'}
-                  fileList={files}
+                  fileList={formFiles[item.name]}
                   multiple={true}
                   action={'/api/admin/file/upload'}
                   headers={{authorization: 'Bearer ' + sessionStorage['token']}}
@@ -859,9 +787,14 @@ const FormPage: React.SFC<FormPageProps> = props => {
                       return true;
                     });
 
-                    let getFileList:any = [];
-                    getFileList[item.name] = fileList;
-                    changeFile(getFileList);
+                    dispatch({
+                      type: 'form/updateFiles',
+                      payload: {
+                        files : fileList,
+                        itemName : item.name
+                      }
+                    });
+
                   }}
                 >
                   <Button>
@@ -1034,17 +967,11 @@ const FormPage: React.SFC<FormPageProps> = props => {
                   </Form>
                 </span>
                 <span style={{float:'right'}}>
-                  <Popconfirm
-                    title="确认要删除这些数据吗？"
-                    onConfirm={onDeletePicture}
-                    okText="确定"
-                    cancelText="取消"
-                  >
-                    <Button type="primary" danger>
-                      删除
-                    </Button>
-                  </Popconfirm>
+                  <Button type="primary" danger>
+                    删除
+                  </Button>
                   &nbsp;&nbsp;&nbsp;&nbsp;
+
                   <Upload
                     showUploadList={false}
                     name={'file'}
@@ -1073,13 +1000,12 @@ const FormPage: React.SFC<FormPageProps> = props => {
                       return(
                         <Col span={4}>
                           <Card
+
                             hoverable={true}
                             size={'small'}
                             style={{ width: '100%' }}
                             cover={
                               <img
-                                onClick={() => toggleChecked(item.id)}
-                                style={{objectFit: 'cover'}}
                                 alt={item.name}
                                 src={item.path}
                                 width={'100%'}
@@ -1088,14 +1014,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
                             }
                             actions={[
                               <Checkbox value={item.id}>选择</Checkbox>,
-                              <Popconfirm
-                                title="确认要删除吗？"
-                                onConfirm={() => onDeletePicture(item.id)}
-                                okText="确定"
-                                cancelText="取消"
-                              >
-                                <Iconfont type={'icon-delete'} /> 删除
-                              </Popconfirm>,
+                              <span><Iconfont type={'icon-delete'} /> 删除</span>,
                             ]}
                           >
                             <Meta
@@ -1138,18 +1057,26 @@ function mapStateToProps(state:any) {
   const {
     content,
     routes,
+    formImages,
+    formFiles,
     loading,
+    pageRandom
   } = state.form;
 
   const {
     picture,
   } = state.picture;
 
+  console.log(formImages);
+
   return {
     content,
     picture,
+    formImages,
+    formFiles,
     routes,
     loading,
+    pageRandom
   };
 }
 

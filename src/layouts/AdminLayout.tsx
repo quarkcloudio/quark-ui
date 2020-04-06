@@ -24,6 +24,9 @@ interface IProps {
 class AdminLayout extends Component<IProps> {
 
   state = {
+    logo:'',
+    name:'',
+    description:'',
     collapsed: false,
     userInfo:{
       nickname:'tangtanglove',
@@ -34,6 +37,18 @@ class AdminLayout extends Component<IProps> {
   };
 
   componentDidMount() {
+    this.props.dispatch({
+      type: 'request/get',
+      payload: {
+        actionUrl: 'admin/appInfo',
+      },
+      callback: (res:any) => {
+        if (res) {
+          this.setState({ ...res.data});
+        }
+      },
+    });
+
     this.props.dispatch({
       type: 'global/getMenus',
       payload: {
@@ -47,6 +62,7 @@ class AdminLayout extends Component<IProps> {
       menuSelectedKeys:menuSelectedKeys
     })
   }
+
 
   onMenuClick = (event:any) => {
     let menuSelectedKeys = [];
@@ -110,8 +126,8 @@ class AdminLayout extends Component<IProps> {
           style={{
             height:'100vh',
           }}
-          title={'Quark'}
-          logo={logo}
+          title={this.state.name ? this.state.name : 'Quark'}
+          logo={this.state.logo ? this.state.logo : logo}
           menuDataRender={() => menus}
           fixedHeader={true}
           fixSiderbar={true}

@@ -41,7 +41,7 @@ class IndexPage extends Component<IProps> {
     pagination: {},
     visible: false,
     loading: false,
-    canUpdate: false,
+    canUpgrade: false,
   };
   
   componentDidMount() {
@@ -72,7 +72,7 @@ class IndexPage extends Component<IProps> {
       },
       callback: (res:any) => {
         if (res) {
-          this.setState({canUpdate: res.data.can_update });
+          this.setState({canUpgrade: res.data.can_upgrade });
         }
       },
     });
@@ -226,7 +226,7 @@ class IndexPage extends Component<IProps> {
                   <div className={styles.gutterBoxNoBottom}>
                     <div className={styles.gutterTitle}>系统版本</div>
                     <div className={styles.gutterNum}>
-                    {this.state.canUpdate ? 
+                    {this.state.canUpgrade ? 
                         <Badge dot>
                           <a className={styles.updateSystem} href="#/upgrade/index">
                             {this.state.data.app_version}
@@ -337,7 +337,7 @@ class IndexPage extends Component<IProps> {
 }
 
 function mapStateToProps(state:any) {
-  const { submitting } = state.login;
+  const { submitting } = state.request;
   return {
     submitting
   };

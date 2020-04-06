@@ -19,6 +19,7 @@ const config: IConfig =  {
         { path: '/', component: '../pages/Dashboard/Index' },
         { path: '/index', component: '../pages/Dashboard/Index' },
         { path: '/dashboard/index', component: '../pages/Dashboard/Index' },
+        { path: '/upgrade/index', component: '../pages/Upgrade/Index' },
         { path: '/quark/engine', component: '../pages/Quark/Engine' },
         { path: '/account',component: '../pages/Account/Settings/Info' },
         { path: '/account/settings',component: '../pages/Account/Settings/Info' },
