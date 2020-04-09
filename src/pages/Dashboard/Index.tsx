@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import { Dispatch } from 'redux';
 import styles from './Index.css';
 
-import { Row, Col, Card, Statistic, Divider, Badge} from 'antd';
+import { Row, Col, Card, Statistic, Divider, Badge, Table} from 'antd';
 
 import {
   Chart,
@@ -101,6 +101,47 @@ class IndexPage extends Component<IProps> {
   render() {
 
     const {submitting} = this.props;
+
+    const columns = [
+      {
+        title: '名称',
+        dataIndex: 'name',
+        key: 'name',
+      },
+      {
+        title: '信息',
+        dataIndex: 'info',
+        key: 'info',
+      },
+    ];
+
+    const data = [
+      {
+        key: '1',
+        name: 'OneThink版本',
+        info: '1.0.131218',
+      },
+      {
+        key: '2',
+        name: '服务器操作系统',
+        info: 'Linux',
+      },
+      {
+        key: '3',
+        name: 'ThinkPHP版本',
+        info: '3.2.0',
+      },
+      {
+        key: '4',
+        name: '运行环境',
+        info: '	Apache',
+      },
+      {
+        key: '5',
+        name: 'MYSQL版本',
+        info: '5.1.48-log',
+      },
+    ];
 
     return (
       <div className={styles.container}>
@@ -331,6 +372,20 @@ class IndexPage extends Component<IProps> {
             </Card>
           </Col>
         </Row>
+        <div className={styles.line}></div>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Card title="系统信息" bordered={false}>
+              <Table columns={columns} showHeader={false} pagination={false} dataSource={data} size="small" />
+            </Card>
+          </Col>
+          <Col span={12}>
+            <Card title="产品团队" bordered={false}>
+
+            </Card>
+          </Col>
+        </Row>
+        <div className={styles.line}></div>
       </div>
     );
   }
