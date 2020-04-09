@@ -33,7 +33,8 @@ import {
   Col,
   Divider,
   Menu,
-  Pagination
+  Pagination,
+  Popconfirm
 } from 'antd';
 
 import locale from 'antd/es/date-picker/locale/zh_CN';
@@ -295,6 +296,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
       changePictureBoxVisible(true);
       getPictures();
       setTinymceEditor(editor);
+      checkPictureForm.resetFields();
       sessionStorage.removeItem('editorCommand');
     }
   };
@@ -319,6 +321,93 @@ const FormPage: React.SFC<FormPageProps> = props => {
   // 分页切换
   const changePagination = (page:any) => {
     getPictures(page);
+  };
+
+  const onSelectAllPictures = () => {
+    let data:any = []
+    picture.lists.map(function (item:any) {
+      data.push(item.id)
+    })
+
+    let checkPictures = [];
+    checkPictures = checkPictureForm.getFieldValue('checkPictures');
+    if(checkPictures) {
+      if(checkPictures.length == picture.lists.length) {
+        checkPictureForm.resetFields();
+      } else {
+        checkPictureForm.setFieldsValue({'checkPictures':data});
+      }
+    } else {
+      checkPictureForm.setFieldsValue({'checkPictures':data});
+    }
+
+  };
+
+  const toggleChecked = (id:any) => {
+    let checkPictures = checkPictureForm.getFieldValue('checkPictures');
+    if(checkPictures) {
+      let pos = checkPictures.indexOf(id);
+      if (pos < 0) {
+        checkPictures.push(id);
+      } else {
+        checkPictures.splice(pos, 1);
+      }
+    } else {
+      checkPictures = [];
+      checkPictures.push(id);
+    }
+
+    let data:any = []
+    checkPictures.map(function (item:any) {
+      data.push(item)
+      console.log(item);
+    })
+
+    checkPictureForm.setFieldsValue({'checkPictures':data});
+  };
+
+  const onDeletePicture = (id:any = null) => {
+
+    if(id == null) {
+      message.error('请选择数据', 3);
+      return false;
+    }
+
+    dispatch({
+      type: 'picture/delete',
+      payload: {
+        actionUrl: 'admin/picture/delete',
+        id:id
+      },
+      callback: (res:any) => {
+        getPictures(1);
+      }
+    });
+  };
+
+  const onDeletePictures = (e:any) => {
+
+    e.persist();
+
+    let ids = null;
+
+    ids = checkPictureForm.getFieldValue('checkPictures');
+
+    if(ids == null) {
+      message.error('请选择数据', 3);
+      return false;
+    }
+
+    dispatch({
+      type: 'picture/delete',
+      payload: {
+        actionUrl: 'admin/picture/delete',
+        id:ids
+      },
+      callback: (res:any) => {
+        getPictures(1);
+      }
+    });
   };
 
   const formItem = (items:any) => {
@@ -942,7 +1031,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
                 <span style={{float:'left'}}>
                   <Form layout="inline" form={searchPictureForm} onFinish={onSearchPicture}>
                     <Form.Item>
-                      <Button>
+                      <Button onClick={onSelectAllPictures}>
                         全选
                       </Button>
                     </Form.Item>
@@ -967,9 +1056,16 @@ const FormPage: React.SFC<FormPageProps> = props => {
                   </Form>
                 </span>
                 <span style={{float:'right'}}>
-                  <Button type="primary" danger>
-                    删除
-                  </Button>
+                  <Popconfirm
+                    title="确认要删除这些数据吗？"
+                    onConfirm={onDeletePictures}
+                    okText="确定"
+                    cancelText="取消"
+                  >
+                    <Button type="primary" danger>
+                      删除
+                    </Button>
+                  </Popconfirm>
                   &nbsp;&nbsp;&nbsp;&nbsp;
 
                   <Upload
@@ -1006,6 +1102,8 @@ const FormPage: React.SFC<FormPageProps> = props => {
                             style={{ width: '100%' }}
                             cover={
                               <img
+                                onClick={() => toggleChecked(item.id)}
+                                style={{objectFit: 'cover'}}
                                 alt={item.name}
                                 src={item.path}
                                 width={'100%'}
@@ -1014,7 +1112,14 @@ const FormPage: React.SFC<FormPageProps> = props => {
                             }
                             actions={[
                               <Checkbox value={item.id}>选择</Checkbox>,
-                              <span><Iconfont type={'icon-delete'} /> 删除</span>,
+                              <Popconfirm
+                                title="确认要删除吗？"
+                                onConfirm={() => onDeletePicture(item.id)}
+                                okText="确定"
+                                cancelText="取消"
+                              >
+                                <Iconfont type={'icon-delete'} /> 删除
+                              </Popconfirm>,
                             ]}
                           >
                             <Meta
@@ -1066,8 +1171,6 @@ function mapStateToProps(state:any) {
   const {
     picture,
   } = state.picture;
-
-  console.log(formImages);
 
   return {
     content,
