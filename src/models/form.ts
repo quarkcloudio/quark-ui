@@ -104,6 +104,12 @@ const form: ModelType = {
                 }
 
                 if(item.component == 'datetime') {
+                  if(response.data.content.body.form.data[item.name]) {
+                    response.data.content.body.form.data[item.name] = moment(response.data.content.body.form.data[item.name], item.format);
+                  } else {
+                    response.data.content.body.form.data[item.name] = moment();
+                  }
+
                   if(item.value) {
                     response.data.content.body.form.data[item.name] = moment(item.value, item.format);
                   }
@@ -145,6 +151,12 @@ const form: ModelType = {
               }
 
               if(item.component == 'datetime') {
+                if(response.data.content.body.form.data[item.name]) {
+                  response.data.content.body.form.data[item.name] = moment(response.data.content.body.form.data[item.name], item.format);
+                } else {
+                  response.data.content.body.form.data[item.name] = moment();
+                }
+
                 if(item.value) {
                   response.data.content.body.form.data[item.name] = moment(item.value, item.format);
                 }
