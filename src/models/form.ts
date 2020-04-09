@@ -115,7 +115,7 @@ const form: ModelType = {
                   }
                 }
 
-                if(item.component == 'rangePicker') {
+                if(item.component == 'datetimeRange') {
                   if(item.value[0] && item.value[1]) {
                     response.data.content.body.form.data[item.name] = 
                     [
@@ -162,7 +162,7 @@ const form: ModelType = {
                 }
               }
         
-              if(item.component == 'rangePicker') {
+              if(item.component == 'datetimeRange') {
                 if(item.value[0] && item.value[1]) {
                   response.data.content.body.form.data[item.name] = 
                   [

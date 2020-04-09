@@ -491,7 +491,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
             );
           }
 
-          if(item.componentName == "rangePicker") {
+          if(item.componentName == "datetimeRange") {
             return (
               <Form.Item 
                 key={item.name}
