@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { connect } from 'dva';
 import { Dispatch } from 'redux';
 import styles from './Index.css';
 
-import { Row, Col, Card, Statistic, Divider, Badge, Table} from 'antd';
+import { Row, Col, Card, Statistic, Divider, Badge, Table, Spin} from 'antd';
 
 import {
   Chart,
@@ -36,7 +37,13 @@ class IndexPage extends Component<IProps> {
   state = {
     msg: '',
     url: '',
-    data: {},
+    data: {
+      statistic:[],
+      todoList:[],
+      quickStart:[],
+      systemInfo:[],
+      productTeam:[],
+    },
     status: '',
     pagination: {},
     visible: false,
@@ -115,10 +122,10 @@ class IndexPage extends Component<IProps> {
       },
     ];
 
-    const data = [
+    const systemInfo = [
       {
         key: '1',
-        name: 'OneThink版本',
+        name: 'QuarkAdmin版本',
         info: '1.0.131218',
       },
       {
@@ -128,8 +135,8 @@ class IndexPage extends Component<IProps> {
       },
       {
         key: '3',
-        name: 'ThinkPHP版本',
-        info: '3.2.0',
+        name: 'Laravel版本',
+        info: '5.7.0',
       },
       {
         key: '4',
@@ -141,10 +148,50 @@ class IndexPage extends Component<IProps> {
         name: 'MYSQL版本',
         info: '5.1.48-log',
       },
+      {
+        key: '6',
+        name: '上传限制',
+        info: '2M',
+      },
+    ];
+
+    const productTeam = [
+      {
+        key: '1',
+        name: '作者',
+        info: 'tangtanglove',
+      },
+      {
+        key: '2',
+        name: '联系方式',
+        info: 'dai_hang_love@126.com',
+      },
+      {
+        key: '3',
+        name: '官方网址',
+        info: 'www.quarkcms.com',
+      },
+      {
+        key: '4',
+        name: '文档地址',
+        info: 'www.quarkcms.com/doc',
+      },
+      {
+        key: '5',
+        name: 'BUG反馈',
+        info: 'https://github.com/quarkcms/quark-admin/issues',
+      },
+      {
+        key: '6',
+        name: 'Github',
+        info: 'https://github.com/quarkcms/quark-admin',
+      },
     ];
 
     return (
-      <div className={styles.container}>
+      <Spin spinning={this.state.loading} tip="Loading..." style={{width:'100%',marginTop:'200px'}}>
+      {this.state.data.content ?
+        <span>
         <Row gutter={16}>
           <Col span={6}>
             <Card>
@@ -376,17 +423,18 @@ class IndexPage extends Component<IProps> {
         <Row gutter={16}>
           <Col span={12}>
             <Card title="系统信息" bordered={false}>
-              <Table columns={columns} showHeader={false} pagination={false} dataSource={data} size="small" />
+              <Table columns={columns} showHeader={false} pagination={false} dataSource={systemInfo} size="small" />
             </Card>
           </Col>
           <Col span={12}>
             <Card title="产品团队" bordered={false}>
-
+              <Table columns={columns} showHeader={false} pagination={false} dataSource={productTeam} size="small" />
             </Card>
           </Col>
         </Row>
-        <div className={styles.line}></div>
-      </div>
+        </span>
+      : null}
+    </Spin>
     );
   }
 }
