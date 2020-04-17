@@ -74,9 +74,9 @@ const DashboardPage: React.SFC<DashboardPageProps> = props => {
       }
     });
     checkUpdate()
-  }, [dispatch, api, checkUpdate]);
+  }, [dispatch, api]); // eslint-disable-line 
 
-  const checkUpdate = useCallback(() =>  {
+  const checkUpdate = () =>  { // eslint-disable-line 
     checkUpgrading(true)
     // 调用model
     dispatch({
@@ -91,7 +91,7 @@ const DashboardPage: React.SFC<DashboardPageProps> = props => {
         }
       },
     });
-  })
+  }
 
 
   const itemRender = (item:any) => {
