@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './ShowPage.less';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Dispatch } from 'redux';
@@ -11,8 +11,28 @@ import {
   Tabs,
   Popconfirm,
   Row,
-  Col
+  Col,
+  Statistic,
+  Table,
+  Affix,
+  Button,
+  Badge,
+  Tooltip
 } from 'antd';
+
+import {
+  ArrowUpOutlined,
+  EditOutlined,
+  MoneyCollectOutlined,
+  PictureOutlined,
+  MessageOutlined,
+  MenuOutlined,
+  UserOutlined,
+  BarsOutlined,
+  PaperClipOutlined,
+  ReloadOutlined,
+  SyncOutlined
+} from '@ant-design/icons';
 
 export interface DashboardPageProps {
   api: string;
@@ -32,6 +52,9 @@ export interface DashboardPageProps {
 
 const DashboardPage: React.SFC<DashboardPageProps> = props => {
 
+  const [canUpgrade, checkUpgrade] = useState(false);
+  const [checking, checkUpgrading] = useState(false);
+
   const {
     api,
     content,
@@ -44,63 +67,157 @@ const DashboardPage: React.SFC<DashboardPageProps> = props => {
    * constructor
    */
   useEffect(() => {
-    console.log(api);
     dispatch({
       type: 'show/info',
       payload: {
         actionUrl: api
       }
     });
-  }, [dispatch, api]);
+    checkUpdate()
+  }, [dispatch, api, checkUpdate]);
+
+  const checkUpdate = useCallback(() =>  {
+    checkUpgrading(true)
+    // 调用model
+    dispatch({
+      type: 'request/get',
+      payload: {
+        actionUrl: 'admin/upgrade/index',
+      },
+      callback: (res:any) => {
+        if (res) {
+          checkUpgrading(false)
+          checkUpgrade(res.data.can_upgrade);
+        }
+      },
+    });
+  })
+
 
   const itemRender = (item:any) => {
+
+    let formItem = null;
+
     if(item) {
       if(item.component.name == 'row') {
-        item.component.items.map((item:any) => {
-          return (
-            itemRender(item)
-          )
-        })
+        formItem =
+        <Row gutter={item.component.gutter}>
+          {item.component.items.map((item:any) => {
+            return (
+              itemRender(item)
+            )
+          })}
+        </Row>
       }
   
       if(item.component.name == 'col') {
-        return (
-          <Col span={item.component.span}>
-            {itemRender(item)}
-          </Col>
-        )
+        formItem = 
+        <Col span={item.component.span}>
+          {item.component.items.map((item:any) => {
+            return (
+              itemRender(item)
+            )
+          })}
+        </Col>
       }
   
+      if(item.component.name == 'card') {
+        formItem =
+        <Card title={item.component.title} bordered={false}>
+          {item.component.items.map((item:any) => {
+            return (
+              itemRender(item)
+            )
+          })}
+        </Card>
+      }
+
       if(item.component.name == 'text') {
-        return (
-          <span>
-            {item.component.items}
-          </span>
-        )
+        formItem =
+        <span>
+          {item.component.text}
+        </span>
+      }
+
+      if(item.component.name == 'statistic') {
+        formItem =
+        <Statistic
+          title={item.component.title}
+          value={item.component.value}
+          precision={item.component.precision}
+          valueStyle={...item.component.valueStyle}
+          prefix={item.component.prefix}
+        />
+      }
+
+      if(item.component.name == 'table') {
+        formItem =
+        <Table
+          columns={item.component.columns}
+          showHeader={item.component.showHeader}
+          pagination={item.component.pagination}
+          dataSource={item.component.dataSource}
+          size={item.component.size}
+        />
       }
     }
+
+    return formItem;
   };
 
   return (
     <Spin spinning={loading} tip="Loading..." style={{width:'100%',marginTop:'200px'}}>
       {content ?
-        <PageHeaderWrapper
-          title={content ? content.title : false}
-          subTitle={content.subTitle}
-          content={content.description}
-          breadcrumb={{routes}}
-        >
-          {content.body.component ?
-            <span>
-              {!!content.body.component.items && content.body.component.items.map((item:any) => {
-                itemRender(item);
-              })}
-            </span>
+        <span>
+          {content.title ?
+            <PageHeaderWrapper
+              title={content ? content.title : false}
+              subTitle={content.subTitle}
+              content={content.description}
+              breadcrumb={{routes}}
+            >
+              {content.body.component ?
+                <span>
+                  {!!content.body.component.items && content.body.component.items.map((item:any) => {
+                    return(itemRender(item));
+                  })}
+                </span>
+              :
+                ''
+              }
+            </PageHeaderWrapper>
           :
-            ''
+            <span>
+              {content.body.component ?
+                <span>
+                  {!!content.body.component.items && content.body.component.items.map((item:any) => {
+                    return(itemRender(item));
+                  })}
+                </span>
+              :
+                ''
+              }
+            </span>
           }
-        </PageHeaderWrapper>
-      : null}
+        </span>
+      : ''}
+      <Affix offsetBottom={20} style={{float:'right'}}>
+        <span>
+        {canUpgrade ?
+          <Tooltip title="有新版可以更新">
+            <Badge dot>
+              <a href="#/upgrade/index">
+                <Button size={'large'} type="primary" shape="circle" icon={<ArrowUpOutlined />} />
+              </a>
+            </Badge>
+          </Tooltip>
+        :
+          <Tooltip title="检查更新">
+            <Button size={'large'} type="primary" shape="circle" onClick={checkUpdate} icon={<SyncOutlined spin={checking}/> }/>
+          </Tooltip>
+        }
+        </span>
+      </Affix>
     </Spin>
   );
 };
