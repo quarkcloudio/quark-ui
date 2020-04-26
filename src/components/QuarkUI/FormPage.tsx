@@ -428,6 +428,20 @@ const FormPage: React.SFC<FormPageProps> = props => {
             )
           }
   
+          if(item.component == 'display') {
+            return (
+              <Form.Item
+                label={item.label}
+              >
+                <span
+                  style={item.style ? item.style : []}
+                >
+                  {item.value}
+                </span>
+              </Form.Item>
+            )
+          }
+
           if(item.component == 'input') {
             return (
               <Form.Item
