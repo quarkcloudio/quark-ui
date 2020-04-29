@@ -879,6 +879,17 @@ const TablePage: React.SFC<TablePageProps> = props => {
                     </a>
                   </Menu.Item>
 
+        } else if(item.url) {
+          menu = <Menu.Item
+                  key={item.name}
+                 >
+                  <a
+                    style={style}
+                    href={item.url+"?search[id]="+id}
+                  >
+                    {item.label}
+                  </a>
+                 </Menu.Item>
         } else {
           menu =  <Menu.Item
                     key={item.name}
@@ -1007,6 +1018,17 @@ const TablePage: React.SFC<TablePageProps> = props => {
                     >
                       {item.label}
                     </Button>
+        } else if(item.url) {
+          button = <Button
+                    key={item.name}
+                    style={{marginLeft:'8px',...style}}
+                    type={item.type}
+                    size={item.size}
+                    href={item.url}
+                    icon={item.icon && <Iconfont type={item.icon} />}
+                  >
+                    {item.label}
+                  </Button>
         } else {
           button = <Button
                       key={item.name}

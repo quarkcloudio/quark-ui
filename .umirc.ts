@@ -25,6 +25,7 @@ const config: IConfig =  {
         { path: '/account/settings',component: '../pages/Account/Settings/Info' },
         { path: '/account/settings/info',component: '../pages/Account/Settings/Info' },
         { path: '/account/settings/security',component: '../pages/Account/Settings/Security' },
+        { path: '/sms/send',component: '../pages/Sms/Send' },
       ]
     }
   ],
