@@ -82,6 +82,7 @@ export interface FormPageProps {
   formImages:any;
   formFiles:any;
   formSearchOptions:any;
+  formMapPosition:any;
   picture:any;
   routes:any;
   loading: boolean;
@@ -107,6 +108,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
     formImages,
     formFiles,
     formSearchOptions,
+    formMapPosition,
     loading,
     dispatch,
     pageRandom
@@ -486,6 +488,94 @@ const FormPage: React.SFC<FormPageProps> = props => {
             )
           }
   
+          if(item.component == "map") {
+            const markerEvents = {
+              dragend: (instance:any) => {
+                dispatch({
+                  type: 'form/updateMapPosition',
+                  payload: {
+                    longitude : instance.lnglat.lng,
+                    latitude : instance.lnglat.lat,
+                    itemName : item.name
+                  }
+                });
+              }
+            }
+
+            // on select item
+            const onMapSelect = (e:any) => {
+              if(e.poi.location) {
+                dispatch({
+                  type: 'form/updateMapPosition',
+                  payload: {
+                    longitude : e.poi.location.lng,
+                    latitude : e.poi.location.lat,
+                    itemName : item.name
+                  }
+                });
+              }
+            }
+
+            return (
+              <span>
+                <Form.Item 
+                  key={item.name}
+                  label={item.label}
+                  name={item.name}
+                  rules={item.frontendRules}
+                  help={item.help ? item.help : undefined}
+                  extra={item.extra}
+                >
+                  <Input addonBefore="经度" size={item.size} style={{width: '200px',marginBottom:'10px'}} placeholder={item.placeholder} />
+                </Form.Item>
+                <Form.Item 
+                  key={item.name}
+                  label={item.label}
+                  name={item.name}
+                  rules={item.frontendRules}
+                  help={item.help ? item.help : undefined}
+                  extra={item.extra}
+                >
+                  <Input addonBefore="纬度" size={item.size} style={{width: '200px',marginBottom:'10px'}} placeholder={item.placeholder} />
+                </Form.Item>
+                <div style={item.style}>
+                  <Map 
+                    center={{longitude: item.value.longitude, latitude: item.value.latitude }}
+                    plugins={[
+                      'ToolBar',
+                    ]}
+                    amapkey={item.key}
+                    zoom={item.zoom}
+                  >
+                    <Autocomplete 
+                      options={[]}
+                      onSelect={(e:any)=>onMapSelect(e)}
+                      style={{
+                        'position':'absolute',
+                        'top':20,
+                        'right':10,
+                        'border-radius':4,
+                        'border':'1px solid #1890FF',
+                        'height':34,
+                        'width':200,
+                        'color':'rgba(0, 0, 0, 0.65)',
+                        'padding':'4px 11px'
+                      }}
+                      placeholder='请输入关键字'
+                    />
+                    <Marker
+                      events={markerEvents}
+                      position= {{longitude: item.value.longitude, latitude: item.value.latitude }}
+                      visible={true}
+                      clickable={true}
+                      draggable={true}
+                    />
+                  </Map>
+                </div>
+              </span>
+            );
+          }
+
           if(item.component == "cascader") {
             return (
               <Form.Item
@@ -1283,6 +1373,7 @@ function mapStateToProps(state:any) {
     formImages,
     formFiles,
     formSearchOptions,
+    formMapPosition,
     loading,
     pageRandom
   } = state.form;
@@ -1297,6 +1388,7 @@ function mapStateToProps(state:any) {
     formImages,
     formFiles,
     formSearchOptions,
+    formMapPosition,
     routes,
     loading,
     pageRandom

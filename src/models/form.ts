@@ -16,6 +16,7 @@ export interface ModelType {
     formImages:any,
     formFiles:any,
     formSearchOptions:any,
+    formMapPosition:any,
     loading:boolean,
     pageRandom:any,
   };
@@ -29,6 +30,7 @@ export interface ModelType {
     updateImages: Reducer<{}>;
     updateFiles: Reducer<{}>;
     updateSearchOptions: Reducer<{}>;
+    updateMapPosition: Reducer<{}>;
     updateForm: Reducer<{}>;
     resetForm: Reducer<{}>;
     changePageLoading: Reducer<{}>;
@@ -56,6 +58,7 @@ const form: ModelType = {
     formImages:[],
     formFiles:[],
     formSearchOptions:[],
+    formMapPosition:[],
     loading:true,
     pageRandom:1
   },
@@ -255,6 +258,18 @@ const form: ModelType = {
     updateSearchOptions(state:any, action:any) {
       state.formSearchOptions[action.payload.itemName] = action.payload.data;
       state.pageRandom = Math.random();
+      return {
+        ...state,
+      };
+    },
+    updateMapPosition(state:any, action:any) {
+      let position = {
+        longitude:action.payload.longitude,
+        latitude:action.payload.latitude
+      }
+      state.formMapPosition[action.payload.itemName] = position;
+      state.pageRandom = Math.random();
+
       return {
         ...state,
       };

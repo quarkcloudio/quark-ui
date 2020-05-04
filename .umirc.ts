@@ -55,7 +55,7 @@ const config: IConfig =  {
   ],
   proxy: {
     '/api': {
-      target: 'http://www.admin.com/',
+      target: 'http://www.project.com/',
       changeOrigin: true,
       pathRewrite: { '^/api': '/api' },
     }
