@@ -15,6 +15,7 @@ export interface ModelType {
     routes?:any,
     formImages:any,
     formFiles:any,
+    formSearchOptions:any,
     loading:boolean,
     pageRandom:any,
   };
@@ -22,10 +23,12 @@ export interface ModelType {
   effects: {
     info: Effect;
     submit: Effect;
+    updateSearchOptions: Effect;
   };
   reducers: {
     updateImages: Reducer<{}>;
     updateFiles: Reducer<{}>;
+    updateSearchOptions: Reducer<{}>;
     updateForm: Reducer<{}>;
     resetForm: Reducer<{}>;
     changePageLoading: Reducer<{}>;
@@ -52,6 +55,7 @@ const form: ModelType = {
     routes:[],
     formImages:[],
     formFiles:[],
+    formSearchOptions:[],
     loading:true,
     pageRandom:1
   },
@@ -76,6 +80,7 @@ const form: ModelType = {
 
         let formImages:any = [];
         let formFiles:any = [];
+        let formSearchOptions:any = [];
 
         if (callback && typeof callback === 'function') {
 
@@ -101,6 +106,10 @@ const form: ModelType = {
                   if(item.value) {
                     formFiles[item.name] = item.value;
                   }
+                }
+
+                if(item.component == 'search') {
+                  formSearchOptions[item.name] = item.options;
                 }
 
                 if(item.component == 'datetime') {
@@ -150,6 +159,10 @@ const form: ModelType = {
                 }
               }
 
+              if(item.component == 'search') {
+                formSearchOptions[item.name] = item.options;
+              }
+
               if(item.component == 'datetime') {
                 if(response.data.content.body.form.data[item.name]) {
                   response.data.content.body.form.data[item.name] = moment(response.data.content.body.form.data[item.name], item.format);
@@ -178,7 +191,15 @@ const form: ModelType = {
           callback(response); // 返回结果
         }
 
-        const data = { ...response.data, routes:response.data.content.breadcrumb,loading:false,formImages: formImages,formFiles:formFiles};
+        const data = { 
+          ...response.data,
+          routes:response.data.content.breadcrumb,
+          loading:false,
+          formImages: formImages,
+          formFiles:formFiles,
+          formSearchOptions:formSearchOptions
+        };
+
         yield put({
           type: 'updateForm',
           payload: data,
@@ -206,6 +227,15 @@ const form: ModelType = {
         message.error(response.msg, 3);
       }
     },
+    *updateSearchOptions({ payload, callback }, { put, call }) {
+      const response = yield call(get, payload);
+      const data = { data:response.data,itemName:payload.itemName};
+
+      yield put({
+        type: 'updateSearchOptions',
+        payload: data,
+      });
+    },
   },
   reducers: {
     updateImages(state:any, action:any) {
@@ -218,7 +248,13 @@ const form: ModelType = {
     updateFiles(state:any, action:any) {
       state.formFiles[action.payload.itemName] = action.payload.files;
       state.pageRandom = Math.random();
-      console.log(action.payload.files)
+      return {
+        ...state,
+      };
+    },
+    updateSearchOptions(state:any, action:any) {
+      state.formSearchOptions[action.payload.itemName] = action.payload.data;
+      state.pageRandom = Math.random();
       return {
         ...state,
       };
@@ -230,13 +266,13 @@ const form: ModelType = {
     },
     resetForm(state, action) {
       let resetState = {
-          content:[],
-          loading:true,
-        }
-        return {
-          ...resetState,
-        };
-      },
+        content:[],
+        loading:true,
+      }
+      return {
+        ...resetState,
+      };
+    },
     changePageLoading(state, action) {
       let pageLoading = {
         loading:action.payload.loading

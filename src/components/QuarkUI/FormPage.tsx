@@ -5,6 +5,9 @@ import { Dispatch } from 'redux';
 import { connect } from 'dva';
 import router from 'umi/router';
 import { Editor } from '@tinymce/tinymce-react';
+import { Map, Marker } from 'react-amap';
+import Autocomplete from 'react-amap-plugin-autocomplete';
+
 import {
   UploadOutlined,
   createFromIconfontCN,
@@ -39,13 +42,12 @@ import {
 
 import locale from 'antd/es/date-picker/locale/zh_CN';
 
-const { SubMenu } = Menu;
-const { Meta } = Card;
-
 const Iconfont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js', // 在 iconfont.cn 上生成
 });
 
+const { SubMenu } = Menu;
+const { Meta } = Card;
 const { TextArea } = Input;
 const TabPane = Tabs.TabPane;
 const Option = Select.Option;
@@ -79,6 +81,7 @@ export interface FormPageProps {
   };
   formImages:any;
   formFiles:any;
+  formSearchOptions:any;
   picture:any;
   routes:any;
   loading: boolean;
@@ -103,6 +106,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
     routes,
     formImages,
     formFiles,
+    formSearchOptions,
     loading,
     dispatch,
     pageRandom
@@ -482,6 +486,106 @@ const FormPage: React.SFC<FormPageProps> = props => {
             )
           }
   
+          if(item.component == "cascader") {
+            return (
+              <Form.Item
+                key={item.name}
+                label={item.label}
+                name={item.name}
+                rules={item.frontendRules}
+                help={item.help ? item.help : undefined}
+                extra={item.extra}
+              >
+                <Cascader
+                  size={item.size}
+                  options={item.options}
+                  style={item.style}
+                  placeholder={item.placeholder}
+                />
+              </Form.Item>
+            );
+          }
+
+          if(item.component == "search") {
+
+            let timeout:any = null;
+
+            // on select item
+            const onInputSearch = (value:any) => {
+              if(value) {
+                if (timeout) {
+                  clearTimeout(timeout);
+                  timeout = null;
+                }
+
+                timeout = setTimeout(function() {
+                  dispatch({
+                    type: 'form/updateSearchOptions',
+                    payload: {
+                      actionUrl : item.url,
+                      itemName : item.name,
+                      search:value
+                    }
+                  });
+                }, 300);
+              }
+            }
+
+            if(item.mode) {
+              return (
+                <Form.Item 
+                  key={item.name}
+                  label={item.label}
+                  name={item.name}
+                  rules={item.frontendRules}
+                  help={item.help ? item.help : undefined}
+                  extra={item.extra}
+                >
+                  <Select
+                    showSearch
+                    defaultActiveFirstOption={false}
+                    mode={item.mode} 
+                    size={item.size} 
+                    filterOption={false}
+                    onSearch={(value:any)=>onInputSearch(value)}
+                    placeholder={item.placeholder}
+                    style={item.style ? item.style : []}
+                  >
+                    {!!formSearchOptions[item.name] && formSearchOptions[item.name].map((option:any) => {
+                      return (<Option key={option.value} value={option.value}>{option.label}</Option>)
+                    })}
+                  </Select>
+                </Form.Item>
+              );
+            } else {
+              return (
+                <Form.Item 
+                  key={item.name}
+                  label={item.label}
+                  name={item.name}
+                  rules={item.frontendRules}
+                  help={item.help ? item.help : undefined}
+                  extra={item.extra}
+                >
+                  <Select
+                    showSearch
+                    defaultActiveFirstOption={false}
+                    mode={item.mode}
+                    size={item.size}
+                    filterOption={false}
+                    onSearch={(value:any)=>onInputSearch(value)}
+                    placeholder={item.placeholder}
+                    style={item.style ? item.style : []}
+                  >
+                    {!!formSearchOptions[item.name] && formSearchOptions[item.name].map((option:any) => {
+                      return (<Option key={option.value} value={option.value}>{option.label}</Option>)
+                    })}
+                  </Select>
+                </Form.Item>
+              );
+            }
+          }
+
           if(item.component == 'radio') {
             return (
               <Form.Item
@@ -1178,6 +1282,7 @@ function mapStateToProps(state:any) {
     routes,
     formImages,
     formFiles,
+    formSearchOptions,
     loading,
     pageRandom
   } = state.form;
@@ -1191,6 +1296,7 @@ function mapStateToProps(state:any) {
     picture,
     formImages,
     formFiles,
+    formSearchOptions,
     routes,
     loading,
     pageRandom

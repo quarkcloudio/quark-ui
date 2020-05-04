@@ -20,10 +20,12 @@ export interface ModelType {
   state: {};
   reducers: {
     storeMenus: Reducer<{}>;
+    storeAccountInfo: Reducer<{}>;
     setEngineApi: Reducer<{}>;
   };
   effects: {
     getMenus: Effect;
+    getAccountInfo: Effect;
   };
   subscriptions:{ setup: Subscription };
 }
@@ -32,6 +34,7 @@ const global : ModelType = {
   namespace: 'global',
   state: {
     menus:[],
+    accountInfo:[],
     engine:{
       api:null,
       component:null,
@@ -39,9 +42,16 @@ const global : ModelType = {
     },
   },
   reducers: {
-    storeMenus(state, action) {
+    storeMenus(state:any, action) {
+      state.menus = action.payload;
       return {
-        menus:action.payload,
+        ...state,
+      };
+    },
+    storeAccountInfo(state:any, action) {
+      state.accountInfo = action.payload;
+      return {
+        ...state,
       };
     },
     setEngineApi(state:any, action) {
@@ -61,6 +71,22 @@ const global : ModelType = {
 
       yield put({
         type: 'storeMenus',
+        payload: response.data,
+      });
+
+      if (callback && typeof callback === 'function') {
+        callback(response);
+      }
+    },
+    *getAccountInfo({ payload, callback }, { call, put }) {
+
+      const response = yield call(get, payload);
+      if(!response) {
+        return false;
+      }
+
+      yield put({
+        type: 'storeAccountInfo',
         payload: response.data,
       });
 

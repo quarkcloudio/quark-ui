@@ -17,6 +17,8 @@
     "dva": "^2.6.0-beta.6",
     "qs": "^6.9.1",
     "react": "^16.8.6",
+    "react-amap": "^1.2.8",
+    "react-amap-plugin-autocomplete": "0.0.4",
     "react-dom": "^16.8.6",
     "umi-request": "^1.2.17"
   },

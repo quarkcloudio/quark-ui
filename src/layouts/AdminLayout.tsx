@@ -19,6 +19,11 @@ const Iconfont = createFromIconfontCN({
 interface IProps {
   dispatch:Dispatch<any>;
   menus: [];
+  accountInfo: {
+    nickname:'',
+    username:'',
+    avatar:''
+  };
 }
 
 class AdminLayout extends Component<IProps> {
@@ -28,10 +33,6 @@ class AdminLayout extends Component<IProps> {
     name:'',
     description:'',
     collapsed: false,
-    userInfo:{
-      nickname:'tangtanglove',
-      avatar:undefined
-    },
     menuOpenKeys:['/dashboard'],
     menuSelectedKeys:['/dashboard/index'],
   };
@@ -47,6 +48,13 @@ class AdminLayout extends Component<IProps> {
           this.setState({ ...res.data});
         }
       },
+    });
+
+    this.props.dispatch({
+      type: 'global/getAccountInfo',
+      payload: {
+        actionUrl: 'admin/account/info'
+      }
     });
 
     this.props.dispatch({
@@ -102,7 +110,7 @@ class AdminLayout extends Component<IProps> {
 
   render() {
 
-    const { menus,children } = this.props;
+    const { menus,accountInfo,children } = this.props;
 
     const menu = (
       <Menu onClick={this.onAvatarMenuClick}>
@@ -133,11 +141,11 @@ class AdminLayout extends Component<IProps> {
           fixSiderbar={true}
           rightContentRender={() =>
             <div className={styles.right}>
-              {this.state.userInfo.nickname ? 
+              {accountInfo ? 
                 <Dropdown className={styles.container} overlay={menu}>
                   <span className={`${styles.action} ${styles.account}`}>
-                    <Avatar size="small" className={styles.avatar} src={this.state.userInfo.avatar} alt="avatar" />
-                      <span className={styles.name}>{this.state.userInfo.nickname}</span>
+                    <Avatar size="small" className={styles.avatar} src={accountInfo.avatar} alt="avatar" />
+                      <span className={styles.name}>{accountInfo.nickname}</span>
                   </span>
                 </Dropdown>
               : 
@@ -157,9 +165,10 @@ class AdminLayout extends Component<IProps> {
 }
 
 function mapStateToProps(state:any) {
-  const { menus } = state.global;
+  const { menus,accountInfo } = state.global;
   return {
-    menus
+    menus,
+    accountInfo
   };
 }
 
