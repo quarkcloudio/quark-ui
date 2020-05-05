@@ -84,6 +84,7 @@ const form: ModelType = {
         let formImages:any = [];
         let formFiles:any = [];
         let formSearchOptions:any = [];
+        let formMapPosition:any = [];
 
         if (callback && typeof callback === 'function') {
 
@@ -115,6 +116,14 @@ const form: ModelType = {
                   formSearchOptions[item.name] = item.options;
                 }
 
+                if(item.component == 'map') {
+                  let position = {
+                    longitude:item.value.longitude,
+                    latitude:item.value.latitude
+                  }
+                  formMapPosition[item.name] = position;
+                }
+
                 if(item.component == 'datetime') {
                   if(response.data.content.body.form.data[item.name]) {
                     response.data.content.body.form.data[item.name] = moment(response.data.content.body.form.data[item.name], item.format);
@@ -127,7 +136,7 @@ const form: ModelType = {
                   }
                 }
 
-                if(item.component == 'datetimeRange') {
+                if(item.component == 'datetimeRange' || item.component == 'timeRange') {
                   if(item.value[0] && item.value[1]) {
                     response.data.content.body.form.data[item.name] = 
                     [
@@ -166,6 +175,14 @@ const form: ModelType = {
                 formSearchOptions[item.name] = item.options;
               }
 
+              if(item.component == 'map') {
+                let position = {
+                  longitude:item.value.longitude,
+                  latitude:item.value.latitude
+                }
+                formMapPosition[item.name] = position;
+              }
+
               if(item.component == 'datetime') {
                 if(response.data.content.body.form.data[item.name]) {
                   response.data.content.body.form.data[item.name] = moment(response.data.content.body.form.data[item.name], item.format);
@@ -178,7 +195,7 @@ const form: ModelType = {
                 }
               }
         
-              if(item.component == 'datetimeRange') {
+              if(item.component == 'datetimeRange' || item.component == 'timeRange') {
                 if(item.value[0] && item.value[1]) {
                   response.data.content.body.form.data[item.name] = 
                   [
@@ -187,7 +204,7 @@ const form: ModelType = {
                   ]
                 }
               }
-        
+
             })
           }
 
@@ -200,7 +217,8 @@ const form: ModelType = {
           loading:false,
           formImages: formImages,
           formFiles:formFiles,
-          formSearchOptions:formSearchOptions
+          formSearchOptions:formSearchOptions,
+          formMapPosition:formMapPosition
         };
 
         yield put({

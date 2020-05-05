@@ -37,7 +37,8 @@ import {
   Divider,
   Menu,
   Pagination,
-  Popconfirm
+  Popconfirm,
+  TimePicker
 } from 'antd';
 
 import locale from 'antd/es/date-picker/locale/zh_CN';
@@ -54,6 +55,7 @@ const Option = Select.Option;
 const RadioGroup = Radio.Group;
 const { RangePicker } = DatePicker;
 const { TreeNode } = Tree;
+const TimeRangePicker = TimePicker.RangePicker;
 
 export interface FormPageProps {
   type:string|undefined;
@@ -195,6 +197,14 @@ const FormPage: React.SFC<FormPageProps> = props => {
           } else {
             values[item.name] = 0;
           }
+        }
+      }
+
+      if(item.component == 'map') {
+        if(formMapPosition[item.name]) {
+          values[item.name] = formMapPosition[item.name];
+        } else {
+          values[item.name] = 0;
         }
       }
 
@@ -517,30 +527,32 @@ const FormPage: React.SFC<FormPageProps> = props => {
             }
 
             return (
-              <span>
-                <Form.Item 
-                  key={item.name}
-                  label={item.label}
-                  name={item.name}
-                  rules={item.frontendRules}
-                  help={item.help ? item.help : undefined}
-                  extra={item.extra}
+
+              <Form.Item 
+                key={item.name}
+                label={item.label}
+                rules={item.frontendRules}
+                help={item.help ? item.help : undefined}
+                extra={item.extra}
+              >
+                <Form.Item
+                  style={{ display: 'inline-block', width: '188px' }}
                 >
-                  <Input addonBefore="经度" size={item.size} style={{width: '200px',marginBottom:'10px'}} placeholder={item.placeholder} />
+                  <Input addonBefore="经度" value={formMapPosition ? formMapPosition[item.name].longitude: null } size={item.size} />
                 </Form.Item>
-                <Form.Item 
-                  key={item.name}
-                  label={item.label}
-                  name={item.name}
-                  rules={item.frontendRules}
-                  help={item.help ? item.help : undefined}
-                  extra={item.extra}
+                <span
+                  style={{ display: 'inline-block', width: '24px', lineHeight: '32px', textAlign: 'center' }}
                 >
-                  <Input addonBefore="纬度" size={item.size} style={{width: '200px',marginBottom:'10px'}} placeholder={item.placeholder} />
+                  -
+                </span>
+                <Form.Item
+                  style={{ display: 'inline-block', width: '188px' }}
+                >
+                  <Input addonBefore="纬度"  value={formMapPosition ? formMapPosition[item.name].latitude: null } size={item.size} />
                 </Form.Item>
                 <div style={item.style}>
                   <Map 
-                    center={{longitude: item.value.longitude, latitude: item.value.latitude }}
+                    center={{longitude: formMapPosition ? formMapPosition[item.name].longitude: null, latitude: formMapPosition ? formMapPosition[item.name].latitude: null }}
                     plugins={[
                       'ToolBar',
                     ]}
@@ -554,7 +566,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
                         'position':'absolute',
                         'top':20,
                         'right':10,
-                        'border-radius':4,
+                        'borderRadius':4,
                         'border':'1px solid #1890FF',
                         'height':34,
                         'width':200,
@@ -565,14 +577,14 @@ const FormPage: React.SFC<FormPageProps> = props => {
                     />
                     <Marker
                       events={markerEvents}
-                      position= {{longitude: item.value.longitude, latitude: item.value.latitude }}
+                      position= {{longitude: formMapPosition ? formMapPosition[item.name].longitude: null, latitude: formMapPosition ? formMapPosition[item.name].latitude: null }}
                       visible={true}
                       clickable={true}
                       draggable={true}
                     />
                   </Map>
                 </div>
-              </span>
+              </Form.Item>
             );
           }
 
@@ -788,7 +800,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
             );
           }
 
-          if(item.componentName == "datetimeRange") {
+          if(item.component == "datetimeRange") {
             return (
               <Form.Item 
                 key={item.name}
@@ -800,6 +812,25 @@ const FormPage: React.SFC<FormPageProps> = props => {
               >
                 <RangePicker
                   showTime={...item.showTime}
+                  size={item.size}
+                  locale={locale}
+                  format={item.format}
+                />
+              </Form.Item>
+            );
+          }
+
+          if(item.component == "timeRange") {
+            return (
+              <Form.Item 
+                key={item.name}
+                label={item.label}
+                name={item.name}
+                help={item.help ? item.help : undefined}
+                extra={item.extra}
+                rules={item.frontendRules}
+              >
+                <TimeRangePicker
                   size={item.size}
                   locale={locale}
                   format={item.format}

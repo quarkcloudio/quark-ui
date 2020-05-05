@@ -12,7 +12,7 @@
     "@tinymce/tinymce-react": "^3.5.0",
     "@types/qs": "^6.9.0",
     "@types/tinymce": "^4.5.24",
-    "antd": "^4.0.0-rc.1",
+    "antd": "^4.2.0",
     "bizcharts": "^3.5.6",
     "dva": "^2.6.0-beta.6",
     "qs": "^6.9.1",
