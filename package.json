@@ -8,6 +8,7 @@
     "precommit": "lint-staged"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.1.0",
     "@ant-design/pro-layout": "^5.0.0",
     "@tinymce/tinymce-react": "^3.5.0",
     "@types/qs": "^6.9.0",
