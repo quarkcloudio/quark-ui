@@ -3,7 +3,7 @@ import styles from './ShowPage.less';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
-import router from 'umi/router';
+import { history } from 'umi';
 
 import {
   Card,
@@ -94,7 +94,7 @@ const ShowPage: React.SFC<ShowPageProps> = props => {
         // 操作成功
         if (res.status === 'success') {
           // 页面跳转
-          router.push("#/admin/quark/engine?api="+api.replace(/\/show/g, '/index')+"&component=table");
+          history.push("#/admin/quark/engine?api="+api.replace(/\/show/g, '/index')+"&component=table");
         }
       }
     });
@@ -113,7 +113,7 @@ const ShowPage: React.SFC<ShowPageProps> = props => {
           size="small"
           title={content.body.show.title}
           bordered={false}
-          extra={<Button type="link" onClick={(e) => router.go(-1)}>返回上一页</Button>}
+          extra={<Button type="link" onClick={(e) => history.go(-1)}>返回上一页</Button>}
         >
           <Form {...content.body.show.layout} style={{marginTop:'20px'}}>
             {!!content.body.show.items && content.body.show.items.map((item:any) => {

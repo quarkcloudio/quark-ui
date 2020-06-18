@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Dispatch } from 'redux';
 import styles from './Style.less';
-import router from 'umi/router';
+import { history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Menu, Form, Input, Button } from 'antd';
 
@@ -61,11 +61,11 @@ class InfoPage extends Component<IProps> {
 
   handleMenuClick = (e: any) => {
     if (e.key === 'info') {
-      router.push('/account/settings/info');
+      history.push('/account/settings/info');
       return;
     }
     if (e.key === 'security') {
-      router.push('/account/settings/security');
+      history.push('/account/settings/security');
       return;
     }
   };

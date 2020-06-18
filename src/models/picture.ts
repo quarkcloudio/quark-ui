@@ -1,6 +1,5 @@
 import { Reducer } from 'redux';
 import { Effect,Subscription } from 'dva';
-import router from 'umi/router';
 import { message } from 'antd';
 import moment from 'moment';
 import { 

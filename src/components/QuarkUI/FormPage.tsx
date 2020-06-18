@@ -3,7 +3,7 @@ import styles from './FormPage.less';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
-import router from 'umi/router';
+import { history } from 'umi';
 import { Editor } from '@tinymce/tinymce-react';
 import { Map, Marker } from 'react-amap';
 import Autocomplete from 'react-amap-plugin-autocomplete';
@@ -790,7 +790,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
                 rules={item.frontendRules}
               >
                 <DatePicker
-                  showTime={...item.showTime}
+                  showTime={{...item.showTime}}
                   size={item.size}
                   locale={locale}
                   format={item.format}
@@ -811,7 +811,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
                 rules={item.frontendRules}
               >
                 <RangePicker
-                  showTime={...item.showTime}
+                  showTime={{...item.showTime}}
                   size={item.size}
                   locale={locale}
                   format={item.format}
@@ -1210,7 +1210,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
               {content.body.form.tab ?
                 <div className={styles.container}>
                   <Form {...content.body.form.layout} form={form} onFinish={onFinish} initialValues={content.body.form.initialValues}>
-                    <Tabs defaultActiveKey="1" tabBarExtraContent={<Button type="link" onClick={(e) => router.go(-1)}>返回上一页</Button>}>
+                    <Tabs defaultActiveKey="1" tabBarExtraContent={<Button type="link" onClick={(e) => history.go(-1)}>返回上一页</Button>}>
                       {content.body.form.tab.map((tab:any,index:any) => {
                         return (
                           <TabPane tab={tab.title} key={(index+1).toString()}>
@@ -1226,7 +1226,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
                   size="small"
                   title={content.body.form.title}
                   bordered={false}
-                  extra={<Button type="link" onClick={(e) => router.go(-1)}>返回上一页</Button>}
+                  extra={<Button type="link" onClick={(e) => history.go(-1)}>返回上一页</Button>}
                 >
                   <Form {...content.body.form.layout} form={form} onFinish={onFinish} initialValues={content.body.form.initialValues}>
                     {formItem(content.body.form.items)}

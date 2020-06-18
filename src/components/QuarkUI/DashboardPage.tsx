@@ -3,7 +3,7 @@ import styles from './ShowPage.less';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
-import router from 'umi/router';
+import { history } from 'umi';
 
 import {
   Card,
@@ -145,7 +145,7 @@ const DashboardPage: React.SFC<DashboardPageProps> = props => {
           title={item.component.title}
           value={item.component.value}
           precision={item.component.precision}
-          valueStyle={...item.component.valueStyle}
+          valueStyle={{...item.component.valueStyle}}
           prefix={item.component.prefix}
         />
       }

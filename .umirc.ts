@@ -1,9 +1,19 @@
-import { IConfig } from 'umi-types';
+import { defineConfig } from 'umi';
 
-// ref: https://umijs.org/config/
-const config: IConfig =  {
-  treeShaking: true,
-  history: 'hash', //
+export default defineConfig({
+  nodeModulesTransform: {
+    type: 'none',
+    exclude: [],
+  },
+  title: 'quark',
+  history: { type: 'hash' },
+  dll: false,
+  hash: true,
+  dynamicImport: false,
+  antd: {},
+  dva: {
+    hmr: true,
+  },
   base: '/admin/',
   publicPath: '/admin/',
   routes: [
@@ -26,32 +36,10 @@ const config: IConfig =  {
         { path: '/account/settings/info',component: '../pages/Account/Settings/Info' },
         { path: '/account/settings/security',component: '../pages/Account/Settings/Security' },
         { path: '/sms/send',component: '../pages/Sms/Send' },
+        { path: '/goodsAttribute/create',component: '../pages/GoodsAttribute/Create' },
+        { path: '/goodsAttribute/edit',component: '../pages/GoodsAttribute/Edit' },
       ]
     }
-  ],
-  plugins: [
-    // ref: https://umijs.org/plugin/umi-plugin-react.html
-    ['umi-plugin-react', {
-      antd: true,
-      dva: true,
-      dynamicImport: false,
-      title: 'quark',
-      dll: false,
-      
-      routes: {
-        exclude: [
-          /models\//,
-          /services\//,
-          /model\.(t|j)sx?$/,
-          /service\.(t|j)sx?$/,
-          /components\//,
-        ],
-      },
-
-      headScripts: [
-        { src: '<%= PUBLIC_PATH %>tinymce/tinymce.min.js' },
-      ],
-    }],
   ],
   proxy: {
     '/api': {
@@ -60,6 +48,4 @@ const config: IConfig =  {
       pathRewrite: { '^/api': '/api' },
     }
   }
-}
-
-export default config;
+});

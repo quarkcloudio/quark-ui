@@ -4,7 +4,6 @@ import FormPage from '@/components/QuarkUI/FormPage';
 import TablePage from '@/components/QuarkUI/TablePage';
 import ShowPage from '@/components/QuarkUI/ShowPage';
 import DashboardPage from '@/components/QuarkUI/DashboardPage';
-import { stringify } from 'qs';
 import zhCN from 'antd/es/locale/zh_CN';
 
 import {

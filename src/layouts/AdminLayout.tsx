@@ -4,7 +4,7 @@ import { Dispatch } from 'redux';
 import { Dropdown, Avatar, Menu, Spin } from 'antd';
 import logo from '../assets/logo.png';
 import ProLayout from '@ant-design/pro-layout';
-import router from 'umi/router';
+import { history } from 'umi';
 
 import {
   createFromIconfontCN,
@@ -78,7 +78,7 @@ class AdminLayout extends Component<IProps> {
     this.setState({
       menuSelectedKeys:menuSelectedKeys
     })
-    router.push(event.key);
+    history.push(event.key);
   };
 
   onMenuOpenChange = (openKeys:any) => {
@@ -103,7 +103,7 @@ class AdminLayout extends Component<IProps> {
     }
 
     if (key === 'settings') {
-      router.push('/account/settings/info');
+      history.push('/account/settings/info');
       return;
     }
   };

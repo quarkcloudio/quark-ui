@@ -1,7 +1,7 @@
 import { routerRedux } from 'dva/router';
 import { Reducer } from 'redux';
 import { Effect,Subscription } from 'dva';
-import router from 'umi/router';
+import { history } from 'umi';
 import { parse, stringify } from 'qs';
 import { message } from 'antd';
 import { 
@@ -111,7 +111,7 @@ const global : ModelType = {
           });
         }
         if (!sessionStorage['token'] && pathname !== '/login') {
-          router.push('/login');
+          history.push('/login');
         }
       });
     },

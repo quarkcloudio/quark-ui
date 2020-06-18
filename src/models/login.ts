@@ -1,7 +1,7 @@
 import { routerRedux } from 'dva/router';
 import { Reducer } from 'redux';
 import { Effect,Subscription } from 'dva';
-import router from 'umi/router';
+import { history } from 'umi';
 import { message } from 'antd';
 import { 
   get,
@@ -54,7 +54,7 @@ const login : ModelType = {
         // 记录登录凭据
         sessionStorage.setItem('token', response.data.token);
         // 跳转到后台
-        router.push('/index');
+        history.push('/index');
       } else {
         message.error(response.msg, 3);
       }
@@ -74,7 +74,7 @@ const login : ModelType = {
 
       if (window.location.pathname !== '/login') {
         // 跳转到登录页面
-        router.push('/login');
+        history.push('/login');
       }
     },
   },
@@ -83,7 +83,7 @@ const login : ModelType = {
       return history.listen(({ pathname }) => {
         // 已登录，跳转到主页
         if (sessionStorage['token'] && pathname == '/login') {
-          router.push('/index');
+          history.push('/index');
         }
       });
     },

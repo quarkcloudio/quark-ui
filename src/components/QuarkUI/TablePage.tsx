@@ -3,7 +3,7 @@ import styles from './TablePage.less';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
-import router from 'umi/router';
+import { history } from 'umi';
 import FormPage from '@/components/QuarkUI/FormPage';
 
 import {
@@ -439,7 +439,11 @@ const TablePage: React.SFC<TablePageProps> = props => {
                         {columnRender}
                        </a>
       } else {
-        columnRender = <a href={column.link}>{columnRender}</a>
+        if(column.link.indexOf("?") != -1) {
+          columnRender = <a href={column.link}>{columnRender}</a>
+        } else {
+          columnRender = <a href={column.link+'?search[id]='+row.id}>{columnRender}</a>
+        }
       }
     }
 

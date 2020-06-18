@@ -4,7 +4,7 @@
  */
 import { extend } from 'umi-request';
 import { notification } from 'antd';
-import router from 'umi/router';
+import { history } from 'umi';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -35,13 +35,13 @@ const errorHandler = (error: { response: Response }): void => {
 
     if(status == 401) {
       sessionStorage.removeItem('token');
-      router.push('/login');
+      history.push('/login');
     } else if(status == 403){
       notification.error({
         message: `请求错误 ${status}: ${url}`,
         description: errorText,
       });
-      router.push('/exception/403');
+      history.push('/exception/403');
     } else {
       notification.error({
         message: `请求错误 ${status}: ${url}`,

@@ -1,6 +1,6 @@
 import { Reducer } from 'redux';
 import { Effect,Subscription } from 'dva';
-import router from 'umi/router';
+import { history } from 'umi';
 import { message } from 'antd';
 import { 
   get,
@@ -68,7 +68,7 @@ const form: ModelType = {
         message.success(response.msg, 3);
         // 页面跳转
         if(response.url) {
-          router.push(response.url);
+          history.push(response.url);
         }
         if (callback && typeof callback === 'function') {
           callback(response); // 返回结果
