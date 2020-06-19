@@ -32,7 +32,7 @@ class CreatePage extends Component<any> {
   formRef: React.RefObject<any> = React.createRef();
 
   state = {
-    goodsTypes: []
+    goodsTypes:[],
   };
 
   // 当挂在模板时，初始化数据
@@ -40,21 +40,22 @@ class CreatePage extends Component<any> {
     // 获得url参数
     let params = parse(window.location.href.split('?')[1])
     let { search } = params;
-
     // loading
     this.setState({ loading: true });
 
     this.props.dispatch({
       type: 'request/get',
       payload: {
-        actionUrl: 'admin/goodsAttribute/create',
+        actionUrl: 'admin/goodsSpecification/edit',
+        ...search
       },
       callback: (res:any) => {
         if (res) {
-          this.setState({ goodsTypes: res.data.goods_types});
-          if(search) {
-            this.formRef.current.setFieldsValue({goods_type_id:parseInt(search['id'])});
-          }
+          this.setState({
+            goodsTypes: res.data.goods_types
+          });
+
+          this.formRef.current.setFieldsValue(res.data.goods_attribute);
         }
       },
     });
@@ -62,13 +63,10 @@ class CreatePage extends Component<any> {
 
   onFinish = (values:any) => {
     const { dispatch } = this.props;
-
-    console.log(values);
-
     dispatch({
       type: 'request/post',
       payload: {
-        actionUrl: 'admin/goodsAttribute/store',
+        actionUrl: 'admin/goodsSpecification/save',
         ...values,
       },
     });
@@ -99,10 +97,10 @@ class CreatePage extends Component<any> {
     };
 
     return (
-      <PageHeaderWrapper title="添加商品属性">
+      <PageHeaderWrapper title="编辑商品规格">
         <Card
           size="small"
-          title="添加商品属性"
+          title="编辑商品规格"
           bordered={false}
           extra={<a href="javascript:history.go(-1)">返回上一页</a>}
         >
@@ -110,14 +108,14 @@ class CreatePage extends Component<any> {
           <Form
             ref={this.formRef}
             onFinish={this.onFinish}
-            initialValues={{
-              sort:0,
-              goods_type_id:0,
-              style:1,
-              status:true
-            }}
             style={{ marginTop: 8 }}
           >
+            <Form.Item
+              style={{display:'none'}}
+              name={'id'}
+            >
+              <Input/>
+            </Form.Item>
             <Form.Item
               {...formItemLayout}
               label="商品类型"
@@ -133,22 +131,20 @@ class CreatePage extends Component<any> {
             </Form.Item>
             <Form.Item
               {...formItemLayout}
-              label="属性名称"
+              label="规格名称"
               name={'name'}
             >
-              <Input style={{ width: 400 }} placeholder="请输入属性名称" />
+              <Input style={{ width: 400 }} placeholder="请输入规格名称" />
             </Form.Item>
-            <Form.Item {...formItemLayout} name={'description'} label="属性描述">
+            <Form.Item {...formItemLayout} name={'description'} label="规格描述">
               <TextArea
                 style={{ width: 400 }}
-                placeholder="请输入属性描述"
+                placeholder="请输入规格描述"
               />
             </Form.Item>
             <Form.Item {...formItemLayout} name={'style'} label="显示样式">
               <RadioGroup>
                 <Radio value={1}>{'多选'}</Radio>
-                <Radio value={2}>{'单选'}</Radio>
-                <Radio value={3}>{'文本'}</Radio>
               </RadioGroup>
             </Form.Item>
 
@@ -159,16 +155,24 @@ class CreatePage extends Component<any> {
                     {fields.map((field,index) => (
                       <Form.Item
                       {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-                      label={index === 0 ? '属性值' : ''}
+                      label={index === 0 ? '规格值' : ''}
                       style={{ margin: 0 }}
                       >
                         <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="start">
+                          <Form.Item
+                            style={{display:'none'}}
+                            {...field}
+                            name={[field.name, 'id']}
+                            fieldKey={[field.fieldKey, 'id']}
+                          >
+                            <Input/>
+                          </Form.Item>
                           <Form.Item
                             {...field}
                             name={[field.name, 'vname']}
                             fieldKey={[field.fieldKey, 'vname']}
                           >
-                            <Input placeholder="请输入属性可选值" />
+                            <Input placeholder="请输入规格可选值" />
                           </Form.Item>
                           <Form.Item
                             {...field}
@@ -199,7 +203,7 @@ class CreatePage extends Component<any> {
                         style={{ width: '400px' }}
                         block
                       >
-                        <PlusOutlined /> 添加属性值
+                        <PlusOutlined /> 添加规格值
                       </Button>
                     </Form.Item>
                   </div>

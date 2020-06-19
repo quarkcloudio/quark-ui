@@ -1023,12 +1023,20 @@ const TablePage: React.SFC<TablePageProps> = props => {
                       {item.label}
                     </Button>
         } else if(item.url) {
+
+          let itemUrl = '';
+          if(id) {
+            itemUrl = item.url+"?search[id]="+id;
+          } else {
+            itemUrl = item.url;
+          }
+
           button = <Button
                     key={item.name}
                     style={{marginLeft:'8px',...style}}
                     type={item.type}
                     size={item.size}
-                    href={item.url}
+                    href={itemUrl}
                     icon={item.icon && <Iconfont type={item.icon} />}
                   >
                     {item.label}

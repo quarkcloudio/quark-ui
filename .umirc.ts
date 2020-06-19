@@ -38,6 +38,10 @@ export default defineConfig({
         { path: '/sms/send',component: '../pages/Sms/Send' },
         { path: '/goodsAttribute/create',component: '../pages/GoodsAttribute/Create' },
         { path: '/goodsAttribute/edit',component: '../pages/GoodsAttribute/Edit' },
+        { path: '/goodsSpecification/create',component: '../pages/GoodsSpecification/Create' },
+        { path: '/goodsSpecification/edit',component: '../pages/GoodsSpecification/Edit' },
+        { path: '/goodsCategory/create',component: '../pages/GoodsCategory/Create' },
+        // { path: '/goodsCategory/edit',component: '../pages/GoodsCategory/Edit' },
       ]
     }
   ],
