@@ -1,131 +1,140 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'dva';
-import router from 'umi/router';
+import { Dispatch } from 'redux';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import BraftEditor from 'braft-editor';
-import 'braft-editor/dist/index.css';
-import moment from 'moment';
-import 'moment/locale/zh-cn';
-import locale from 'antd/lib/date-picker/locale/zh_CN';
+import { MinusCircleOutlined,PlusOutlined } from '@ant-design/icons';
+import { parse } from 'qs';
+import zhCN from 'antd/es/locale/zh_CN';
 
 import {
-  Card,
-  Row,
-  Col,
   InputNumber,
-  DatePicker,
   Tabs,
   Switch,
-  Icon,
-  Tag,
   Form,
   Select,
   Input,
   Button,
-  Checkbox,
   Radio,
   Upload,
   message,
-  Modal,
   Transfer,
   Table,
-  Divider,
+  Space,
   Drawer,
+  ConfigProvider
 } from 'antd';
-moment.locale('zh-cn');
 
 const { TextArea } = Input;
 const TabPane = Tabs.TabPane;
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
-var attributeId = 0;
-var specificationId = 0;
 
-@connect(({ model }) => ({
-  model,
-}))
-@Form.create()
-class EditPage extends PureComponent {
+interface IProps {
+  dispatch:Dispatch<any>;
+  submitting: boolean;
+}
+
+class EditPage extends Component<any> {
+
+  formRef: React.RefObject<any> = React.createRef();
+
   state = {
-    msg: '',
-    url: '',
-    data: {},
+    data: {
+      goodsBrandSelectedKeys:[],
+      goodsBrands:[],
+      goodsTypes:[]
+    },
+    categorys:[],
     status: '',
     loading: false,
     coverId: false,
-    attributeTable: [],
+    attributeTable: {
+      dataSource:[],
+      pagination:[]
+    },
     attributeSearch: [],
     attributeSelectedIds: [],
     attributeSelectedData: [],
     attributeDrawerVisible: false,
-    specificationTable: [],
+    specificationTable:  {
+      dataSource:[],
+      pagination:[]
+    },
     specificationSearch: [],
     specificationSelectedIds: [],
     specificationSelectedData: [],
     specificationDrawerVisible: false,
-    attributeSelectedKeys: [],
-    specificationSelectedKeys: [],
   };
 
   // 当挂在模板时，初始化数据
   componentDidMount() {
     // 获得url参数
-    const params = this.props.location.query;
+    let params = parse(window.location.href.split('?')[1])
+    let { search } = params;
 
     // loading
     this.setState({ loading: true });
 
     this.props.dispatch({
-      type: 'action/get',
+      type: 'request/get',
       payload: {
-        actionUrl: 'admin/goods/categoryEdit?id=' + params.id,
+        actionUrl: 'admin/goodsCategory/edit',
+        ...search
       },
-      callback: res => {
+      callback: (res:any) => {
         if (res) {
-
-          if(res.data.cover_id == 0) {
-            res.data.cover_id = false;
-          }
-
           this.setState({
             data: res.data,
+            categorys:res.data.categorys,
             coverId: res.data.cover_id,
-            attributeSelectedIds: res.data.attributeSelectedIds,
-            specificationSelectedIds: res.data.specificationSelectedIds,
-            attributeSelectedData: res.data.attributeSelectedData,
-            specificationSelectedData: res.data.specificationSelectedData,
-            attributeSelectedKeys: res.data.attributeSelectedKeys,
-            specificationSelectedKeys: res.data.specificationSelectedKeys,
+            attributeSelectedIds:res.data.attributeSelectedIds,
+            attributeSelectedData:res.data.attributeSelectedData,
+            specificationSelectedIds:res.data.specificationSelectedIds,
+            specificationSelectedData:res.data.specificationSelectedData,
           });
 
-          attributeId = res.data.attributeSelectedKeys.length;
-          specificationId = res.data.specificationSelectedKeys.length;
-
           this.props.dispatch({
-            type: 'action/get',
+            type: 'request/get',
             payload: {
-              actionUrl: 'admin/goods/attributeIndex',
+              actionUrl: 'admin/goodsAttribute/search',
               attributeSelectedIds: this.state.attributeSelectedIds,
             },
-            callback: res => {
+            callback: (res:any) => {
               if (res) {
-                this.setState({ attributeTable: res.data.table });
+                this.setState({ attributeTable: res.data });
+              }
+            },
+          });
+      
+          this.props.dispatch({
+            type: 'request/get',
+            payload: {
+              actionUrl: 'admin/goodsSpecification/search',
+              specificationSelectedIds: this.state.specificationSelectedIds,
+            },
+            callback: (res:any) => {
+              if (res) {
+                this.setState({ specificationTable: res.data });
               }
             },
           });
 
-          this.props.dispatch({
-            type: 'action/get',
-            payload: {
-              actionUrl: 'admin/goods/specificationIndex',
-              specificationSelectedIds: this.state.specificationSelectedIds,
-            },
-            callback: res => {
-              if (res) {
-                this.setState({ specificationTable: res.data.table });
-              }
-            },
+          this.formRef.current.setFieldsValue({
+            id:res.data.id,
+            title:res.data.title,
+            name:res.data.name,
+            pid:res.data.pid,
+            sort:res.data.sort,
+            description:res.data.description,
+            index_tpl:res.data.index_tpl,
+            lists_tpl:res.data.lists_tpl,
+            detail_tpl:res.data.detail_tpl,
+            page_num:res.data.page_num,
+            status:res.data.status,
+            attributes:res.data.attributeSelectedData,
+            specifications:res.data.specificationSelectedData,
           });
+
         }
       },
     });
@@ -144,11 +153,11 @@ class EditPage extends PureComponent {
   };
 
   // 分页切换
-  attributeChangePagination = (pagination, filters, sorter) => {
+  attributeChangePagination = (pagination:any, filters:any, sorter:any) => {
     this.props.dispatch({
-      type: 'action/get',
+      type: 'request/get',
       payload: {
-        actionUrl: 'admin/goods/attributeIndex',
+        actionUrl: 'admin/goodsAttribute/search',
         pageSize: pagination.pageSize, // 分页数量
         current: pagination.current, // 当前页码
         sortField: sorter.field, // 排序字段
@@ -157,109 +166,95 @@ class EditPage extends PureComponent {
         search: this.state.attributeSearch,
         attributeSelectedIds: this.state.attributeSelectedIds,
       },
-      callback: res => {
+      callback: (res:any) => {
         if (res) {
-          this.setState({ attributeTable: res.data.table });
+          this.setState({ attributeTable: res.data });
         }
       },
     });
   };
 
   // 搜索
-  attributeOnSearch = () => {
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        values['name'] = values['attributeName'];
-        values['goodsTypeId'] = values['attributeGoodsTypeId'];
-        this.props.dispatch({
-          type: 'action/get',
-          payload: {
-            actionUrl: 'admin/goods/attributeIndex',
-            ...this.state.attributeTable.pagination,
-            search: values,
-            attributeSelectedIds: this.state.attributeSelectedIds,
-          },
-          callback: res => {
-            if (res) {
-              this.setState({ attributeTable: res.data.table, attributeSearch: values });
-            }
-          },
-        });
-      }
-    });
-  };
-
-  attributeRemove = k => {
-    const { form } = this.props;
-
-    // can use data-binding to get
-    const keys = form.getFieldValue('attributeKeys');
-
-    // 移除已经选中attribute的id
-    let removeattributeSelectedId = this.state.attributeSelectedData[k]['id'];
-    let attributeSelectedIds = this.state.attributeSelectedIds;
-    let newattributeSelectedIds = attributeSelectedIds.filter(function(item) {
-      return item != removeattributeSelectedId;
-    });
-    this.setState({ attributeSelectedIds: newattributeSelectedIds });
-
-    // can use data-binding to set
-    form.setFieldsValue({
-      attributeKeys: keys.filter(key => key !== k),
-    });
-
+  attributeOnSearch = (values:any) => {
     this.props.dispatch({
-      type: 'action/get',
+      type: 'request/get',
       payload: {
-        actionUrl: 'admin/goods/attributeIndex',
+        actionUrl: 'admin/goodsAttribute/search',
         ...this.state.attributeTable.pagination,
-        search: this.state.attributeSearch,
-        attributeSelectedIds: newattributeSelectedIds,
-      },
-      callback: res => {
-        if (res) {
-          this.setState({ attributeTable: res.data.table });
-        }
-      },
-    });
-  };
-
-  attributeAdd = index => {
-    const { form } = this.props;
-
-    // can use data-binding to get
-    const keys = form.getFieldValue('attributeKeys');
-    const nextKeys = keys.concat(attributeId++);
-
-    // 已经选中attribute的id
-    let attributeSelectedIds = this.state.attributeSelectedIds;
-    attributeSelectedIds.push(this.state.attributeTable.dataSource[index]['id']);
-    // 已经选中attribute的值
-    this.state.attributeSelectedData[attributeId - 1] = this.state.attributeTable.dataSource[index];
-    this.setState({
-      attributeSelectedIds: attributeSelectedIds,
-      attributeSelectedData: this.state.attributeSelectedData,
-    });
-
-    this.props.dispatch({
-      type: 'action/get',
-      payload: {
-        actionUrl: 'admin/goods/attributeIndex',
-        ...this.state.attributeTable.pagination,
-        search: this.state.attributeSearch,
+        search: values,
         attributeSelectedIds: this.state.attributeSelectedIds,
       },
-      callback: res => {
+      callback: (res:any) => {
         if (res) {
-          this.setState({ attributeTable: res.data.table });
+          this.setState({ attributeTable: res.data, attributeSearch: values });
         }
       },
     });
+  };
 
-    // can use data-binding to set
-    // important! notify form to detect changes
-    form.setFieldsValue({
-      attributeKeys: nextKeys,
+  attributeAdd = (index:any) => {
+    let attributeSelectedIds = this.state.attributeSelectedIds;
+    let attributeSelectedData = this.state.attributeSelectedData;
+
+    // 已经选中attribute的id
+    attributeSelectedIds.push(this.state.attributeTable.dataSource[index]['id']);
+
+    // 已经选中attribute的值
+    attributeSelectedData.push(this.state.attributeTable.dataSource[index]);
+
+    this.props.dispatch({
+      type: 'request/get',
+      payload: {
+        actionUrl: 'admin/goodsAttribute/search',
+        ...this.state.attributeTable.pagination,
+        search: this.state.attributeSearch,
+        attributeSelectedIds: attributeSelectedIds,
+      },
+      callback: (res:any) => {
+        if (res) {
+          this.setState({
+            attributeTable: res.data,
+            attributeSelectedIds:attributeSelectedIds,
+            attributeSelectedData:attributeSelectedData 
+          });
+          this.formRef.current.setFieldsValue({attributes:this.state.attributeSelectedData});
+        }
+      },
+    });
+  };
+
+  attributeRemove = (index:any) => {
+
+    let removeAttributeSelectedId = this.state.attributeSelectedData[index]['id'];
+
+    // 移除选中attribute的id
+    let attributeSelectedIds = this.state.attributeSelectedIds.filter(function(item) {
+      return item != removeAttributeSelectedId;
+    });
+
+    // 移除选中attribute的值
+    let attributeSelectedData = this.state.attributeSelectedData.filter(function(item:any) {
+      return item.id != removeAttributeSelectedId;
+    });
+
+    this.props.dispatch({
+      type: 'request/get',
+      payload: {
+        actionUrl: 'admin/goodsAttribute/search',
+        ...this.state.attributeTable.pagination,
+        search: this.state.attributeSearch,
+        attributeSelectedIds: attributeSelectedIds,
+      },
+      callback: (res:any) => {
+        if (res) {
+          this.setState({
+            attributeTable: res.data,
+            attributeSelectedIds: attributeSelectedIds,
+            attributeSelectedData:attributeSelectedData
+          });
+          this.formRef.current.setFieldsValue({attributes:attributeSelectedData});
+        }
+      },
     });
   };
 
@@ -276,11 +271,11 @@ class EditPage extends PureComponent {
   };
 
   // 分页切换
-  specificationChangePagination = (pagination, filters, sorter) => {
+  specificationChangePagination = (pagination:any, filters:any, sorter:any) => {
     this.props.dispatch({
-      type: 'action/get',
+      type: 'request/get',
       payload: {
-        actionUrl: 'admin/goods/specificationIndex',
+        actionUrl: 'admin/goodsSpecification/search',
         pageSize: pagination.pageSize, // 分页数量
         current: pagination.current, // 当前页码
         sortField: sorter.field, // 排序字段
@@ -289,142 +284,118 @@ class EditPage extends PureComponent {
         search: this.state.specificationSearch,
         specificationSelectedIds: this.state.specificationSelectedIds,
       },
-      callback: res => {
+      callback: (res:any) => {
         if (res) {
-          this.setState({ specificationTable: res.data.table });
+          this.setState({ specificationTable: res.data });
         }
       },
     });
   };
 
   // 搜索
-  specificationOnSearch = () => {
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        values['name'] = values['specificationName'];
-        values['goodsTypeId'] = values['specificationGoodsTypeId'];
-        this.props.dispatch({
-          type: 'action/get',
-          payload: {
-            actionUrl: 'admin/goods/specificationIndex',
-            ...this.state.specificationTable.pagination,
-            search: values,
-            specificationSelectedIds: this.state.specificationSelectedIds,
-          },
-          callback: res => {
-            if (res) {
-              this.setState({ specificationTable: res.data.table, specificationSearch: values });
-            }
-          },
-        });
-      }
-    });
-  };
-
-  specificationRemove = k => {
-    const { form } = this.props;
-
-    // can use data-binding to get
-    const keys = form.getFieldValue('specificationKeys');
-
-    // 移除已经选中specification的id
-    let removespecificationSelectedId = this.state.specificationSelectedData[k]['id'];
-    let specificationSelectedIds = this.state.specificationSelectedIds;
-    let newspecificationSelectedIds = specificationSelectedIds.filter(function(item) {
-      return item != removespecificationSelectedId;
-    });
-    this.setState({ specificationSelectedIds: newspecificationSelectedIds });
-
-    // can use data-binding to set
-    form.setFieldsValue({
-      specificationKeys: keys.filter(key => key !== k),
-    });
-
+  specificationOnSearch = (values:any) => {
     this.props.dispatch({
-      type: 'action/get',
+      type: 'request/get',
       payload: {
-        actionUrl: 'admin/goods/specificationIndex',
+        actionUrl: 'admin/goodsSpecification/search',
         ...this.state.specificationTable.pagination,
-        search: this.state.specificationSearch,
-        specificationSelectedIds: newspecificationSelectedIds,
-      },
-      callback: res => {
-        if (res) {
-          this.setState({ specificationTable: res.data.table });
-        }
-      },
-    });
-  };
-
-  specificationAdd = index => {
-    const { form } = this.props;
-
-    // can use data-binding to get
-    const keys = form.getFieldValue('specificationKeys');
-    const nextKeys = keys.concat(specificationId++);
-
-    // 已经选中specification的id
-    let specificationSelectedIds = this.state.specificationSelectedIds;
-    specificationSelectedIds.push(this.state.specificationTable.dataSource[index]['id']);
-    // 已经选中specification的值
-    this.state.specificationSelectedData[
-      specificationId - 1
-    ] = this.state.specificationTable.dataSource[index];
-    this.setState({
-      specificationSelectedIds: specificationSelectedIds,
-      specificationSelectedData: this.state.specificationSelectedData,
-    });
-
-    this.props.dispatch({
-      type: 'action/get',
-      payload: {
-        actionUrl: 'admin/goods/specificationIndex',
-        ...this.state.specificationTable.pagination,
-        search: this.state.specificationSearch,
+        search: values,
         specificationSelectedIds: this.state.specificationSelectedIds,
       },
-      callback: res => {
+      callback: (res:any) => {
         if (res) {
-          this.setState({ specificationTable: res.data.table });
+          this.setState({ specificationTable: res.data, specificationSearch: values });
         }
       },
     });
+  };
 
-    // can use data-binding to set
-    // important! notify form to detect changes
-    form.setFieldsValue({
-      specificationKeys: nextKeys,
+  specificationAdd = (index:any) => {
+    let specificationSelectedIds = this.state.specificationSelectedIds;
+    let specificationSelectedData = this.state.specificationSelectedData;
+
+    // 已经选中specification的id
+    specificationSelectedIds.push(this.state.specificationTable.dataSource[index]['id']);
+
+    // 已经选中specification的值
+    specificationSelectedData.push(this.state.specificationTable.dataSource[index]);
+
+    this.props.dispatch({
+      type: 'request/get',
+      payload: {
+        actionUrl: 'admin/goodsSpecification/search',
+        ...this.state.specificationTable.pagination,
+        search: this.state.specificationSearch,
+        specificationSelectedIds: specificationSelectedIds,
+      },
+      callback: (res:any) => {
+        if (res) {
+          this.setState({
+            specificationTable: res.data,
+            specificationSelectedIds:specificationSelectedIds,
+            specificationSelectedData:specificationSelectedData 
+          });
+          this.formRef.current.setFieldsValue({specifications:this.state.specificationSelectedData});
+        }
+      },
     });
   };
 
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      values['cover_id'] = this.state.coverId;
+  specificationRemove = (index:any) => {
 
-      // 验证正确提交表单
-      if (!err) {
-        this.props.dispatch({
-          type: 'action/post',
-          payload: {
-            actionUrl: 'admin/goods/categorySave',
-            ...values,
-          },
-        });
-      }
+    let removeSpecificationSelectedId = this.state.specificationSelectedData[index]['id'];
+
+    // 移除选中specification的id
+    let specificationSelectedIds = this.state.specificationSelectedIds.filter(function(item) {
+      return item != removeSpecificationSelectedId;
+    });
+
+    // 移除选中specification的值
+    let specificationSelectedData = this.state.specificationSelectedData.filter(function(item:any) {
+      return item.id != removeSpecificationSelectedId;
+    });
+
+    this.props.dispatch({
+      type: 'request/get',
+      payload: {
+        actionUrl: 'admin/goodsSpecification/search',
+        ...this.state.specificationTable.pagination,
+        search: this.state.specificationSearch,
+        specificationSelectedIds: specificationSelectedIds,
+      },
+      callback: (res:any) => {
+        if (res) {
+          this.setState({
+            specificationTable: res.data,
+            specificationSelectedIds: specificationSelectedIds,
+            specificationSelectedData: specificationSelectedData
+          });
+          this.formRef.current.setFieldsValue({specifications:specificationSelectedData});
+        }
+      },
     });
   };
 
-  brandFilterOption = (inputValue, option) => option.title.indexOf(inputValue) > -1;
+  onFinish = (values:any) => {
+    values['cover_id'] = this.state.coverId;
+    this.props.dispatch({
+      type: 'request/post',
+      payload: {
+        actionUrl: 'admin/goodsCategory/save',
+        ...values,
+      },
+    });
+  };
 
-  brandChange = targetKeys => {
+  brandFilterOption = (inputValue:any, option:any) => option.title.indexOf(inputValue) > -1;
+
+  brandChange = (targetKeys:any) => {
     let data = this.state.data;
     data.goodsBrandSelectedKeys = targetKeys;
     this.setState({ data: data });
   };
 
   render() {
-    const { getFieldDecorator, getFieldValue } = this.props.form;
 
     const formItemLayout = {
       labelCol: {
@@ -444,98 +415,10 @@ class EditPage extends PureComponent {
       },
     };
 
-    getFieldDecorator('attributeKeys', { initialValue: this.state.attributeSelectedKeys });
-    const attributeKeys = getFieldValue('attributeKeys');
-    const attributeFormItems = attributeKeys.map((k, index) => (
-      <Form.Item
-        {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-        label={index === 0 ? '关联属性' : ''}
-        required={false}
-        key={k}
-      >
-        {getFieldDecorator(`attribute_ids[${k}]`, {
-          initialValue: this.state.attributeSelectedData[k]['id'],
-        })(<Input type={'hidden'} />)}
-        {getFieldDecorator(`attribute_names[${k}]`, {
-          initialValue: this.state.attributeSelectedData[k]['name'],
-        })(
-          <Input
-            placeholder="属性名称"
-            disabled={true}
-            style={{ width: '100px', marginRight: 8 }}
-          />,
-        )}
-        {getFieldDecorator(`attribute_values[${k}]`, {
-          initialValue: this.state.attributeSelectedData[k]['goods_attribute_values'],
-        })(
-          <Input placeholder="属性值" disabled={true} style={{ width: '250px', marginRight: 8 }} />,
-        )}
-        {getFieldDecorator(`attribute_groups[${k}]`, {
-          initialValue: this.state.attributeSelectedData[k]['group']
-            ? this.state.attributeSelectedData[k]['group']
-            : '',
-        })(<Input placeholder="分组名称" style={{ width: '100px', marginRight: 8 }} />)}
-        {getFieldDecorator(`attribute_sorts[${k}]`, {
-          initialValue: this.state.attributeSelectedData[k]['sort']
-            ? this.state.attributeSelectedData[k]['sort']
-            : 0,
-        })(<Input placeholder="排序" style={{ width: '60px', marginRight: 8 }} />)}
-        <Icon
-          className="dynamic-delete-button"
-          type="minus-circle-o"
-          onClick={() => this.attributeRemove(k)}
-        />
-      </Form.Item>
-    ));
-
-    getFieldDecorator('specificationKeys', { initialValue: this.state.specificationSelectedKeys });
-    const specificationKeys = getFieldValue('specificationKeys');
-    const specificationFormItems = specificationKeys.map((k, index) => (
-      <Form.Item
-        {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-        label={index === 0 ? '关联规格' : ''}
-        required={false}
-        key={k}
-      >
-        {getFieldDecorator(`attribute_specification_ids[${k}]`, {
-          initialValue: this.state.specificationSelectedData[k]['id'],
-        })(<Input type={'hidden'} />)}
-        {getFieldDecorator(`attribute_specification_names[${k}]`, {
-          initialValue: this.state.specificationSelectedData[k]['name'],
-        })(
-          <Input
-            placeholder="属性名称"
-            disabled={true}
-            style={{ width: '100px', marginRight: 8 }}
-          />,
-        )}
-        {getFieldDecorator(`attribute_specification_values[${k}]`, {
-          initialValue: this.state.specificationSelectedData[k]['goods_attribute_values'],
-        })(
-          <Input placeholder="属性值" disabled={true} style={{ width: '250px', marginRight: 8 }} />,
-        )}
-        {getFieldDecorator(`attribute_specification_groups[${k}]`, {
-          initialValue: this.state.specificationSelectedData[k]['group']
-            ? this.state.specificationSelectedData[k]['group']
-            : '',
-        })(<Input placeholder="分组名称" style={{ width: '100px', marginRight: 8 }} />)}
-        {getFieldDecorator(`attribute_specification_sorts[${k}]`, {
-          initialValue: this.state.specificationSelectedData[k]['sort']
-            ? this.state.specificationSelectedData[k]['sort']
-            : 0,
-        })(<Input placeholder="排序" style={{ width: '60px', marginRight: 8 }} />)}
-        <Icon
-          className="dynamic-delete-button"
-          type="minus-circle-o"
-          onClick={() => this.specificationRemove(k)}
-        />
-      </Form.Item>
-    ));
-
     // 单图片上传模式
     let uploadButton = (
       <div>
-        <Icon type="plus" />
+        <PlusOutlined />
         <div className="ant-upload-text">上传图片</div>
       </div>
     );
@@ -554,298 +437,411 @@ class EditPage extends PureComponent {
       {
         title: '操作',
         key: 'action',
-        render: (text, record, index) => <a onClick={() => this.attributeAdd(index)}>选择</a>,
+        render: (text:any, record:any, index:any) => <a onClick={() => this.attributeAdd(index)}>选择</a>,
       },
     ];
 
     const specificationColumns = [
       {
-        title: '属性名称',
+        title: '规格名称',
         dataIndex: 'name',
         key: 'name',
       },
       {
-        title: '属性值',
+        title: '规格值',
         dataIndex: 'goods_attribute_values',
         key: 'goods_attribute_values',
       },
       {
         title: '操作',
         key: 'action',
-        render: (text, record, index) => <a onClick={() => this.specificationAdd(index)}>选择</a>,
+        render: (text:any, record:any, index:any) => <a onClick={() => this.specificationAdd(index)}>选择</a>,
       },
     ];
 
     return (
-      <PageHeaderWrapper title={false}>
-        <div style={{ background: '#fff', padding: '10px' }}>
+      <ConfigProvider locale={zhCN}>
+      <PageHeaderWrapper title="编辑商品分类">
+        <div style={{ background: '#fff', padding: '10px',paddingTop: '0px' }}>
+          <Form
+            onFinish={this.onFinish}
+            ref={this.formRef}
+            initialValues={{
+              pid:0,
+              sort:0,
+              page_num:10,
+              status:true
+            }}
+            style={{ marginTop: 8 }}
+          >
           <Tabs>
             <TabPane tab="基本信息" key="1">
-              <Form onSubmit={this.handleSubmit} style={{ marginTop: 8 }}>
-                <Form.Item {...formItemLayout} label="分类标题">
-                  {getFieldDecorator('id', {
-                    initialValue: this.state.data.id,
-                  })(<Input type="hidden" />)}
-                  {getFieldDecorator('title', {
-                    initialValue: this.state.data.title,
-                  })(<Input style={{ width: 400 }} placeholder="请输入分类标题" />)}
-                </Form.Item>
-                <Form.Item {...formItemLayout} label="分类名称">
-                  {getFieldDecorator('name', {
-                    initialValue: this.state.data.name,
-                  })(<Input style={{ width: 200 }} placeholder="请输入分类名称" />)}
-                </Form.Item>
-                <Form.Item {...formItemLayout} label="封面图">
-                  <Upload
-                    name={'file'}
-                    listType={'picture-card'}
-                    showUploadList={false}
-                    action={'/api/admin/picture/upload'}
-                    headers={{ authorization: 'Bearer ' + sessionStorage['token'] }}
-                    beforeUpload={file => {
-                      if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
-                        message.error('请上传jpg或png格式的图片!');
-                        return false;
-                      }
-                      const isLt2M = file.size / 1024 / 1024 < 2;
-                      if (!isLt2M) {
-                        message.error('图片大小不可超过2MB!');
-                        return false;
-                      }
-                      return true;
-                    }}
-                    onChange={info => {
-                      if (info.file.status === 'done') {
-                        // Get this url from response in real world.
-                        if (info.file.response.status === 'success') {
-                          let fileList = [];
-                          if (info.file.response) {
-                            info.file.url = info.file.response.data.url;
-                            info.file.uid = info.file.response.data.id;
-                            info.file.id = info.file.response.data.id;
-                          }
-                          fileList[0] = info.file;
-                          this.setState({ fileList: fileList });
-                        } else {
-                          message.error(info.file.response.msg);
+              <Form.Item
+                style={{display:'none'}}
+                name={'id'}
+              >
+                <Input/>
+              </Form.Item>
+              <Form.Item {...formItemLayout} label="分类标题" name={'title'} >
+                <Input style={{ width: 400 }} placeholder="请输入分类标题" />
+              </Form.Item>
+              <Form.Item {...formItemLayout} label="分类名称" name={'name'}>
+                <Input style={{ width: 200 }} placeholder="请输入分类名称" />
+              </Form.Item>
+              <Form.Item {...formItemLayout} label="封面图">
+                <Upload
+                  name={'file'}
+                  listType={'picture-card'}
+                  showUploadList={false}
+                  action={'/api/admin/picture/upload'}
+                  headers={{ authorization: 'Bearer ' + sessionStorage['token'] }}
+                  beforeUpload={file => {
+                    if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
+                      message.error('请上传jpg或png格式的图片!');
+                      return false;
+                    }
+                    const isLt2M = file.size / 1024 / 1024 < 2;
+                    if (!isLt2M) {
+                      message.error('图片大小不可超过2MB!');
+                      return false;
+                    }
+                    return true;
+                  }}
+                  onChange={info => {
+                    if (info.file.status === 'done') {
+                      // Get this url from response in real world.
+                      if (info.file.response.status === 'success') {
+                        let fileList = [];
+                        if (info.file.response) {
+                          info.file.url = info.file.response.data.url;
+                          info.file.uid = info.file.response.data.id;
+                          info.file.id = info.file.response.data.id;
                         }
+                        fileList[0] = info.file;
+                        this.setState({ coverId: fileList });
+                      } else {
+                        message.error(info.file.response.msg);
                       }
-                    }}
-                  >
-                    {this.state.coverId[0] ? (
-                      <img src={this.state.coverId[0]['url']} alt="avatar" width={80} />
-                    ) : (
-                      uploadButton
-                    )}
-                  </Upload>
-                </Form.Item>
-                <Form.Item {...formItemLayout} label="父节点">
-                  {getFieldDecorator('pid', {
-                    initialValue: this.state.data.pid ? this.state.data.pid.toString() : '0',
-                  })(
-                    <Select style={{ width: 200 }}>
-                      {!!this.state.data.categorys &&
-                        this.state.data.categorys.map(option => {
-                          return <Option key={option.value.toString()}>{option.name}</Option>;
-                        })}
-                    </Select>,
+                    }
+                  }}
+                >
+                  {this.state.coverId ? (
+                    <img src={this.state.coverId[0]['url']} alt="avatar" width={80} />
+                  ) : (
+                    uploadButton
                   )}
-                </Form.Item>
-                <Form.Item {...formItemLayout} label="排序">
-                  {getFieldDecorator('sort', {
-                    initialValue: this.state.data.sort,
-                  })(<InputNumber style={{ width: 200 }} placeholder="排序" />)}
-                </Form.Item>
-                <Form.Item {...formItemLayout} label="描述">
-                  {getFieldDecorator('description', {
-                    initialValue: this.state.data.description,
-                  })(<TextArea style={{ width: 400 }} placeholder="请输入描述" />)}
-                </Form.Item>
-                <Form.Item {...formItemLayout} label="频道模板">
-                  {getFieldDecorator('index_tpl', {
-                    initialValue: this.state.data.index_tpl,
-                  })(<Input style={{ width: 400 }} placeholder="请输入频道模板" />)}
-                </Form.Item>
-                <Form.Item {...formItemLayout} label="列表模板">
-                  {getFieldDecorator('lists_tpl', {
-                    initialValue: this.state.data.lists_tpl,
-                  })(<Input style={{ width: 400 }} placeholder="请输入列表模板" />)}
-                </Form.Item>
-                <Form.Item {...formItemLayout} label="详情模板">
-                  {getFieldDecorator('detail_tpl', {
-                    initialValue: this.state.data.detail_tpl,
-                  })(<Input style={{ width: 400 }} placeholder="请输入详情模板" />)}
-                </Form.Item>
-                <Form.Item {...formItemLayout} label="分页数量">
-                  {getFieldDecorator('page_num', {
-                    initialValue: this.state.data.page_num,
-                  })(<InputNumber style={{ width: 200 }} placeholder="请输入分页数量" />)}
-                </Form.Item>
-                <Form.Item {...formItemLayout} label="状态">
-                  {getFieldDecorator('status', {
-                    initialValue: this.state.data.status,
-                    valuePropName: 'checked',
-                  })(<Switch checkedChildren="正常" unCheckedChildren="禁用" />)}
-                </Form.Item>
-                <Form.Item wrapperCol={{ span: 12, offset: 5 }}>
-                  <Button type="primary" htmlType="submit">
-                    提交
-                  </Button>
-                </Form.Item>
-              </Form>
+                </Upload>
+              </Form.Item>
+              <Form.Item {...formItemLayout} label="父节点" name={'pid'}>
+                <Select style={{ width: 200 }}>
+                  <Option value={0}>{'请选择分类'}</Option>
+                  {!!this.state.categorys &&
+                    this.state.categorys.map((option:any) => {
+                      return <Option key={option.value} value={option.value}>{option.name}</Option>;
+                    })}
+                </Select>
+              </Form.Item>
+              <Form.Item {...formItemLayout} label="排序" name={'sort'}>
+                <InputNumber style={{ width: 200 }} placeholder="排序" />
+              </Form.Item>
+              <Form.Item {...formItemLayout} label="描述" name={'description'}>
+                <TextArea style={{ width: 400 }} placeholder="请输入描述" />
+              </Form.Item>
+              <Form.Item {...formItemLayout} label="频道模板" name={'index_tpl'}>
+                <Input style={{ width: 400 }} placeholder="请输入频道模板" />
+              </Form.Item>
+              <Form.Item {...formItemLayout} label="列表模板" name={'lists_tpl'}>
+                <Input style={{ width: 400 }} placeholder="请输入列表模板" />
+              </Form.Item>
+              <Form.Item {...formItemLayout} label="详情模板" name={'detail_tpl'}>
+                <Input style={{ width: 400 }} placeholder="请输入详情模板" />
+              </Form.Item>
+              <Form.Item {...formItemLayout} label="分页数量" name={'page_num'}>
+                <InputNumber style={{ width: 200 }} placeholder="请输入分页数量" />
+              </Form.Item>
+              <Form.Item {...formItemLayout} label="状态" name={'status'} valuePropName={'checked'} >
+                <Switch checkedChildren="正常" unCheckedChildren="禁用" />
+              </Form.Item>
+              <Form.Item wrapperCol={{ span: 12, offset: 5 }}>
+                <Button type="primary" htmlType="submit">
+                  提交
+                </Button>
+              </Form.Item>
             </TabPane>
             <TabPane tab="关联品牌" key="2">
-              <Form onSubmit={this.handleSubmit} style={{ marginTop: 8 }}>
-                <Form.Item {...formItemLayout}>
-                  {getFieldDecorator('brand_ids', {
-                    initialValue: '',
-                  })(
-                    <Transfer
-                      titles={['所有品牌', '已选择关联品牌']}
-                      dataSource={this.state.data ? this.state.data.goodsBrands : []}
-                      showSearch
-                      listStyle={{
-                        width: 300,
-                        height: 300,
-                      }}
-                      filterOption={this.brandFilterOption}
-                      targetKeys={this.state.data ? this.state.data.goodsBrandSelectedKeys : []}
-                      onChange={this.brandChange}
-                      render={item => item.title}
-                    />,
-                  )}
-                </Form.Item>
-                <Form.Item {...formItemLayout} label="状态">
-                  {getFieldDecorator('status', {
-                    initialValue: true,
-                    valuePropName: 'checked',
-                  })(<Switch checkedChildren="正常" unCheckedChildren="禁用" />)}
-                </Form.Item>
-                <Form.Item wrapperCol={{ span: 12, offset: 5 }}>
-                  <Button type="primary" htmlType="submit">
-                    提交
-                  </Button>
-                </Form.Item>
-              </Form>
+              <Form.Item {...formItemLayout} name={'brand_ids'}>
+                <Transfer
+                  titles={['所有品牌', '已选择关联品牌']}
+                  dataSource={this.state.data ? this.state.data.goodsBrands : []}
+                  showSearch
+                  listStyle={{
+                    width: 300,
+                    height: 300,
+                  }}
+                  filterOption={this.brandFilterOption}
+                  targetKeys={this.state.data ? this.state.data.goodsBrandSelectedKeys : []}
+                  onChange={this.brandChange}
+                  render={item => item.title}
+                />
+              </Form.Item>
+              <Form.Item wrapperCol={{ span: 12, offset: 5 }}>
+                <Button type="primary" htmlType="submit">
+                  提交
+                </Button>
+              </Form.Item>
             </TabPane>
             <TabPane tab="关联属性、规格" key="3">
-              <Form onSubmit={this.handleSubmit} style={{ marginTop: 8 }}>
-                {attributeFormItems}
-                <Form.Item {...formItemLayoutWithOutLabel}>
-                  <Button
-                    type="dashed"
-                    onClick={this.attributeShowDrawer}
-                    style={{ width: '400px' }}
-                  >
-                    <Icon type="plus" /> 添加属性
-                  </Button>
+              <Form.List name="attributes">
+                {(fields, { add, remove }) => {
+                  return (
+                    <div>
+                      {fields.map((field,index) => (
+                        <Form.Item
+                        {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
+                        label={index === 0 ? '关联属性' : ''}
+                        style={{ margin: 0 }}
+                        >
+                          <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="start">
+                            <Form.Item
+                              {...field}
+                              name={[field.name, 'id']}
+                              fieldKey={[field.fieldKey, 'id']}
+                              style={{display:'none'}}
+                            >
+                              <Input />
+                            </Form.Item>
+                            <Form.Item
+                              {...field}
+                              name={[field.name, 'name']}
+                              fieldKey={[field.fieldKey, 'name']}
+                            >
+                              <Input disabled={true} placeholder="请输入属性名称" />
+                            </Form.Item>
+                            <Form.Item
+                              {...field}
+                              name={[field.name, 'goods_attribute_values']}
+                              fieldKey={[field.fieldKey, 'goods_attribute_values']}
+                            >
+                              <Input disabled={true} placeholder="请输入属性值" />
+                            </Form.Item>
+                            <Form.Item
+                              {...field}
+                              name={[field.name, 'group']}
+                              fieldKey={[field.fieldKey, 'group']}
+                            >
+                              <Input placeholder="请输入分组名称" />
+                            </Form.Item>
+                            <Form.Item
+                              {...field}
+                              name={[field.name, 'sort']}
+                              fieldKey={[field.fieldKey, 'sort']}
+                            >
+                              <InputNumber placeholder="排序" />
+                            </Form.Item>
+                            <Form.Item
+                              {...field}
+                            >
+                              <MinusCircleOutlined
+                                onClick={() => {
+                                  this.attributeRemove(index);
+                                  remove(field.name);
+                                }}
+                              />
+                            </Form.Item>
+                          </Space>
+                        </Form.Item>
+                      ))}
+                    </div>
+                  );
+                }}
+              </Form.List>
+              <Form.Item {...formItemLayoutWithOutLabel}>
+                <Button
+                  type="dashed"
+                  onClick={this.attributeShowDrawer}
+                  style={{ width: '400px' }}
+                >
+                  <PlusOutlined /> 添加属性
+                </Button>
+              </Form.Item>
+              <Form.List name="specifications">
+                {(fields, { add, remove }) => {
+                  return (
+                    <div>
+                      {fields.map((field,index) => (
+                        <Form.Item
+                        {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
+                        label={index === 0 ? '关联规格' : ''}
+                        style={{ margin: 0 }}
+                        >
+                          <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="start">
+                            <Form.Item
+                              {...field}
+                              name={[field.name, 'id']}
+                              fieldKey={[field.fieldKey, 'id']}
+                              style={{display:'none'}}
+                            >
+                              <Input />
+                            </Form.Item>
+                            <Form.Item
+                              {...field}
+                              name={[field.name, 'name']}
+                              fieldKey={[field.fieldKey, 'name']}
+                            >
+                              <Input disabled={true} placeholder="请输入规格名称" />
+                            </Form.Item>
+                            <Form.Item
+                              {...field}
+                              name={[field.name, 'goods_attribute_values']}
+                              fieldKey={[field.fieldKey, 'goods_attribute_values']}
+                            >
+                              <Input disabled={true} placeholder="请输入规格值" />
+                            </Form.Item>
+                            <Form.Item
+                              {...field}
+                              name={[field.name, 'group']}
+                              fieldKey={[field.fieldKey, 'group']}
+                            >
+                              <Input placeholder="请输入分组名称" />
+                            </Form.Item>
+                            <Form.Item
+                              {...field}
+                              name={[field.name, 'sort']}
+                              fieldKey={[field.fieldKey, 'sort']}
+                            >
+                              <InputNumber placeholder="排序" />
+                            </Form.Item>
+                            <Form.Item
+                              {...field}
+                            >
+                              <MinusCircleOutlined
+                                onClick={() => {
+                                  this.specificationRemove(index);
+                                  remove(field.name);
+                                }}
+                              />
+                            </Form.Item>
+                          </Space>
+                        </Form.Item>
+                      ))}
+                    </div>
+                  );
+                }}
+              </Form.List>
+              <Form.Item {...formItemLayoutWithOutLabel}>
+                <Button
+                  type="dashed"
+                  onClick={this.specificationShowDrawer}
+                  style={{ width: '400px' }}
+                >
+                  <PlusOutlined /> 添加规格
+                </Button>
+              </Form.Item>
+              <Form.Item wrapperCol={{ span: 12, offset: 5 }}>
+                <Button type="primary" htmlType="submit">
+                  提交
+                </Button>
+              </Form.Item>
+            </TabPane>
+          </Tabs>
+          </Form>
+
+          <Drawer
+            title="请选择关联属性"
+            closable={false}
+            onClose={this.attributeCloseDrawer}
+            visible={this.state.attributeDrawerVisible}
+            width={500}
+          >
+            <p>
+              <Form
+                layout="inline"
+                onFinish={this.attributeOnSearch}
+                initialValues={{
+                  attributeGoodsTypeId:0
+                }}
+              >
+                <Form.Item name={'attributeName'}>
+                  <Input placeholder="搜索内容" />
                 </Form.Item>
-                {specificationFormItems}
-                <Form.Item {...formItemLayoutWithOutLabel}>
-                  <Button
-                    type="dashed"
-                    onClick={this.specificationShowDrawer}
-                    style={{ width: '400px' }}
-                  >
-                    <Icon type="plus" /> 添加规格
-                  </Button>
+                <Form.Item name={'attributeGoodsTypeId'}>
+                  <Select style={{ width: 150 }}>
+                    <Option value={0}>{'请选择商品类型'}</Option>
+                    {!!this.state.data.goodsTypes &&
+                      this.state.data.goodsTypes.map((option:any) => {
+                        return <Option key={option.value} value={option.value}>{option.name}</Option>;
+                      })}
+                  </Select>
                 </Form.Item>
-                <Form.Item {...formItemLayout} label="状态">
-                  {getFieldDecorator('status', {
-                    initialValue: true,
-                    valuePropName: 'checked',
-                  })(<Switch checkedChildren="正常" unCheckedChildren="禁用" />)}
-                </Form.Item>
-                <Form.Item wrapperCol={{ span: 12, offset: 5 }}>
+                <Form.Item>
                   <Button type="primary" htmlType="submit">
-                    提交
+                    搜索
                   </Button>
                 </Form.Item>
               </Form>
+              <Table
+                columns={attributeColumns}
+                dataSource={this.state.attributeTable.dataSource}
+                pagination={this.state.attributeTable.pagination}
+                onChange={this.attributeChangePagination}
+              />
+            </p>
+          </Drawer>
 
-              <Drawer
-                title="请选择关联属性"
-                closable={false}
-                onClose={this.attributeCloseDrawer}
-                visible={this.state.attributeDrawerVisible}
-                width={500}
+          <Drawer
+            title="请选择关联规格"
+            closable={false}
+            onClose={this.specificationCloseDrawer}
+            visible={this.state.specificationDrawerVisible}
+            width={500}
+          >
+            <p>
+              <Form
+                layout="inline"
+                onFinish={this.specificationOnSearch}
+                initialValues={{
+                  specificationGoodsTypeId:0
+                }}
               >
-                <p>
-                  <Form layout="inline" onSubmit={this.attributeOnSearch}>
-                    <Form.Item>
-                      {getFieldDecorator('attributeName')(<Input placeholder="搜索内容" />)}
-                    </Form.Item>
-                    <Form.Item>
-                      {getFieldDecorator('attributeGoodsTypeId', {
-                        initialValue: '0',
-                      })(
-                        <Select style={{ width: 150 }}>
-                          {!!this.state.data.goodsTypes &&
-                            this.state.data.goodsTypes.map(option => {
-                              return <Option key={option.value.toString()}>{option.name}</Option>;
-                            })}
-                        </Select>,
-                      )}
-                    </Form.Item>
-                    <Form.Item>
-                      <Button type="primary" htmlType="submit">
-                        搜索
-                      </Button>
-                    </Form.Item>
-                  </Form>
-                  <Table
-                    columns={attributeColumns}
-                    dataSource={this.state.attributeTable.dataSource}
-                    pagination={this.state.attributeTable.pagination}
-                    onChange={this.attributeChangePagination}
-                  />
-                </p>
-              </Drawer>
-
-              <Drawer
-                title="请选择关联规格"
-                closable={false}
-                onClose={this.specificationCloseDrawer}
-                visible={this.state.specificationDrawerVisible}
-                width={500}
-              >
-                <p>
-                  <Form layout="inline" onSubmit={this.specificationOnSearch}>
-                    <Form.Item>
-                      {getFieldDecorator('specificationName')(<Input placeholder="搜索内容" />)}
-                    </Form.Item>
-                    <Form.Item>
-                      {getFieldDecorator('specificationGoodsTypeId', {
-                        initialValue: '0',
-                      })(
-                        <Select style={{ width: 150 }}>
-                          {!!this.state.data.goodsTypes &&
-                            this.state.data.goodsTypes.map(option => {
-                              return <Option key={option.value.toString()}>{option.name}</Option>;
-                            })}
-                        </Select>,
-                      )}
-                    </Form.Item>
-                    <Form.Item>
-                      <Button type="primary" htmlType="submit">
-                        搜索
-                      </Button>
-                    </Form.Item>
-                  </Form>
-                  <Table
-                    columns={specificationColumns}
-                    dataSource={this.state.specificationTable.dataSource}
-                    pagination={this.state.specificationTable.pagination}
-                    onChange={this.specificationChangePagination}
-                  />
-                </p>
-              </Drawer>
-            </TabPane>
-          </Tabs>
+                <Form.Item name={'specificationName'}>
+                  <Input placeholder="搜索内容" />
+                </Form.Item>
+                <Form.Item name={'specificationGoodsTypeId'}>
+                  <Select style={{ width: 150 }}>
+                    <Option value={0}>{'请选择商品类型'}</Option>
+                    {!!this.state.data.goodsTypes &&
+                      this.state.data.goodsTypes.map((option:any) => {
+                        return <Option key={option.value} value={option.value}>{option.name}</Option>;
+                      })}
+                  </Select>
+                </Form.Item>
+                <Form.Item>
+                  <Button type="primary" htmlType="submit">
+                    搜索
+                  </Button>
+                </Form.Item>
+              </Form>
+              <Table
+                columns={specificationColumns}
+                dataSource={this.state.specificationTable.dataSource}
+                pagination={this.state.specificationTable.pagination}
+                onChange={this.specificationChangePagination}
+              />
+            </p>
+          </Drawer>
         </div>
       </PageHeaderWrapper>
+      </ConfigProvider>
     );
   }
+
 }
 
-export default EditPage;
+function mapStateToProps(state:any) {
+  const { submitting } = state.request;
+  return {
+    submitting
+  };
+}
+
+export default connect(mapStateToProps)(EditPage);

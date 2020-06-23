@@ -40,6 +40,7 @@ class CreatePage extends Component<any> {
     // 获得url参数
     let params = parse(window.location.href.split('?')[1])
     let { search } = params;
+    
     // loading
     this.setState({ loading: true });
 

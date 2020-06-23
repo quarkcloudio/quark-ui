@@ -41,7 +41,8 @@ export default defineConfig({
         { path: '/goodsSpecification/create',component: '../pages/GoodsSpecification/Create' },
         { path: '/goodsSpecification/edit',component: '../pages/GoodsSpecification/Edit' },
         { path: '/goodsCategory/create',component: '../pages/GoodsCategory/Create' },
-        // { path: '/goodsCategory/edit',component: '../pages/GoodsCategory/Edit' },
+        { path: '/goodsCategory/edit',component: '../pages/GoodsCategory/Edit' },
+        { path: '/goods/create',component: '../pages/Goods/Create' },
       ]
     }
   ],

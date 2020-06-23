@@ -4,6 +4,7 @@ import { Dispatch } from 'redux';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { MinusCircleOutlined,PlusOutlined } from '@ant-design/icons';
 import { parse } from 'qs';
+import zhCN from 'antd/es/locale/zh_CN';
 
 import {
   InputNumber,
@@ -20,6 +21,7 @@ import {
   Table,
   Space,
   Drawer,
+  ConfigProvider
 } from 'antd';
 
 const { TextArea } = Input;
@@ -188,7 +190,7 @@ class CreatePage extends Component<any> {
             attributeSelectedIds:attributeSelectedIds,
             attributeSelectedData:attributeSelectedData 
           });
-          this.formRef.current.setFieldsValue({attribute_keys:this.state.attributeSelectedData});
+          this.formRef.current.setFieldsValue({attributes:this.state.attributeSelectedData});
         }
       },
     });
@@ -223,7 +225,7 @@ class CreatePage extends Component<any> {
             attributeSelectedIds: attributeSelectedIds,
             attributeSelectedData:attributeSelectedData
           });
-          this.formRef.current.setFieldsValue({attribute_keys:attributeSelectedData});
+          this.formRef.current.setFieldsValue({attributes:attributeSelectedData});
         }
       },
     });
@@ -306,7 +308,7 @@ class CreatePage extends Component<any> {
             specificationSelectedIds:specificationSelectedIds,
             specificationSelectedData:specificationSelectedData 
           });
-          this.formRef.current.setFieldsValue({specification_keys:this.state.specificationSelectedData});
+          this.formRef.current.setFieldsValue({specifications:this.state.specificationSelectedData});
         }
       },
     });
@@ -341,7 +343,7 @@ class CreatePage extends Component<any> {
             specificationSelectedIds: specificationSelectedIds,
             specificationSelectedData: specificationSelectedData
           });
-          this.formRef.current.setFieldsValue({specification_keys:specificationSelectedData});
+          this.formRef.current.setFieldsValue({specifications:specificationSelectedData});
         }
       },
     });
@@ -350,7 +352,7 @@ class CreatePage extends Component<any> {
   onFinish = (values:any) => {
     values['cover_id'] = this.state.coverId;
     this.props.dispatch({
-      type: 'action/post',
+      type: 'request/post',
       payload: {
         actionUrl: 'admin/goodsCategory/store',
         ...values,
@@ -414,12 +416,12 @@ class CreatePage extends Component<any> {
 
     const specificationColumns = [
       {
-        title: '属性名称',
+        title: '规格名称',
         dataIndex: 'name',
         key: 'name',
       },
       {
-        title: '属性值',
+        title: '规格值',
         dataIndex: 'goods_attribute_values',
         key: 'goods_attribute_values',
       },
@@ -431,22 +433,26 @@ class CreatePage extends Component<any> {
     ];
 
     return (
+      <ConfigProvider locale={zhCN}>
       <PageHeaderWrapper title="添加商品分类">
         <div style={{ background: '#fff', padding: '10px',paddingTop: '0px' }}>
           <Form
             onFinish={this.onFinish}
             ref={this.formRef}
             initialValues={{
+              pid:0,
+              sort:0,
+              page_num:10,
               status:true
             }}
             style={{ marginTop: 8 }}
           >
           <Tabs>
             <TabPane tab="基本信息" key="1">
-              <Form.Item {...formItemLayout} label="分类标题">
+              <Form.Item {...formItemLayout} label="分类标题" name={'title'} >
                 <Input style={{ width: 400 }} placeholder="请输入分类标题" />
               </Form.Item>
-              <Form.Item {...formItemLayout} label="分类名称">
+              <Form.Item {...formItemLayout} label="分类名称" name={'name'}>
                 <Input style={{ width: 200 }} placeholder="请输入分类名称" />
               </Form.Item>
               <Form.Item {...formItemLayout} label="封面图">
@@ -493,30 +499,31 @@ class CreatePage extends Component<any> {
                   )}
                 </Upload>
               </Form.Item>
-              <Form.Item {...formItemLayout} label="父节点">
+              <Form.Item {...formItemLayout} label="父节点" name={'pid'}>
                 <Select style={{ width: 200 }}>
+                  <Option value={0}>{'请选择分类'}</Option>
                   {!!this.state.data.categorys &&
-                    this.state.data.categorys.map(option => {
-                      return <Option key={option.value.toString()}>{option.name}</Option>;
+                    this.state.data.categorys.map((option:any) => {
+                      return <Option key={option.value} value={option.value}>{option.name}</Option>;
                     })}
                 </Select>
               </Form.Item>
-              <Form.Item {...formItemLayout} label="排序">
+              <Form.Item {...formItemLayout} label="排序" name={'sort'}>
                 <InputNumber style={{ width: 200 }} placeholder="排序" />
               </Form.Item>
-              <Form.Item {...formItemLayout} label="描述">
+              <Form.Item {...formItemLayout} label="描述" name={'description'}>
                 <TextArea style={{ width: 400 }} placeholder="请输入描述" />
               </Form.Item>
-              <Form.Item {...formItemLayout} label="频道模板">
+              <Form.Item {...formItemLayout} label="频道模板" name={'index_tpl'}>
                 <Input style={{ width: 400 }} placeholder="请输入频道模板" />
               </Form.Item>
-              <Form.Item {...formItemLayout} label="列表模板">
+              <Form.Item {...formItemLayout} label="列表模板" name={'lists_tpl'}>
                 <Input style={{ width: 400 }} placeholder="请输入列表模板" />
               </Form.Item>
-              <Form.Item {...formItemLayout} label="详情模板">
+              <Form.Item {...formItemLayout} label="详情模板" name={'detail_tpl'}>
                 <Input style={{ width: 400 }} placeholder="请输入详情模板" />
               </Form.Item>
-              <Form.Item {...formItemLayout} label="分页数量">
+              <Form.Item {...formItemLayout} label="分页数量" name={'page_num'}>
                 <InputNumber style={{ width: 200 }} placeholder="请输入分页数量" />
               </Form.Item>
               <Form.Item {...formItemLayout} label="状态" name={'status'} valuePropName={'checked'} >
@@ -529,7 +536,7 @@ class CreatePage extends Component<any> {
               </Form.Item>
             </TabPane>
             <TabPane tab="关联品牌" key="2">
-              <Form.Item {...formItemLayout}>
+              <Form.Item {...formItemLayout} name={'brand_ids'}>
                 <Transfer
                   titles={['所有品牌', '已选择关联品牌']}
                   dataSource={this.state.data ? this.state.data.goodsBrands : []}
@@ -551,7 +558,7 @@ class CreatePage extends Component<any> {
               </Form.Item>
             </TabPane>
             <TabPane tab="关联属性、规格" key="3">
-              <Form.List name="attribute_keys">
+              <Form.List name="attributes">
                 {(fields, { add, remove }) => {
                   return (
                     <div>
@@ -624,14 +631,14 @@ class CreatePage extends Component<any> {
                   <PlusOutlined /> 添加属性
                 </Button>
               </Form.Item>
-              <Form.List name="specification_keys">
+              <Form.List name="specifications">
                 {(fields, { add, remove }) => {
                   return (
                     <div>
                       {fields.map((field,index) => (
                         <Form.Item
                         {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-                        label={index === 0 ? '关联属性' : ''}
+                        label={index === 0 ? '关联规格' : ''}
                         style={{ margin: 0 }}
                         >
                           <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="start">
@@ -648,14 +655,14 @@ class CreatePage extends Component<any> {
                               name={[field.name, 'name']}
                               fieldKey={[field.fieldKey, 'name']}
                             >
-                              <Input disabled={true} placeholder="请输入属性名称" />
+                              <Input disabled={true} placeholder="请输入规格名称" />
                             </Form.Item>
                             <Form.Item
                               {...field}
                               name={[field.name, 'goods_attribute_values']}
                               fieldKey={[field.fieldKey, 'goods_attribute_values']}
                             >
-                              <Input disabled={true} placeholder="请输入属性值" />
+                              <Input disabled={true} placeholder="请输入规格值" />
                             </Form.Item>
                             <Form.Item
                               {...field}
@@ -714,15 +721,22 @@ class CreatePage extends Component<any> {
             width={500}
           >
             <p>
-              <Form layout="inline" onFinish={this.attributeOnSearch}>
+              <Form
+                layout="inline"
+                onFinish={this.attributeOnSearch}
+                initialValues={{
+                  attributeGoodsTypeId:0
+                }}
+              >
                 <Form.Item name={'attributeName'}>
                   <Input placeholder="搜索内容" />
                 </Form.Item>
                 <Form.Item name={'attributeGoodsTypeId'}>
                   <Select style={{ width: 150 }}>
+                    <Option value={0}>{'请选择商品类型'}</Option>
                     {!!this.state.data.goodsTypes &&
-                      this.state.data.goodsTypes.map(option => {
-                        return <Option key={option.value.toString()}>{option.name}</Option>;
+                      this.state.data.goodsTypes.map((option:any) => {
+                        return <Option key={option.value} value={option.value}>{option.name}</Option>;
                       })}
                   </Select>
                 </Form.Item>
@@ -749,15 +763,22 @@ class CreatePage extends Component<any> {
             width={500}
           >
             <p>
-              <Form layout="inline" onFinish={this.specificationOnSearch}>
+              <Form
+                layout="inline"
+                onFinish={this.specificationOnSearch}
+                initialValues={{
+                  specificationGoodsTypeId:0
+                }}
+              >
                 <Form.Item name={'specificationName'}>
                   <Input placeholder="搜索内容" />
                 </Form.Item>
                 <Form.Item name={'specificationGoodsTypeId'}>
                   <Select style={{ width: 150 }}>
+                    <Option value={0}>{'请选择商品类型'}</Option>
                     {!!this.state.data.goodsTypes &&
-                      this.state.data.goodsTypes.map(option => {
-                        return <Option key={option.value.toString()}>{option.name}</Option>;
+                      this.state.data.goodsTypes.map((option:any) => {
+                        return <Option key={option.value} value={option.value}>{option.name}</Option>;
                       })}
                   </Select>
                 </Form.Item>
@@ -777,6 +798,7 @@ class CreatePage extends Component<any> {
           </Drawer>
         </div>
       </PageHeaderWrapper>
+      </ConfigProvider>
     );
   }
 
