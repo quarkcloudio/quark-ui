@@ -7,7 +7,7 @@ import { MinusCircleOutlined,PlusOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 import zhCN from 'antd/es/locale/zh_CN';
-import { Editor } from '@tinymce/tinymce-react';
+import Editor from '@/components/Form/Editor';
 
 import {
   Card,
@@ -234,8 +234,8 @@ class CreatePage extends Component<any> {
 
   onFinish = (values:any) => {
     values['goods_skus'] = this.state.dataSource;
-    values['pc_content'] = values['pc_content'].toHTML();
-    values['mobile_content'] = values['mobile_content'].toHTML();
+    values['pc_content'] = values['pc_content'];
+    values['mobile_content'] = values['mobile_content'];
     values['cover_id'] = this.state.coverId;
     values['file_id'] = this.state.fileId;
     this.props.dispatch({
@@ -659,7 +659,7 @@ class CreatePage extends Component<any> {
                       return (<Option key={option.id.toString()} value={option.id.toString()}>{option.name}</Option>)
                     })}
                   </Select>
-                &nbsp;&nbsp;<Button href="#/admin/mall/goods/unitCreate" target="_blank" type="primary">新建商品单位</Button>
+                &nbsp;&nbsp;<Button href="#/admin/quark/engine?api=admin/goodsUnit/create&component=form" target="_blank" type="primary">新建商品单位</Button>
                 &nbsp;&nbsp;<Button onClick={this.reload} loading={this.state.unitLoading}>重新加载</Button>
               </Form.Item>
               <Form.Item {...formItemLayout} label="商品品牌" name={'goods_brand_id'}>
@@ -972,34 +972,14 @@ class CreatePage extends Component<any> {
               <Form.Item {...formItemLayout} label="商品内容">
                 <Tabs defaultActiveKey="1">
                   <TabPane tab="电脑端" key="1">
-                    <div style={{border: '1px solid #ccc;'}}>
-                      <Editor
-                        init={{
-                          language: 'zh_CN',
-                          height: 500 ,
-                          width: '100%',
-                          plugins: [
-                            'advlist autolink lists link charmap print preview anchor image',
-                            'searchreplace visualblocks code fullscreen',
-                            'insertdatetime media table paste code help wordcount multipleimage'
-                          ],
-                          menu: {
-                              insert: {title: '插入', items: 'multipleimage link media template codesample inserttable | charmap emoticons hr | pagebreak nonbreaking anchor toc | insertdatetime'},
-                          },
-                          toolbar:
-                            'undo redo | formatselect | bold italic backcolor | \
-                            alignleft aligncenter alignright alignjustify | \
-                            bullist numlist outdent indent | removeformat | help',
-                          fontsize_formats: '8pt 10pt 12pt 14pt 18pt 24pt 36pt'
-                        }}
-                        onExecCommand={editorExecCommand}
-                      />
-                    </div>
+                      <Form.Item name={'pc_content'}>
+                        <Editor />
+                      </Form.Item>
                   </TabPane>
                   <TabPane tab="手机端" key="2">
-                    <div style={{border: '1px solid #ccc;'}}>
-
-                    </div>
+                      <Form.Item name={'mobile_content'}>
+                        <Editor />
+                      </Form.Item>
                   </TabPane>
                 </Tabs>
               </Form.Item>
@@ -1053,7 +1033,7 @@ class CreatePage extends Component<any> {
                     </Select>
                   </Form.Item>
                 </Space>
-                <Button href="#/admin/mall/goods/layoutCreate" target="_blank" type="primary">新建详情版式</Button>
+                <Button href="#/admin/quark/engine?api=admin/goodsLayout/create&component=form" target="_blank" type="primary">新建详情版式</Button>
                 &nbsp;&nbsp;<Button onClick={this.reload} loading={this.state.layoutLoading}>重新加载</Button>
               </Form.Item>
               <span style={{display:this.state.showFreightInfo?'block':'none'}}>
@@ -1160,7 +1140,7 @@ class CreatePage extends Component<any> {
               <Form.Item {...formItemLayout} label="状态" name={'status'} valuePropName={'checked'} >
                 <Switch checkedChildren="出售中" unCheckedChildren="已下架" />
               </Form.Item>
-              <Affix offsetBottom={10}>
+              <Affix offsetBottom={20}>
                 <Form.Item wrapperCol={{ span: 12, offset: 10 }}>
                   <Button type="primary" htmlType="submit">
                     下一步，上传商品图片

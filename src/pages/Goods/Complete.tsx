@@ -1,13 +1,9 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'dva';
-import router from 'umi/router';
+import { Dispatch } from 'redux';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import BraftEditor from 'braft-editor';
-import 'braft-editor/dist/index.css';
-import styles from './Style.less';
-import moment from 'moment';
-import 'moment/locale/zh-cn';
-import locale from 'antd/lib/date-picker/locale/zh_CN';
+import { MinusCircleOutlined,PlusOutlined } from '@ant-design/icons';
+import { parse } from 'qs';
 
 import {
   Steps,
@@ -15,16 +11,13 @@ import {
   Result,
   Typography
 } from 'antd';
-moment.locale('zh-cn');
 
 const { Step } = Steps;
 const { Paragraph, Text } = Typography;
 
-@connect(({ model }) => ({
-  model,
-}))
+class Complete extends Component<any> {
 
-class CreatePage extends PureComponent {
+  formRef: React.RefObject<any> = React.createRef();
 
   state = {
     msg: '',
@@ -41,11 +34,11 @@ class CreatePage extends PureComponent {
     const params = this.props.location.query;
 
     this.props.dispatch({
-      type: 'action/get',
+      type: 'request/get',
       payload: {
         actionUrl: 'admin/goods/complete?id='+params.id,
       },
-      callback: (res) => {
+      callback: (res:any) => {
         if (res) {
           this.setState({ data: res.data,loading:true,goodsId:params.id});
         }
@@ -60,7 +53,7 @@ class CreatePage extends PureComponent {
     };
 
     return (
-      <PageHeaderWrapper title={false}>
+      <PageHeaderWrapper title="商品发布成功">
         <div style={{background:'#fff',padding:'20px'}}>
           <Steps current={2} style={{width:'100%',margin:'30px auto'}}>
             <Step title="填写商品详情" />
@@ -86,4 +79,11 @@ class CreatePage extends PureComponent {
   }
 }
 
-export default CreatePage;
+function mapStateToProps(state:any) {
+  const { submitting } = state.request;
+  return {
+    submitting
+  };
+}
+
+export default connect(mapStateToProps)(Complete);

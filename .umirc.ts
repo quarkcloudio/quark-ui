@@ -43,6 +43,8 @@ export default defineConfig({
         { path: '/goodsCategory/create',component: '../pages/GoodsCategory/Create' },
         { path: '/goodsCategory/edit',component: '../pages/GoodsCategory/Edit' },
         { path: '/goods/create',component: '../pages/Goods/Create' },
+        { path: '/goods/imageCreate',component: '../pages/Goods/ImageCreate' },
+        { path: '/goods/complete',component: '../pages/Goods/Complete' },
       ]
     }
   ],

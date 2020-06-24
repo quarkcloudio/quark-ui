@@ -1,65 +1,35 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'dva';
-import router from 'umi/router';
+import { Dispatch } from 'redux';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import BraftEditor from 'braft-editor';
-import 'braft-editor/dist/index.css';
-import styles from './Style.less';
-import moment from 'moment';
-import 'moment/locale/zh-cn';
-import locale from 'antd/lib/date-picker/locale/zh_CN';
+import { MinusCircleOutlined,PlusOutlined } from '@ant-design/icons';
+import { parse } from 'qs';
 
 import {
-  Card,
-  Row,
-  Col,
-  InputNumber,
-  DatePicker,
-  Tabs,
-  Switch,
-  Icon,
-  Tag,
+  message,
   Form,
-  Select,
   Input,
   Button,
-  Checkbox,
+  Select,
   Radio,
-  Upload,
-  message,
-  Modal,
   Steps,
-  Cascader,
-  TreeSelect,
-  Divider,
-  Typography,
-  Table,
-  Popconfirm,
-  Affix
+  Upload,
+  Modal
 } from 'antd';
-moment.locale('zh-cn');
 
-const {  RangePicker } = DatePicker;
-const { TextArea } = Input;
-const TabPane = Tabs.TabPane;
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
 const { Step } = Steps;
-const { TreeNode } = TreeSelect;
-const { Title } = Typography;
+const { TextArea } = Input;
 
-@connect(({ model }) => ({
-  model,
-}))
+class ImageCreate extends Component<any> {
 
-@Form.create()
-
-class CreatePage extends PureComponent {
+  formRef: React.RefObject<any> = React.createRef();
 
   state = {
     goodsId:false,
-    fileList:false,
-    previewImage:false,
+    fileList:[],
+    previewImage:undefined,
     previewVisible:false
   };
 
@@ -73,26 +43,19 @@ class CreatePage extends PureComponent {
     this.setState({loading:true,goodsId:params.id});
   }
 
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      values['file_list'] = this.state.fileList;
-      values['goods_id'] = this.state.goodsId;
-      // 验证正确提交表单
-      if (!err) {
-        this.props.dispatch({
-          type: 'action/post',
-          payload: {
-            actionUrl: 'admin/goods/imageStore',
-            ...values,
-          },
-        });
-      }
+  onFinish = (values:any) => {
+    values['file_list'] = this.state.fileList;
+    values['goods_id'] = this.state.goodsId;
+    this.props.dispatch({
+      type: 'request/post',
+      payload: {
+        actionUrl: 'admin/goods/imageStore',
+        ...values,
+      },
     });
   };
 
   render() {
-    const { getFieldDecorator } = this.props.form;
 
     const formItemLayout = {
       labelCol: {
@@ -112,20 +75,20 @@ class CreatePage extends PureComponent {
     // 多图片上传模式
     let uploadButton = (
       <div>
-        <Icon type="plus" />
+        <PlusOutlined />
         <div className="ant-upload-text">上传图片</div>
       </div>
     );
 
     const handleCancel = () => {
       this.setState({
-        previewImage : null,
+        previewImage : undefined,
         previewVisible : false,
       });
     };
 
     return (
-      <PageHeaderWrapper title={false}>
+      <PageHeaderWrapper title="上传商品图片">
         <div style={{background:'#fff',padding:'20px'}}>
           <Steps current={1} style={{width:'100%',margin:'30px auto'}}>
             <Step title="填写商品详情" />
@@ -133,7 +96,11 @@ class CreatePage extends PureComponent {
             <Step title="商品发布成功" />
           </Steps>
           <div className="steps-content" style={{width:'100%',margin:'40px auto'}}>
-            <Form onSubmit={this.handleSubmit} style={{ marginTop: 8 }}>
+            <Form
+              onFinish={this.onFinish}
+              ref={this.formRef}
+              style={{ marginTop: 8 }}
+            >
               <Form.Item
                 {...formItemLayout}
               >
@@ -207,6 +174,14 @@ class CreatePage extends PureComponent {
       </PageHeaderWrapper>
     );
   }
+
 }
 
-export default CreatePage;
+function mapStateToProps(state:any) {
+  const { submitting } = state.request;
+  return {
+    submitting
+  };
+}
+
+export default connect(mapStateToProps)(ImageCreate);
