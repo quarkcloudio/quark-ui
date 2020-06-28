@@ -180,7 +180,6 @@ class CreatePage extends Component<any> {
     shopId:'',
     categoryId:'',
     systemGoodsAttributes:false,
-    shopGoodsAttributes:false,
     goodsAttributes:false,
     checkedGoodsAttributes:[],
     loading: false,
@@ -289,7 +288,6 @@ class CreatePage extends Component<any> {
         if (res) {
           this.setState({ 
             systemGoodsAttributes: res.data.systemGoodsAttributes,
-            shopGoodsAttributes: res.data.shopGoodsAttributes,
             goodsAttributes:res.data.goodsAttributes
           });
         }
@@ -650,17 +648,23 @@ class CreatePage extends Component<any> {
                     <Radio value={2}>计重</Radio>
                   </Radio.Group>
               </Form.Item>
-              <Form.Item {...formItemLayout} label="商品单位" name={'goods_unit_id'}>
-                  <Select
-                  placeholder="请选择商品单位"
-                  style={{ width: 200 }}
-                  >
-                    {!!this.state.data.goodsUnits && this.state.data.goodsUnits.map((option:any) => {
-                      return (<Option key={option.id.toString()} value={option.id.toString()}>{option.name}</Option>)
-                    })}
-                  </Select>
-                &nbsp;&nbsp;<Button href="#/admin/quark/engine?api=admin/goodsUnit/create&component=form" target="_blank" type="primary">新建商品单位</Button>
-                &nbsp;&nbsp;<Button onClick={this.reload} loading={this.state.unitLoading}>重新加载</Button>
+              <Form.Item {...formItemLayout} label="商品单位">
+                <Space style={{ display: 'flex', marginBottom: 0 }} align="start">
+                  <Form.Item name={'goods_unit_id'}>
+                    <Select
+                      placeholder="请选择商品单位"
+                      style={{ width: 200 }}
+                    >
+                      {!!this.state.data.goodsUnits && this.state.data.goodsUnits.map((option:any) => {
+                        return (<Option key={option.id} value={option.id}>{option.name}</Option>)
+                      })}
+                    </Select>
+                  </Form.Item>
+                  <Form.Item>
+                    <Button href="#/admin/quark/engine?api=admin/goodsUnit/create&component=form" target="_blank" type="primary">新建商品单位</Button>
+                    &nbsp;&nbsp;<Button onClick={this.reload} loading={this.state.unitLoading}>重新加载</Button>
+                  </Form.Item>
+                </Space>
               </Form.Item>
               <Form.Item {...formItemLayout} label="商品品牌" name={'goods_brand_id'}>
                   <Select
@@ -732,7 +736,7 @@ class CreatePage extends Component<any> {
                       <span style={{display:'inline-block',padding:'0px 10px',background:'#22baa0',color:'#fff',fontSize:'13px',fontWeight:700,lineHeight:'30px'}}>店铺自定义属性</span>
                     </div>
                     <div style={{marginTop:'20px'}}>
-                      <Form.List name="shop_goods_attributes">
+                      <Form.List name="goods_shop_spus">
                         {(fields, { add, remove }) => {
                           return (
                             <div>
@@ -741,16 +745,16 @@ class CreatePage extends Component<any> {
                                   <Form.Item
                                     {...field}
                                     style={{ width: '100px'}}
-                                    name={[field.name, 'name']}
-                                    fieldKey={[field.fieldKey, 'name']}
+                                    name={[field.name, 'attribute_name']}
+                                    fieldKey={[field.fieldKey, 'attribute_name']}
                                   >
                                     <Input placeholder="属性名" />
                                   </Form.Item>
                                   <Form.Item
                                     {...field}
                                     style={{ width: '400px'}}
-                                    name={[field.name, 'value']}
-                                    fieldKey={[field.fieldKey, 'value']}
+                                    name={[field.name, 'attribute_value']}
+                                    fieldKey={[field.fieldKey, 'attribute_value']}
                                   >
                                     <Input placeholder="属性值，多个值间用英文逗号分割" />
                                   </Form.Item>

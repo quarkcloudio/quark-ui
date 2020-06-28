@@ -1,6 +1,6 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'dva';
-import router from 'umi/router';
+import { history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
@@ -31,19 +31,12 @@ moment.locale('zh-cn');
 const TabPane = Tabs.TabPane;
 const { Step } = Steps;
 
-@connect(({ model }) => ({
-  model,
-}))
+class QuickDeliveryPage extends Component<any> {
 
-@Form.create()
+  formRef: React.RefObject<any> = React.createRef();
 
-class InfoPage extends PureComponent {
   state = {
-    data:{
-      goodsOrderDeliveryInfo:false,
-      goodsOrderDeliveryDetails:false,
-      goodsOrderInfo:false,
-    },
+    data:false,
     msg: '',
     url: '',
     status: '',
@@ -60,11 +53,11 @@ class InfoPage extends PureComponent {
     this.setState({ loading: true });
 
     this.props.dispatch({
-      type: 'action/get',
+      type: 'request/get',
       payload: {
-        actionUrl: 'admin/goodsOrder/deliveryEdit?' + stringify(params),
+        actionUrl: 'admin/goodsOrder/quickDelivery?' + stringify(params),
       },
-      callback: res => {
+      callback: (res:any) => {
         if (res) {
           this.setState({
             data: res.data
@@ -74,27 +67,20 @@ class InfoPage extends PureComponent {
     });
   }
 
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      // 验证正确提交表单
-      if (!err) {
+  onFinish = (values:any) => {
+    // 配送类型
+    values['express_type'] = this.state.expressType
 
-        // 配送类型
-        values['express_type'] = this.state.expressType
-
-        this.props.dispatch({
-          type: 'action/post',
-          payload: {
-            actionUrl: 'admin/goodsOrder/deliverySave',
-            ...values,
-          }
-        });
+    this.props.dispatch({
+      type: 'request/post',
+      payload: {
+        actionUrl: 'admin/goodsOrder/send',
+        ...values,
       }
     });
   };
- 
-  onTabChange = (key) => {
+
+  onTabChange = (key:any) => {
     this.setState({
       expressType:key
     })
@@ -109,7 +95,7 @@ class InfoPage extends PureComponent {
         title: '商品名称',
         key: 'cover_id',
         dataIndex: 'cover_id',
-        render: (text, record) => (
+        render: (text:any, record:any) => (
           <span>
             <Avatar src={text} shape="square" size="large" /> 
             {record.goods_name}
@@ -127,7 +113,7 @@ class InfoPage extends PureComponent {
         key: 'goods_price',
       },
       {
-        title: '发货数量',
+        title: '数量',
         dataIndex: 'num',
         key: 'num',
       },
@@ -154,13 +140,8 @@ class InfoPage extends PureComponent {
         <div className={styles.container}>
           <Row gutter={[16, 16]}>
             <Col span={24}>
-              发货单编号：{this.state.data.goodsOrderDeliveryInfo.delivery_no}
-            </Col>
-          </Row>
-          <Row gutter={[16, 16]}>
-            <Col span={24}>
               <Table
-                dataSource={this.state.data.goodsOrderDeliveryDetails}
+                dataSource={this.state.data.goods_order_details}
                 columns={columns}
                 pagination={false}
                 bordered
@@ -169,65 +150,80 @@ class InfoPage extends PureComponent {
           </Row>
           <Row gutter={[16, 16]}>
             <Col span={24}>
-              <Card size="small" title="收货信息">
-                <p>收 货 人： {this.state.data.goodsOrderInfo.consignee_name}，{this.state.data.goodsOrderInfo.consignee_phone}</p>
-                <p>收货地址： {this.state.data.goodsOrderInfo.consignee_address}</p>
-                <p>支付方式： {this.state.data.goodsOrderInfo.pay_type}</p>
-                <p>买家留言： {this.state.data.goodsOrderInfo.remark}</p>
+              <Card size="small" title="确认收货信息">
+                <p>收 货 人： {this.state.data.consignee_name}，{this.state.data.consignee_phone}</p>
+                <p>收货地址： {this.state.data.consignee_address}</p>
+                <p>支付方式： {this.state.data.pay_type}</p>
+                <p>买家留言： {this.state.data.remark}</p>
               </Card>
             </Col>
           </Row>
           <Row gutter={[16, 16]}>
             <Col span={24}>
-              {!!this.state.data.goodsOrderDeliveryInfo && (
               <Card size="small" title="选择物流服务">
-                <Tabs defaultActiveKey={this.state.data.goodsOrderDeliveryInfo ? this.state.data.goodsOrderDeliveryInfo.express_type.toString() : '1'} onChange={this.onTabChange}>
+                <Tabs defaultActiveKey="1" onChange={this.onTabChange}>
                   <TabPane tab="无需物流" key="1">
-                    <Form onSubmit={this.handleSubmit} style={{ marginTop: 8 }}>
+                    <Form 
+                      onFinish={this.onFinish}
+                      ref={this.formRef}
+                      style={{ marginTop: 8 }}
+                    >
+                      <Form.Item
+                        style={{display:'none'}}
+                        name={'order_id'}
+                        initialValue={this.state.data.id}
+                      >
+                        <Input/>
+                      </Form.Item>
                       <Form.Item {...formItemLayout} label="注意">
                         <span className="ant-form-text">如果订单中的商品无需物流运送，您可以直接点击确认发货！</span>
                       </Form.Item>
                       <Form.Item wrapperCol={{ span: 12, offset: 2 }}>
-                        {getFieldDecorator('id', {
-                          initialValue: this.state.data.goodsOrderDeliveryInfo.id,
-                        })(<Input style={{ display: 'none' }} />)}
-                        <Button type="primary" htmlType="submit">确认修改</Button>
+                        <Button type="primary" htmlType="submit">确认发货</Button>
                       </Form.Item>
                     </Form>
                   </TabPane>
                   <TabPane tab="第三方物流" key="2">
-                    <Form onSubmit={this.handleSubmit} style={{ marginTop: 8 }}>
-                      <Form.Item {...formItemLayout} label="物流公司">
-                        {getFieldDecorator('id', {
-                          initialValue: this.state.data.goodsOrderDeliveryInfo.id,
-                        })(<Input style={{ display: 'none' }} />)}
-                        {getFieldDecorator('express_id', {
-                          initialValue: this.state.data.goodsOrderDeliveryInfo ? this.state.data.goodsOrderDeliveryInfo.goods_express_id.toString() : '0',
-                        })(
-                          <Select style={{ width: 200 }}>
-                            <Option key={'0'}>{'请选择物流公司'}</Option>
-                            {!!this.state.data.goodsExpresses &&
-                              this.state.data.goodsExpresses.map(option => {
-                                return <Option key={option.id.toString()}>{option.name}</Option>;
-                              })}
-                          </Select>,
-                        )}
+                    <Form
+                      onFinish={this.onFinish}
+                      ref={this.formRef}
+                      style={{ marginTop: 8 }}
+                    >
+                      <Form.Item
+                        style={{display:'none'}}
+                        name={'order_id'}
+                        initialValue={this.state.data.id}
+                      >
+                        <Input/>
                       </Form.Item>
-                      <Form.Item {...formItemLayout} label="物流单号">
+                      <Form.Item
+                        {...formItemLayout}
+                        label="物流公司"
+                        name={'express_id'}
+                        initialValue={0}
+                      >
+                        <Select style={{ width: 200 }}>
+                          <Option value={0} key={0}>{'请选择物流公司'}</Option>
+                          {!!this.state.data.goodsExpresses &&
+                            this.state.data.goodsExpresses.map((option:any) => {
+                              return <Option value={option.id} key={option.id}>{option.name}</Option>;
+                            })}
+                        </Select>
+                      </Form.Item>
+                      <Form.Item {...formItemLayout} label="物流单号" name={'express_no'}>
                         {getFieldDecorator('express_no', {
-                          initialValue: this.state.data.goodsOrderDeliveryInfo.express_no,
+                          initialValue: '',
                         })(<Input style={{ width: 200 }} placeholder="请输入物流单号" />)}
                       </Form.Item>
                       <Form.Item wrapperCol={{ span: 12, offset: 2 }}>
                         <Button type="primary" htmlType="submit">
-                          确认修改
+                          确认发货
                         </Button>
                       </Form.Item>
                     </Form>
                   </TabPane>
                 </Tabs>
               </Card>
-              )}
             </Col>
           </Row>
         </div>
@@ -236,4 +232,11 @@ class InfoPage extends PureComponent {
   }
 }
 
-export default InfoPage;
+function mapStateToProps(state:any) {
+  const { submitting } = state.request;
+  return {
+    submitting
+  };
+}
+
+export default connect(mapStateToProps)(QuickDeliveryPage);

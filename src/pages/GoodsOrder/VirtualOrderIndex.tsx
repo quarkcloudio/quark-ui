@@ -1,12 +1,22 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'dva';
-import router from 'umi/router';
+import { history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 import locale from 'antd/lib/date-picker/locale/zh_CN';
 import { stringify } from 'qs';
 import styles from './Style.less';
+import { Dispatch } from 'redux';
+import zhCN from 'antd/es/locale/zh_CN';
+
+import {
+  createFromIconfontCN
+} from '@ant-design/icons';
+
+const Iconfont = createFromIconfontCN({
+  scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js', // 在 iconfont.cn 上生成
+});
 
 import {
   Card,
@@ -33,7 +43,8 @@ import {
   Dropdown,
   Divider,
   List,
-  Avatar
+  Avatar,
+  ConfigProvider
 } from 'antd';
 moment.locale('zh-cn');
 
@@ -43,13 +54,10 @@ const Option = Select.Option;
 const RadioGroup = Radio.Group;
 const { RangePicker } = DatePicker;
 
-@connect(({ model }) => ({
-  model,
-}))
+class IndexPage extends Component<any> {
 
-@Form.create()
+  formRef: React.RefObject<any> = React.createRef();
 
-class IndexPage extends PureComponent {
   state = {
     data:false,
     msg: '',
@@ -73,11 +81,11 @@ class IndexPage extends PureComponent {
     this.setState({ loading: true });
 
     this.props.dispatch({
-      type: 'action/get',
+      type: 'request/get',
       payload: {
         actionUrl: 'admin/goodsOrder/virtualOrderIndex' + stringify(params),
       },
-      callback: res => {
+      callback: (res:any) => {
         if (res) {
           this.setState({
             search: res.data.search,
@@ -92,8 +100,6 @@ class IndexPage extends PureComponent {
 
   render() {
 
-    const { getFieldDecorator, getFieldValue } = this.props.form;
-
     // 展开或收缩高级搜索
     const toggle = () => {
       this.setState({
@@ -101,7 +107,7 @@ class IndexPage extends PureComponent {
       });
     };
 
-    const expandedRowRender = (record, index) => {
+    const expandedRowRender = (record:any, index:any) => {
       return <div style={{'backgroundColor':'#ffffff','padding':'0px 10px'}}>
         <p style={{'textAlign':'left','margin':0,'borderBottom':'1px solid #e8e8e8','padding':'20px 0px'}}>
           <span style={{'color':'#22BAA0'}}>温馨提示：</span>
@@ -115,13 +121,13 @@ class IndexPage extends PureComponent {
         <List
           size="large"
           dataSource={record.goods_order_details}
-          renderItem={item => (
+          renderItem={(item:any) => (
             <List.Item>
               <List.Item.Meta
                 avatar={
                   <Avatar src={item.cover_id} shape="square" size="large" />
                 }
-                title={<a href={"#/admin/mall/goods/edit?id="+item.goods_id}>{item.goods_name} {item.goods_property_names}</a>}
+                title={<a href={"#/admin/goods/edit?search[id]="+item.goods_id}>{item.goods_name} {item.goods_property_names}</a>}
                 description={item.description}
               />
               {<span style={{'marginRight':150,'float':'left'}}>￥{item.goods_price}</span>}
@@ -138,7 +144,7 @@ class IndexPage extends PureComponent {
         <p style={{'textAlign':'right','marginTop':0,'borderBottom':'1px solid #e8e8e8','padding':'10px 0px'}}><strong>订单总金额：</strong><strong style={{'color':'#ff3535'}}>￥{record.total_amount}</strong></p>
         <p style={{'textAlign':'right','margin':0,'height':40}}>
           <span style={{'float':'left'}}><Button>打印订单</Button></span>
-          <span style={{'float':'right'}}>{record.goods_order_status=='待核验'?<Button href={"#/admin/mall/goodsOrder/quickDelivery?id="+record.id}>一键核验</Button> : null} <Button href={"#/admin/mall/goodsOrder/Info?id="+record.id} type="primary">订单详情</Button></span>
+          <span style={{'float':'right'}}>{record.goods_order_status=='待核验'?<Button href={"#/admin/goodsOrder/quickDelivery?id="+record.id}>一键核验</Button> : null} <Button href={"#/admin/goodsOrder/Info?id="+record.id} type="primary">订单详情</Button></span>
         </p>
       </div>;
     };
@@ -153,7 +159,7 @@ class IndexPage extends PureComponent {
     ];
 
     // 分页切换
-    const changePagination = (pagination, filters, sorter) => {
+    const changePagination = (pagination:any, filters:any, sorter:any) => {
 
       // 获得url参数
       const params = this.props.location.query;
@@ -163,7 +169,7 @@ class IndexPage extends PureComponent {
       });
 
       this.props.dispatch({
-        type: 'action/get',
+        type: 'request/get',
         payload: {
           actionUrl: 'admin/goodsOrder/virtualOrderIndex' + stringify(params),
           pageSize: pagination.pageSize, // 分页数量
@@ -173,7 +179,7 @@ class IndexPage extends PureComponent {
           ...filters, // 筛选
           search: this.state.search,
         },
-        callback : res => {
+        callback : (res:any) => {
           if (res) {
             this.setState({
               search: res.data.search,
@@ -187,101 +193,91 @@ class IndexPage extends PureComponent {
     };
 
     // 不同状态不同数据
-    const getStatusLists = (e) => {
+    const getStatusLists = (values:any) => {
 
       // 获得url参数
       const params = this.props.location.query;
 
-      this.props.form.validateFields((err, values) => {
-
-        if (values['dateRange'] && values['dateRange']) {
-          if (values['dateRange'][0] && values['dateRange'][1]) {
-            // 时间标准化
-            let dateStart = values['dateRange'][0].format('YYYY-MM-DD HH:mm:ss');
-            let dateEnd = values['dateRange'][1].format('YYYY-MM-DD HH:mm:ss');
-            // 先清空对象
-            values['dateRange'] = [];
-            // 重新赋值对象
-            values['dateRange'] = [dateStart, dateEnd];
-          }
+      if (values['dateRange'] && values['dateRange']) {
+        if (values['dateRange'][0] && values['dateRange'][1]) {
+          // 时间标准化
+          let dateStart = values['dateRange'][0].format('YYYY-MM-DD HH:mm:ss');
+          let dateEnd = values['dateRange'][1].format('YYYY-MM-DD HH:mm:ss');
+          // 先清空对象
+          values['dateRange'] = [];
+          // 重新赋值对象
+          values['dateRange'] = [dateStart, dateEnd];
         }
+      }
 
-        values['status'] = e.target.value;
-
-        if (!err) {
-          this.setState({
-            tableLoading: true
-          });
-          this.props.dispatch({
-            type: 'action/get',
-            payload: {
-              actionUrl: 'admin/goodsOrder/virtualOrderIndex' + stringify(params),
-              ...this.state.pagination,
-              search: values,
-            },
-            callback : res => {
-              if (res) {
-                this.setState({
-                  search: res.data.search,
-                  pagination: res.data.pagination,
-                  data:res.data,
-                  tableLoading: false
-                });
-              }
-            }
-          });
+      this.setState({
+        tableLoading: true
+      });
+      this.props.dispatch({
+        type: 'request/get',
+        payload: {
+          actionUrl: 'admin/goodsOrder/virtualOrderIndex' + stringify(params),
+          ...this.state.pagination,
+          search: values,
+        },
+        callback : (res:any) => {
+          if (res) {
+            this.setState({
+              search: res.data.search,
+              pagination: res.data.pagination,
+              data:res.data,
+              tableLoading: false
+            });
+          }
         }
       });
     };
 
     // 搜索
-    const onSearch = () => {
+    const onSearch = (values:any) => {
 
       // 获得url参数
       const params = this.props.location.query;
 
-      this.props.form.validateFields((err, values) => {
-
-        if (values['dateRange'] && values['dateRange']) {
-          if (values['dateRange'][0] && values['dateRange'][1]) {
-            // 时间标准化
-            let dateStart = values['dateRange'][0].format('YYYY-MM-DD HH:mm:ss');
-            let dateEnd = values['dateRange'][1].format('YYYY-MM-DD HH:mm:ss');
-            // 先清空对象
-            values['dateRange'] = [];
-            // 重新赋值对象
-            values['dateRange'] = [dateStart, dateEnd];
-          }
+      if (values['dateRange'] && values['dateRange']) {
+        if (values['dateRange'][0] && values['dateRange'][1]) {
+          // 时间标准化
+          let dateStart = values['dateRange'][0].format('YYYY-MM-DD HH:mm:ss');
+          let dateEnd = values['dateRange'][1].format('YYYY-MM-DD HH:mm:ss');
+          // 先清空对象
+          values['dateRange'] = [];
+          // 重新赋值对象
+          values['dateRange'] = [dateStart, dateEnd];
         }
+      }
 
-        if (!err) {
-          this.setState({
-            tableLoading: true
-          });
-          this.props.dispatch({
-            type: 'action/get',
-            payload: {
-              actionUrl: 'admin/goodsOrder/virtualOrderIndex' + stringify(params),
-              ...this.state.pagination,
-              search: values,
-            },
-            callback : res => {
-              if (res) {
-                this.setState({
-                  search: res.data.search,
-                  pagination: res.data.pagination,
-                  data:res.data,
-                  tableLoading: false
-                });
-              }
-            }
-          });
+      this.setState({
+        tableLoading: true
+      });
+
+      this.props.dispatch({
+        type: 'request/get',
+        payload: {
+          actionUrl: 'admin/goodsOrder/virtualOrderIndex' + stringify(params),
+          ...this.state.pagination,
+          search: values,
+        },
+        callback : (res:any) => {
+          if (res) {
+            this.setState({
+              search: res.data.search,
+              pagination: res.data.pagination,
+              data:res.data,
+              tableLoading: false
+            });
+          }
         }
       });
     };
 
     return (
-      <PageHeaderWrapper title={false}>
+      <ConfigProvider locale={zhCN}>
+      <PageHeaderWrapper title={"虚拟订单列表"}>
       <Tabs type="card">
         <TabPane tab="虚拟订单列表" key="1">
           <div className={styles.container}>
@@ -292,7 +288,10 @@ class IndexPage extends PureComponent {
                 </Col>
                 <Col span={22}>
                   <div className={styles.floatRight}>
-                  <Form layout="inline">
+                  <Form
+                    layout="inline"
+                    ref={this.formRef}
+                  >
                     <Form.Item >
                       <Radio.Group onChange={getStatusLists}>
                         <Radio.Button value="ALL">全部订单({this.state.data.totalNum})</Radio.Button>
@@ -317,37 +316,32 @@ class IndexPage extends PureComponent {
                 </Col>
                 <Col span={22}>
                   <div className={styles.floatRight}>
-                    <Form layout="inline">
-                      <Form.Item>
-                        {getFieldDecorator(`title`, {
-                          initialValue: ''
-                        })(
-                          <Input style={{ width: 220 }} placeholder="订单编号/买家账号/买家手机号" />,
-                        )}
+                    <Form
+                      layout="inline"
+                      ref={this.formRef}
+                    >
+                      <Form.Item name={'title'}>
+                        <Input style={{ width: 220 }} placeholder="订单编号/买家账号/买家手机号" />
+                      </Form.Item>
+                      <Form.Item name={'status'}>
+                        <Select style={{ width: 120 }}>
+                          <Option value="ALL">全部订单</Option>
+                          <Option value="NOT_PAID">等待付款</Option>
+                          <Option value="PAID">待核验</Option>
+                          <Option value="SUCCESS">已完成</Option>
+                          <Option value="CLOSE">已关闭</Option>
+                          <Option value="REFUND">退款中</Option>
+                        </Select>
                       </Form.Item>
                       <Form.Item>
-                        {getFieldDecorator(`status`, {
-                          initialValue: 'ALL'
-                        })(
-                          <Select style={{ width: 120 }}>
-                            <Option value="ALL">全部订单</Option>
-                            <Option value="NOT_PAID">等待付款</Option>
-                            <Option value="PAID">待核验</Option>
-                            <Option value="SUCCESS">已完成</Option>
-                            <Option value="CLOSE">已关闭</Option>
-                            <Option value="REFUND">退款中</Option>
-                          </Select>
-                        )}
-                      </Form.Item>
-                      <Form.Item>
-                        <Button onClick={() => onSearch()}>搜索</Button>
+                        <Button>搜索</Button>
                       </Form.Item>
                       <Form.Item>
                         <Button href={this.state.exportUrl} target="_blank" type="primary">导出</Button>
                       </Form.Item>
                       <Form.Item style={{ marginRight: 10 }}>
-                        <a style={{ fontSize: 12 }} onClick={toggle}>
-                          高级搜索 <Icon type={this.state.advancedSearchExpand ? 'up' : 'down'} />
+                        <a type="link" style={{ fontSize: 12}}  onClick={toggle}>
+                          高级搜索 {this.state.advancedSearchExpand ? <Iconfont type={'icon-up'} /> : <Iconfont type={'icon-down'} />}
                         </a>
                       </Form.Item>
                     </Form>
@@ -361,41 +355,34 @@ class IndexPage extends PureComponent {
             >
               <Row>
                 <Col span={24}>
-                  <Form layout="inline">
-                    <Form.Item>
-                      {getFieldDecorator(`payType`, {
-                        initialValue: '0'
-                      })(
-                        <Select style={{ width: 180 }}>
-                          <Option value="0">请选择付款方式</Option>
-                          <Option value="WECHAT_APP">微信APP支付</Option>
-                          <Option value="WECHAT_JSAPI">微信公众号支付</Option>
-                          <Option value="WECHAT_NATIVE">微信电脑网站支付</Option>
-                          <Option value="ALIPAY_PAGE">支付宝电脑网站支付</Option>
-                          <Option value="ALIPAY_APP">支付宝APP支付</Option>
-                          <Option value="ALIPAY_WAP">支付宝手机网站支付</Option>
-                          <Option value="ALIPAY_F2F">支付宝当面付</Option>
-                          <Option value="ALIPAY_JS">支付宝JSAPI</Option>
-                        </Select>
-                      )}
+                  <Form
+                    layout="inline"
+                    ref={this.formRef}
+                  >
+                    <Form.Item name={'payType'}>
+                      <Select style={{ width: 180 }}>
+                        <Option value="0">请选择付款方式</Option>
+                        <Option value="WECHAT_APP">微信APP支付</Option>
+                        <Option value="WECHAT_JSAPI">微信公众号支付</Option>
+                        <Option value="WECHAT_NATIVE">微信电脑网站支付</Option>
+                        <Option value="ALIPAY_PAGE">支付宝电脑网站支付</Option>
+                        <Option value="ALIPAY_APP">支付宝APP支付</Option>
+                        <Option value="ALIPAY_WAP">支付宝手机网站支付</Option>
+                        <Option value="ALIPAY_F2F">支付宝当面付</Option>
+                        <Option value="ALIPAY_JS">支付宝JSAPI</Option>
+                      </Select>
                     </Form.Item>
-                    <Form.Item>
-                      {getFieldDecorator(`payType`, {
-                        initialValue: '0'
-                      })(
-                        <Select style={{ width: 180 }}>
-                          <Option value="0">请选择订单类型</Option>
-                          <Option value="MALL">普通订单</Option>
-                        </Select>
-                      )}
+                    <Form.Item name={'type'}>
+                      <Select style={{ width: 180 }}>
+                        <Option value="0">请选择订单类型</Option>
+                        <Option value="MALL">普通订单</Option>
+                      </Select>
                     </Form.Item>
-                    <Form.Item>
-                      {getFieldDecorator(`dateRange`)(
-                        <RangePicker
-                          showTime={true}
-                          style={{ width: 360 }}
-                        />
-                      )}
+                    <Form.Item name={'dateRange'}>
+                      <RangePicker
+                        showTime={true}
+                        style={{ width: 360 }}
+                      />
                     </Form.Item>
                     <Form.Item >
                       <Button>搜索</Button>
@@ -429,8 +416,16 @@ class IndexPage extends PureComponent {
         </TabPane>
       </Tabs>
       </PageHeaderWrapper>
+      </ConfigProvider>
     );
   }
 }
 
-export default IndexPage;
+function mapStateToProps(state:any) {
+  const { submitting } = state.request;
+  return {
+    submitting
+  };
+}
+
+export default connect(mapStateToProps)(IndexPage);

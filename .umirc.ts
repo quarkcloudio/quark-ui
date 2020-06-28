@@ -44,7 +44,14 @@ export default defineConfig({
         { path: '/goodsCategory/edit',component: '../pages/GoodsCategory/Edit' },
         { path: '/goods/create',component: '../pages/Goods/Create' },
         { path: '/goods/imageCreate',component: '../pages/Goods/ImageCreate' },
+        { path: '/goods/imageEdit',component: '../pages/Goods/imageEdit' },
         { path: '/goods/complete',component: '../pages/Goods/Complete' },
+        { path: '/goods/edit',component: '../pages/Goods/Edit' },
+        { path: '/goodsOrder/index',component: '../pages/GoodsOrder/Index' },
+        { path: '/goodsOrder/info',component: '../pages/GoodsOrder/Info' },
+        { path: '/goodsOrder/quickDelivery',component: '../pages/GoodsOrder/QuickDelivery' },
+        { path: '/goodsOrder/virtualOrderIndex',component: '../pages/GoodsOrder/VirtualOrderIndex' },
+        { path: '/goodsOrder/deliveryIndex',component: '../pages/GoodsOrder/DeliveryIndex' },
       ]
     }
   ],

@@ -1,6 +1,6 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'dva';
-import router from 'umi/router';
+import { history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
@@ -24,18 +24,13 @@ import {
   Steps,
   Tag
 } from 'antd';
+
 moment.locale('zh-cn');
 
-const TabPane = Tabs.TabPane;
 const { Step } = Steps;
 
-@connect(({ model }) => ({
-  model,
-}))
+class InfoPage extends Component<any> {
 
-@Form.create()
-
-class InfoPage extends PureComponent {
   state = {
     data:false,
     msg: '',
@@ -54,11 +49,11 @@ class InfoPage extends PureComponent {
     this.setState({ loading: true });
 
     this.props.dispatch({
-      type: 'action/get',
+      type: 'request/get',
       payload: {
         actionUrl: 'admin/goodsOrder/info?' + stringify(params),
       },
-      callback: res => {
+      callback: (res:any) => {
         if (res) {
 
           let current = 0;
@@ -89,15 +84,13 @@ class InfoPage extends PureComponent {
   }
 
   render() {
-
-    const { getFieldDecorator, getFieldValue } = this.props.form;
     
     const columns = [
       {
         title: '商品名称',
         key: 'cover_id',
         dataIndex: 'cover_id',
-        render: (text, record) => (
+        render: (text:any, record:any) => (
           <span>
             <Avatar src={text} shape="square" size="large" /> 
             {record.goods_name}
@@ -133,7 +126,7 @@ class InfoPage extends PureComponent {
         title: '服务',
         key: 'service_status',
         dataIndex: 'service_status',
-        render:  (text, record) => (
+        render:  (text:any, record:any) => (
           <span>
             <Tag color={'green'}>
               {text}
@@ -144,7 +137,7 @@ class InfoPage extends PureComponent {
     ];
 
     return (
-      <PageHeaderWrapper title={false}>
+      <PageHeaderWrapper title={'订单详情'}>
         <div className={styles.container}>
           <Row>
             <Col span={24}>
@@ -158,7 +151,7 @@ class InfoPage extends PureComponent {
                   </Steps>
                 : 
                 <Steps current={this.state.goodsOrderStatusRecordCount} size="small">
-                  {!!this.state.data && this.state.data.goodsOrderStatusRecords.map(option => {
+                  {!!this.state.data && this.state.data.goodsOrderStatusRecords.map((option:any) => {
                     switch (option.status) {
                       case 'NOT_PAID':
                         return <Step title="拍下商品" description={option.created_at} />;
@@ -229,7 +222,7 @@ class InfoPage extends PureComponent {
               <Card size="small" style={{minHeight:'260px'}} title={'商家：'+this.state.data.shop_title}>
                 <p>订单编号：{this.state.data.order_no}</p>
                 {!!this.state.data &&
-                  this.state.data.goodsOrderStatusRecords.map(option => {
+                  this.state.data.goodsOrderStatusRecords.map((option:any) => {
                     switch (option.status) {
                       case 'NOT_PAID':
                         return <p>拍下商品：{option.created_at}</p>;
@@ -287,10 +280,10 @@ class InfoPage extends PureComponent {
             <Col span={24}>
               <Card size="small" title="物流发货单">
               {!!this.state.data &&
-                this.state.data.goodsOrderDeliveries.map(option => {
+                this.state.data.goodsOrderDeliveries.map((option:any) => {
                   return (
                     <div style={{float:'left',marginLeft:'30px'}}>
-                      <p>订单商品： {!!option.goodsOrderDetails && option.goodsOrderDetails.map(option1 => {
+                      <p>订单商品： {!!option.goodsOrderDetails && option.goodsOrderDetails.map((option1:any) => {
                         return option1.goods_name
                       })}</p>
                       <p>物流方式： {option.express_type==1 ? '无需配送' : '第三方物流'}</p>
@@ -310,4 +303,11 @@ class InfoPage extends PureComponent {
   }
 }
 
-export default InfoPage;
+function mapStateToProps(state:any) {
+  const { submitting } = state.request;
+  return {
+    submitting
+  };
+}
+
+export default connect(mapStateToProps)(InfoPage);

@@ -27,7 +27,7 @@ interface IProps {
 
 const { TextArea } = Input;
 
-class CreatePage extends Component<any> {
+class EditPage extends Component<any> {
 
   formRef: React.RefObject<any> = React.createRef();
 
@@ -239,4 +239,4 @@ function mapStateToProps(state:any) {
   };
 }
 
-export default connect(mapStateToProps)(CreatePage);
+export default connect(mapStateToProps)(EditPage);

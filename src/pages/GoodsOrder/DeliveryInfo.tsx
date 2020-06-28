@@ -1,6 +1,6 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'dva';
-import router from 'umi/router';
+import { history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
@@ -26,18 +26,11 @@ import {
   Input,
   Select
 } from 'antd';
+
 moment.locale('zh-cn');
 
-const TabPane = Tabs.TabPane;
-const { Step } = Steps;
+class IndexPage extends Component<any> {
 
-@connect(({ model }) => ({
-  model,
-}))
-
-@Form.create()
-
-class InfoPage extends PureComponent {
   state = {
     data:{
       goodsOrderDeliveryInfo:false,
@@ -60,11 +53,11 @@ class InfoPage extends PureComponent {
     this.setState({ loading: true });
 
     this.props.dispatch({
-      type: 'action/get',
+      type: 'request/get',
       payload: {
         actionUrl: 'admin/goodsOrder/deliveryInfo?' + stringify(params),
       },
-      callback: res => {
+      callback: (res:any) => {
         if (res) {
           this.setState({
             data: res.data
@@ -75,15 +68,13 @@ class InfoPage extends PureComponent {
   }
 
   render() {
-
-    const { getFieldDecorator, getFieldValue } = this.props.form;
     
     const columns = [
       {
         title: '商品名称',
         key: 'cover_id',
         dataIndex: 'cover_id',
-        render: (text, record) => (
+        render: (text:any, record:any) => (
           <span>
             <Avatar src={text} shape="square" size="large" /> 
             {record.goods_name}
@@ -170,4 +161,11 @@ class InfoPage extends PureComponent {
   }
 }
 
-export default InfoPage;
+function mapStateToProps(state:any) {
+  const { submitting } = state.request;
+  return {
+    submitting
+  };
+}
+
+export default connect(mapStateToProps)(IndexPage);
