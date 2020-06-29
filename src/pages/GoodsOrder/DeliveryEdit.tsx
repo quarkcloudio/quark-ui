@@ -211,10 +211,10 @@ class IndexPage extends Component<any> {
                         initialValue={this.state.data.goodsOrderDeliveryInfo ? this.state.data.goodsOrderDeliveryInfo.goods_express_id : 0}
                       >
                         <Select style={{ width: 200 }}>
-                          <Option key={0}>{'请选择物流公司'}</Option>
+                          <Option key={0} value={0}>{'请选择物流公司'}</Option>
                           {!!this.state.data.goodsExpresses &&
                             this.state.data.goodsExpresses.map((option:any) => {
-                              return <Option key={option.id}>{option.name}</Option>;
+                              return <Option key={option.id} value={0}>{option.name}</Option>;
                             })}
                         </Select>
                       </Form.Item>

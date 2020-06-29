@@ -186,7 +186,7 @@ class InfoPage extends Component<any> {
                 {this.state.data.goods_order_status == 'NOT_PAID' ? <p>已拍下订单，等待买家付款</p> : null}
                 {this.state.data.goods_order_status == 'PAID' ? 
                   <span>
-                    <p><Button>关闭订单</Button> <Button>修改收货人信息</Button> <Button href={"#/admin/mall/goodsOrder/quickDelivery?id="+this.state.data.id} type="primary">一键发货</Button></p>
+                    <p><Button>关闭订单</Button> <Button>修改收货人信息</Button> <Button href={"#/admin/goodsOrder/quickDelivery?id="+this.state.data.id} type="primary">一键发货</Button></p>
                     <p>1、买家已付款，请尽快发货，否则买家有权申请退款。</p>
                     <p>2、如果无法发货，请及时与买家联系并说明情况。</p>
                     <p>3、买家申请退款后，卖家须征得买家同意后再操作发货，否则买家有权拒收货物。</p>
