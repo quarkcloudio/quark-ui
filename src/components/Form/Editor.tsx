@@ -229,7 +229,9 @@ const EditorPage: React.SFC<any> = ({ value, onChange , height, width, picture, 
               'undo redo | formatselect | bold italic backcolor | \
               alignleft aligncenter alignright alignjustify | \
               bullist numlist outdent indent | removeformat | help',
-            fontsize_formats: '8pt 10pt 12pt 14pt 18pt 24pt 36pt'
+            fontsize_formats: '8pt 10pt 12pt 14pt 18pt 24pt 36pt',
+            relative_urls : false,
+            remove_script_host : true,
           }}
           onExecCommand={editorExecCommand}
         />
