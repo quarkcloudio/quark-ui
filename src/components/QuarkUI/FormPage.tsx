@@ -10,6 +10,8 @@ import Autocomplete from 'react-amap-plugin-autocomplete';
 
 import {
   UploadOutlined,
+  MinusCircleOutlined,
+  PlusOutlined,
   createFromIconfontCN,
 } from '@ant-design/icons';
 
@@ -38,7 +40,8 @@ import {
   Menu,
   Pagination,
   Popconfirm,
-  TimePicker
+  TimePicker,
+  Space
 } from 'antd';
 
 import locale from 'antd/es/date-picker/locale/zh_CN';
@@ -256,7 +259,15 @@ const FormPage: React.SFC<FormPageProps> = props => {
     changePreviewImage('');
   };
 
-  const formItem = (items:any) => {
+  const normFile = (e:any) => {
+    console.log('Upload event:', e);
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && e.fileList;
+  };
+
+  const formItemRender = (items:any) => {
     let formItem = null;
     if(items) {
       formItem = 
@@ -946,6 +957,49 @@ const FormPage: React.SFC<FormPageProps> = props => {
             );
           }
 
+          if(item.component == 'list') {
+            return (
+              <Form.Item
+                key={item.name}
+                label={item.label}
+                rules={item.frontendRules}
+                help={item.help ? item.help : undefined}
+                extra={item.extra}
+              >
+                <Form.List key={item.name} name={item.name}>
+                  {(fields, { add, remove }) => {
+                    return (
+                      <div>
+                        {fields.map(field => (
+                          <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="start">
+                            {formListItemRender(item.items,field)}
+                            <MinusCircleOutlined
+                              onClick={() => {
+                                remove(field.name);
+                              }}
+                            />
+                          </Space>
+                        ))}
+
+                        <Form.Item>
+                          <Button
+                            type="dashed"
+                            onClick={() => {
+                              add();
+                            }}
+                            block
+                          >
+                            <PlusOutlined /> {item.button}
+                          </Button>
+                        </Form.Item>
+                      </div>
+                    );
+                  }}
+                </Form.List>
+              </Form.Item>
+            )
+          }
+
         })}
         {(!content.body.form.disableSubmit && !content.body.form.disableReset) ? 
           <Form.Item
@@ -1009,6 +1063,566 @@ const FormPage: React.SFC<FormPageProps> = props => {
     return formItem;
   }
 
+  const formListItemRender = (items:any,field:any) => {
+    let formItem = null;
+    if(items) {
+      formItem = 
+      <span>
+        {!!items && items.map((item:any) => {
+
+          if(item.component == 'input') {
+            return (
+              <Form.Item
+                key={item.name}
+                label={item.label}
+                name={[field.name, item.name]}
+                fieldKey={[field.fieldKey, item.name]}
+                rules={item.frontendRules}
+                help={item.help ? item.help : undefined}
+                extra={item.extra}
+              >
+                <Input
+                  placeholder={item.placeholder}
+                  style={item.style ? item.style : []}
+                />
+              </Form.Item>
+            )
+          }
+  
+          if(item.component == 'inputNumber') {
+            return (
+              <Form.Item
+                key={item.name}
+                label={item.label}
+                name={[field.name, item.name]}
+                fieldKey={[field.fieldKey, item.name]}
+                rules={item.frontendRules}
+                help={item.help ? item.help : undefined}
+                extra={item.extra}
+              >
+                <InputNumber
+                  size={item.size}
+                  style={item.style}
+                  max={item.max}
+                  min={item.min}
+                  step={item.step}
+                  placeholder={item.placeholder}
+                />
+              </Form.Item>
+            )
+          }
+  
+          if(item.component == "cascader") {
+            return (
+              <Form.Item
+                key={item.name}
+                label={item.label}
+                name={[field.name, item.name]}
+                fieldKey={[field.fieldKey, item.name]}
+                rules={item.frontendRules}
+                help={item.help ? item.help : undefined}
+                extra={item.extra}
+              >
+                <Cascader
+                  size={item.size}
+                  options={item.options}
+                  style={item.style}
+                  placeholder={item.placeholder}
+                />
+              </Form.Item>
+            );
+          }
+
+          if(item.component == "search") {
+
+            let timeout:any = null;
+
+            // on select item
+            const onInputSearch = (value:any) => {
+              if(value) {
+                if (timeout) {
+                  clearTimeout(timeout);
+                  timeout = null;
+                }
+
+                timeout = setTimeout(function() {
+                  dispatch({
+                    type: 'form/updateSearchOptions',
+                    payload: {
+                      actionUrl : item.url,
+                      itemName : item.name,
+                      search:value
+                    }
+                  });
+                }, 300);
+              }
+            }
+
+            if(item.mode) {
+              return (
+                <Form.Item 
+                  key={item.name}
+                  label={item.label}
+                  name={[field.name, item.name]}
+                  fieldKey={[field.fieldKey, item.name]}
+                  rules={item.frontendRules}
+                  help={item.help ? item.help : undefined}
+                  extra={item.extra}
+                >
+                  <Select
+                    showSearch
+                    defaultActiveFirstOption={false}
+                    mode={item.mode} 
+                    size={item.size} 
+                    filterOption={false}
+                    onSearch={(value:any)=>onInputSearch(value)}
+                    placeholder={item.placeholder}
+                    style={item.style ? item.style : []}
+                  >
+                    {!!formSearchOptions[item.name] && formSearchOptions[item.name].map((option:any) => {
+                      return (<Option key={option.value} value={option.value}>{option.label}</Option>)
+                    })}
+                  </Select>
+                </Form.Item>
+              );
+            } else {
+              return (
+                <Form.Item 
+                  key={item.name}
+                  label={item.label}
+                  name={[field.name, item.name]}
+                  fieldKey={[field.fieldKey, item.name]}
+                  rules={item.frontendRules}
+                  help={item.help ? item.help : undefined}
+                  extra={item.extra}
+                >
+                  <Select
+                    showSearch
+                    defaultActiveFirstOption={false}
+                    mode={item.mode}
+                    size={item.size}
+                    filterOption={false}
+                    onSearch={(value:any)=>onInputSearch(value)}
+                    placeholder={item.placeholder}
+                    style={item.style ? item.style : []}
+                  >
+                    {!!formSearchOptions[item.name] && formSearchOptions[item.name].map((option:any) => {
+                      return (<Option key={option.value} value={option.value}>{option.label}</Option>)
+                    })}
+                  </Select>
+                </Form.Item>
+              );
+            }
+          }
+
+          if(item.component == 'radio') {
+            return (
+              <Form.Item
+                key={item.name}
+                label={item.label}
+                name={[field.name, item.name]}
+                fieldKey={[field.fieldKey, item.name]}
+                rules={item.frontendRules}
+                help={item.help ? item.help : undefined}
+                extra={item.extra}
+              >
+                <Radio.Group style={item.style ? item.style : []} options={item.options} />
+              </Form.Item>
+            )
+          }
+  
+          if(item.component == 'select') {
+            return (
+              <Form.Item
+                key={item.name}
+                label={item.label}
+                name={[field.name, item.name]}
+                fieldKey={[field.fieldKey, item.name]}
+                rules={item.frontendRules}
+                help={item.help ? item.help : undefined}
+                extra={item.extra}
+              >
+                <Select mode={item.mode} style={item.style ? item.style : []}>
+                  {item.options.map((item:any) => {
+                    return (<Option key={item.value} value={item.value}>{item.label}</Option>)
+                  })}
+                </Select>
+              </Form.Item>
+            )
+          }
+  
+          if(item.component == "checkbox") {
+            return (
+              <Form.Item 
+                key={item.name}
+                label={item.label}
+                name={[field.name, item.name]}
+                fieldKey={[field.fieldKey, item.name]}
+                rules={item.frontendRules}
+                help={item.help ? item.help : undefined}
+                extra={item.extra}
+              >
+                <Checkbox.Group style={item.style ? item.style : []}>
+                  {!!item.options && item.options.map((item:any) => {
+                  return (<Checkbox key={item.value} value={item.value}>{item.label}</Checkbox>)
+                  })}
+                </Checkbox.Group>
+              </Form.Item>
+            );
+          }
+  
+          if(item.component == 'icon') {
+            return (
+              <Form.Item
+                key={item.name}
+                label={item.label}
+                name={[field.name, item.name]}
+                fieldKey={[field.fieldKey, item.name]}
+                rules={item.frontendRules}
+                help={item.help ? item.help : undefined}
+                extra={item.extra}
+              >
+                <Select style={item.style ? item.style : []}>
+                  {item.options.map((item:any) => {
+                    return (<Option key={item} value={item}><Iconfont type={item} /> {item}</Option>)
+                  })}
+                </Select>
+              </Form.Item>
+            )
+          }
+  
+          if(item.component == 'switch') {
+            return (
+              <Form.Item
+                key={item.name}
+                label={item.label}
+                name={[field.name, item.name]}
+                fieldKey={[field.fieldKey, item.name]}
+                extra={item.extra}
+                help={item.help ? item.help : undefined}
+                rules={item.frontendRules}
+                valuePropName={'checked'}
+              >
+                <Switch
+                  checkedChildren={item.options.on}
+                  unCheckedChildren={item.options.off}
+                />
+              </Form.Item>
+            )
+          }
+  
+          if(item.component == "datetime") {
+            return (
+              <Form.Item 
+                key={item.name}
+                label={item.label}
+                name={[field.name, item.name]}
+                fieldKey={[field.fieldKey, item.name]}
+                help={item.help ? item.help : undefined}
+                extra={item.extra}
+                rules={item.frontendRules}
+              >
+                <DatePicker
+                  showTime={{...item.showTime}}
+                  size={item.size}
+                  locale={locale}
+                  format={item.format}
+                  placeholder={item.placeholder}
+                />
+              </Form.Item>
+            );
+          }
+
+          if(item.component == "datetimeRange") {
+            return (
+              <Form.Item 
+                key={item.name}
+                label={item.label}
+                name={[field.name, item.name]}
+                fieldKey={[field.fieldKey, item.name]}
+                help={item.help ? item.help : undefined}
+                extra={item.extra}
+                rules={item.frontendRules}
+              >
+                <RangePicker
+                  showTime={{...item.showTime}}
+                  size={item.size}
+                  locale={locale}
+                  format={item.format}
+                />
+              </Form.Item>
+            );
+          }
+
+          if(item.component == "timeRange") {
+            return (
+              <Form.Item 
+                key={item.name}
+                label={item.label}
+                name={[field.name, item.name]}
+                fieldKey={[field.fieldKey, item.name]}
+                help={item.help ? item.help : undefined}
+                extra={item.extra}
+                rules={item.frontendRules}
+              >
+                <TimeRangePicker
+                  size={item.size}
+                  locale={locale}
+                  format={item.format}
+                />
+              </Form.Item>
+            );
+          }
+
+          if(item.component == "textArea") {
+            return (
+              <Form.Item
+                key={item.name}
+                label={item.label}
+                name={[field.name, item.name]}
+                fieldKey={[field.fieldKey, item.name]}
+                help={item.help ? item.help : undefined}
+                extra={item.extra}
+                rules={item.frontendRules}
+              >
+                <TextArea style={item.style} rows={item.rows} placeholder={item.placeholder} />
+              </Form.Item>
+            );
+          }
+  
+          if(item.component == "image") {
+            // 多图片上传模式
+            if(item.mode == "multiple") {
+              let uploadButton = (
+                <div>
+                  <Iconfont type={'icon-plus-circle'} />
+                  <div className="ant-upload-text">{item.button}</div>
+                </div>
+              );
+
+              return (
+                <Form.Item 
+                  key={item.name}
+                  label={item.label}
+                  name={[field.name, item.name]}
+                  fieldKey={[field.fieldKey, item.name]}
+                  valuePropName="fileList"
+                  help={item.help ? item.help : undefined}
+                  extra={item.extra}
+                >
+                  <Upload
+                    listType={"picture-card"}
+                    multiple={true}
+                    onPreview={(file:any) => {
+                      changePreviewImage(file.url || file.thumbUrl);
+                      changePreviewVisible(true);
+                    }}
+                    action={'/api/admin/picture/upload'}
+                    headers={{authorization: 'Bearer ' + sessionStorage['token']}}
+                    beforeUpload = {(file:any) => {
+                      let canUpload = false;
+                      for(var i = 0; i < item.limitType.length; i++) {
+                        if(item.limitType[i] == file.type) {
+                          canUpload = true;
+                        }
+                      }
+                      if (!canUpload) {
+                        message.error('请上传正确格式的图片!');
+                        return false;
+                      }
+                      const isLtSize = file.size / 1024 / 1024 < item.limitSize;
+                      if (!isLtSize) {
+                        message.error('图片大小不可超过'+item.limitSize+'MB!');
+                        return false;
+                      }
+                      return true;
+                    }}
+                    onChange = {(info:any) => {
+                      let fileList = info.fileList;
+                      fileList = fileList.slice(-item.limitNum);
+                      fileList = fileList.map((file:any) => {
+                        if (file.response) {
+                          file.id = file.response.data.id;
+                          file.name = file.response.data.name;
+                          file.url = file.response.data.url;
+                          file.size = file.response.data.size;
+                        }
+                        return file;
+                      });
+    
+                      fileList = fileList.filter((file:any) => {
+                        if (file.response) {
+                          return file.response.status === 'success';
+                        }
+                        return true;
+                      });
+
+                      dispatch({
+                        type: 'form/updateImages',
+                        payload: {
+                          images : fileList,
+                          itemName : item.name
+                        }
+                      });
+
+                    }}
+                  >
+                    {formImages[item.name] >= 3 ? null : uploadButton}
+                  </Upload>
+                </Form.Item>
+              );
+            } else {
+              // 单图片上传模式
+              let uploadButton = (
+                <div>
+                  <Iconfont type={'icon-plus-circle'} />
+                  <div className="ant-upload-text">{item.button}</div>
+                </div>
+              );
+
+              return (
+                <Form.Item
+                  key={item.name}
+                  label={item.label}
+                  name={[field.name, item.name]}
+                  fieldKey={[field.fieldKey, item.name]}
+                  valuePropName="fileList"
+                  help={item.help ? item.help : undefined}
+                  extra={item.extra}
+                >
+                  <Upload
+                    listType={"picture-card"}
+                    showUploadList={false}
+                    action={'/api/admin/picture/upload'}
+                    headers={{authorization: 'Bearer ' + sessionStorage['token']}}
+                    beforeUpload = {(file:any) => {
+                      let canUpload = false;
+                      for(var i = 0; i < item.limitType.length; i++) {
+                        console.log(file.type);
+                        if(item.limitType[i] == file.type) {
+                          canUpload = true;
+                        }
+                      }
+                      if (!canUpload) {
+                        message.error('请上传正确格式的图片!');
+                        return false;
+                      }
+                      const isLtSize = file.size / 1024 / 1024 < item.limitSize;
+                      if (!isLtSize) {
+                        message.error('图片大小不可超过'+item.limitSize+'MB!');
+                        return false;
+                      }
+                      return true;
+                    }}
+                    onChange = {(info:any) => {
+                      if (info.file.status === 'done') {
+                        if (info.file.response.status === 'success') {
+                          let fileInfo:any = [];
+
+                          fileInfo[item.name] = info.file.response.data;
+
+                          dispatch({
+                            type: 'form/updateImages',
+                            payload: {
+                              images : info.file.response.data,
+                              itemName : item.name
+                            }
+                          });
+
+                        } else {
+                          message.error(info.file.response.msg);
+                        }
+                      }
+                    }}
+                  >
+                    {formImages[item.name] ? (
+                      <img src={formImages[item.name].url} alt={formImages[item.name].name} width={80} />
+                    ) : (uploadButton)}
+                  </Upload>
+                </Form.Item>
+              );
+            }
+          }
+  
+          if(item.component=='file') {
+            return (
+              <Form.Item 
+                label={item.label}
+                name={[field.name, item.name]}
+                fieldKey={[field.fieldKey, item.name]}
+                valuePropName="fileList"
+                getValueFromEvent={normFile}
+                help={item.help}
+                extra={item.extra}
+              >
+                <Upload
+                  multiple={true}
+                  action={'/api/admin/file/upload'}
+                  headers={{authorization: 'Bearer ' + sessionStorage['token']}}
+                  beforeUpload = {(file:any) => {
+                    let canUpload = false;
+                    for(var i = 0; i < item.limitType.length; i++) {
+                      console.log(file.type);
+                      if(item.limitType[i] == file.type) {
+                        canUpload = true;
+                      }
+                    }
+                    if (!canUpload) {
+                      message.error('请上传正确格式的文件!');
+                      return false;
+                    }
+                    const isLtSize = file.size / 1024 / 1024 < item.limitSize;
+                    if (!isLtSize) {
+                      message.error('文件大小不可超过'+item.limitSize+'MB!');
+                      return false;
+                    }
+                    return true;
+                  }}
+                  onChange = {(info:any) => {
+                    let fileList = info.fileList;
+                    fileList = fileList.slice(-item.limitNum);
+                    fileList = fileList.map((file:any) => {
+                      if (file.response) {
+                        file.id = file.response.data.id;
+                        file.name = file.response.data.name;
+                        file.url = file.response.data.url;
+                        file.size = file.response.data.size;
+                      }
+                      return file;
+                    });
+  
+                    fileList = fileList.filter((file:any) => {
+                      if (file.response) {
+                        return file.response.status === 'success';
+                      }
+                      return true;
+                    });
+
+                    dispatch({
+                      type: 'form/updateFiles',
+                      payload: {
+                        files : fileList,
+                        itemName : item.name
+                      }
+                    });
+
+                  }}
+                >
+                  <Button>
+                    <Iconfont type={'icon-upload'} /> {item.button}
+                  </Button>
+                </Upload>
+              </Form.Item>
+            );
+          }
+
+        })}
+      </span>
+    }
+
+    return formItem;
+  }
+
   return (
     <Spin spinning={loading} tip="Loading..." style={{width:'100%',marginTop:'200px'}}>
       {content ?
@@ -1027,7 +1641,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
                       {content.body.form.tab.map((tab:any,index:any) => {
                         return (
                           <TabPane tab={tab.title} key={(index+1).toString()}>
-                            {formItem(tab.items)}
+                            {formItemRender(tab.items)}
                           </TabPane>
                         )
                       })}
@@ -1042,7 +1656,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
                   extra={<Button type="link" onClick={(e) => history.go(-1)}>返回上一页</Button>}
                 >
                   <Form {...content.body.form.layout} form={form} onFinish={onFinish} initialValues={content.body.form.initialValues}>
-                    {formItem(content.body.form.items)}
+                    {formItemRender(content.body.form.items)}
                   </Form>
                 </Card>
               }
@@ -1050,7 +1664,7 @@ const FormPage: React.SFC<FormPageProps> = props => {
           :
             <span>
               <Form {...content.body.form.layout} form={form} onFinish={onFinish} initialValues={content.body.form.initialValues}>
-                {formItem(content.body.form.items)}
+                {formItemRender(content.body.form.items)}
               </Form>
             </span>
           }
