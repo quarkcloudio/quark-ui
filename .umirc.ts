@@ -5,7 +5,7 @@ export default defineConfig({
     type: 'none',
     exclude: [],
   },
-  title: 'quark',
+  title: false,
   history: { type: 'hash' },
   dll: false,
   hash: true,

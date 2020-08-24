@@ -4,11 +4,9 @@ import { Dispatch } from 'redux';
 import { Dropdown, Avatar, Menu, Spin } from 'antd';
 import logo from '../assets/logo.png';
 import ProLayout from '@ant-design/pro-layout';
-import { history } from 'umi';
+import { history, Helmet } from 'umi';
 
-import {
-  createFromIconfontCN,
-} from '@ant-design/icons';
+import { createFromIconfontCN } from '@ant-design/icons';
 
 import styles from './AdminLayout.less';
 
@@ -17,24 +15,23 @@ const Iconfont = createFromIconfontCN({
 });
 
 interface IProps {
-  dispatch:Dispatch<any>;
+  dispatch: Dispatch<any>;
   menus: [];
   accountInfo: {
-    nickname:'',
-    username:'',
-    avatar:''
+    nickname: '';
+    username: '';
+    avatar: '';
   };
 }
 
 class AdminLayout extends Component<IProps> {
-
   state = {
-    logo:'',
-    name:'',
-    description:'',
+    logo: '',
+    name: '',
+    description: '',
     collapsed: false,
-    menuOpenKeys:['/dashboard'],
-    menuSelectedKeys:['/dashboard/index'],
+    menuOpenKeys: ['/dashboard'],
+    menuSelectedKeys: ['/dashboard/index'],
   };
 
   componentDidMount() {
@@ -43,9 +40,9 @@ class AdminLayout extends Component<IProps> {
       payload: {
         actionUrl: 'admin/appInfo',
       },
-      callback: (res:any) => {
+      callback: (res: any) => {
         if (res) {
-          this.setState({ ...res.data});
+          this.setState({ ...res.data });
         }
       },
     });
@@ -53,43 +50,42 @@ class AdminLayout extends Component<IProps> {
     this.props.dispatch({
       type: 'global/getAccountInfo',
       payload: {
-        actionUrl: 'admin/account/info'
-      }
+        actionUrl: 'admin/account/info',
+      },
     });
 
     this.props.dispatch({
       type: 'global/getMenus',
       payload: {
-        actionUrl: 'admin/account/menus'
-      }
+        actionUrl: 'admin/account/menus',
+      },
     });
 
     let menuSelectedKeys = [];
     menuSelectedKeys.push(this.props.location.query.api);
     this.setState({
-      menuSelectedKeys:menuSelectedKeys
-    })
+      menuSelectedKeys: menuSelectedKeys,
+    });
   }
 
-
-  onMenuClick = (event:any) => {
+  onMenuClick = (event: any) => {
     let menuSelectedKeys = [];
     menuSelectedKeys.push(event.key);
     this.setState({
-      menuSelectedKeys:menuSelectedKeys
-    })
+      menuSelectedKeys: menuSelectedKeys,
+    });
     history.push(event.key);
   };
 
-  onMenuOpenChange = (openKeys:any) => {
+  onMenuOpenChange = (openKeys: any) => {
     let menuOpenKeys = [];
     menuOpenKeys.push(openKeys);
     this.setState({
-      menuOpenKeys:openKeys
-    })
+      menuOpenKeys: openKeys,
+    });
   };
 
-  onAvatarMenuClick = (event:any) => {
+  onAvatarMenuClick = (event: any) => {
     const { key } = event;
 
     if (key === 'logout') {
@@ -109,8 +105,7 @@ class AdminLayout extends Component<IProps> {
   };
 
   render() {
-
-    const { menus,accountInfo,children } = this.props;
+    const { menus, accountInfo, children } = this.props;
 
     const menu = (
       <Menu onClick={this.onAvatarMenuClick}>
@@ -130,30 +125,42 @@ class AdminLayout extends Component<IProps> {
           overflowX: 'hidden',
         }}
       >
+        <Helmet>
+          <meta charSet="utf-8" />
+          <title>{this.state.name ? this.state.name : 'Quark'}</title>
+        </Helmet>
         <ProLayout
           style={{
-            height:'100vh',
+            height: '100vh',
           }}
           title={this.state.name ? this.state.name : 'Quark'}
           logo={this.state.logo ? this.state.logo : logo}
           menuDataRender={() => menus}
           fixedHeader={true}
           fixSiderbar={true}
-          rightContentRender={() =>
+          rightContentRender={() => (
             <div className={styles.right}>
-              {accountInfo ? 
+              {accountInfo ? (
                 <Dropdown className={styles.container} overlay={menu}>
                   <span className={`${styles.action} ${styles.account}`}>
-                    <Avatar size="small" className={styles.avatar} src={accountInfo.avatar} alt="avatar" />
-                      <span className={styles.name}>{accountInfo.nickname}</span>
+                    <Avatar
+                      size="small"
+                      className={styles.avatar}
+                      src={accountInfo.avatar}
+                      alt="avatar"
+                    />
+                    <span className={styles.name}>{accountInfo.nickname}</span>
                   </span>
                 </Dropdown>
-              : 
+              ) : (
                 <Spin size="small" style={{ marginLeft: 8, marginRight: 8 }} />
-              }
+              )}
             </div>
-          }
-          menuProps={{ onOpenChange:this.onMenuOpenChange,onClick:this.onMenuClick}}
+          )}
+          menuProps={{
+            onOpenChange: this.onMenuOpenChange,
+            onClick: this.onMenuClick,
+          }}
           openKeys={this.state.menuOpenKeys}
           selectedKeys={this.state.menuSelectedKeys}
         >
@@ -164,11 +171,11 @@ class AdminLayout extends Component<IProps> {
   }
 }
 
-function mapStateToProps(state:any) {
-  const { menus,accountInfo } = state.global;
+function mapStateToProps(state: any) {
+  const { menus, accountInfo } = state.global;
   return {
     menus,
-    accountInfo
+    accountInfo,
   };
 }
 
