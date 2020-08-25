@@ -28,6 +28,7 @@ class AdminLayout extends Component<IProps> {
   state = {
     logo: '',
     name: '',
+    title: '',
     description: '',
     collapsed: false,
     menuOpenKeys: ['/dashboard'],
@@ -68,6 +69,13 @@ class AdminLayout extends Component<IProps> {
     });
   }
 
+  componentWillReceiveProps(prevProps: any, prevState: any) {
+    var title = this.getMenuName(this.props.menus, window.location.href);
+    this.setState({
+      title: title,
+    });
+  }
+
   onMenuClick = (event: any) => {
     let menuSelectedKeys = [];
     menuSelectedKeys.push(event.key);
@@ -75,6 +83,23 @@ class AdminLayout extends Component<IProps> {
       menuSelectedKeys: menuSelectedKeys,
     });
     history.push(event.key);
+  };
+
+  getMenuName = (menus: any, path: string) => {
+    let menuName = null;
+    menus.map((item: any) => {
+      if (path.indexOf(item.path) != -1 && item.path.split('/').length >= 3) {
+        menuName = item.name;
+      } else {
+        if (item.hasOwnProperty('children')) {
+          if (this.getMenuName(item.children, path)) {
+            menuName = this.getMenuName(item.children, path);
+          }
+        }
+      }
+    });
+
+    return menuName;
   };
 
   onMenuOpenChange = (openKeys: any) => {
@@ -127,13 +152,17 @@ class AdminLayout extends Component<IProps> {
       >
         <Helmet>
           <meta charSet="utf-8" />
-          <title>{this.state.name ? this.state.name : 'Quark'}</title>
+          <title>
+            {this.state.title
+              ? this.state.title + ' - ' + this.state.name
+              : this.state.name}
+          </title>
         </Helmet>
         <ProLayout
           style={{
             height: '100vh',
           }}
-          title={this.state.name ? this.state.name : 'Quark'}
+          title={this.state.name ? this.state.name : ''}
           logo={this.state.logo ? this.state.logo : logo}
           menuDataRender={() => menus}
           fixedHeader={true}

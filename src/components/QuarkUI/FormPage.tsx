@@ -644,6 +644,9 @@ const FormPage: React.SFC<FormPageProps> = props => {
                     extra={item.extra}
                   >
                     <Select style={item.style ? item.style : []}>
+                      <Option key={0} value={0}>
+                        无图标
+                      </Option>
                       {item.options.map((item: any) => {
                         return (
                           <Option key={item} value={item}>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Spin } from 'antd';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
 import { Helmet } from 'umi';
@@ -14,11 +15,10 @@ class LoginLayout extends Component<IProps> {
     logo: '',
     name: '',
     description: '',
+    loading: true,
   };
 
   componentDidMount() {
-    document.title = '管理员登录';
-
     this.props.dispatch({
       type: 'request/get',
       payload: {
@@ -26,7 +26,7 @@ class LoginLayout extends Component<IProps> {
       },
       callback: (res: any) => {
         if (res) {
-          this.setState({ ...res.data });
+          this.setState({ ...res.data, loading: false });
         }
       },
     });
@@ -35,13 +35,16 @@ class LoginLayout extends Component<IProps> {
   render() {
     const { children } = this.props;
     return (
-      <div>
+      <Spin tip="Loading..." spinning={this.state.loading}>
         <Helmet>
           <meta charSet="utf-8" />
-          <title>{this.state.name ? this.state.name : 'Quark'}</title>
+          <title>{this.state.name ? this.state.name : 'loading...'}</title>
         </Helmet>
         <div className={styles.container}>
-          <div className={styles.content}>
+          <div
+            className={styles.content}
+            style={{ display: this.state.loading ? 'none' : 'block' }}
+          >
             <div className={styles.top}>
               <div className={styles.header}>
                 <img
@@ -64,7 +67,7 @@ class LoginLayout extends Component<IProps> {
             {children}
           </div>
         </div>
-      </div>
+      </Spin>
     );
   }
 }
