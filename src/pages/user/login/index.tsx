@@ -1,10 +1,10 @@
 import { AlipayCircleOutlined, TaobaoCircleOutlined, WeiboCircleOutlined } from '@ant-design/icons';
 import { Alert, Checkbox, message } from 'antd';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, SelectLang, useModel } from 'umi';
 import { getPageQuery } from '@/utils/utils';
 import logo from '@/assets/logo.svg';
-import { LoginParamsType, fakeAccountLogin } from '@/services/login';
+import { LoginParamsType, accountLogin } from '@/services/login';
 import Footer from '@/components/Footer';
 import LoginFrom from './components/Login';
 import styles from './style.less';
@@ -47,6 +47,7 @@ const replaceGoto = () => {
 };
 
 const Login: React.FC<{}> = () => {
+  const [quarkInfoState, setQuarkInfoState] = useState<any>({});
   const [userLoginState, setUserLoginState] = useState<API.LoginStateType>({});
   const [submitting, setSubmitting] = useState(false);
 
@@ -54,11 +55,33 @@ const Login: React.FC<{}> = () => {
   const [autoLogin, setAutoLogin] = useState(true);
   const [type, setType] = useState<string>('account');
 
+  /**
+   * constructor
+   */
+  useEffect(() => {
+    getQuarkInfo();
+  }, []); // eslint-disable-line
+
+  const getQuarkInfo = async () => {
+    try {
+      // 登录
+      const result = await quarkInfo();
+
+      if (result.status === 'success') {
+
+      } else {
+        message.error(result.msg);
+      }
+    } catch (error) {
+      message.error('获取应用信息失败！');
+    }
+  };
+
   const handleSubmit = async (values: LoginParamsType) => {
     setSubmitting(true);
     try {
       // 登录
-      const msg = await fakeAccountLogin({ ...values, type });
+      const msg = await accountLogin({ ...values, type });
       if (msg.status === 'ok') {
         message.success('登录成功！');
         replaceGoto();
@@ -66,6 +89,8 @@ const Login: React.FC<{}> = () => {
           refresh();
         }, 0);
         return;
+      } else {
+        message.error(msg.msg);
       }
       // 如果失败去设置用户错误信息
       setUserLoginState(msg);

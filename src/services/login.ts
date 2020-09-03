@@ -22,3 +22,10 @@ export async function getFakeCaptcha(mobile: string) {
 export async function outLogin() {
   return request('/api/login/outLogin');
 }
+
+export async function accountLogin(params: LoginParamsType) {
+  return request<API.LoginStateType>('/api/admin/login', {
+    method: 'POST',
+    data: params,
+  });
+}
