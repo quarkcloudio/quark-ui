@@ -14,11 +14,6 @@ declare namespace API {
     unreadCount?: number;
   }
 
-  export interface LoginStateType {
-    status?: 'ok' | 'error';
-    type?: string;
-  }
-
   export interface NoticeIconData {
     id: string;
     key: string;

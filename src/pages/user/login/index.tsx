@@ -1,6 +1,5 @@
-import { AlipayCircleOutlined, TaobaoCircleOutlined, WeiboCircleOutlined } from '@ant-design/icons';
-import { Alert, Checkbox, message } from 'antd';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { message } from 'antd';
 import { Link, SelectLang, useModel } from 'umi';
 import { getPageQuery } from '@/utils/utils';
 import logo from '@/assets/logo.svg';
@@ -10,19 +9,6 @@ import LoginFrom from './components/Login';
 import styles from './style.less';
 
 const { Tab, Username, Password, Mobile, Captcha, Submit } = LoginFrom;
-
-const LoginMessage: React.FC<{
-  content: string;
-}> = ({ content }) => (
-  <Alert
-    style={{
-      marginBottom: 24,
-    }}
-    message={content}
-    type="error"
-    showIcon
-  />
-);
 
 /**
  * 此方法会跳转到 redirect 参数所在的位置
@@ -47,60 +33,31 @@ const replaceGoto = () => {
 };
 
 const Login: React.FC<{}> = () => {
-  const [quarkInfoState, setQuarkInfoState] = useState<any>({});
-  const [userLoginState, setUserLoginState] = useState<API.LoginStateType>({});
   const [submitting, setSubmitting] = useState(false);
-
-  const { refresh } = useModel('@@initialState');
-  const [autoLogin, setAutoLogin] = useState(true);
+  const { refresh,initialState } = useModel('@@initialState');
   const [type, setType] = useState<string>('account');
+  const quarkInfo = initialState.quarkInfo;
 
   /**
-   * constructor
+   * 用户登录
    */
-  useEffect(() => {
-    getQuarkInfo();
-  }, []); // eslint-disable-line
-
-  const getQuarkInfo = async () => {
-    try {
-      // 登录
-      const result = await quarkInfo();
-
-      if (result.status === 'success') {
-
-      } else {
-        message.error(result.msg);
-      }
-    } catch (error) {
-      message.error('获取应用信息失败！');
-    }
-  };
-
   const handleSubmit = async (values: LoginParamsType) => {
     setSubmitting(true);
     try {
-      // 登录
-      const msg = await accountLogin({ ...values, type });
-      if (msg.status === 'ok') {
-        message.success('登录成功！');
+      const result = await accountLogin({ ...values, type });
+      if (result.status === 'success') {
+        message.success(result.msg);
         replaceGoto();
-        setTimeout(() => {
-          refresh();
-        }, 0);
+        setTimeout(() => {refresh();}, 0);
         return;
       } else {
-        message.error(msg.msg);
+        message.error(result.msg);
       }
-      // 如果失败去设置用户错误信息
-      setUserLoginState(msg);
     } catch (error) {
       message.error('登录失败，请重试！');
     }
     setSubmitting(false);
   };
-
-  const { status, type: loginType } = userLoginState;
 
   return (
     <div className={styles.container}>
@@ -111,23 +68,19 @@ const Login: React.FC<{}> = () => {
         <div className={styles.top}>
           <div className={styles.header}>
             <Link to="/">
-              <img alt="logo" className={styles.logo} src={logo} />
-              <span className={styles.title}>Ant Design</span>
+              <img alt="logo" className={styles.logo} src={quarkInfo.logo ? quarkInfo.logo : logo} />
+              <span className={styles.title}>{quarkInfo.name ? quarkInfo.name : 'QuarkCMS'}</span>
             </Link>
           </div>
-          <div className={styles.desc}>Ant Design 是西湖区最具影响力的 Web 设计规范</div>
+          <div className={styles.desc}>{quarkInfo.name ? quarkInfo.description : '信息丰富的世界里，唯一稀缺的就是人类的注意力'}</div>
         </div>
 
         <div className={styles.main}>
           <LoginFrom activeKey={type} onTabChange={setType} onSubmit={handleSubmit}>
             <Tab key="account" tab="账户密码登录">
-              {status === 'error' && loginType === 'account' && !submitting && (
-                <LoginMessage content="账户或密码错误（admin/ant.design）" />
-              )}
-
               <Username
                 name="username"
-                placeholder="用户名: admin or user"
+                placeholder="用户名"
                 rules={[
                   {
                     required: true,
@@ -137,7 +90,7 @@ const Login: React.FC<{}> = () => {
               />
               <Password
                 name="password"
-                placeholder="密码: ant.design"
+                placeholder="密码"
                 rules={[
                   {
                     required: true,
@@ -147,9 +100,6 @@ const Login: React.FC<{}> = () => {
               />
             </Tab>
             <Tab key="mobile" tab="手机号登录">
-              {status === 'error' && loginType === 'mobile' && !submitting && (
-                <LoginMessage content="验证码错误" />
-              )}
               <Mobile
                 name="mobile"
                 placeholder="手机号"
@@ -178,28 +128,7 @@ const Login: React.FC<{}> = () => {
                 ]}
               />
             </Tab>
-            <div>
-              <Checkbox checked={autoLogin} onChange={(e) => setAutoLogin(e.target.checked)}>
-                自动登录
-              </Checkbox>
-              <a
-                style={{
-                  float: 'right',
-                }}
-              >
-                忘记密码
-              </a>
-            </div>
             <Submit loading={submitting}>登录</Submit>
-            <div className={styles.other}>
-              其他登录方式
-              <AlipayCircleOutlined className={styles.icon} />
-              <TaobaoCircleOutlined className={styles.icon} />
-              <WeiboCircleOutlined className={styles.icon} />
-              <Link className={styles.register} to="/user/register">
-                注册账户
-              </Link>
-            </div>
           </LoginFrom>
         </div>
       </div>

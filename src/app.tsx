@@ -6,11 +6,13 @@ import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { ResponseError } from 'umi-request';
 import { queryCurrent } from './services/user';
+import { queryQuarkInfo } from '@/services/login';
 import defaultSettings from '../config/defaultSettings';
 
 export async function getInitialState(): Promise<{
   currentUser?: API.CurrentUser;
   settings?: LayoutSettings;
+  quarkInfo?: any;
 }> {
   // 如果是登录页面，不执行
   if (history.location.pathname !== '/user/login') {
@@ -24,8 +26,12 @@ export async function getInitialState(): Promise<{
       history.push('/user/login');
     }
   }
+
+  const quarkInfo = await queryQuarkInfo();
+
   return {
     settings: defaultSettings,
+    quarkInfo: quarkInfo.data,
   };
 }
 
