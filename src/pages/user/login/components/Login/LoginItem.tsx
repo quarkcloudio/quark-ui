@@ -15,6 +15,7 @@ export interface LoginItemType {
   Password: React.FC<WrappedLoginItemProps>;
   Mobile: React.FC<WrappedLoginItemProps>;
   Captcha: React.FC<WrappedLoginItemProps>;
+  ImageCaptcha: React.FC<WrappedLoginItemProps>;
 }
 
 export interface LoginItemProps extends Partial<FormItemProps> {
@@ -60,6 +61,8 @@ const getFormItemOptions = ({
 const LoginItem: React.FC<LoginItemProps> = (props) => {
   const [count, setCount] = useState<number>(props.countDown || 0);
   const [timing, setTiming] = useState(false);
+  const [imageCaptcha, getImageCaptcha] = useState('/api/admin/captcha');
+
   // 这么写是为了防止restProps中 带入 onChange, defaultValue, rules props tabUtil
   const {
     onChange,
@@ -137,6 +140,27 @@ const LoginItem: React.FC<LoginItemProps> = (props) => {
             </Col>
           </Row>
         )}
+      </FormItem>
+    );
+  }
+  if (type === 'ImageCaptcha') {
+    return (
+      <FormItem name={name} {...options}>
+        <Row gutter={10}>
+          <Col span={16}>
+            <Input {...customProps} {...otherProps}/>
+          </Col>
+          <Col span={8}>
+            {<img 
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                getImageCaptcha('/api/admin/captcha?random='+Math.random());
+              }}
+              src={imageCaptcha}
+              alt="验证码"
+            />}
+          </Col>
+        </Row>
       </FormItem>
     );
   }

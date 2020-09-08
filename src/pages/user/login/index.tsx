@@ -8,7 +8,7 @@ import Footer from '@/components/Footer';
 import LoginFrom from './components/Login';
 import styles from './style.less';
 
-const { Tab, Username, Password, Mobile, Captcha, Submit } = LoginFrom;
+const { Tab, Username, Password, Mobile, Captcha, ImageCaptcha, Submit } = LoginFrom;
 
 /**
  * 此方法会跳转到 redirect 参数所在的位置
@@ -98,6 +98,16 @@ const Login: React.FC<{}> = () => {
                   },
                 ]}
               />
+              <ImageCaptcha
+                name="captcha"
+                placeholder="图形验证码"
+                rules={[
+                  {
+                    required: true,
+                    message: '请输入图形验证码！',
+                  },
+                ]}
+              />
             </Tab>
             <Tab key="mobile" tab="手机号登录">
               <Mobile
@@ -114,8 +124,18 @@ const Login: React.FC<{}> = () => {
                   },
                 ]}
               />
-              <Captcha
+              <ImageCaptcha
                 name="captcha"
+                placeholder="图形验证码"
+                rules={[
+                  {
+                    required: true,
+                    message: '请输入图形验证码！',
+                  },
+                ]}
+              />
+              <Captcha
+                name="code"
                 placeholder="验证码"
                 countDown={120}
                 getCaptchaButtonText=""

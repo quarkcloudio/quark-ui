@@ -29,7 +29,3 @@ export async function accountLogin(params: LoginParamsType) {
     data: params,
   });
 }
-
-export async function queryQuarkInfo() {
-  return request('/api/admin/quark/info');
-}

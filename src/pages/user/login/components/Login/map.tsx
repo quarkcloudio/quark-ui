@@ -1,4 +1,4 @@
-import { LockTwoTone, MailTwoTone, MobileTwoTone, UserOutlined } from '@ant-design/icons';
+import { LockTwoTone, MailTwoTone, MobileTwoTone, UserOutlined,SafetyCertificateTwoTone } from '@ant-design/icons';
 import React from 'react';
 import styles from './index.less';
 
@@ -61,6 +61,19 @@ export default {
       size: 'large',
       prefix: <MailTwoTone className={styles.prefixIcon} />,
       placeholder: 'captcha',
+    },
+    rules: [
+      {
+        required: true,
+        message: 'Please enter Captcha!',
+      },
+    ],
+  },
+  ImageCaptcha: {
+    props: {
+      size: 'large',
+      prefix: <SafetyCertificateTwoTone className={styles.prefixIcon} />,
+      placeholder: 'image captcha',
     },
     rules: [
       {

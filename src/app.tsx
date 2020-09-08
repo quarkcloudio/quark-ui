@@ -6,7 +6,7 @@ import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { ResponseError } from 'umi-request';
 import { queryCurrent } from './services/user';
-import { queryQuarkInfo } from '@/services/login';
+import { queryQuarkInfo } from '@/services/quark';
 import defaultSettings from '../config/defaultSettings';
 
 export async function getInitialState(): Promise<{
