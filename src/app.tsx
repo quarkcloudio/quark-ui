@@ -5,29 +5,30 @@ import { history, RequestConfig } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { ResponseError } from 'umi-request';
-import { queryCurrent } from './services/user';
-import { queryQuarkInfo } from '@/services/quark';
+import { queryQuarkInfo, queryQuarkLayout, queryAccountInfo } from '@/services/quark';
 import defaultSettings from '../config/defaultSettings';
 
 export async function getInitialState(): Promise<{
-  currentUser?: API.CurrentUser;
+  accountInfo?: API.AccountInfo;
   settings?: LayoutSettings;
   quarkInfo?: any;
 }> {
+  const quarkInfo = await queryQuarkInfo();
+
   // 如果是登录页面，不执行
   if (history.location.pathname !== '/user/login') {
     try {
-      const currentUser = await queryCurrent();
+      const accountInfo = await queryAccountInfo();
+      const quarkLayout = await queryQuarkLayout();
       return {
-        currentUser,
-        settings: defaultSettings,
+        accountInfo: accountInfo.data,
+        settings: quarkLayout.data,
+        quarkInfo: quarkInfo.data,
       };
     } catch (error) {
       history.push('/user/login');
     }
   }
-
-  const quarkInfo = await queryQuarkInfo();
 
   return {
     settings: defaultSettings,
@@ -38,15 +39,17 @@ export async function getInitialState(): Promise<{
 export const layout = ({
   initialState,
 }: {
-  initialState: { settings?: LayoutSettings; currentUser?: API.CurrentUser };
+  initialState: { settings?: LayoutSettings; accountInfo?: API.AccountInfo, quarkInfo?: any };
 }): BasicLayoutProps => {
   return {
+    title: initialState.quarkInfo.name,
+    logo: initialState.quarkInfo.logo,
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     footerRender: () => <Footer />,
     onPageChange: () => {
       // 如果没有登录，重定向到 login
-      if (!initialState?.currentUser?.userid && history.location.pathname !== '/user/login') {
+      if (!initialState?.accountInfo?.id && history.location.pathname !== '/user/login') {
         history.push('/user/login');
       }
     },
@@ -99,5 +102,12 @@ const errorHandler = (error: ResponseError) => {
 };
 
 export const request: RequestConfig = {
-  errorHandler,
+  errorHandler: errorHandler,
+  // 请求拦截器
+  requestInterceptors: [
+    (url: string, options) => {
+      options.headers = { Authorization: `Bearer ${sessionStorage.getItem('token') ?? ''}` };
+      return { url, options };
+    }
+  ],
 };

@@ -3,7 +3,7 @@ import { message } from 'antd';
 import { Link, SelectLang, useModel } from 'umi';
 import { getPageQuery } from '@/utils/utils';
 import logo from '@/assets/logo.svg';
-import { LoginParamsType, accountLogin } from '@/services/login';
+import { accountLogin } from '@/services/quark';
 import Footer from '@/components/Footer';
 import LoginFrom from './components/Login';
 import styles from './style.less';
@@ -41,12 +41,14 @@ const Login: React.FC<{}> = () => {
   /**
    * 用户登录
    */
-  const handleSubmit = async (values: LoginParamsType) => {
+  const handleSubmit = async (values: any) => {
     setSubmitting(true);
     try {
       const result = await accountLogin({ ...values, type });
       if (result.status === 'success') {
         message.success(result.msg);
+        // 记录登录凭据
+        sessionStorage.setItem('token', result.data.token);
         replaceGoto();
         setTimeout(() => {refresh();}, 0);
         return;
