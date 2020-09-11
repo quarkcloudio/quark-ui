@@ -5,25 +5,34 @@ import { history, RequestConfig } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { ResponseError } from 'umi-request';
-import { queryQuarkInfo, queryQuarkLayout, queryAccountInfo } from '@/services/quark';
+import { queryQuarkInfo, queryQuarkLayout, queryQuarkMenus, queryAccountInfo } from '@/services/quark';
 import defaultSettings from '../config/defaultSettings';
+import logo from './assets/logo.png';
 
 export async function getInitialState(): Promise<{
   accountInfo?: API.AccountInfo;
   settings?: LayoutSettings;
   quarkInfo?: any;
+  quarkMenus?: any;
 }> {
   const quarkInfo = await queryQuarkInfo();
 
   // 如果是登录页面，不执行
-  if (history.location.pathname !== '/user/login') {
+  if (history.location.pathname !== '/user/login' && sessionStorage.getItem('token')) {
     try {
       const accountInfo = await queryAccountInfo();
       const quarkLayout = await queryQuarkLayout();
+      const quarkMenus = await queryQuarkMenus();
+
+      if(!quarkLayout.data.logo) {
+        quarkLayout.data.logo = logo;
+      }
+
       return {
         accountInfo: accountInfo.data,
         settings: quarkLayout.data,
         quarkInfo: quarkInfo.data,
+        quarkMenus: quarkMenus.data
       };
     } catch (error) {
       history.push('/user/login');
@@ -39,12 +48,11 @@ export async function getInitialState(): Promise<{
 export const layout = ({
   initialState,
 }: {
-  initialState: { settings?: LayoutSettings; accountInfo?: API.AccountInfo, quarkInfo?: any };
+  initialState: { settings?: LayoutSettings; accountInfo?: API.AccountInfo, quarkInfo?: any, quarkMenus:any };
 }): BasicLayoutProps => {
   return {
-    title: initialState.quarkInfo.name,
-    logo: initialState.quarkInfo.logo,
     rightContentRender: () => <RightContent />,
+    menuDataRender:() => initialState.quarkMenus,
     disableContentMargin: false,
     footerRender: () => <Footer />,
     onPageChange: () => {

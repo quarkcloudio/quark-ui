@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import useMergeValue from 'use-merge-value';
 import classNames from 'classnames';
 import { FormInstance } from 'antd/es/form';
-import { LoginParamsType } from '@/services/login';
 
 import LoginContext from './LoginContext';
 import LoginItem, { LoginItemProps } from './LoginItem';
@@ -15,7 +14,7 @@ export interface LoginProps {
   activeKey?: string;
   onTabChange?: (key: string) => void;
   style?: React.CSSProperties;
-  onSubmit?: (values: LoginParamsType) => void;
+  onSubmit?: (values: any) => void;
   className?: string;
   from?: FormInstance;
   children: React.ReactElement<typeof LoginTab>[];
@@ -82,7 +81,7 @@ const Login: LoginType = (props) => {
           form={props.from || form}
           onFinish={(values) => {
             if (props.onSubmit) {
-              props.onSubmit(values as LoginParamsType);
+              props.onSubmit(values);
             }
           }}
         >
