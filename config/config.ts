@@ -12,7 +12,7 @@ export default defineConfig({
     hmr: true,
   },
   layout: {
-    name: 'Ant Design Pro',
+    name: 'QuarkAdmin',
     locale: true,
     siderWidth: 208,
   },
@@ -56,22 +56,14 @@ export default defineConfig({
       component: './Admin',
       routes: [
         {
-          path: '/admin/sub-page',
-          name: 'sub-page',
-          icon: 'smile',
-          component: './Welcome',
+          path: '/admin/quark/engine',
+          component: './Quark/Engine',
         },
       ],
     },
     {
-      name: 'list.table-list',
-      icon: 'table',
-      path: '/list',
-      component: './ListTableList',
-    },
-    {
       path: '/',
-      redirect: '/welcome',
+      redirect: '/admin/quark/engine?api=admin/dashboard/index&component=dashboard',
     },
     {
       component: './404',

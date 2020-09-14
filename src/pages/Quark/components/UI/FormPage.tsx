@@ -4,7 +4,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
 import { history } from 'umi';
-import Editor from '@/components/Form/Editor';
+import Editor from '../Form/Editor';
 import { Map, Marker } from 'react-amap';
 import Autocomplete from 'react-amap-plugin-autocomplete';
 

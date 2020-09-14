@@ -4,7 +4,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Dispatch } from 'redux';
 import { connect } from 'dva';
 import { history } from 'umi';
-import FormPage from '@/components/QuarkUI/FormPage';
+import FormPage from '../UI/FormPage';
 
 import {
   createFromIconfontCN,
