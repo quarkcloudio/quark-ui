@@ -46,14 +46,13 @@ export default defineConfig({
       path: '/welcome',
       name: 'welcome',
       icon: 'smile',
-      component: './Welcome',
+      component: './Quark/Engine',
     },
     {
       path: '/admin',
       name: 'admin',
       icon: 'crown',
       access: 'canAdmin',
-      component: './Admin',
       routes: [
         {
           path: '/admin/quark/engine',

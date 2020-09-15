@@ -45,6 +45,7 @@
   ],
   "dependencies": {
     "@ant-design/icons": "^4.0.0",
+    "@ant-design/pro-card": "^1.1.0",
     "@ant-design/pro-layout": "^6.2.5",
     "@ant-design/pro-table": "^2.4.0",
     "@tinymce/tinymce-react": "^3.6.1",
@@ -56,6 +57,8 @@
     "path-to-regexp": "2.4.0",
     "qs": "^6.9.0",
     "react": "^16.8.6",
+    "react-amap": "^1.2.8",
+    "react-amap-plugin-autocomplete": "0.0.4",
     "react-dom": "^16.8.6",
     "react-helmet-async": "^1.0.4",
     "umi": "^3.2.0",

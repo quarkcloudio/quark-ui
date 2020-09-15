@@ -1,57 +1,91 @@
-import React, { PureComponent } from 'react';
-import { connect } from 'dva';
-import FormPage from './components/UI/FormPage';
-import TablePage from './components/UI/TablePage';
-import ShowPage from './components/UI/ShowPage';
-import DashboardPage from './components/UI/DashboardPage';
-import zhCN from 'antd/es/locale/zh_CN';
+import React, { useState, useEffect } from 'react';
+import { PageContainer } from '@ant-design/pro-layout';
+import ProCard from '@ant-design/pro-card';
+import { get } from '@/services/action';
 
-import {
-  ConfigProvider
-} from 'antd';
+const getQueryString = (key: any) => {
+  var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)", "i");
+  var r = window.location.search.substr(1).match(reg);
+  if (r != null) return unescape(r[2]);
+  return '';
+}
 
-class Engine extends PureComponent<any> {
-
-  state = {
-    api: this.props.location.query.api,
-    component:this.props.location.query.component,
-    search:this.props.location.query.search
-  };
-
-
-  render() {
-
-    const {engine} = this.props;
-
-    return (
-      <ConfigProvider locale={zhCN}>
-        <div>
-          {engine ?
-            <div>
-              {!!engine.component && engine.component =='form' ? <FormPage api={engine.api} type={'page'} search={engine.search} /> : null}
-              {!!engine.component && engine.component =='table' ? <TablePage api={engine.api} search={engine.search} /> : null}
-              {!!engine.component && engine.component =='show' ? <ShowPage api={engine.api} search={engine.search} /> : null}
-              {!!engine.component && engine.component =='dashboard' ? <DashboardPage api={engine.api} search={engine.search} /> : null}
-            </div>
-          : 
-            <div>
-              {!!this.state.component && this.state.component =='form' ? <FormPage api={this.state.api} type={'page'} search={this.state.search} /> : null}
-              {!!this.state.component && this.state.component =='table' ? <TablePage api={this.state.api} search={this.state.search} /> : null}
-              {!!this.state.component && this.state.component =='show' ? <ShowPage api={this.state.api} search={this.state.search} /> : null}
-              {!!this.state.component && this.state.component =='dashboard' ? <DashboardPage api={this.state.api} search={this.state.search} /> : null}
-            </div>
-          }
-        </div>
-      </ConfigProvider>
-    );
+const parseComponent = (content:any) => {
+  let component = null;
+  switch (content.component) {
+    case 'card':
+      component = <>
+        <ProCard
+          title={content.title}
+          extra={content.extra}
+          subTitle={content.subTitle}
+          tip={content.tip}
+          layout={content.layout}
+        >
+          {componentRender(content.content)}
+        </ProCard>
+      </>
+      break;
+  
+    default:
+      component = <span>无{component}组件</span>
+      break;
   }
+  return component;
 }
 
-function mapStateToProps(state:any) {
-  const { engine } = state.global;
-  return {
-    engine
-  };
+const componentRender = (content:any) => {
+  if(content === null) {
+    return null;
+  }
+
+  if(typeof content === 'string' || typeof content === 'number') {
+    return <span>{content}</span>;
+  }
+
+  if(content.hasOwnProperty('component')) {
+    return parseComponent(content);
+  }
+
+  let component:any = null;
+  if(content.hasOwnProperty(0)) {
+    component = (
+      content.map((item:any) => {
+        return componentRender(item);
+      })
+    )
+  }
+
+  return component;
 }
 
-export default connect(mapStateToProps)(Engine);
+const Engine: React.FC<{}> = () => {
+  const api = getQueryString('api');
+  const [container, setContainerState] = useState({
+    title: null,
+    subTitle: null,
+    content: null
+  });
+
+  useEffect(() => {
+    getContainer();
+  }, [api]);
+
+  const getContainer = async () =>  {
+    const result = await get({
+      actionUrl: api
+    });
+    setContainerState(result.data)
+  }
+
+  return (
+    <PageContainer
+      title={container.title}
+      subTitle={container.subTitle}
+    >
+      {componentRender(container.content)}
+    </PageContainer>
+  );
+}
+
+export default Engine;
