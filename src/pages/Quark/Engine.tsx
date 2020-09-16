@@ -14,17 +14,25 @@ const parseComponent = (content:any) => {
   let component = null;
   switch (content.component) {
     case 'card':
-      component = <>
+      component =
         <ProCard
           title={content.title}
           extra={content.extra}
           subTitle={content.subTitle}
           tip={content.tip}
           layout={content.layout}
+          colSpan={content.colSpan}
+          gutter={content.gutter}
+          bordered={content.bordered}
+          ghost={content.ghost}
+          split={content.split}
+          headerBordered={content.headerBordered}
+          collapsible={content.collapsible}
+          defaultCollapsed={content.defaultCollapsed}
+          style={content.style}
         >
           {componentRender(content.content)}
         </ProCard>
-      </>
       break;
   
     default:
