@@ -16,6 +16,7 @@ const parseComponent = (content:any) => {
     case 'card':
       component =
         <ProCard
+          key={content.key}
           title={content.title}
           extra={content.extra}
           subTitle={content.subTitle}

@@ -43,8 +43,8 @@ export default defineConfig({
       ],
     },
     {
-      path: '/welcome',
-      name: 'welcome',
+      path: '/quark/engine',
+      name: 'quark-engine',
       icon: 'smile',
       component: './Quark/Engine',
     },
@@ -62,7 +62,7 @@ export default defineConfig({
     },
     {
       path: '/',
-      redirect: '/admin/quark/engine?api=admin/dashboard/index&component=dashboard',
+      redirect: '/quark/engine?api=admin/dashboard/index',
     },
     {
       component: './404',
