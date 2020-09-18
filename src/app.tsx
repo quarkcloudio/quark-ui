@@ -14,25 +14,35 @@ export async function getInitialState(): Promise<{
   settings?: LayoutSettings;
   quarkInfo?: any;
   quarkMenus?: any;
+  fetchUserInfo: () => Promise<API.AccountInfo | undefined>;
 }> {
+  const fetchUserInfo = async () => {
+    try {
+      const currentUser = await queryAccountInfo();
+      return currentUser;
+    } catch (error) {
+      history.push('/user/login');
+    }
+    return undefined;
+  };
+
   const quarkInfo = await queryQuarkInfo();
 
   // 如果是登录页面，不执行
   if (history.location.pathname !== '/user/login' && sessionStorage.getItem('token')) {
     try {
-      const accountInfo = await queryAccountInfo();
+      const accountInfo = await fetchUserInfo();
       const quarkLayout = await queryQuarkLayout();
       const quarkMenus = await queryQuarkMenus();
-
-      if(!quarkLayout.data.logo) {
-        quarkLayout.data.logo = logo;
+      if(!quarkLayout.logo) {
+        quarkLayout.logo = logo;
       }
-
       return {
-        accountInfo: accountInfo.data,
-        settings: quarkLayout.data,
-        quarkInfo: quarkInfo.data,
-        quarkMenus: quarkMenus.data
+        fetchUserInfo,
+        accountInfo: accountInfo,
+        settings: quarkLayout,
+        quarkInfo: quarkInfo,
+        quarkMenus: quarkMenus
       };
     } catch (error) {
       history.push('/user/login');
@@ -40,8 +50,9 @@ export async function getInitialState(): Promise<{
   }
 
   return {
+    fetchUserInfo,
     settings: defaultSettings,
-    quarkInfo: quarkInfo.data,
+    quarkInfo: quarkInfo,
   };
 }
 
@@ -56,8 +67,10 @@ export const layout = ({
     disableContentMargin: false,
     footerRender: () => <Footer />,
     onPageChange: () => {
+      const { accountInfo } = initialState;
+      const { location } = history;
       // 如果没有登录，重定向到 login
-      if (!initialState?.accountInfo?.id && history.location.pathname !== '/user/login') {
+      if (!accountInfo?.id && location.pathname !== '/user/login') {
         history.push('/user/login');
       }
     },

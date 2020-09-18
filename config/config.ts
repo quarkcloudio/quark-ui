@@ -14,7 +14,6 @@ export default defineConfig({
   layout: {
     name: 'QuarkAdmin',
     locale: true,
-    siderWidth: 208,
   },
   locale: {
     // default zh-CN

@@ -1,15 +1,28 @@
 import { request } from 'umi';
+import { message } from 'antd';
+
+function response(result:any) {
+  if(result.status === 'success') {
+    message.success(result.msg);
+    return result.data;
+  }
+  message.error(result.msg);
+  return false;
+}
 
 export async function queryQuarkInfo() {
-  return request('/api/admin/quark/info');
+  const result = request('/api/admin/quark/info');
+  return response(result);
 }
 
 export async function queryQuarkLayout() {
-  return request('/api/admin/quark/layout');
+  const result = request('/api/admin/quark/layout');
+  return response(result);
 }
 
 export async function queryQuarkMenus() {
-  return request('/api/admin/quark/menus');
+  const result = request('/api/admin/quark/menus');
+  return response(result);
 }
 
 export async function getSmsCode(params: any) {
@@ -35,5 +48,6 @@ export async function accountLogout() {
 }
 
 export async function queryAccountInfo() {
-  return request('/api/admin/account/info');
+  const result = request('/api/admin/account/info');
+  return response(result);
 }
