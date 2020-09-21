@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProCard from '@ant-design/pro-card';
+import ProTable from '@ant-design/pro-table';
 import { get } from '@/services/action';
 
 const getQueryString = (key: any) => {
@@ -35,7 +36,15 @@ const parseComponent = (content:any) => {
           {componentRender(content.content)}
         </ProCard>
       break;
-  
+    case 'table':
+      component =
+        <ProTable
+          key={content.key}
+          rowKey={content.rowKey}
+          dateFormatter="string"
+          headerTitle={content.headerTitle}
+        />
+      break;
     default:
       component = <span>无{component}组件</span>
       break;

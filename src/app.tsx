@@ -1,9 +1,6 @@
-import React from 'react';
-import { BasicLayoutProps, Settings as LayoutSettings } from '@ant-design/pro-layout';
+import { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { notification } from 'antd';
 import { history, RequestConfig } from 'umi';
-import RightContent from '@/components/RightContent';
-import Footer from '@/components/Footer';
 import { ResponseError } from 'umi-request';
 import { queryQuarkInfo, queryQuarkLayout, queryQuarkMenus, queryAccountInfo } from '@/services/quark';
 import defaultSettings from '../config/defaultSettings';
@@ -15,6 +12,8 @@ export async function getInitialState(): Promise<{
   quarkInfo?: any;
   quarkMenus?: any;
   fetchUserInfo: () => Promise<API.AccountInfo | undefined>;
+  fetchLayoutInfo: () => Promise<undefined>;
+  fetchMenusInfo: () => Promise<undefined>;
 }> {
   const fetchUserInfo = async () => {
     try {
@@ -26,23 +25,33 @@ export async function getInitialState(): Promise<{
     return undefined;
   };
 
+  const fetchLayoutInfo = async () => {
+    return await queryQuarkLayout();
+  };
+
+  const fetchMenusInfo = async () => {
+    return await queryQuarkMenus();
+  };
+
   const quarkInfo = await queryQuarkInfo();
 
   // 如果是登录页面，不执行
-  if (history.location.pathname !== '/user/login' && sessionStorage.getItem('token')) {
+  if (history.location.pathname !== '/user/login' && sessionStorage.getItem('token') !== null) {
     try {
       const accountInfo = await fetchUserInfo();
-      const quarkLayout = await queryQuarkLayout();
-      const quarkMenus = await queryQuarkMenus();
-      if(!quarkLayout.logo) {
-        quarkLayout.logo = logo;
+      const quarkLayout = await fetchLayoutInfo();
+      const quarkMenus = await fetchMenusInfo();
+      if(!quarkLayout.data.logo) {
+        quarkLayout.data.logo = logo;
       }
       return {
         fetchUserInfo,
-        accountInfo: accountInfo,
-        settings: quarkLayout,
-        quarkInfo: quarkInfo,
-        quarkMenus: quarkMenus
+        fetchLayoutInfo,
+        fetchMenusInfo,
+        accountInfo: accountInfo.data,
+        settings: quarkLayout.data,
+        quarkInfo: quarkInfo.data,
+        quarkMenus: quarkMenus.data
       };
     } catch (error) {
       history.push('/user/login');
@@ -51,33 +60,12 @@ export async function getInitialState(): Promise<{
 
   return {
     fetchUserInfo,
+    fetchLayoutInfo,
+    fetchMenusInfo,
     settings: defaultSettings,
-    quarkInfo: quarkInfo,
+    quarkInfo: quarkInfo.data,
   };
 }
-
-export const layout = ({
-  initialState,
-}: {
-  initialState: { settings?: LayoutSettings; accountInfo?: API.AccountInfo, quarkInfo?: any, quarkMenus:any };
-}): BasicLayoutProps => {
-  return {
-    rightContentRender: () => <RightContent />,
-    menuDataRender:() => initialState.quarkMenus,
-    disableContentMargin: false,
-    footerRender: () => <Footer />,
-    onPageChange: () => {
-      const { accountInfo } = initialState;
-      const { location } = history;
-      // 如果没有登录，重定向到 login
-      if (!accountInfo?.id && location.pathname !== '/user/login') {
-        history.push('/user/login');
-      }
-    },
-    menuHeaderRender: undefined,
-    ...initialState?.settings,
-  };
-};
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',

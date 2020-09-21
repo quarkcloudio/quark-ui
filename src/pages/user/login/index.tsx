@@ -37,15 +37,19 @@ const Login: React.FC<{}> = () => {
     setSubmitting(true);
     try {
       const result = await accountLogin({ ...values, type });
-      if (result.status === 'success' && initialState) {
+      if (result.status == 'success' && initialState) {
         message.success(result.msg);
-        const accountInfo = await initialState?.fetchUserInfo();
-        setInitialState({
-          ...initialState,
-          accountInfo,
-        });
         // 记录登录凭据
         sessionStorage.setItem('token', result.data.token);
+        const accountInfo = await initialState?.fetchUserInfo();
+        const layoutInfo = await initialState?.fetchLayoutInfo();
+        const quarkMenus = await initialState?.fetchMenusInfo();
+        setInitialState({
+          ...initialState,
+          accountInfo: accountInfo.data,
+          settings: layoutInfo.data,
+          quarkMenus: quarkMenus.data
+        });
         replaceGoto();
         return;
       } else {

@@ -8,8 +8,8 @@ const Footer: React.FC<{}> = () => {
 
   return (
     <DefaultFooter
-      copyright={quarkInfo.copyright}
-      links={quarkInfo.links.map((item:any, index:any) => {
+      copyright={quarkInfo?.copyright}
+      links={quarkInfo?.links?.map((item:any, index:any) => {
         item['key']=index;
         return item;
       })}

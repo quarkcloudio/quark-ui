@@ -11,10 +11,6 @@ export default defineConfig({
   dva: {
     hmr: true,
   },
-  layout: {
-    name: 'QuarkAdmin',
-    locale: true,
-  },
   locale: {
     // default zh-CN
     default: 'zh-CN',
@@ -42,19 +38,12 @@ export default defineConfig({
       ],
     },
     {
-      path: '/quark/engine',
-      name: 'quark-engine',
-      icon: 'smile',
-      component: './Quark/Engine',
-    },
-    {
-      path: '/admin',
-      name: 'admin',
-      icon: 'crown',
+      path: '/',
       access: 'canAdmin',
+      component: '@/layouts/Index',
       routes: [
         {
-          path: '/admin/quark/engine',
+          path: '/quark/engine',
           component: './Quark/Engine',
         },
       ],
