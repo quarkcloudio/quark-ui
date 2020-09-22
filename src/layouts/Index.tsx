@@ -12,12 +12,14 @@ const Index: React.FC<{}> = (props) => {
   const quarkMenus = initialState.quarkMenus;
   const settings = initialState.settings;
   const [title, setTitle] = useState<string>('QuarkCMS');
-  const [menuOpenKeys, setMenuOpenKeys] = useState([quarkMenus[0]['key']]);
-  const [menuSelectedKeys, setMenuSelectedKeys] = useState([quarkMenus[0]['children'][0]['key']]);
+  const [menuOpenKeys, setMenuOpenKeys] = useState([quarkMenus?quarkMenus[0]['key']:null]);
+  const [menuSelectedKeys, setMenuSelectedKeys] = useState([quarkMenus?quarkMenus[0]['children'][0]['key']:null]);
 
   useEffect(() => {
-    const title = getMenuName(quarkMenus, window.location.href);
-    setTitle(title);
+    if(quarkMenus) {
+      const title = getMenuName(quarkMenus, window.location.href);
+      setTitle(title);
+    }
   }, [api]);
 
   const getMenuName = (menus: any, path: string) => {

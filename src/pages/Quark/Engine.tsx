@@ -41,6 +41,8 @@ const parseComponent = (content:any) => {
         <ProTable
           key={content.key}
           rowKey={content.rowKey}
+          columns={content.columns}
+          datasource={content.datasource}
           dateFormatter="string"
           headerTitle={content.headerTitle}
         />
@@ -80,7 +82,7 @@ const componentRender = (content:any) => {
 const Engine: React.FC<{}> = () => {
   const api = getQueryString('api');
   const [container, setContainerState] = useState({
-    title: null,
+    title: ' ',
     subTitle: null,
     content: null
   });

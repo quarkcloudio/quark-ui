@@ -1,6 +1,8 @@
-import { Settings as LayoutSettings } from '@ant-design/pro-layout';
+import { BasicLayoutProps, Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { notification } from 'antd';
 import { history, RequestConfig } from 'umi';
+import RightContent from '@/components/RightContent';
+import Footer from '@/components/Footer';
 import { ResponseError } from 'umi-request';
 import { queryQuarkInfo, queryQuarkLayout, queryQuarkMenus, queryAccountInfo } from '@/services/quark';
 import defaultSettings from '../config/defaultSettings';
@@ -66,6 +68,28 @@ export async function getInitialState(): Promise<{
     quarkInfo: quarkInfo.data,
   };
 }
+
+// export const layout = ({
+//   initialState,
+// }: {
+//   initialState: { settings?: LayoutSettings; currentUser?: API.AccountInfo };
+// }): BasicLayoutProps => {
+//   return {
+//     rightContentRender: () => <RightContent />,
+//     disableContentMargin: false,
+//     footerRender: () => <Footer />,
+//     onPageChange: () => {
+//       const { currentUser } = initialState;
+//       const { location } = history;
+//       // 如果没有登录，重定向到 login
+//       if (!currentUser?.userid && location.pathname !== '/user/login') {
+//         history.push('/user/login');
+//       }
+//     },
+//     menuHeaderRender: undefined,
+//     ...initialState?.settings,
+//   };
+// };
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',

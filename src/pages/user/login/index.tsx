@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { message } from 'antd';
-import { Link, SelectLang, useModel, history, History } from 'umi';
+import { Link, SelectLang, useModel, history, History, Helmet } from 'umi';
 import logo from '@/assets/logo.svg';
 import { accountLogin } from '@/services/quark';
 import Footer from '@/components/Footer';
@@ -62,6 +62,11 @@ const Login: React.FC<{}> = () => {
   };
 
   return (
+    <>
+    <Helmet>
+      <meta charSet="utf-8" />
+      <title>{quarkInfo.name ? quarkInfo.name : 'QuarkCMS'}</title>
+    </Helmet>
     <div className={styles.container}>
       <div className={styles.lang}>
         <SelectLang />
@@ -156,6 +161,7 @@ const Login: React.FC<{}> = () => {
       </div>
       <Footer />
     </div>
+    </>
   );
 };
 

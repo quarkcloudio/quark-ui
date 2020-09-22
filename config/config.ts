@@ -11,6 +11,10 @@ export default defineConfig({
   dva: {
     hmr: true,
   },
+  // layout: {
+  //   name: 'Ant Design Pro',
+  //   locale: true,
+  // },
   locale: {
     // default zh-CN
     default: 'zh-CN',
@@ -38,22 +42,25 @@ export default defineConfig({
       ],
     },
     {
-      path: '/',
-      access: 'canAdmin',
       component: '@/layouts/Index',
       routes: [
         {
-          path: '/quark/engine',
-          component: './Quark/Engine',
+          path: '/quark',
+          routes: [
+            {
+              path: '/quark/engine',
+              component: './Quark/Engine',
+            },
+          ],
+        },
+        {
+          path: '/',
+          redirect: '/quark/engine?api=admin/dashboard/index',
+        },
+        {
+          component: './404',
         },
       ],
-    },
-    {
-      path: '/',
-      redirect: '/quark/engine?api=admin/dashboard/index',
-    },
-    {
-      component: './404',
     },
   ],
   // Theme for antd: https://ant.design/docs/react/customize-theme-cn
