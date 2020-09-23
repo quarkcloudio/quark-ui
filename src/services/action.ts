@@ -2,15 +2,17 @@ import { request } from 'umi';
 import { stringify } from 'qs';
 
 export async function get(params: any) {
-  let actionUrl = '';
+  let actionUrl = '',url = '';
+  url = params.actionUrl;
+  delete params['actionUrl'];
 
-  if(params.actionUrl.indexOf("?") != -1) {
-    actionUrl = `${params.actionUrl}&${stringify(params)}`;
+  if(url.indexOf("?") != -1) {
+    actionUrl = `${url}&${stringify(params)}`;
   } else {
-    actionUrl = `${params.actionUrl}?${stringify(params)}`;
+    actionUrl = `${url}?${stringify(params)}`;
   }
   
-  if(params.actionUrl.indexOf("http") == -1) {
+  if(url.indexOf("http") == -1) {
     actionUrl = `../../api/${actionUrl}`;
   }
 
@@ -18,12 +20,14 @@ export async function get(params: any) {
 }
 
 export async function post(params: any) {
-  let actionUrl = '';
+  let actionUrl = '',url = '';
+  url = params.actionUrl;
+  delete params['actionUrl'];
 
-  if(params.actionUrl.indexOf("http") == -1) {
-    actionUrl = `../../api/${params.actionUrl}`;
+  if(url.indexOf("http") == -1) {
+    actionUrl = `../../api/${url}`;
   } else {
-    actionUrl = params.actionUrl;
+    actionUrl = url;
   }
 
   return request(actionUrl, {

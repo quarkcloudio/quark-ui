@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { stringify } from 'qs';
-import { history } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProCard from '@ant-design/pro-card';
-import ProTable, { ProColumns } from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-table';
+import { stringify } from 'qs';
+import { history } from 'umi';
 import { get } from '@/services/action';
+import {
+  Popover
+} from 'antd';
+import { QrcodeOutlined } from '@ant-design/icons';
 
 const Engine: React.FC<{}> = () => {
-  const query = history.location.query;
   const [container, setContainerState] = useState({
     title: ' ',
     subTitle: null,
@@ -16,14 +19,48 @@ const Engine: React.FC<{}> = () => {
 
   useEffect(() => {
     getContainer();
-  }, [query.api]);
+  }, [history.location.query.api]);
 
+  // 渲染column
+  const columnRender = (column:any, text:any) => {
+    let columnComponent = null;
+
+    if(column.link) {
+      columnComponent = <a href={text.link}>{text.title}</a>
+    } else {
+      columnComponent = text;
+    }
+
+    if(column.image) {
+      columnComponent = <img src={text} width={column.image.width} height={column.image.height} />
+    }
+
+    if(column.qrcode) {
+      let img:any = <img src={columnComponent} width={column.qrcode.width} height={column.qrcode.height} />;
+      columnComponent = 
+      <Popover placement="left" content={img}>
+        <QrcodeOutlined style={{cursor:'pointer',fontSize:'18px'}} />
+      </Popover>
+    }
+
+    if(column.rowActions) {
+
+    }
+
+    return columnComponent;
+  }
+
+  // 解析column
   const parseColumns = (columns:any) => {
-    let getColumns: ProColumns<any>[] = [];
     columns.map((item:any,key:any) => {
-      getColumns[key] = item;
+      item.render = (text:any, row:any) => (
+        <>
+          {columnRender(item, text)}
+        </>
+      );
+      columns[key] = item;
     })
-    return getColumns;
+    return columns;
   }
   
   const parseComponent = (content:any) => {
@@ -59,9 +96,7 @@ const Engine: React.FC<{}> = () => {
             headerTitle={content.headerTitle}
             columns={parseColumns(content.columns)}
             search={content.search}
-            request={(params, sorter, filter,) => {
-              // 表单搜索项会从 params 传入，传递给后端接口。
-              console.log(params, sorter, filter);
+            request={async (params, sorter, filter,) => {
               let query = {};
               query['api'] = history.location.query.api;
               query['page'] = params.current;
@@ -76,8 +111,10 @@ const Engine: React.FC<{}> = () => {
   
               history.push(history.location.pathname+'?'+stringify(query));
 
+              const datasource = await getTableDatasource(content.key);
+
               return Promise.resolve({
-                data: getTableDatasource(content.key),
+                data: datasource,
                 success: true,
               });
             }}
@@ -121,8 +158,6 @@ const Engine: React.FC<{}> = () => {
     if(data.key === key) {
       return data;
     }
-    console.log(key);
-    console.log(data.key);
 
     if(data.hasOwnProperty('content')) {
       return findComponent(data.content,key);
@@ -141,21 +176,19 @@ const Engine: React.FC<{}> = () => {
 
   const getContainer = async () =>  {
     const result = await get({
-      actionUrl: query.api,
-      ...query
+      actionUrl: history.location.query.api,
+      ...history.location.query
     });
     setContainerState(result.data)
   }
 
   const getTableDatasource:any = async (key:string) =>  {
     const result = await get({
-      actionUrl: query.api,
-      ...query
+      actionUrl: history.location.query.api,
+      ...history.location.query
     });
-
-    const table = findComponent(result,key);
-    console.log(table);
-    return [];
+    const table = findComponent(result.data,key);
+    return table.datasource;
   }
 
   return (
