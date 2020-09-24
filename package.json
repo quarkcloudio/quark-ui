@@ -45,9 +45,9 @@
   ],
   "dependencies": {
     "@ant-design/icons": "^4.0.0",
-    "@ant-design/pro-card": "^1.1.0",
+    "@ant-design/pro-card": "^1.2.1",
     "@ant-design/pro-layout": "^6.4.19",
-    "@ant-design/pro-table": "^2.7.4",
+    "@ant-design/pro-table": "^2.8.1",
     "@tinymce/tinymce-react": "^3.6.1",
     "antd": "^4.6.5",
     "classnames": "^2.2.6",

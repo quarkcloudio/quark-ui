@@ -43,8 +43,8 @@ const Engine: React.FC<{}> = () => {
       </Popover>
     }
 
-    if(column.rowActions) {
-
+    if(column.actions) {
+      text
     }
 
     return columnComponent;
