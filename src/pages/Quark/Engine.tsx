@@ -6,7 +6,8 @@ import { stringify } from 'qs';
 import { history } from 'umi';
 import { get } from '@/services/action';
 import {
-  Popover
+  Popover,
+  Button
 } from 'antd';
 import { QrcodeOutlined } from '@ant-design/icons';
 
@@ -44,10 +45,52 @@ const Engine: React.FC<{}> = () => {
     }
 
     if(column.actions) {
-      text
+      columnComponent = parseActions(text);
     }
 
     return columnComponent;
+  }
+
+  // 执行行为
+  const executeAction = async (api:string) => {
+    const result = await get({
+      actionUrl: api
+    });
+
+    return result;
+  }
+
+  // 解析actions
+  const parseActions = (actions:any) => {
+    let actionComponent:any = null;
+    actionComponent = (
+      actions.map((item:any,key:any) => {
+        let component:any = null;
+        switch (item.component) {
+          case 'aStyleAction':
+            component = <a href={item.href} target={item.target} style={item.style} onClick={()=>{executeAction(item.api)}}>
+                          {item.name}
+                        </a>
+            break;
+
+          case 'buttonStyleAction':
+            component = <Button
+                          type={item.type}
+                          href={item.href}
+                          target={item.target}
+                          style={item.style}
+                        >
+                          {item.name}
+                        </Button>
+            break;
+        
+          default:
+            break;
+        }
+        return component;
+      })
+    )
+    return actionComponent;
   }
 
   // 解析column
