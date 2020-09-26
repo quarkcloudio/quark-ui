@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProCard from '@ant-design/pro-card';
-import ProTable from '@ant-design/pro-table';
+import ProTable , { ActionType }from '@ant-design/pro-table';
 import { stringify } from 'qs';
 import { history } from 'umi';
 import { get } from '@/services/action';
@@ -12,6 +12,8 @@ import {
 import { QrcodeOutlined } from '@ant-design/icons';
 
 const Engine: React.FC<{}> = () => {
+  const actionRef = useRef<any>(undefined);
+
   const [container, setContainerState] = useState({
     title: ' ',
     subTitle: null,
@@ -57,7 +59,12 @@ const Engine: React.FC<{}> = () => {
       actionUrl: api
     });
 
-    return result;
+    if(result.status === 'success') {
+      const { current } = actionRef;
+      if (current) {
+        current.reload();
+      }
+    }
   }
 
   // 解析actions
@@ -163,6 +170,7 @@ const Engine: React.FC<{}> = () => {
             }}
             pagination={content.pagination}
             dateFormatter="string"
+            actionRef={actionRef}
           />
         break;
       default:
