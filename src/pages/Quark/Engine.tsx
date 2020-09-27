@@ -3,15 +3,18 @@ import { PageContainer } from '@ant-design/pro-layout';
 import ProCard from '@ant-design/pro-card';
 import ProTable , { ActionType }from '@ant-design/pro-table';
 import { stringify } from 'qs';
-import { history } from 'umi';
+import { history, Link } from 'umi';
 import { get } from '@/services/action';
 import {
   Popover,
-  Button
+  Button,
+  Modal,
+  Popconfirm
 } from 'antd';
-import { QrcodeOutlined } from '@ant-design/icons';
+import { QrcodeOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 
 const Engine: React.FC<{}> = () => {
+  const { confirm } = Modal;
   const actionRef = useRef<any>(undefined);
 
   const [container, setContainerState] = useState({
@@ -29,7 +32,16 @@ const Engine: React.FC<{}> = () => {
     let columnComponent = null;
 
     if(column.link) {
-      columnComponent = <a href={text.link}>{text.title}</a>
+      if(text.target === '_blank') {
+        columnComponent = <a href={text.href} target={text.target}>{text.title}</a>
+      } else {
+        columnComponent =
+        <Link
+          to={text.href}
+        >
+          {text.title}
+        </Link>
+      }
     } else {
       columnComponent = text;
     }
@@ -40,7 +52,7 @@ const Engine: React.FC<{}> = () => {
 
     if(column.qrcode) {
       let img:any = <img src={columnComponent} width={column.qrcode.width} height={column.qrcode.height} />;
-      columnComponent = 
+      columnComponent =
       <Popover placement="left" content={img}>
         <QrcodeOutlined style={{cursor:'pointer',fontSize:'18px'}} />
       </Popover>
@@ -51,6 +63,21 @@ const Engine: React.FC<{}> = () => {
     }
 
     return columnComponent;
+  }
+
+  // 显示确认弹框
+  const showConfirm = async (confirmInfo:any, api:string) => {
+    confirm({
+      title: confirmInfo.title,
+      icon: <ExclamationCircleOutlined />,
+      content: confirmInfo.content,
+      onOk() {
+        executeAction(api);
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
   }
 
   // 执行行为
@@ -75,20 +102,141 @@ const Engine: React.FC<{}> = () => {
         let component:any = null;
         switch (item.component) {
           case 'aStyleAction':
-            component = <a href={item.href} target={item.target} style={item.style} onClick={()=>{executeAction(item.api)}}>
-                          {item.name}
-                        </a>
+            if(item.href) {
+              // 跳转行为
+              if(item.target === '_blank') {
+                component = 
+                <a
+                  key={item.key}
+                  href={item.href}
+                  target={item.target}
+                  style={item.style}
+                >
+                  {item.name}
+                </a>
+              } else {
+                component = 
+                <Link
+                  key={item.key}
+                  style={item.style}
+                  to={item.href}
+                >
+                  {item.name}
+                </Link>
+              }
+            } else {
+              // 执行操作行为
+              component = 
+              <a
+                key={item.key}
+                style={item.style}
+                onClick={()=>{executeAction(item.api)}}
+              >
+                {item.name}
+              </a>
+
+              // 是否带确认
+              if(item.confirm) {
+                component = 
+                <a
+                  key={item.key}
+                  style={item.style}
+                  onClick={()=>{showConfirm(item.confirm,item.api)}}
+                >
+                  {item.name}
+                </a>
+              }
+
+              // 带Popconfirm确认
+              if(item.popconfirm) {
+                component = 
+                <Popconfirm
+                  key={item.key}
+                  placement="topRight"
+                  title={item.popconfirm.title}
+                  onConfirm={()=>{executeAction(item.api)}}
+                >
+                  <a
+                    key={item.key}
+                    style={item.style}
+                  >
+                    {item.name}
+                  </a>
+                </Popconfirm>
+              }
+            }
             break;
 
           case 'buttonStyleAction':
-            component = <Button
-                          type={item.type}
-                          href={item.href}
-                          target={item.target}
-                          style={item.style}
-                        >
-                          {item.name}
-                        </Button>
+            if(item.href) {
+              if(item.target === '_blank') {
+                component = 
+                <Button
+                  key={item.key}
+                  type={item.type}
+                  href={item.href}
+                  target={item.target}
+                  style={item.style}
+                >
+                  {item.name}
+                </Button>
+              } else {
+                component = 
+                <Button
+                  key={item.key}
+                  type={item.type}
+                  style={item.style}
+                >
+                  <Link
+                    key={item.key}
+                    to={item.href}
+                  >
+                    {item.name}
+                  </Link>
+                </Button>
+              }
+            } else {
+              component = 
+              <Button
+                key={item.key}
+                type={item.type}
+                style={item.style}
+                onClick={()=>{executeAction(item.api)}}
+              >
+                {item.name}
+              </Button>
+
+              if(item.confirm) {
+                component = 
+                <Button
+                  key={item.key}
+                  type={item.type}
+                  style={item.style}
+                  onClick={()=>{showConfirm(item.confirm,item.api)}}
+                >
+                  {item.name}
+                </Button>
+              }
+
+              // 带Popconfirm确认
+              if(item.popconfirm) {
+                component = 
+                <Popconfirm
+                  key={item.key}
+                  placement="topRight"
+                  title={item.popconfirm.title}
+                  onConfirm={()=>{executeAction(item.api)}}
+                >
+                  <Button
+                    key={item.key}
+                    type={item.type}
+                    style={item.style}
+                  >
+                    {item.name}
+                  </Button>
+                </Popconfirm>
+              }
+            }
             break;
         
           default:
