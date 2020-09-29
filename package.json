@@ -45,11 +45,11 @@
   ],
   "dependencies": {
     "@ant-design/icons": "^4.0.0",
-    "@ant-design/pro-card": "^1.2.1",
-    "@ant-design/pro-layout": "^6.4.19",
-    "@ant-design/pro-table": "^2.8.1",
-    "@tinymce/tinymce-react": "^3.6.1",
-    "antd": "^4.6.5",
+    "@ant-design/pro-card": "^1.2.2",
+    "@ant-design/pro-layout": "^6.5.0",
+    "@ant-design/pro-table": "^2.9.1",
+    "@tinymce/tinymce-react": "^3.7.0",
+    "antd": "^4.6.6",
     "classnames": "^2.2.6",
     "lodash": "^4.17.11",
     "moment": "^2.29.0",
@@ -88,7 +88,7 @@
     "cross-port-killer": "^1.1.1",
     "detect-installer": "^1.0.1",
     "enzyme": "^3.11.0",
-    "eslint": "^7.9.0",
+    "eslint": "^7.10.0",
     "express": "^4.17.1",
     "gh-pages": "^3.0.0",
     "husky": "^4.3.0",
@@ -98,7 +98,7 @@
     "prettier": "^2.1.2",
     "pro-download": "1.0.1",
     "puppeteer-core": "^5.3.1",
-    "stylelint": "^13.7.1"
+    "stylelint": "^13.7.2"
   },
   "engines": {
     "node": ">=10.0.0"

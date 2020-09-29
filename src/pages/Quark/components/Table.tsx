@@ -105,8 +105,9 @@ const Table: React.FC<Table> = (props) => {
       rowKey={props.table.rowKey}
       headerTitle={props.table.headerTitle}
       columns={parseColumns(props.table.columns)}
+      options={props.table.options}
       search={props.table.search}
-      request={async (params, sorter, filter,) => {
+      request={async (params, sorter, filter) => {
         let query = {};
         query['api'] = history.location.query.api;
         query['page'] = params.current;
@@ -129,13 +130,37 @@ const Table: React.FC<Table> = (props) => {
         });
       }}
       pagination={props.table.pagination}
-      dateFormatter="string"
-      toolBarRender={() => [
-        <Button>
-          导出数据
-        </Button>,
-        <Button type="primary">创建应用</Button>,
-      ]}
+      dateFormatter={props.table.dateFormatter}
+      columnEmptyText={props.table.columnEmptyText}
+      toolbar={{
+        multipleLine: true,
+        tabs: {
+          items: [
+            {
+              key: 'tab1',
+              tab: '标签一',
+            },
+            {
+              key: 'tab2',
+              tab: '标签二',
+            },
+          ],
+        },
+        menu: {
+          type: 'inline',
+          items: [
+            {
+              label: <span>全部应用</span>,
+              key: 'all',
+            },
+            {
+              label: <span>我创建的应用</span>,
+              key: 'todo',
+            },
+          ],
+        },
+        actions: [<Button type="primary">新建应用</Button>],
+      }}
     />
   );
 }

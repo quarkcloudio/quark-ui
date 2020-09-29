@@ -166,13 +166,13 @@ const RowAction: React.FC<Action> = (props) => {
             component = buttonStyle(item);
             break;
           case 'itemStyle':
-            component = <Menu.Item>{aStyle(item)}</Menu.Item>;
+            component = <Menu.Item key={item.key}>{aStyle(item)}</Menu.Item>;
             break;
 
           case 'dropdownStyle':
             component =
-            <Dropdown overlay={menu(item.overlay)}>
-              <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+            <Dropdown key={item.key} overlay={menu(item.overlay)}>
+              <a onClick={e => e.preventDefault()}>
                 {item.name} <DownOutlined />
               </a>
             </Dropdown>
