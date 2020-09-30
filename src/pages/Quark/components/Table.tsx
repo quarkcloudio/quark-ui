@@ -4,6 +4,7 @@ import { stringify } from 'qs';
 import { history, Link } from 'umi';
 import { get } from '@/services/action';
 import RowAction from '@/pages/Quark/components/RowAction';
+import QueryFilter from '@/pages/Quark/components/QueryFilter';
 import {
   Popover,
   Button
@@ -89,79 +90,63 @@ const Table: React.FC<Table> = (props) => {
     return conmpontent
   }
 
-  const getTableDatasource:any = async (key:string) =>  {
+  const getTableDatasource:any = async (key:string,query:[]) =>  {
+
+    if(query){
+      history.push(history.location.pathname+'?'+stringify(query));
+    }
+
     const result = await get({
       actionUrl: history.location.query.api,
       ...history.location.query
     });
+
     const table = findComponent(result.data,key);
     return table.datasource;
   }
 
   return (
-    <ProTable
-      key={props.table.key}
-      actionRef={actionRef}
-      rowKey={props.table.rowKey}
-      headerTitle={props.table.headerTitle}
-      columns={parseColumns(props.table.columns)}
-      options={props.table.options}
-      search={props.table.search}
-      request={async (params, sorter, filter) => {
-        let query = {};
-        query['api'] = history.location.query.api;
-        query['page'] = params.current;
-        query['pageSize'] = params.pageSize;
+    <>
+      <QueryFilter search={props.table.search} current={actionRef.current}/>
+      <ProTable
+        key={props.table.key}
+        actionRef={actionRef}
+        rowKey={props.table.rowKey}
+        headerTitle={props.table.headerTitle}
+        columns={parseColumns(props.table.columns)}
+        options={props.table.options}
+        search={false}
+        request={async (params, sorter, filter) => {
+          let query = {},datasource = null;
+          query['api'] = history.location.query.api;
+          query['page'] = params.current;
+          query['pageSize'] = params.pageSize;
 
-        delete params['current'];
-        delete params['pageSize'];
+          // delete params['current'];
+          // delete params['pageSize'];
+          // query['search'] = params;
 
-        query['search'] = params;
-        query['sorter'] = sorter;
-        query['filter'] = filter;
+          query['search'] = history.location.query.search;
+          query['sorter'] = sorter;
+          query['filter'] = filter;
 
-        history.push(history.location.pathname+'?'+stringify(query));
 
-        const datasource = await getTableDatasource(props.table.key);
+          datasource = await getTableDatasource(props.table.key,query);
 
-        return Promise.resolve({
-          data: datasource,
-          success: true,
-        });
-      }}
-      pagination={props.table.pagination}
-      dateFormatter={props.table.dateFormatter}
-      columnEmptyText={props.table.columnEmptyText}
-      toolbar={{
-        multipleLine: true,
-        tabs: {
-          items: [
-            {
-              key: 'tab1',
-              tab: '标签一',
-            },
-            {
-              key: 'tab2',
-              tab: '标签二',
-            },
-          ],
-        },
-        menu: {
-          type: 'inline',
-          items: [
-            {
-              label: <span>全部应用</span>,
-              key: 'all',
-            },
-            {
-              label: <span>我创建的应用</span>,
-              key: 'todo',
-            },
-          ],
-        },
-        actions: [<Button type="primary">新建应用</Button>],
-      }}
-    />
+          return Promise.resolve({
+            data: datasource,
+            success: true,
+          });
+        }}
+        pagination={props.table.pagination}
+        dateFormatter={props.table.dateFormatter}
+        columnEmptyText={props.table.columnEmptyText}
+        toolbar={{
+          multipleLine: false,
+          actions: [<Button key={'button'} type="primary">新建应用</Button>],
+        }}
+      />
+    </>
   );
 }
 
