@@ -6,11 +6,11 @@ import RowAction from '@/pages/Quark/components/RowAction';
 import QueryFilter from '@/pages/Quark/components/QueryFilter';
 import {
   Popover,
-  Button,
   Space
 } from 'antd';
 import { QrcodeOutlined } from '@ant-design/icons';
 import BatchAction from './BatchAction';
+import ToolBarAction from './ToolBarAction';
 
 export interface Table {
   key: number;
@@ -159,7 +159,7 @@ const Table: React.FC<Table> = (props) => {
         columnEmptyText={props.table.columnEmptyText}
         toolbar={{
           multipleLine: false,
-          actions: [<Button key={'button'} type="primary">新建应用</Button>],
+          actions: [<ToolBarAction key={props.table.toolbar.key} actions={props.table.toolbar.actions} current={actionRef.current} />],
         }}
       />
     </>

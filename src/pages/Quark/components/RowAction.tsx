@@ -1,15 +1,16 @@
 import React from 'react';
 import { ActionType }from '@ant-design/pro-table';
-import { Link } from 'umi';
+import { useModel, Link } from 'umi';
 import { get } from '@/services/action';
 import {
   Button,
   Modal,
   Popconfirm,
   Dropdown,
-  Menu
+  Menu,
+  Space
 } from 'antd';
-import { ExclamationCircleOutlined, DownOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined, DownOutlined, createFromIconfontCN } from '@ant-design/icons';
 
 export interface Action {
   actions: {};
@@ -17,6 +18,10 @@ export interface Action {
 }
 
 const RowAction: React.FC<Action> = (props) => {
+  const { initialState } = useModel('@@initialState');
+  const IconFont = createFromIconfontCN({
+    scriptUrl: initialState.settings.iconfontUrl,
+  });
   const { confirm } = Modal;
 
   // 显示确认弹框
@@ -107,27 +112,73 @@ const RowAction: React.FC<Action> = (props) => {
     if(item.href) {
       if(item.target === '_blank') {
         component = 
-        <Button key={item.key} type={item.type} href={item.href} target={item.target} style={item.style}>
+        <Button
+          key={item.key}
+          type={item.type}
+          block={item.block}
+          danger={item.danger}
+          disabled={item.disabled}
+          ghost={item.ghost}
+          shape={item.shape}
+          size={item.size}
+          icon={item.icon ? <IconFont type={item.icon} /> : null}
+          href={item.href}
+          target={item.target}
+          style={item.style}
+        >
           {item.name}
         </Button>
       } else {
         component = 
-        <Button key={item.key} type={item.type} style={item.style}>
-          <Link key={item.key} to={item.href}>
+        <Link key={item.key} to={item.href}>
+          <Button
+            key={item.key}
+            type={item.type}
+            block={item.block}
+            danger={item.danger}
+            disabled={item.disabled}
+            ghost={item.ghost}
+            shape={item.shape}
+            size={item.size}
+            icon={item.icon ? <IconFont type={item.icon} /> : null}
+            style={item.style}
+          >
             {item.name}
-          </Link>
-        </Button>
+          </Button>
+        </Link>
       }
     } else {
       component = 
-      <Button key={item.key} type={item.type} style={item.style} onClick={()=>{executeAction(item.api)}}
+      <Button
+        key={item.key}
+        type={item.type}
+        block={item.block}
+        danger={item.danger}
+        disabled={item.disabled}
+        ghost={item.ghost}
+        shape={item.shape}
+        size={item.size}
+        icon={item.icon ? <IconFont type={item.icon} /> : null}
+        style={item.style}
+        onClick={()=>{executeAction(item.api)}}
       >
         {item.name}
       </Button>
 
       if(item.confirm) {
         component = 
-        <Button key={item.key} type={item.type} style={item.style} onClick={()=>{showConfirm(item.confirm,item.api)}}
+        <Button
+          key={item.key}
+          type={item.type}
+          block={item.block}
+          danger={item.danger}
+          disabled={item.disabled}
+          ghost={item.ghost}
+          shape={item.shape}
+          size={item.size}
+          icon={item.icon ? <IconFont type={item.icon} /> : null}
+          style={item.style}
+          onClick={()=>{showConfirm(item.confirm,item.api)}}
         >
           {item.name}
         </Button>
@@ -142,7 +193,18 @@ const RowAction: React.FC<Action> = (props) => {
           title={item.popconfirm.title}
           onConfirm={()=>{executeAction(item.api)}}
         >
-          <Button key={item.key} type={item.type} style={item.style}>
+          <Button
+            key={item.key}
+            type={item.type}
+            block={item.block}
+            danger={item.danger}
+            disabled={item.disabled}
+            ghost={item.ghost}
+            shape={item.shape}
+            size={item.size}
+            icon={item.icon ? <IconFont type={item.icon} /> : null}
+            style={item.style}
+          >
             {item.name}
           </Button>
         </Popconfirm>
@@ -170,12 +232,21 @@ const RowAction: React.FC<Action> = (props) => {
             break;
 
           case 'dropdownStyle':
-            component =
-            <Dropdown key={item.key} overlay={menu(item.overlay)}>
-              <a onClick={e => e.preventDefault()}>
-                {item.name} <DownOutlined />
-              </a>
-            </Dropdown>
+            if(item.mode === 'a') {
+              component =
+              <Dropdown key={item.key} overlay={menu(item.overlay)}>
+                <a onClick={e => e.preventDefault()} style={item.style}>
+                  {item.name} <DownOutlined />
+                </a>
+              </Dropdown>
+            } else {
+              component =
+              <Dropdown key={item.key} overlay={menu(item.overlay)}>
+                <Button>
+                  {item.name} <DownOutlined />
+                </Button>
+              </Dropdown>
+            }
             break;
 
           default:
@@ -188,9 +259,9 @@ const RowAction: React.FC<Action> = (props) => {
   }
 
   return (
-    <>
-    {parseActions(props.actions)}
-    </>
+    <Space>
+      {parseActions(props.actions)}
+    </Space>
   );
 }
 

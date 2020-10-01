@@ -2,7 +2,6 @@ import React from 'react';
 import { ActionType }from '@ant-design/pro-table';
 import { useModel, Link } from 'umi';
 import { get } from '@/services/action';
-import { stringify } from 'qs';
 import {
   Button,
   Modal,
@@ -14,13 +13,11 @@ import {
 import { ExclamationCircleOutlined, DownOutlined, createFromIconfontCN } from '@ant-design/icons';
 
 export interface Action {
-  onCleanSelected:any;
-  selectedRowKeys:any;
   actions: {};
   current?: ActionType;
 }
 
-const BatchAction: React.FC<Action> = (props) => {
+const ToolBarAction: React.FC<Action> = (props) => {
   const { initialState } = useModel('@@initialState');
   const IconFont = createFromIconfontCN({
     scriptUrl: initialState.settings.iconfontUrl,
@@ -44,15 +41,11 @@ const BatchAction: React.FC<Action> = (props) => {
 
   // 执行行为
   const executeAction = async (api:string) => {
-    let ids = {};
-    ids['id'] = props.selectedRowKeys;
-    api = api.replace('id={id}',stringify(ids));
     const result = await get({
       actionUrl: api
     });
 
     if(result.status === 'success') {
-      props.onCleanSelected();
       if (props.current) {
         props.current.reload();
       }
@@ -68,9 +61,6 @@ const BatchAction: React.FC<Action> = (props) => {
   const aStyle = (item:any) => {
     let component = null;
     if(item.href) {
-      let ids = {};
-      ids['id'] = props.selectedRowKeys;
-      item.href = item.href.replace('id={id}',stringify(ids));
       // 跳转行为
       if(item.target === '_blank') {
         component = 
@@ -120,9 +110,6 @@ const BatchAction: React.FC<Action> = (props) => {
   const buttonStyle = (item:any) => {
     let component = null;
     if(item.href) {
-      let ids = {};
-      ids['id'] = props.selectedRowKeys;
-      item.href = item.href.replace('id={id}',stringify(ids));
       if(item.target === '_blank') {
         component = 
         <Button
@@ -278,4 +265,4 @@ const BatchAction: React.FC<Action> = (props) => {
   );
 }
 
-export default BatchAction;
+export default ToolBarAction;
