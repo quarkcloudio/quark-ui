@@ -1,15 +1,16 @@
 import React, { useRef } from 'react';
 import ProTable from '@ant-design/pro-table';
-import { stringify } from 'qs';
 import { history, Link } from 'umi';
 import { get } from '@/services/action';
 import RowAction from '@/pages/Quark/components/RowAction';
 import QueryFilter from '@/pages/Quark/components/QueryFilter';
 import {
   Popover,
-  Button
+  Button,
+  Space
 } from 'antd';
 import { QrcodeOutlined } from '@ant-design/icons';
+import BatchAction from './BatchAction';
 
 export interface Table {
   key: number;
@@ -90,11 +91,7 @@ const Table: React.FC<Table> = (props) => {
     return conmpontent
   }
 
-  const getTableDatasource:any = async (key:string,query:[]) =>  {
-
-    if(query){
-      history.push(history.location.pathname+'?'+stringify(query));
-    }
+  const getTableDatasource:any = async (key:string) =>  {
 
     const result = await get({
       actionUrl: history.location.query.api,
@@ -114,24 +111,43 @@ const Table: React.FC<Table> = (props) => {
         rowKey={props.table.rowKey}
         headerTitle={props.table.headerTitle}
         columns={parseColumns(props.table.columns)}
+        rowSelection={{}}
+        tableAlertRender={({ selectedRowKeys, onCleanSelected }) => (
+          <Space size={24}>
+            <span>
+              已选 {selectedRowKeys.length} 项
+              <a style={{ marginLeft: 8 }} onClick={onCleanSelected}>
+                取消选择
+              </a>
+            </span>
+          </Space>
+        )}
+        tableAlertOptionRender={({ selectedRowKeys, onCleanSelected}) => {
+          return (
+            <BatchAction actions={props.table.batchActions} selectedRowKeys={selectedRowKeys} onCleanSelected={onCleanSelected} current={actionRef.current} />
+          );
+        }}
         options={props.table.options}
         search={false}
         request={async (params, sorter, filter) => {
           let query = {},datasource = null;
-          query['api'] = history.location.query.api;
+          query = history.location.query;
+
           query['page'] = params.current;
           query['pageSize'] = params.pageSize;
-
-          // delete params['current'];
-          // delete params['pageSize'];
-          // query['search'] = params;
-
           query['search'] = history.location.query.search;
-          query['sorter'] = sorter;
-          query['filter'] = filter;
 
+          if(JSON.stringify(sorter) != "{}") {
+            query['sorter'] = sorter;
+          }
 
-          datasource = await getTableDatasource(props.table.key,query);
+          if(JSON.stringify(filter) != "{}") {
+            query['filter'] = filter;
+          }
+
+          history.push({ pathname: history.location.pathname, query: query });
+
+          datasource = await getTableDatasource(props.table.key);
 
           return Promise.resolve({
             data: datasource,

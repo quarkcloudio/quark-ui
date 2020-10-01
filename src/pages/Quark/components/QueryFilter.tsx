@@ -1,6 +1,5 @@
 import React from 'react';
 import { ActionType }from '@ant-design/pro-table';
-import { stringify } from 'qs';
 import { history } from 'umi';
 import ProForm, { 
   QueryFilter as ProQueryFilter,
@@ -23,10 +22,15 @@ const QueryFilter: React.FC<Action> = (props) => {
     query['pageSize'] = history.location.query.pageSize;
 
     query['search'] = values;
-    query['sorter'] = history.location.query.sorter;
-    query['filter'] = history.location.query.filter;
+    if(history.location.query.sorter) {
+      query['sorter'] = history.location.query.sorter;
+    }
 
-    history.push(history.location.pathname+'?'+stringify(query));
+    if(history.location.query.filter) {
+      query['filter'] = history.location.query.filter;
+    }
+
+    history.push({ pathname: history.location.pathname, query: query });
     
     if (props.current) {
       props.current.reload();
