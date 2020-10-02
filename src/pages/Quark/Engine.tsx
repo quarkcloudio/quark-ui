@@ -4,6 +4,11 @@ import ProCard from '@ant-design/pro-card';
 import { history } from 'umi';
 import { get } from '@/services/action';
 import Table from '@/pages/Quark/components/Table';
+import Form from '@/pages/Quark/components/Form';
+import zhCN from 'antd/es/locale/zh_CN';
+import {
+  ConfigProvider
+} from 'antd';
 
 const Engine: React.FC<{}> = () => {
 
@@ -49,6 +54,13 @@ const Engine: React.FC<{}> = () => {
             table={content}
           />
         break;
+      case 'form':
+        component =
+          <Form
+            key={content.key}
+            form={content}
+          />
+        break;
       default:
         component = <span>无{component}组件</span>
         break;
@@ -90,12 +102,14 @@ const Engine: React.FC<{}> = () => {
   }
 
   return (
-    <PageContainer
-      title={container.title}
-      subTitle={container.subTitle}
-    >
-      {componentRender(container.content)}
-    </PageContainer>
+    <ConfigProvider locale={zhCN}>
+      <PageContainer
+        title={container.title}
+        subTitle={container.subTitle}
+      >
+        {componentRender(container.content)}
+      </PageContainer>
+    </ConfigProvider>
   );
 }
 

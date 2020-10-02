@@ -159,7 +159,7 @@ const Table: React.FC<Table> = (props) => {
         columnEmptyText={props.table.columnEmptyText}
         toolbar={{
           multipleLine: false,
-          actions: [<ToolBarAction key={props.table.toolbar.key} actions={props.table.toolbar.actions} current={actionRef.current} />],
+          actions: props.table.toolbar.actions.length > 0 ? [<ToolBarAction key={props.table.toolbar.key} actions={props.table.toolbar.actions} current={actionRef.current} />] : undefined,
         }}
       />
     </>
