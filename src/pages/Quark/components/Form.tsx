@@ -28,6 +28,16 @@ const Form: React.FC<Table> = (props) => {
               label={item.label}
               tooltip={item.tooltip}
               placeholder={item.placeholder}
+              style={item.style}
+              width={item.width}
+              disabled={item.disabled}
+              fieldProps={{
+                allowClear:item.allowClear,
+                maxLength:item.maxLength,
+                addonAfter:item.addonAfter,
+                addonBefore:item.addonBefore,
+                size:item.size
+              }}
             />;
             break;
 
