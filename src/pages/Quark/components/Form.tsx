@@ -15,6 +15,11 @@ export interface Table {
 
 const Form: React.FC<Table> = (props:any) => {
 
+  const layout = {
+    labelCol: { span: 2 },
+    wrapperCol: { span: 22 },
+  };
+
   // 解析表单item
   const formItemRender = (items:any) => {
     const formItemComponent = (
@@ -33,6 +38,7 @@ const Form: React.FC<Table> = (props:any) => {
                 style={item.style}
                 width={item.width}
                 disabled={item.disabled}
+                rules={item.frontendRules}
                 fieldProps={{
                   allowClear:item.allowClear,
                   maxLength:item.maxLength,
@@ -54,6 +60,7 @@ const Form: React.FC<Table> = (props:any) => {
                 style={item.style}
                 width={item.width}
                 disabled={item.disabled}
+                rules={item.frontendRules}
                 fieldProps={{
                   allowClear:item.allowClear,
                   maxLength:item.maxLength,
@@ -84,6 +91,7 @@ const Form: React.FC<Table> = (props:any) => {
               disabled={item.disabled}
               options={item.options}
               layout={item.layout}
+              rules={item.frontendRules}
             />;
             break;
           case 'radio':
@@ -96,6 +104,7 @@ const Form: React.FC<Table> = (props:any) => {
               width={item.width}
               disabled={item.disabled}
               options={item.options}
+              rules={item.frontendRules}
             />;
             break;
           case 'image':
@@ -133,6 +142,8 @@ const Form: React.FC<Table> = (props:any) => {
       scrollToFirstError={props.form.scrollToFirstError}
       size={props.form.size}
       layout={props.form.layout}
+      labelCol={props.form.labelCol}
+      wrapperCol={props.form.wrapperCol}
     >
       {formItemRender(props.form.items)}
     </ProForm>

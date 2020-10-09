@@ -4,7 +4,6 @@ import { Upload, Form } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 
 export interface ImageUploader {
-  key: string;
   name: string;
   label: string;
   title: string;
@@ -17,7 +16,6 @@ const ImageUploader: React.FC<ImageUploader> = (props) => {
   return (
     <Form.Item label={props.label} name={props.name}>
       <Upload
-        key={props.key}
         name={props.name}
         listType="picture-card"
       >
