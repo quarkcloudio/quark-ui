@@ -17,7 +17,7 @@ export interface Table {
   table: any;
 }
 
-const Table: React.FC<Table> = (props) => {
+const Table: React.FC<Table> = (props:any) => {
   const actionRef = useRef<any>(undefined);
 
   // 渲染column
@@ -129,7 +129,7 @@ const Table: React.FC<Table> = (props) => {
         }}
         options={props.table.options}
         search={false}
-        request={async (params, sorter, filter) => {
+        request={async (params:any, sorter:any, filter:any) => {
           let query = {},datasource = null;
           query = history.location.query;
 

@@ -156,7 +156,7 @@ const QueryFilter: React.FC<Action> = (props) => {
       labelWidth = {props.search.labelWidth}
       span = {props.search.span}
       split = {props.search.split}
-      style={{padding:'30px 30px 0px 0px'}}
+      style={{padding:'30px 30px 0px 30px'}}
     >
       {
         props.search.items.map((item: any, key: any) => {

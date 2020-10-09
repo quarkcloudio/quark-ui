@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
-import ProForm, { ProFormText, ProFormDateRangePicker, ProFormSelect } from '@ant-design/pro-form';
+import ProForm, { ProFormText, ProFormCheckbox, ProFormRadio, ProFormUploadButton } from '@ant-design/pro-form';
+import ImageUploader from './ImageUploader';
 import { history, Link } from 'umi';
 import { get } from '@/services/action';
 import {
@@ -12,7 +13,7 @@ export interface Table {
   form: any;
 }
 
-const Form: React.FC<Table> = (props) => {
+const Form: React.FC<Table> = (props:any) => {
 
   // 解析表单item
   const formItemRender = (items:any) => {
@@ -21,27 +22,97 @@ const Form: React.FC<Table> = (props) => {
         let component:any = null;
         switch (item.component) {
           case 'text':
+            if(item.component === 'text') {
+              component = 
+              <ProFormText
+                key={item.key}
+                name={item.name}
+                label={item.label}
+                tooltip={item.tooltip}
+                placeholder={item.placeholder}
+                style={item.style}
+                width={item.width}
+                disabled={item.disabled}
+                fieldProps={{
+                  allowClear:item.allowClear,
+                  maxLength:item.maxLength,
+                  addonAfter:item.addonAfter,
+                  addonBefore:item.addonBefore,
+                  size:item.size
+                }}
+              />;
+            }
+
+            if(item.component === 'password') {
+              component = 
+              <ProFormText.Password
+                key={item.key}
+                name={item.name}
+                label={item.label}
+                tooltip={item.tooltip}
+                placeholder={item.placeholder}
+                style={item.style}
+                width={item.width}
+                disabled={item.disabled}
+                fieldProps={{
+                  allowClear:item.allowClear,
+                  maxLength:item.maxLength,
+                  addonAfter:item.addonAfter,
+                  addonBefore:item.addonBefore,
+                  size:item.size
+                }}
+              />;
+            }
+            break;
+          case 'hidden':
             component = 
-            <ProFormText
+            <span key={item.key} style={{display:'none'}}>
+              <ProFormText
+                key={item.key}
+                name={item.name}
+              />
+            </span>;
+            break;
+          case 'checkbox':
+            component = 
+            <ProFormCheckbox.Group
               key={item.key}
               name={item.name}
               label={item.label}
-              tooltip={item.tooltip}
-              placeholder={item.placeholder}
               style={item.style}
               width={item.width}
               disabled={item.disabled}
-              fieldProps={{
-                allowClear:item.allowClear,
-                maxLength:item.maxLength,
-                addonAfter:item.addonAfter,
-                addonBefore:item.addonBefore,
-                size:item.size
-              }}
+              options={item.options}
+              layout={item.layout}
             />;
             break;
-
+          case 'radio':
+            component = 
+            <ProFormRadio.Group
+              key={item.key}
+              name={item.name}
+              label={item.label}
+              style={item.style}
+              width={item.width}
+              disabled={item.disabled}
+              options={item.options}
+            />;
+            break;
+          case 'image':
+            component = 
+            <ImageUploader
+              key={item.key}
+              name={item.name}
+              label={item.label}
+              title={item.button}
+              action="upload.do"
+            />;
+            break;
           default:
+            component = 
+            <>
+              无{item.component}组件
+            </>
             break;
         }
         return component;
@@ -61,7 +132,6 @@ const Form: React.FC<Table> = (props) => {
       requiredMark={props.form.requiredMark}
       scrollToFirstError={props.form.scrollToFirstError}
       size={props.form.size}
-      dateFormatter={props.form.dateFormatter}
       layout={props.form.layout}
     >
       {formItemRender(props.form.items)}
