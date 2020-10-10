@@ -1,11 +1,11 @@
 import React, { useRef } from 'react';
-import ProForm, { ProFormText, ProFormCheckbox, ProFormRadio, ProFormUploadButton } from '@ant-design/pro-form';
+import ProForm, { ProFormText, ProFormCheckbox, ProFormRadio, ProFormSwitch, ProFormTextArea } from '@ant-design/pro-form';
 import ImageUploader from './ImageUploader';
+import FileUploader from './FileUploader';
 import { history, Link } from 'umi';
 import { get } from '@/services/action';
 import {
-  Popover,
-  Space
+  Form as AntForm
 } from 'antd';
 
 export interface Table {
@@ -15,10 +15,7 @@ export interface Table {
 
 const Form: React.FC<Table> = (props:any) => {
 
-  const layout = {
-    labelCol: { span: 2 },
-    wrapperCol: { span: 22 },
-  };
+  const [form] = AntForm.useForm();
 
   // 解析表单item
   const formItemRender = (items:any) => {
@@ -27,7 +24,7 @@ const Form: React.FC<Table> = (props:any) => {
         let component:any = null;
         switch (item.component) {
           case 'text':
-            if(item.component === 'text') {
+            if(item.type === 'text') {
               component = 
               <ProFormText
                 key={item.key}
@@ -39,6 +36,8 @@ const Form: React.FC<Table> = (props:any) => {
                 width={item.width}
                 disabled={item.disabled}
                 rules={item.frontendRules}
+                extra={item.extra}
+                help={item.help ? item.help : undefined}
                 fieldProps={{
                   allowClear:item.allowClear,
                   maxLength:item.maxLength,
@@ -49,9 +48,9 @@ const Form: React.FC<Table> = (props:any) => {
               />;
             }
 
-            if(item.component === 'password') {
+            if(item.type === 'password') {
               component = 
-              <ProFormText.Password
+              <ProFormText.PassWord
                 key={item.key}
                 name={item.name}
                 label={item.label}
@@ -61,6 +60,8 @@ const Form: React.FC<Table> = (props:any) => {
                 width={item.width}
                 disabled={item.disabled}
                 rules={item.frontendRules}
+                extra={item.extra}
+                help={item.help ? item.help : undefined}
                 fieldProps={{
                   allowClear:item.allowClear,
                   maxLength:item.maxLength,
@@ -70,6 +71,26 @@ const Form: React.FC<Table> = (props:any) => {
                 }}
               />;
             }
+            break;
+          case 'textArea':
+            component = 
+            <ProFormTextArea
+              key={item.key}
+              name={item.name}
+              label={item.label}
+              tooltip={item.tooltip}
+              placeholder={item.placeholder}
+              style={item.style}
+              width={item.width}
+              disabled={item.disabled}
+              rules={item.frontendRules}
+              extra={item.extra}
+              help={item.help ? item.help : undefined}
+              fieldProps={{
+                maxLength:item.maxLength,
+                autoSize:item.autoSize
+              }}
+            />;
             break;
           case 'hidden':
             component = 
@@ -92,6 +113,8 @@ const Form: React.FC<Table> = (props:any) => {
               options={item.options}
               layout={item.layout}
               rules={item.frontendRules}
+              extra={item.extra}
+              help={item.help ? item.help : undefined}
             />;
             break;
           case 'radio':
@@ -105,23 +128,70 @@ const Form: React.FC<Table> = (props:any) => {
               disabled={item.disabled}
               options={item.options}
               rules={item.frontendRules}
+              extra={item.extra}
+              help={item.help ? item.help : undefined}
             />;
             break;
           case 'image':
             component = 
             <ImageUploader
               key={item.key}
+              form={form}
+              name={item.name}
+              label={item.label}
+              mode={item.mode}
+              title={item.button}
+              limitType={item.limitType}
+              limitSize={item.limitSize}
+              limitNum={item.limitNum}
+              value={item.value}
+              action={item.api}
+              extra={item.extra}
+              help={item.help ? item.help : undefined}
+            />;
+            break;
+          case 'file':
+            component = 
+            <FileUploader
+              key={item.key}
+              form={form}
               name={item.name}
               label={item.label}
               title={item.button}
-              action="upload.do"
+              limitType={item.limitType}
+              limitSize={item.limitSize}
+              limitNum={item.limitNum}
+              value={item.value}
+              action={item.api}
+              extra={item.extra}
+              help={item.help ? item.help : undefined}
+            />;
+            break;
+          case 'switch':
+            component = 
+            <ProFormSwitch
+              key={item.key}
+              name={item.name}
+              label={item.label}
+              style={item.style}
+              width={item.width}
+              tooltip={item.tooltip}
+              disabled={item.disabled}
+              extra={item.extra}
+              help={item.help ? item.help : undefined}
+              rules={item.frontendRules}
+              valuePropName={'checked'}
+              fieldProps={{
+                checkedChildren:item.options.on,
+                unCheckedChildren:item.options.off
+              }}
             />;
             break;
           default:
             component = 
-            <>
+            <span key={item.key}>
               无{item.component}组件
-            </>
+            </span>
             break;
         }
         return component;
@@ -130,8 +200,14 @@ const Form: React.FC<Table> = (props:any) => {
     return formItemComponent;
   }
 
+  const onFinish = (values: any) => {
+    console.log(values);
+  };
+
   return (
     <ProForm
+      form={form}
+      onFinish={async (values) => { onFinish(values) }}
       style={props.form.style}
       colon={props.form.colon}
       initialValues={props.form.initialValues}
