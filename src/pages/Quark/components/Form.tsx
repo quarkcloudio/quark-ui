@@ -1,9 +1,16 @@
 import React, { useRef } from 'react';
-import ProForm, { ProFormText, ProFormCheckbox, ProFormRadio, ProFormSwitch, ProFormTextArea } from '@ant-design/pro-form';
+import ProForm,{
+  ProFormText,
+  ProFormCheckbox,
+  ProFormRadio,
+  ProFormSwitch,
+  ProFormTextArea,
+  ProFormSelect
+} from '@ant-design/pro-form';
 import ImageUploader from './ImageUploader';
 import FileUploader from './FileUploader';
 import { history, Link } from 'umi';
-import { get } from '@/services/action';
+import { post } from '@/services/action';
 import {
   Form as AntForm
 } from 'antd';
@@ -187,6 +194,27 @@ const Form: React.FC<Table> = (props:any) => {
               }}
             />;
             break;
+          case 'select':
+            component = 
+            <ProFormSelect
+              key={item.key}
+              name={item.name}
+              label={item.label}
+              style={item.style}
+              width={item.width}
+              tooltip={item.tooltip}
+              disabled={item.disabled}
+              extra={item.extra}
+              help={item.help ? item.help : undefined}
+              rules={item.frontendRules}
+              placeholder={item.placeholder}
+              mode={item.mode}
+              fieldProps={{
+                allowClear:item.allowClear,
+                size:item.size
+              }}
+            />;
+            break;
           default:
             component = 
             <span key={item.key}>
@@ -200,8 +228,11 @@ const Form: React.FC<Table> = (props:any) => {
     return formItemComponent;
   }
 
-  const onFinish = (values: any) => {
-    console.log(values);
+  const onFinish = async (values: any) => {
+    const result = await post({
+      actionUrl: props.form.api,
+      ...values
+    });
   };
 
   return (
