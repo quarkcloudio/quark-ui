@@ -12,7 +12,8 @@ import FileUploader from './FileUploader';
 import { history, Link } from 'umi';
 import { post } from '@/services/action';
 import {
-  Form as AntForm
+  Form as AntForm,
+  message
 } from 'antd';
 
 export interface Table {
@@ -151,7 +152,7 @@ const Form: React.FC<Table> = (props:any) => {
               limitType={item.limitType}
               limitSize={item.limitSize}
               limitNum={item.limitNum}
-              value={item.value}
+              value={props.form.initialValues[item.name]?props.form.initialValues[item.name]:null}
               action={item.api}
               extra={item.extra}
               help={item.help ? item.help : undefined}
@@ -233,6 +234,16 @@ const Form: React.FC<Table> = (props:any) => {
       actionUrl: props.form.api,
       ...values
     });
+
+    if(result.status === 'success') {
+      message.success(result.msg);
+    } else {
+      message.error(result.msg);
+    }
+
+    if(result.url) {
+      history.push(result.url);
+    }
   };
 
   return (
