@@ -53,6 +53,19 @@ export default defineConfig({
             },
           ],
         },
+        { path: '/account', component: '../pages/Account/Settings/Info' },
+        {
+          path: '/account/settings',
+          component: '../pages/Account/Settings/Info',
+        },
+        {
+          path: '/account/settings/info',
+          component: '../pages/Account/Settings/Info',
+        },
+        {
+          path: '/account/settings/security',
+          component: '../pages/Account/Settings/Security',
+        },
         {
           path: '/',
           redirect: '/quark/engine?api=admin/dashboard/index',

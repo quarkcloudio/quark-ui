@@ -36,40 +36,12 @@ const Form: React.FC<Table> = (props:any) => {
     }
   };
 
-  if(props.form.title) {
-    return (
-      <ProCard
-        key={'proCard'+props.form.key}
-        title={props.form.title}
-        headerBordered={true}
-        extra={
-          <Button type="link" onClick={e => {history.go(-1);}}>
-            返回上一页
-          </Button>
-        }
-      >
-        <ProForm
-          form={form}
-          onFinish={async (values) => { onFinish(values) }}
-          style={props.form.style}
-          colon={props.form.colon}
-          initialValues={props.form.initialValues}
-          labelAlign={props.form.labelAlign}
-          name={props.form.name}
-          preserve={props.form.preserve}
-          requiredMark={props.form.requiredMark}
-          scrollToFirstError={props.form.scrollToFirstError}
-          size={props.form.size}
-          layout={props.form.layout}
-          labelCol={props.form.labelCol}
-          wrapperCol={props.form.wrapperCol}
-        >
-          <FormItem form={form} initialValues={props.form.initialValues} items={props.form.items} />
-        </ProForm>
-      </ProCard>
-    );
-  } else {
-    return (
+  return (
+    <ProCard
+      key={'proCard'+props.form.key}
+      title={props.form.title}
+      headerBordered={true}
+    >
       <ProForm
         form={form}
         onFinish={async (values) => { onFinish(values) }}
@@ -88,8 +60,8 @@ const Form: React.FC<Table> = (props:any) => {
       >
         <FormItem form={form} initialValues={props.form.initialValues} items={props.form.items} />
       </ProForm>
-    );
-  }
+    </ProCard>
+  );
 }
 
 export default Form;
