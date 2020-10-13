@@ -12,19 +12,28 @@ import {
 
 const Engine: React.FC<{}> = () => {
 
-  const [container, setContainerState] = useState({
+  const [component, setComponentState] = useState({
     title: ' ',
     subTitle: null,
     content: null
   });
 
   useEffect(() => {
-    getContainer();
+    getComponent();
   }, [history.location.query.api]);
 
   const parseComponent = (content:any) => {
     let component = null;
     switch (content.component) {
+      case 'container':
+        component =
+          <PageContainer
+            title={content.title}
+            subTitle={content.subTitle}
+          >
+            {componentRender(content.content)}
+          </PageContainer>
+        break;
       case 'card':
         component =
           <ProCard
@@ -93,22 +102,17 @@ const Engine: React.FC<{}> = () => {
     return component;
   }
 
-  const getContainer = async () =>  {
+  const getComponent = async () =>  {
     const result = await get({
       actionUrl: history.location.query.api,
       ...history.location.query
     });
-    setContainerState(result.data)
+    setComponentState(result.data)
   }
 
   return (
     <ConfigProvider locale={zhCN}>
-      <PageContainer
-        title={container.title}
-        subTitle={container.subTitle}
-      >
-        {componentRender(container.content)}
-      </PageContainer>
+      {componentRender(component)}
     </ConfigProvider>
   );
 }

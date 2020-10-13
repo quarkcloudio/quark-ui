@@ -10,12 +10,11 @@ import {
   Button
 } from 'antd';
 
-export interface Table {
-  key: number;
-  form: any;
+export interface Form {
+  modal: any;
 }
 
-const Form: React.FC<Table> = (props:any) => {
+const Form: React.FC<Form> = (props:any) => {
 
   const [form] = AntForm.useForm();
 

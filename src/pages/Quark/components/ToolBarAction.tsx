@@ -2,6 +2,7 @@ import React from 'react';
 import { ActionType }from '@ant-design/pro-table';
 import { useModel, Link } from 'umi';
 import { get } from '@/services/action';
+import ModalForm from './ModalForm';
 import {
   Button,
   Modal,
@@ -73,6 +74,8 @@ const ToolBarAction: React.FC<Action> = (props) => {
           {item.name}
         </Link>
       }
+    } else if(item.modal) {
+      component = <ModalForm modal={item.modal}/>
     } else {
       // 执行操作行为
       component = 
@@ -147,6 +150,8 @@ const ToolBarAction: React.FC<Action> = (props) => {
           </Button>
         </Link>
       }
+    }  else if(item.modal) {
+      component = <ModalForm modal={item.modal}/>
     } else {
       component = 
       <Button
