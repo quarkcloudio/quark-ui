@@ -11,7 +11,7 @@ import {
 } from 'antd';
 
 export interface Form {
-  modal: any;
+  form: any;
 }
 
 const Form: React.FC<Form> = (props:any) => {
@@ -50,7 +50,7 @@ const Form: React.FC<Form> = (props:any) => {
         <ProForm
           form={form}
           onFinish={async (values) => { onFinish(values) }}
-          style={props.form.style}
+          style={props.form.style ? props.form.style : {margin:'25px',width:'100%'}}
           colon={props.form.colon}
           initialValues={props.form.initialValues}
           labelAlign={props.form.labelAlign}

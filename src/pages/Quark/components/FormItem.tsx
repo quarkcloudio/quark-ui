@@ -256,7 +256,7 @@ const FormItem: React.FC<Table> = (props:any) => {
   }
 
   return (
-    formItemRender(props.items)
+    props.items ? formItemRender(props.items) : null
   );
 }
 

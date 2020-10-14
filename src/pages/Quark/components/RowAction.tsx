@@ -2,6 +2,7 @@ import React from 'react';
 import { ActionType }from '@ant-design/pro-table';
 import { useModel, Link } from 'umi';
 import { get } from '@/services/action';
+import ModalForm from './ModalForm';
 import {
   Button,
   Modal,
@@ -73,6 +74,8 @@ const RowAction: React.FC<Action> = (props) => {
           {item.name}
         </Link>
       }
+    } else if(item.modal) {
+      component = <ModalForm {...item} />
     } else {
       // 执行操作行为
       component = 
@@ -147,6 +150,8 @@ const RowAction: React.FC<Action> = (props) => {
           </Button>
         </Link>
       }
+    } else if(item.modal) {
+      component = <ModalForm {...item} />
     } else {
       component = 
       <Button
@@ -223,14 +228,12 @@ const RowAction: React.FC<Action> = (props) => {
           case 'aStyle':
             component = aStyle(item);
             break;
-
           case 'buttonStyle':
             component = buttonStyle(item);
             break;
           case 'itemStyle':
             component = <Menu.Item key={item.key}>{aStyle(item)}</Menu.Item>;
             break;
-
           case 'dropdownStyle':
             if(item.mode === 'a') {
               component =

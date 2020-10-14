@@ -2,6 +2,7 @@ import React from 'react';
 import { ActionType }from '@ant-design/pro-table';
 import { useModel, Link } from 'umi';
 import { get } from '@/services/action';
+import ModalForm from './ModalForm';
 import { stringify } from 'qs';
 import {
   Button,
@@ -83,6 +84,8 @@ const BatchAction: React.FC<Action> = (props) => {
           {item.name}
         </Link>
       }
+    } else if(item.modal) {
+      component = <ModalForm {...item} />
     } else {
       // 执行操作行为
       component = 
@@ -160,6 +163,8 @@ const BatchAction: React.FC<Action> = (props) => {
           </Button>
         </Link>
       }
+    } else if(item.modal) {
+      component = <ModalForm {...item} />
     } else {
       component = 
       <Button
