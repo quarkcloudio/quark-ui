@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { ModalForm as AntModalForm} from '@ant-design/pro-form';
+import React, { useState } from 'react';
 import { useModel, history } from 'umi';
 import { get, post } from '@/services/action';
 import {
-  Form as AntForm,
+  Form,
   Button,
-  message
+  message,
+  Modal
 } from 'antd';
 import { createFromIconfontCN } from '@ant-design/icons';
 import FormItem from './FormItem';
 
 const ModalForm: React.FC<any> = (props:any) => {
-  const [form] = AntForm.useForm();
+  const [form] = Form.useForm();
   const { initialState } = useModel('@@initialState');
   const IconFont = createFromIconfontCN({
     scriptUrl: initialState.settings.iconfontUrl,
@@ -107,7 +107,12 @@ const ModalForm: React.FC<any> = (props:any) => {
     });
 
     if(result.status === 'success') {
+      setVisible(false)
+      form.resetFields();
       message.success(result.msg);
+      if (props.current) {
+        props.current.reload();
+      }
     } else {
       message.error(result.msg);
     }
@@ -118,31 +123,40 @@ const ModalForm: React.FC<any> = (props:any) => {
   };
 
   return (
-    <AntModalForm
-      trigger={trigger}
-      form={form}
-      onFinish={async (values) => { onFinish(values) }}
-      style={formComponent.style}
-      colon={formComponent.colon}
-      initialValues={formComponent.initialValues}
-      labelAlign={formComponent.labelAlign}
-      name={formComponent.name}
-      preserve={formComponent.preserve}
-      requiredMark={formComponent.requiredMark}
-      scrollToFirstError={formComponent.scrollToFirstError}
-      size={formComponent.size}
-      layout={formComponent.layout}
-      labelCol={formComponent.labelCol}
-      wrapperCol={formComponent.wrapperCol}
-      modalProps={{
-        title:formComponent.title ? formComponent.title : undefined,
-        width:formComponent.width ? formComponent.width : undefined,
-        visible:visible,
-        onCancel : () => {setVisible(false)}
-      }}
-    >
-      <FormItem form={form} initialValues={formComponent.initialValues} items={formComponent.items} />
-    </AntModalForm>
+    <>
+      {trigger}
+      <Modal
+        title={formComponent.title ? formComponent.title : undefined}
+        width={formComponent.width ? formComponent.width : undefined}
+        visible={visible}
+        onCancel={()=>setVisible(false)}
+        onOk={() => {
+          form.validateFields().then(values => {
+              onFinish(values);
+            }).catch(info => {
+              console.log('Validate Failed:', info);
+            });
+        }}
+      >
+        <Form
+          form={form}
+          style={formComponent.style}
+          colon={formComponent.colon}
+          initialValues={formComponent.initialValues}
+          labelAlign={formComponent.labelAlign}
+          name={formComponent.name}
+          preserve={formComponent.preserve}
+          requiredMark={formComponent.requiredMark}
+          scrollToFirstError={formComponent.scrollToFirstError}
+          size={formComponent.size}
+          layout={formComponent.layout}
+          labelCol={formComponent.labelCol}
+          wrapperCol={formComponent.wrapperCol}
+        >
+          <FormItem form={form} initialValues={formComponent.initialValues} items={formComponent.items} />
+        </Form>
+      </Modal>
+    </>
   );
 }
 

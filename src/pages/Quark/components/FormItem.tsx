@@ -1,16 +1,19 @@
 import React from 'react';
+import { useModel } from 'umi';
 import {
   ProFormText,
   ProFormCheckbox,
   ProFormRadio,
   ProFormSwitch,
   ProFormTextArea,
-  ProFormSelect
+  ProFormSelect,
+  ProFormDigit
 } from '@ant-design/pro-form';
-
+import { createFromIconfontCN } from '@ant-design/icons';
 import {
   Tree,
-  Form
+  Form,
+  Select
 } from 'antd';
 
 import ImageUploader from './ImageUploader';
@@ -23,6 +26,11 @@ export interface Table {
 }
 
 const FormItem: React.FC<Table> = (props:any) => {
+
+  const { initialState } = useModel('@@initialState');
+  const IconFont = createFromIconfontCN({
+    scriptUrl: initialState.settings.iconfontUrl,
+  });
 
   // 解析表单item
   const formItemRender = (items:any) => {
@@ -98,6 +106,54 @@ const FormItem: React.FC<Table> = (props:any) => {
                 autoSize:item.autoSize
               }}
             />;
+            break;
+          case 'inputNumber':
+            component = 
+            <ProFormDigit
+              key={item.key}
+              name={item.name}
+              label={item.label}
+              style={item.style}
+              width={item.width}
+              tooltip={item.tooltip}
+              disabled={item.disabled}
+              extra={item.extra}
+              help={item.help ? item.help : undefined}
+              rules={item.frontendRules}
+              placeholder={item.placeholder}
+              min={item.min}
+              max={item.max}
+              fieldProps={{
+                step:item.step,
+                precision:item.precision,
+              }}
+            />;
+            break;
+          case 'icon':
+            component = 
+            <Form.Item
+              key={item.name}
+              label={item.label}
+              name={item.name}
+              style={item.style}
+              tooltip={item.tooltip}
+              rules={item.frontendRules}
+              help={item.help ? item.help : undefined}
+              extra={item.extra}
+            >
+              <Select disabled={item.disabled} style={item.style ? item.style : []}>
+                <Select.Option key={0} value={0}>
+                  无图标
+                </Select.Option>
+                {item.options.map((item: any) => {
+                  return (
+                    <Select.Option key={item} value={item}>
+                      <IconFont type={item} /> {item}
+                    </Select.Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
             break;
           case 'hidden':
             component = 
@@ -208,6 +264,7 @@ const FormItem: React.FC<Table> = (props:any) => {
               help={item.help ? item.help : undefined}
               rules={item.frontendRules}
               placeholder={item.placeholder}
+              options={item.options}
               mode={item.mode}
               fieldProps={{
                 allowClear:item.allowClear,

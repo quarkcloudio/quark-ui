@@ -75,7 +75,7 @@ const ToolBarAction: React.FC<Action> = (props) => {
         </Link>
       }
     } else if(item.modal) {
-      component = <ModalForm {...item} />
+      component = <ModalForm current={props.current} {...item} />
     } else {
       // 执行操作行为
       component = 
@@ -151,7 +151,7 @@ const ToolBarAction: React.FC<Action> = (props) => {
         </Link>
       }
     }  else if(item.modal) {
-      component = <ModalForm {...item} />
+      component = <ModalForm current={props.current} {...item} />
     } else {
       component = 
       <Button
