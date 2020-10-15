@@ -5,6 +5,7 @@ import { history } from 'umi';
 import { get } from '@/services/action';
 import Table from '@/pages/Quark/components/Table';
 import Form from '@/pages/Quark/components/Form';
+import TabForm from '@/pages/Quark/components/TabForm';
 
 const ComponentRender: React.FC<any> = (props:any) => {
 
@@ -62,6 +63,13 @@ const ComponentRender: React.FC<any> = (props:any) => {
       case 'form':
         component =
           <Form
+            key={content.key}
+            form={content}
+          />
+        break;
+      case 'tabForm':
+        component =
+          <TabForm
             key={content.key}
             form={content}
           />

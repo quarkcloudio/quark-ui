@@ -1,13 +1,13 @@
-import React from 'react';
-import ProForm from '@ant-design/pro-form';
+import React, { useState } from 'react';
 import ProCard from '@ant-design/pro-card';
 import FormItem from './FormItem';
 import { history } from 'umi';
 import { post } from '@/services/action';
 import {
-  Form as AntForm,
+  Form,
   message,
-  Button
+  Button,
+  Space
 } from 'antd';
 
 export interface Form {
@@ -15,9 +15,8 @@ export interface Form {
   form: any;
 }
 
-const Form: React.FC<Form> = (props:any) => {
-
-  const [form] = AntForm.useForm();
+const TabForm: React.FC<Form> = (props:any) => {
+  const [form] = Form.useForm();
 
   const onFinish = async (values: any) => {
     const result = await post({
@@ -37,31 +36,54 @@ const Form: React.FC<Form> = (props:any) => {
   };
 
   return (
-    <ProCard
-      key={'proCard'+props.form.key}
-      title={props.form.title}
-      headerBordered={true}
+    <Form
+      form={form}
+      onFinish={async (values) => { onFinish(values) }}
+      style={props.form.style}
+      colon={props.form.colon}
+      initialValues={props.form.initialValues}
+      labelAlign={props.form.labelAlign}
+      name={props.form.name}
+      preserve={props.form.preserve}
+      requiredMark={props.form.requiredMark}
+      scrollToFirstError={props.form.scrollToFirstError}
+      size={props.form.size}
+      layout={props.form.layout}
+      labelCol={props.form.labelCol}
+      wrapperCol={props.form.wrapperCol}
     >
-      <ProForm
-        form={form}
-        onFinish={async (values) => { onFinish(values) }}
-        style={props.form.style}
-        colon={props.form.colon}
-        initialValues={props.form.initialValues}
-        labelAlign={props.form.labelAlign}
-        name={props.form.name}
-        preserve={props.form.preserve}
-        requiredMark={props.form.requiredMark}
-        scrollToFirstError={props.form.scrollToFirstError}
-        size={props.form.size}
-        layout={props.form.layout}
-        labelCol={props.form.labelCol}
-        wrapperCol={props.form.wrapperCol}
+      <ProCard
+        key={'proCard'+props.form.key}
+        headerBordered={true}
+        tabs={{
+          tabPosition:'top',
+          defaultActiveKey: '1',
+          tabBarExtraContent:
+          <Button type="link" onClick={e => history.go(-1)}>
+            返回上一页
+          </Button>
+        }}
       >
-        <FormItem form={form} initialValues={props.form.initialValues} items={props.form.items} />
-      </ProForm>
-    </ProCard>
+        {props.form.tab.map((tab: any, index: any) => {
+          return (
+            <ProCard.TabPane key={(index + 1).toString()} tab={tab.title}>
+              <FormItem form={form} initialValues={props.form.initialValues} items={tab.items} />
+              <Form.Item >
+               <Space>
+                  <Button type="primary" htmlType="submit">
+                    提交
+                  </Button>
+                  <Button onClick={()=>form.resetFields()}>
+                    重置
+                  </Button>
+                </Space>
+              </Form.Item>
+            </ProCard.TabPane>
+          );
+        })}
+      </ProCard>
+    </Form>
   );
 }
 
-export default Form;
+export default TabForm;

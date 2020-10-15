@@ -109,6 +109,7 @@ const Table: React.FC<Table> = (props:any) => {
         key={props.table.key}
         actionRef={actionRef}
         rowKey={props.table.rowKey}
+        tableLayout={props.table.tableLayout}
         headerTitle={props.table.headerTitle}
         columns={parseColumns(props.table.columns)}
         rowSelection={{}}
