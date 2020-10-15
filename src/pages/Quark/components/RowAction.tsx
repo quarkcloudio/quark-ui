@@ -3,6 +3,7 @@ import { ActionType }from '@ant-design/pro-table';
 import { useModel, Link } from 'umi';
 import { get } from '@/services/action';
 import ModalForm from './ModalForm';
+import DrawerForm from './DrawerForm';
 import {
   Button,
   Modal,
@@ -76,6 +77,8 @@ const RowAction: React.FC<Action> = (props) => {
       }
     } else if(item.modal) {
       component = <ModalForm current={props.current} {...item} />
+    } else if(item.drawer) {
+      component = <DrawerForm current={props.current} {...item} />
     } else {
       // 执行操作行为
       component = 
@@ -152,6 +155,8 @@ const RowAction: React.FC<Action> = (props) => {
       }
     } else if(item.modal) {
       component = <ModalForm current={props.current} {...item} />
+    } else if(item.drawer) {
+      component = <DrawerForm current={props.current} {...item} />
     } else {
       component = 
       <Button

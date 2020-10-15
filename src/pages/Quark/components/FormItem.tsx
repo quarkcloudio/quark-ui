@@ -141,7 +141,7 @@ const FormItem: React.FC<Table> = (props:any) => {
               help={item.help ? item.help : undefined}
               extra={item.extra}
             >
-              <Select disabled={item.disabled} style={item.style ? item.style : []}>
+              <Select disabled={item.disabled}>
                 <Select.Option key={0} value={0}>
                   无图标
                 </Select.Option>
