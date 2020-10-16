@@ -130,7 +130,6 @@ const DrawerForm: React.FC<any> = (props:any) => {
         width={formComponent.width ? formComponent.width : undefined}
         visible={visible}
         onClose={()=>setVisible(false)}
-        bodyStyle={{ paddingBottom: 80 }}
         footer={
           <div
             style={{

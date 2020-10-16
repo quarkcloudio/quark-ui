@@ -6,6 +6,11 @@ import { get } from '@/services/action';
 import Table from '@/pages/Quark/components/Table';
 import Form from '@/pages/Quark/components/Form';
 import TabForm from '@/pages/Quark/components/TabForm';
+import Show from '@/pages/Quark/components/Show';
+
+import {
+  Statistic,
+} from 'antd';
 
 const ComponentRender: React.FC<any> = (props:any) => {
 
@@ -72,6 +77,19 @@ const ComponentRender: React.FC<any> = (props:any) => {
           <TabForm
             key={content.key}
             form={content}
+          />
+        break;
+      case 'show':
+        component =
+          <Show
+            key={content.key}
+            show={content}
+          />
+        break;
+      case 'statistic':
+        component =
+          <Statistic
+            {...content}
           />
         break;
       default:
