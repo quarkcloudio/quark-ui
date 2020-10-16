@@ -7,22 +7,33 @@ import {
   ProFormSwitch,
   ProFormTextArea,
   ProFormSelect,
-  ProFormDigit
+  ProFormDigit,
+  ProFormDatePicker,
+  ProFormDateTimePicker,
+  ProFormDateRangePicker,
+  ProFormDateTimeRangePicker
 } from '@ant-design/pro-form';
-import { createFromIconfontCN } from '@ant-design/icons';
+import { createFromIconfontCN,MinusCircleOutlined,PlusOutlined } from '@ant-design/icons';
 import {
   Tree,
   Form,
-  Select
+  Select,
+  Cascader,
+  Space,
+  Button,
+  TimePicker
 } from 'antd';
+import locale from 'antd/es/date-picker/locale/zh_CN';
 
 import ImageUploader from './ImageUploader';
 import FileUploader from './FileUploader';
+import Editor from './Editor';
 
 export interface Table {
   form: any;
   items: any;
   initialValues: any;
+  field?:any;
 }
 
 const FormItem: React.FC<Table> = (props:any) => {
@@ -43,7 +54,8 @@ const FormItem: React.FC<Table> = (props:any) => {
               component = 
               <ProFormText
                 key={item.key}
-                name={item.name}
+                name={props.field ? [props.field.name, item.name] : item.name}
+                fieldKey={props.field ? [props.field.fieldKey, item.name] : item.name}
                 label={item.label}
                 tooltip={item.tooltip}
                 placeholder={item.placeholder}
@@ -67,7 +79,8 @@ const FormItem: React.FC<Table> = (props:any) => {
               component = 
               <ProFormText.Password
                 key={item.key}
-                name={item.name}
+                name={props.field ? [props.field.name, item.name] : item.name}
+                fieldKey={props.field ? [props.field.fieldKey, item.name] : item.name}
                 label={item.label}
                 tooltip={item.tooltip}
                 placeholder={item.placeholder}
@@ -91,7 +104,8 @@ const FormItem: React.FC<Table> = (props:any) => {
             component = 
             <ProFormTextArea
               key={item.key}
-              name={item.name}
+              name={props.field ? [props.field.name, item.name] : item.name}
+              fieldKey={props.field ? [props.field.fieldKey, item.name] : item.name}
               label={item.label}
               tooltip={item.tooltip}
               placeholder={item.placeholder}
@@ -111,7 +125,8 @@ const FormItem: React.FC<Table> = (props:any) => {
             component = 
             <ProFormDigit
               key={item.key}
-              name={item.name}
+              name={props.field ? [props.field.name, item.name] : item.name}
+              fieldKey={props.field ? [props.field.fieldKey, item.name] : item.name}
               label={item.label}
               style={item.style}
               width={item.width}
@@ -134,7 +149,8 @@ const FormItem: React.FC<Table> = (props:any) => {
             <Form.Item
               key={item.name}
               label={item.label}
-              name={item.name}
+              name={props.field ? [props.field.name, item.name] : item.name}
+              fieldKey={props.field ? [props.field.fieldKey, item.name] : item.name}
               style={item.style}
               tooltip={item.tooltip}
               rules={item.frontendRules}
@@ -160,7 +176,8 @@ const FormItem: React.FC<Table> = (props:any) => {
             <span key={item.key} style={{display:'none'}}>
               <ProFormText
                 key={item.key}
-                name={item.name}
+                name={props.field ? [props.field.name, item.name] : item.name}
+                fieldKey={props.field ? [props.field.fieldKey, item.name] : item.name}
               />
             </span>;
             break;
@@ -168,7 +185,8 @@ const FormItem: React.FC<Table> = (props:any) => {
             component = 
             <ProFormCheckbox.Group
               key={item.key}
-              name={item.name}
+              name={props.field ? [props.field.name, item.name] : item.name}
+              fieldKey={props.field ? [props.field.fieldKey, item.name] : item.name}
               label={item.label}
               style={item.style}
               width={item.width}
@@ -184,7 +202,8 @@ const FormItem: React.FC<Table> = (props:any) => {
             component = 
             <ProFormRadio.Group
               key={item.key}
-              name={item.name}
+              name={props.field ? [props.field.name, item.name] : item.name}
+              fieldKey={props.field ? [props.field.fieldKey, item.name] : item.name}
               label={item.label}
               style={item.style}
               width={item.width}
@@ -200,7 +219,7 @@ const FormItem: React.FC<Table> = (props:any) => {
             <ImageUploader
               key={item.key}
               form={props.form}
-              name={item.name}
+              name={props.field ? [props.field.name, item.name] : item.name}
               label={item.label}
               mode={item.mode}
               title={item.button}
@@ -218,7 +237,7 @@ const FormItem: React.FC<Table> = (props:any) => {
             <FileUploader
               key={item.key}
               form={props.form}
-              name={item.name}
+              name={props.field ? [props.field.name, item.name] : item.name}
               label={item.label}
               title={item.button}
               limitType={item.limitType}
@@ -234,7 +253,8 @@ const FormItem: React.FC<Table> = (props:any) => {
             component = 
             <ProFormSwitch
               key={item.key}
-              name={item.name}
+              name={props.field ? [props.field.name, item.name] : item.name}
+              fieldKey={props.field ? [props.field.fieldKey, item.name] : item.name}
               label={item.label}
               style={item.style}
               width={item.width}
@@ -254,7 +274,8 @@ const FormItem: React.FC<Table> = (props:any) => {
             component = 
             <ProFormSelect
               key={item.key}
-              name={item.name}
+              name={props.field ? [props.field.name, item.name] : item.name}
+              fieldKey={props.field ? [props.field.fieldKey, item.name] : item.name}
               label={item.label}
               style={item.style}
               width={item.width}
@@ -275,9 +296,10 @@ const FormItem: React.FC<Table> = (props:any) => {
           case 'tree':
             component = 
             <Form.Item
-              key={item.name}
+              key={item.key}
               label={item.label}
-              name={item.name}
+              name={props.field ? [props.field.name, item.name] : item.name}
+              fieldKey={props.field ? [props.field.fieldKey, item.name] : item.name}
               valuePropName={'checkedKeys'}
               trigger={'onCheck'}
               rules={item.frontendRules}
@@ -291,12 +313,237 @@ const FormItem: React.FC<Table> = (props:any) => {
               />
             </Form.Item>;
             break;
-          default:
+          case 'cascader':
+            component = 
+            <Form.Item
+              key={item.key}
+              label={item.label}
+              name={props.field ? [props.field.name, item.name] : item.name}
+              fieldKey={props.field ? [props.field.fieldKey, item.name] : item.name}
+              rules={item.frontendRules}
+              help={item.help ? item.help : undefined}
+              extra={item.extra}
+            >
+              <Cascader
+                size={item.size}
+                options={item.options}
+                style={item.style}
+                placeholder={item.placeholder}
+              />
+            </Form.Item>;
+            break;
+          case 'date':
+            component = 
+            <ProFormDatePicker
+              key={item.key}
+              label={item.label}
+              name={props.field ? [props.field.name, item.name] : item.name}
+              fieldKey={props.field ? [props.field.fieldKey, item.name] : item.name}
+              rules={item.frontendRules}
+              help={item.help ? item.help : undefined}
+              extra={item.extra}
+              placeholder={item.placeholder}
+              fieldProps={{
+                allowClear:item.allowClear,
+                size:item.size
+              }}
+            />;
+            break;
+          case 'datetime':
+            component = 
+            <ProFormDateTimePicker
+              key={item.key}
+              label={item.label}
+              name={props.field ? [props.field.name, item.name] : item.name}
+              fieldKey={props.field ? [props.field.fieldKey, item.name] : item.name}
+              rules={item.frontendRules}
+              help={item.help ? item.help : undefined}
+              extra={item.extra}
+              placeholder={item.placeholder}
+              fieldProps={{
+                allowClear:item.allowClear,
+                size:item.size
+              }}
+            />;
+            break;
+          case 'dateRange':
+            component = 
+            <ProFormDateRangePicker
+              key={item.key}
+              label={item.label}
+              name={props.field ? [props.field.name, item.name] : item.name}
+              fieldKey={props.field ? [props.field.fieldKey, item.name] : item.name}
+              rules={item.frontendRules}
+              help={item.help ? item.help : undefined}
+              extra={item.extra}
+              placeholder={item.placeholder}
+              fieldProps={{
+                allowClear:item.allowClear,
+                size:item.size
+              }}
+            />;
+            break;
+          case 'datetimeRange':
+            component = 
+            <ProFormDateTimeRangePicker
+              key={item.key}
+              label={item.label}
+              name={props.field ? [props.field.name, item.name] : item.name}
+              fieldKey={props.field ? [props.field.fieldKey, item.name] : item.name}
+              rules={item.frontendRules}
+              help={item.help ? item.help : undefined}
+              extra={item.extra}
+              placeholder={item.placeholder}
+              fieldProps={{
+                allowClear:item.allowClear,
+                size:item.size
+              }}
+            />;
+            break;
+          case 'timeRange':
+            component = 
+            <Form.Item
+              key={item.key}
+              label={item.label}
+              name={props.field ? [props.field.name, item.name] : item.name}
+              fieldKey={props.field ? [props.field.fieldKey, item.name] : item.name}
+              rules={item.frontendRules}
+              help={item.help ? item.help : undefined}
+              extra={item.extra}
+            >
+              <TimePicker.RangePicker
+                size={item.size}
+                locale={locale}
+                format={item.format}
+              />
+            </Form.Item>;
+            break;
+          case 'display':
+            component = 
+            <Form.Item label={item.label}>
+              <span style={item.style ? item.style : []}>
+                {item.value}
+              </span>
+            </Form.Item>
+            break;
+          case 'editor':
+            component = 
+            <Form.Item
+              key={item.key}
+              label={item.label}
+              name={props.field ? [props.field.name, item.name] : item.name}
+              fieldKey={props.field ? [props.field.fieldKey, item.name] : item.name}
+              rules={item.frontendRules}
+              help={item.help ? item.help : undefined}
+              extra={item.extra}
+            >
+              <Editor
+                key={item.name}
+                height={item.height}
+                width={item.width}
+              />
+            </Form.Item>;
+            break;
+          case 'list':
             component = 
             <Form.Item
               key={item.name}
               label={item.label}
               name={item.name}
+              rules={item.frontendRules}
+              help={item.help ? item.help : undefined}
+              extra={item.extra}
+            >
+              <Form.List key={item.name} name={item.name}>
+                {(fields, { add, remove }) => {
+                  return (
+                    <div>
+                      {fields.map(field => (
+                        <Space
+                          key={field.key}
+                          style={{ display: 'flex', marginBottom: 8 }}
+                          align="start"
+                        >
+                          <FormItem form={props.form} initialValues={props.initialValues} items={item.items} field={field}/>
+                          <MinusCircleOutlined
+                            onClick={() => {
+                              remove(field.name);
+                            }}
+                          />
+                        </Space>
+                      ))}
+
+                      <Form.Item>
+                        <Button
+                          type="dashed"
+                          onClick={() => {
+                            add();
+                          }}
+                          block
+                        >
+                          <PlusOutlined /> {item.button}
+                        </Button>
+                      </Form.Item>
+                    </div>
+                  );
+                }}
+              </Form.List>
+            </Form.Item>;
+            break;
+          case 'search':
+            let timeout: any = null;
+
+            const onInputSearch = (value: any) => {
+              if (value) {
+                if (timeout) {
+                  clearTimeout(timeout);
+                  timeout = null;
+                }
+
+                timeout = setTimeout(function() {
+                  // todo
+                }, 300);
+              }
+            };
+
+            component = 
+            <Form.Item
+              key={item.key}
+              label={item.label}
+              name={props.field ? [props.field.name, item.name] : item.name}
+              fieldKey={props.field ? [props.field.fieldKey, item.name] : item.name}
+              rules={item.frontendRules}
+              help={item.help ? item.help : undefined}
+              extra={item.extra}
+            >
+              <Select
+                showSearch
+                defaultActiveFirstOption={false}
+                mode={item.mode}
+                size={item.size}
+                filterOption={false}
+                onSearch={(value: any) => onInputSearch(value)}
+                placeholder={item.placeholder}
+                style={item.style ? item.style : []}
+              >
+                {!!item.options &&
+                  item.options.map((option: any) => {
+                    return (
+                      <Select.Option key={option.value} value={option.value}>
+                        {option.label}
+                      </Select.Option>
+                    );
+                  })}
+              </Select>
+            </Form.Item>;
+            break;
+          default:
+            component = 
+            <Form.Item
+              key={item.name}
+              label={item.label}
+              name={props.field ? [props.field.name, item.name] : item.name}
+              fieldKey={props.field ? [props.field.fieldKey, item.name] : item.name}
               help={item.help ? item.help : undefined}
               extra={item.extra}
             >
