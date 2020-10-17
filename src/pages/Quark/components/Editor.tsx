@@ -1,7 +1,5 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
-import { Dispatch } from 'redux';
-import { connect } from 'dva';
-import { history } from 'umi';
+import React, { useState } from 'react';
+import { get, post } from '@/services/action';
 import { Editor } from '@tinymce/tinymce-react';
 
 import {
@@ -34,11 +32,21 @@ const Iconfont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js', // 在 iconfont.cn 上生成
 });
 
-const EditorPage: React.SFC<any> = ({ value, onChange , height, width, picture, dispatch }) => {
+const EditorPage: React.FC<any> = ({ value, onChange , height, width }) => {
 
   // 上传图片文件
   const [pictureBoxVisible, changePictureBoxVisible] = useState(false);
   const [tinymceEditor, setTinymceEditor] = useState({insertContent(value:any){return value;}});
+  const [picture, setPictureState] = useState({
+    lists:[],
+    categorys:[],
+    pagination:{
+      defaultCurrent:1,
+      pageSize:10,
+      current:1,
+      total:undefined
+    }
+  });
 
   const triggerChange = (changedValue:any) => {
     if (onChange) {
@@ -53,15 +61,13 @@ const EditorPage: React.SFC<any> = ({ value, onChange , height, width, picture, 
   const [searchPictureForm] = Form.useForm();
   const [checkPictureForm] = Form.useForm();
 
-  const getPictures = (page:any = 1,search:any = null) => {
-    dispatch({
-      type: 'picture/info',
-      payload: {
-        actionUrl: 'admin/picture/getLists',
-        page:page,
-        ...search
-      }
+  const getPictures = async (page:any = 1,search:any = null) => {
+    const result = await get({
+      actionUrl: 'admin/picture/getLists',
+      page:page,
+      ...search
     });
+    setPictureState(result.data)
   };
 
   const insertPicture = (e:any) => {
@@ -164,26 +170,27 @@ const EditorPage: React.SFC<any> = ({ value, onChange , height, width, picture, 
     checkPictureForm.setFieldsValue({'checkPictures':data});
   };
 
-  const onDeletePicture = (id:any = null) => {
+  const onDeletePicture = async (id:any = null) => {
 
     if(id == null) {
       message.error('请选择数据', 3);
       return false;
     }
 
-    dispatch({
-      type: 'picture/delete',
-      payload: {
-        actionUrl: 'admin/picture/delete',
-        id:id
-      },
-      callback: (res:any) => {
-        getPictures(1);
-      }
+    const result = await post({
+      actionUrl: 'admin/picture/delete',
+      id:id
     });
+
+    if(result.status === 'error') {
+      message.error(result.msg, 3);
+    }
+    
+    getPictures(1);
+    return true;
   };
 
-  const onDeletePictures = (e:any) => {
+  const onDeletePictures = async (e:any) => {
 
     e.persist();
 
@@ -196,16 +203,17 @@ const EditorPage: React.SFC<any> = ({ value, onChange , height, width, picture, 
       return false;
     }
 
-    dispatch({
-      type: 'picture/delete',
-      payload: {
-        actionUrl: 'admin/picture/delete',
-        id:ids
-      },
-      callback: (res:any) => {
-        getPictures(1);
-      }
+    const result = await post({
+      actionUrl: 'admin/picture/delete',
+      id:ids
     });
+
+    if(result.status === 'error') {
+      message.error(result.msg, 3);
+    }
+    
+    getPictures(1);
+    return true;
   };
 
   return (
@@ -387,15 +395,4 @@ const EditorPage: React.SFC<any> = ({ value, onChange , height, width, picture, 
   );
 };
 
-function mapStateToProps(state:any) {
-
-  const {
-    picture,
-  } = state.picture;
-
-  return {
-    picture
-  };
-}
-
-export default connect(mapStateToProps)(EditorPage);
+export default EditorPage;

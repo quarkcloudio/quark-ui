@@ -438,7 +438,7 @@ const FormItem: React.FC<Table> = (props:any) => {
               extra={item.extra}
             >
               <Editor
-                key={item.name}
+                key={item.key}
                 height={item.height}
                 width={item.width}
               />
