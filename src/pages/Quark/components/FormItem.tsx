@@ -1,5 +1,6 @@
 import React from 'react';
 import { useModel } from 'umi';
+import { get } from '@/services/action';
 import {
   ProFormText,
   ProFormCheckbox,
@@ -27,12 +28,11 @@ import locale from 'antd/es/date-picker/locale/zh_CN';
 
 import ImageUploader from './ImageUploader';
 import FileUploader from './FileUploader';
+import Search from './Search';
 import Editor from './Editor';
 
 export interface Table {
-  form: any;
   items: any;
-  initialValues: any;
   field?:any;
 }
 
@@ -216,38 +216,50 @@ const FormItem: React.FC<Table> = (props:any) => {
             break;
           case 'image':
             component = 
-            <ImageUploader
+            <Form.Item
               key={item.key}
-              form={props.form}
-              name={props.field ? [props.field.name, item.name] : item.name}
               label={item.label}
-              mode={item.mode}
-              title={item.button}
-              limitType={item.limitType}
-              limitSize={item.limitSize}
-              limitNum={item.limitNum}
-              value={props.initialValues? props.initialValues[item.name] : null}
-              action={item.api}
-              extra={item.extra}
+              name={props.field ? [props.field.name, item.name] : item.name}
+              fieldKey={props.field ? [props.field.fieldKey, item.name] : item.name}
+              style={item.style}
+              tooltip={item.tooltip}
+              rules={item.frontendRules}
               help={item.help ? item.help : undefined}
-            />;
+              extra={item.extra}
+            >
+              <ImageUploader
+                key={item.key}
+                mode={item.mode}
+                title={item.button}
+                limitType={item.limitType}
+                limitSize={item.limitSize}
+                limitNum={item.limitNum}
+                action={item.api}
+              />
+            </Form.Item>;
             break;
           case 'file':
-            component = 
-            <FileUploader
+            component =
+            <Form.Item
               key={item.key}
-              form={props.form}
-              name={props.field ? [props.field.name, item.name] : item.name}
               label={item.label}
-              title={item.button}
-              limitType={item.limitType}
-              limitSize={item.limitSize}
-              limitNum={item.limitNum}
-              value={props.initialValues? props.initialValues[item.name] : null}
-              action={item.api}
-              extra={item.extra}
+              name={props.field ? [props.field.name, item.name] : item.name}
+              fieldKey={props.field ? [props.field.fieldKey, item.name] : item.name}
+              style={item.style}
+              tooltip={item.tooltip}
+              rules={item.frontendRules}
               help={item.help ? item.help : undefined}
-            />;
+              extra={item.extra}
+            >
+              <FileUploader
+                key={item.key}
+                title={item.button}
+                limitType={item.limitType}
+                limitSize={item.limitSize}
+                limitNum={item.limitNum}
+                action={item.api}
+              />
+            </Form.Item>;
             break;
           case 'switch':
             component = 
@@ -464,7 +476,7 @@ const FormItem: React.FC<Table> = (props:any) => {
                           style={{ display: 'flex', marginBottom: 8 }}
                           align="start"
                         >
-                          <FormItem form={props.form} initialValues={props.initialValues} items={item.items} field={field}/>
+                          <FormItem items={item.items} field={field}/>
                           <MinusCircleOutlined
                             onClick={() => {
                               remove(field.name);
@@ -491,21 +503,6 @@ const FormItem: React.FC<Table> = (props:any) => {
             </Form.Item>;
             break;
           case 'search':
-            let timeout: any = null;
-
-            const onInputSearch = (value: any) => {
-              if (value) {
-                if (timeout) {
-                  clearTimeout(timeout);
-                  timeout = null;
-                }
-
-                timeout = setTimeout(function() {
-                  // todo
-                }, 300);
-              }
-            };
-
             component = 
             <Form.Item
               key={item.key}
@@ -516,25 +513,14 @@ const FormItem: React.FC<Table> = (props:any) => {
               help={item.help ? item.help : undefined}
               extra={item.extra}
             >
-              <Select
-                showSearch
-                defaultActiveFirstOption={false}
+              <Search
                 mode={item.mode}
                 size={item.size}
-                filterOption={false}
-                onSearch={(value: any) => onInputSearch(value)}
                 placeholder={item.placeholder}
-                style={item.style ? item.style : []}
-              >
-                {!!item.options &&
-                  item.options.map((option: any) => {
-                    return (
-                      <Select.Option key={option.value} value={option.value}>
-                        {option.label}
-                      </Select.Option>
-                    );
-                  })}
-              </Select>
+                style={item.style}
+                options={item.options}
+                api={item.api}
+              />
             </Form.Item>;
             break;
           default:

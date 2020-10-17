@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { get, post } from '@/services/action';
 import { Editor } from '@tinymce/tinymce-react';
-
 import {
   UploadOutlined,
   createFromIconfontCN,
 } from '@ant-design/icons';
-
 import {
   Card,
   DatePicker,
