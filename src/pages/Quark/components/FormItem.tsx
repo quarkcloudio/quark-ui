@@ -1,6 +1,5 @@
 import React from 'react';
 import { useModel } from 'umi';
-import { get } from '@/services/action';
 import {
   ProFormText,
   ProFormCheckbox,
