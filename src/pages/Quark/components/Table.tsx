@@ -11,6 +11,7 @@ import {
 import { QrcodeOutlined } from '@ant-design/icons';
 import BatchAction from './BatchAction';
 import ToolBarAction from './ToolBarAction';
+import { EditableRow, EditableCell } from './Editable';
 
 export interface Table {
   key: number;
@@ -58,6 +59,18 @@ const Table: React.FC<Table> = (props:any) => {
     return columnComponent;
   }
 
+  const editableSave = async (data:any) => {
+    const result = await get({
+      actionUrl: data.editable.action,
+      key: 'editable',
+      id: data.id,
+      ...data.values
+    });
+    if(result.status === 'success') {
+      actionRef.current.reload();
+    }
+  };
+
   // 解析column
   const parseColumns = (columns:any) => {
     columns.map((item:any,key:any) => {
@@ -68,6 +81,23 @@ const Table: React.FC<Table> = (props:any) => {
       );
       columns[key] = item;
     })
+
+    columns = columns.map((column:any) => {
+      if (!column.editable) {
+        return column;
+      }
+      return {
+        ...column,
+        onCell: (record:any) => ({
+          record,
+          editable: column.editable,
+          dataIndex: column.dataIndex,
+          title: column.title,
+          handleSave: editableSave,
+        }),
+      };
+    });
+
     return columns;
   }
 
@@ -113,6 +143,12 @@ const Table: React.FC<Table> = (props:any) => {
         headerTitle={props.table.headerTitle}
         columns={parseColumns(props.table.columns)}
         rowSelection={{}}
+        components={{
+          body: {
+            row: EditableRow,
+            cell: EditableCell,
+          },
+        }}
         tableAlertRender={({ selectedRowKeys, onCleanSelected }) => (
           <Space size={24}>
             <span>
