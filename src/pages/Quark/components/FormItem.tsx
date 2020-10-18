@@ -28,6 +28,7 @@ import locale from 'antd/es/date-picker/locale/zh_CN';
 import ImageUploader from './ImageUploader';
 import FileUploader from './FileUploader';
 import Search from './Search';
+import Map from './Map';
 import Editor from './Editor';
 
 export interface Table {
@@ -519,6 +520,24 @@ const FormItem: React.FC<Table> = (props:any) => {
                 style={item.style}
                 options={item.options}
                 api={item.api}
+              />
+            </Form.Item>;
+            break;
+          case 'map':
+            component = 
+            <Form.Item
+              key={item.key}
+              label={item.label}
+              name={props.field ? [props.field.name, item.name] : item.name}
+              fieldKey={props.field ? [props.field.fieldKey, item.name] : item.name}
+              rules={item.frontendRules}
+              help={item.help ? item.help : undefined}
+              extra={item.extra}
+            >
+              <Map
+                zoom={item.zoom}
+                mapKey={item.mapKey}
+                style={item.style}
               />
             </Form.Item>;
             break;

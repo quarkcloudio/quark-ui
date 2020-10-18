@@ -1,47 +1,72 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Map as AMap, Marker } from 'react-amap';
 import Autocomplete from 'react-amap-plugin-autocomplete';
 import {
-  Form,
   Input
 } from 'antd';
 
-const Map: React.FC<any> = (props:any) => {
+export interface Map {
+  zoom?:any;
+  mapKey?: any;
+  value?: any;
+  style?:any;
+  onChange?:(value: any) => void;
+}
+
+const Map: React.FC<Map> = ({ zoom=null, mapKey=undefined, value={ longitude: undefined, latitude: undefined}, style=[], onChange }) => {
+
+  const [position, setMapPosition] = useState({ longitude: undefined, latitude: undefined});
 
   const markerEvents = {
     dragend: (instance: any) => {
-
+      let position = {
+        longitude:undefined,
+        latitude:undefined
+      }
+      position.longitude = instance.lnglat.lng;
+      position.latitude = instance.lnglat.lat;
+      setMapPosition(position)
     },
   };
-
-  // on select item
-  const onMapSelect = (e: any) => {
-    if (e.poi.location) {
-
+  
+  const triggerChange = (changedValue:any) => {
+    if (onChange) {
+      onChange({...value, ...changedValue });
     }
   };
 
+  const onMapSelect = (e: any) => {
+    if (e.poi.location) {
+      let position = {
+        longitude:undefined,
+        latitude:undefined
+      }
+      position.longitude = e.poi.location.lng;
+      position.latitude = e.poi.location.lat;
+      setMapPosition(position)
+      triggerChange({ ...position });
+    }
+  };
+
+  let getPosition:any = { longitude: undefined, latitude: undefined};
+
+  if(position.latitude && position.longitude) {
+    getPosition = position;
+  } else {
+    getPosition = value;
+  }
+
   return (
-    <Form.Item
-      key={props.name}
-      label={props.label}
-      rules={props.frontendRules}
-      help={props.help ? props.help : undefined}
-      extra={props.extra}
-    >
-      <Form.Item
-        style={{ display: 'inline-block', width: '188px' }}
-      >
-        <Input
-          addonBefore="经度"
-          value={
-            formMapPosition
-              ? formMapPosition[props.name].longitude
-              : null
-          }
-          size={props.size}
-        />
-      </Form.Item>
+    <>
+      <Input
+        addonBefore="经度"
+        value={getPosition ? getPosition.longitude : undefined}
+        style={{
+          display: 'inline-block',
+          width: '188px',
+          lineHeight: '32px'
+        }}
+      />
       <span
         style={{
           display: 'inline-block',
@@ -52,32 +77,24 @@ const Map: React.FC<any> = (props:any) => {
       >
         -
       </span>
-      <Form.Item
-        style={{ display: 'inline-block', width: '188px' }}
-      >
-        <Input
-          addonBefore="纬度"
-          value={
-            formMapPosition
-              ? formMapPosition[props.name].latitude
-              : null
-          }
-          size={props.size}
-        />
-      </Form.Item>
-      <div style={props.style}>
+      <Input
+        addonBefore="纬度"
+        value={getPosition ? getPosition.latitude : undefined}
+        style={{
+          display: 'inline-block',
+          width: '188px',
+          lineHeight: '32px'
+        }}
+      />
+      <div style={style}>
         <AMap
           center={{
-            longitude: formMapPosition
-              ? formMapPosition[props.name].longitude
-              : null,
-            latitude: formMapPosition
-              ? formMapPosition[props.name].latitude
-              : null,
+            longitude: getPosition.longitude,
+            latitude: getPosition.latitude
           }}
           plugins={['ToolBar']}
-          amapkey={props.mapKey}
-          zoom={props.zoom}
+          amapkey={mapKey}
+          zoom={zoom}
         >
           <Autocomplete
             options={[]}
@@ -98,12 +115,8 @@ const Map: React.FC<any> = (props:any) => {
           <Marker
             events={markerEvents}
             position={{
-              longitude: formMapPosition
-                ? formMapPosition[props.name].longitude
-                : null,
-              latitude: formMapPosition
-                ? formMapPosition[props.name].latitude
-                : null,
+              longitude: getPosition.longitude,
+              latitude: getPosition.latitude
             }}
             visible={true}
             clickable={true}
@@ -111,7 +124,7 @@ const Map: React.FC<any> = (props:any) => {
           />
         </AMap>
       </div>
-    </Form.Item>
+    </>
   );
 }
 
