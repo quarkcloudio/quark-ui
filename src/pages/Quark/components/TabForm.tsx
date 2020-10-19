@@ -67,7 +67,7 @@ const TabForm: React.FC<Form> = (props:any) => {
         {props.form.tab.map((tab: any, index: any) => {
           return (
             <ProCard.TabPane key={(index + 1).toString()} tab={tab.title}>
-              <FormItem form={form} initialValues={props.form.initialValues} items={tab.items} />
+              <FormItem items={tab.items} />
               <Form.Item >
                <Space>
                   <Button type="primary" htmlType="submit">
