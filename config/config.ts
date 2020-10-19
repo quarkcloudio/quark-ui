@@ -6,11 +6,19 @@ import proxy from './proxy';
 const { REACT_APP_ENV } = process.env;
 
 export default defineConfig({
+  nodeModulesTransform: {
+    type: 'none',
+    exclude: [],
+  },
+  history: { type: 'hash' },
+  dll: false,
   hash: true,
   antd: {},
   dva: {
     hmr: true,
   },
+  base: '/admin/',
+  publicPath: '/admin/',
   // layout: {
   //   name: 'Ant Design Pro',
   //   locale: true,
@@ -22,9 +30,10 @@ export default defineConfig({
     antd: true,
     baseNavigator: true,
   },
-  dynamicImport: {
-    loading: '@/components/PageLoading/index',
-  },
+  // dynamicImport: {
+  //   loading: '@/components/PageLoading/index',
+  // },
+  dynamicImport: false,
   targets: {
     ie: 11,
   },
