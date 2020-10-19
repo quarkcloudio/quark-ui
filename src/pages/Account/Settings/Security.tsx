@@ -51,7 +51,6 @@ class SecurityPage extends Component<IProps> {
   };
 
   render() {
-    const { submitting } = this.props;
 
     const formItemLayout = {
       labelCol: {
@@ -118,7 +117,7 @@ class SecurityPage extends Component<IProps> {
                   />
                 </Form.Item>
                 <Form.Item wrapperCol={{ span: 12, offset: 5 }}>
-                  <Button type="primary" loading={submitting} htmlType="submit">
+                  <Button type="primary" htmlType="submit">
                     提交
                   </Button>
                 </Form.Item>
@@ -131,11 +130,4 @@ class SecurityPage extends Component<IProps> {
   }
 }
 
-function mapStateToProps(state:any) {
-  const { submitting } = state.login;
-  return {
-    submitting
-  };
-}
-
-export default connect(mapStateToProps)(SecurityPage);
+export default (SecurityPage);
