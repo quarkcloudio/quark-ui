@@ -17,7 +17,7 @@ export default defineConfig({
   dva: {
     hmr: true,
   },
-  base: '/admin/',
+  // base: '/admin/',
   publicPath: '/admin/',
   // layout: {
   //   name: 'Ant Design Pro',
