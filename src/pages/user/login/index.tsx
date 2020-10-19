@@ -61,6 +61,115 @@ const Login: React.FC<{}> = () => {
     setSubmitting(false);
   };
 
+  const usernameLoginComponent = 
+  <>
+    <Username
+      name="username"
+      placeholder="用户名"
+      rules={[
+        {
+          required: true,
+          message: '请输入用户名!',
+        },
+      ]}
+    />
+    <Password
+      name="password"
+      placeholder="密码"
+      rules={[
+        {
+          required: true,
+          message: '请输入密码！',
+        },
+      ]}
+    />
+    <ImageCaptcha
+      name="captcha"
+      placeholder="图形验证码"
+      rules={[
+        {
+          required: true,
+          message: '请输入图形验证码！',
+        },
+      ]}
+    />
+  </>;
+
+  const phoneLoginComponent = 
+  <>
+    <Mobile
+      name="mobile"
+      placeholder="手机号"
+      rules={[
+        {
+          required: true,
+          message: '请输入手机号！',
+        },
+        {
+          pattern: /^1\d{10}$/,
+          message: '手机号格式错误！',
+        },
+      ]}
+    />
+    <ImageCaptcha
+      name="captcha"
+      placeholder="图形验证码"
+      rules={[
+        {
+          required: true,
+          message: '请输入图形验证码！',
+        },
+      ]}
+    />
+    <Captcha
+      name="code"
+      placeholder="验证码"
+      countDown={120}
+      getCaptchaButtonText=""
+      getCaptchaSecondText="秒"
+      rules={[
+        {
+          required: true,
+          message: '请输入验证码！',
+        },
+      ]}
+    />
+  </>;
+
+  const getLoginForm = (type:any) => {
+    let loginForm:any = undefined
+    if(type.length>1) {
+      loginForm = 
+      <LoginFrom activeKey={type} onTabChange={setType} onSubmit={handleSubmit}>
+        <Tab key="account" tab="账户密码登录">
+          {usernameLoginComponent}
+        </Tab>
+        <Tab key="mobile" tab="手机号登录">
+          {phoneLoginComponent}
+        </Tab>
+        <Submit loading={submitting}>登录</Submit>
+      </LoginFrom>
+    } else {
+      switch (type[0]) {
+        case 'username':
+          loginForm = usernameLoginComponent;
+          break;
+        case 'phone':
+          loginForm = phoneLoginComponent;
+          break;
+        default:
+          loginForm = undefined
+          break;
+      }
+      loginForm =
+      <LoginFrom onSubmit={handleSubmit}>
+        {loginForm}
+        <Submit loading={submitting}>登录</Submit>
+      </LoginFrom>
+    }
+    return loginForm;
+  };
+
   return (
     <>
     <Helmet>
@@ -83,80 +192,7 @@ const Login: React.FC<{}> = () => {
         </div>
 
         <div className={styles.main}>
-          <LoginFrom activeKey={type} onTabChange={setType} onSubmit={handleSubmit}>
-            <Tab key="account" tab="账户密码登录">
-              <Username
-                name="username"
-                placeholder="用户名"
-                rules={[
-                  {
-                    required: true,
-                    message: '请输入用户名!',
-                  },
-                ]}
-              />
-              <Password
-                name="password"
-                placeholder="密码"
-                rules={[
-                  {
-                    required: true,
-                    message: '请输入密码！',
-                  },
-                ]}
-              />
-              <ImageCaptcha
-                name="captcha"
-                placeholder="图形验证码"
-                rules={[
-                  {
-                    required: true,
-                    message: '请输入图形验证码！',
-                  },
-                ]}
-              />
-            </Tab>
-            <Tab key="mobile" tab="手机号登录">
-              <Mobile
-                name="mobile"
-                placeholder="手机号"
-                rules={[
-                  {
-                    required: true,
-                    message: '请输入手机号！',
-                  },
-                  {
-                    pattern: /^1\d{10}$/,
-                    message: '手机号格式错误！',
-                  },
-                ]}
-              />
-              <ImageCaptcha
-                name="captcha"
-                placeholder="图形验证码"
-                rules={[
-                  {
-                    required: true,
-                    message: '请输入图形验证码！',
-                  },
-                ]}
-              />
-              <Captcha
-                name="code"
-                placeholder="验证码"
-                countDown={120}
-                getCaptchaButtonText=""
-                getCaptchaSecondText="秒"
-                rules={[
-                  {
-                    required: true,
-                    message: '请输入验证码！',
-                  },
-                ]}
-              />
-            </Tab>
-            <Submit loading={submitting}>登录</Submit>
-          </LoginFrom>
+          {getLoginForm(quarkInfo.login_type)}
         </div>
       </div>
       <Footer />
