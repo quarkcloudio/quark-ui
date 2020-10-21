@@ -46,9 +46,7 @@ const BatchAction: React.FC<Action> = (props) => {
 
   // 执行行为
   const executeAction = async (api:string) => {
-    let ids = {};
-    ids['id'] = props.selectedRowKeys;
-    api = api.replace('id={id}',stringify(ids));
+    api = api.replace('{ids}',stringify(props.selectedRowKeys));
     const result = await get({
       actionUrl: api
     });
@@ -70,9 +68,7 @@ const BatchAction: React.FC<Action> = (props) => {
   const aStyle = (item:any) => {
     let component = null;
     if(item.href) {
-      let ids = {};
-      ids['id'] = props.selectedRowKeys;
-      item.href = item.href.replace('id={id}',stringify(ids));
+      item.href = item.href.replace('{ids}',stringify(props.selectedRowKeys));
       // 跳转行为
       if(item.target === '_blank') {
         component = 
@@ -126,9 +122,7 @@ const BatchAction: React.FC<Action> = (props) => {
   const buttonStyle = (item:any) => {
     let component = null;
     if(item.href) {
-      let ids = {};
-      ids['id'] = props.selectedRowKeys;
-      item.href = item.href.replace('id={id}',stringify(ids));
+      item.href = item.href.replace('{ids}',stringify(props.selectedRowKeys));
       if(item.target === '_blank') {
         component = 
         <Button
