@@ -63,7 +63,7 @@ const Form: React.FC<Form> = (props:any) => {
           labelCol={props.form.labelCol}
           wrapperCol={props.form.wrapperCol}
         >
-          <FormItem items={props.form.items} />
+          <FormItem form={form} items={props.form.items} />
         </ProForm>
       </ProCard>
     );
@@ -85,7 +85,7 @@ const Form: React.FC<Form> = (props:any) => {
         labelCol={props.form.labelCol}
         wrapperCol={props.form.wrapperCol}
       >
-        <FormItem items={props.form.items} />
+        <FormItem form={form} items={props.form.items} />
       </ProForm>
     );
   }

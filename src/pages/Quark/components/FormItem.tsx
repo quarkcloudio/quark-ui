@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useModel } from 'umi';
 import {
   ProFormText,
@@ -31,17 +31,27 @@ import Search from './Search';
 import Map from './Map';
 import Editor from './Editor';
 
-export interface Table {
+export interface FormItem {
   items: any;
   field?:any;
+  form?:any;
 }
 
-const FormItem: React.FC<Table> = (props:any) => {
-
+const FormItem: React.FC<FormItem> = (props:any) => {
   const { initialState } = useModel('@@initialState');
   const IconFont = createFromIconfontCN({
     scriptUrl: initialState.settings.iconfontUrl,
   });
+  
+  //hack
+  const [random, setRandom] = useState(0);
+
+  const onChange = (e:any,name:string) => {
+    let item = {};
+    item[name] = e.target.value;
+    props.form.setFieldsValue(item);
+    setRandom(Math.random);
+  };
 
   // 解析表单item
   const formItemRender = (items:any) => {
@@ -212,6 +222,9 @@ const FormItem: React.FC<Table> = (props:any) => {
               rules={item.frontendRules}
               extra={item.extra}
               help={item.help ? item.help : undefined}
+              fieldProps={{
+                onChange:(e)=>{onChange(e,item.name)}
+              }}
             />;
             break;
           case 'image':
@@ -476,7 +489,7 @@ const FormItem: React.FC<Table> = (props:any) => {
                           style={{ display: 'flex', marginBottom: 8 }}
                           align="start"
                         >
-                          <FormItem items={item.items} field={field}/>
+                          <FormItem form={props.form} items={item.items} field={field}/>
                           <MinusCircleOutlined
                             onClick={() => {
                               remove(field.name);
@@ -557,7 +570,59 @@ const FormItem: React.FC<Table> = (props:any) => {
             </Form.Item>;
             break;
         }
-        return component;
+
+        // 解析when
+        if(item.when) {
+          var whenItemComponent:any = null;
+          item.when.map((whenItem:any,key:any) => {
+            switch (whenItem.operator) {
+              case '=':
+                if(props.form.getFieldValue(item.name) == whenItem.value) {
+                  whenItemComponent = formItemRender(whenItem.items)
+                }
+                break;
+              case '>':
+                if(props.form.getFieldValue(item.name) > whenItem.value) {
+                  whenItemComponent = formItemRender(whenItem.items)
+                }
+                break;
+              case '<':
+                if(props.form.getFieldValue(item.name) < whenItem.value) {
+                  whenItemComponent = formItemRender(whenItem.items)
+                }
+                break;
+              case '<=':
+                if(props.form.getFieldValue(item.name) <= whenItem.value) {
+                  whenItemComponent = formItemRender(whenItem.items)
+                }
+                break;
+              case '>=':
+                if(props.form.getFieldValue(item.name) >= whenItem.value) {
+                  whenItemComponent = formItemRender(whenItem.items)
+                }
+                break;
+              case 'has':
+                if(props.form.getFieldValue(item.name).indexOf(whenItem.value) != -1) {
+                  whenItemComponent = formItemRender(whenItem.items)
+                }
+                break;
+              case 'in':
+                if(whenItem.value.indexOf(props.form.getFieldValue(item.name)) != -1) {
+                  whenItemComponent = formItemRender(whenItem.items)
+                }
+                break;
+              default:
+                if(item.value == whenItem.value) {
+                  whenItemComponent = formItemRender(whenItem.items)
+                }
+                break;
+            }
+          });
+
+          return <>{component}{whenItemComponent}</>;
+        } else {
+          return component;
+        }
       })
     )
     return formItemComponent;

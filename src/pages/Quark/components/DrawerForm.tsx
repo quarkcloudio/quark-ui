@@ -173,7 +173,7 @@ const DrawerForm: React.FC<any> = (props:any) => {
           labelCol={formComponent.labelCol}
           wrapperCol={formComponent.wrapperCol}
         >
-          <FormItem items={formComponent.items} />
+          <FormItem form={form} items={formComponent.items} />
         </Form>
       </Drawer>
     </>
