@@ -451,8 +451,8 @@ const FormItem: React.FC<Table> = (props:any) => {
             >
               <Editor
                 key={item.key}
-                height={item.height}
-                width={item.width}
+                height={item?.style?.height}
+                width={item?.style?.width}
               />
             </Form.Item>;
             break;

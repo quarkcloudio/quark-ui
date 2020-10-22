@@ -44,11 +44,30 @@ const BatchAction: React.FC<Action> = (props) => {
     });
   }
 
+  // 替换查询变量
+  const replaceQueryVariable = (url:any) => 
+  {
+    let query = {};
+    var urls = url.split("?");
+    if(urls) {
+      var vars = urls[1].split("&");
+      for (var i=0;i<vars.length;i++) {
+        var pair = vars[i].split("=");
+        if(pair[1] === '{ids}'){
+          pair[1] = props.selectedRowKeys;
+        }
+        query[pair[0]] = pair[1];
+      }
+
+      return urls[0]+'?'+stringify(query)
+    }
+    return url;
+  }
+
   // 执行行为
   const executeAction = async (api:string) => {
-    api = api.replace('{ids}',stringify(props.selectedRowKeys));
     const result = await get({
-      actionUrl: api
+      actionUrl: replaceQueryVariable(api)
     });
 
     if(result.status === 'success') {
@@ -68,7 +87,7 @@ const BatchAction: React.FC<Action> = (props) => {
   const aStyle = (item:any) => {
     let component = null;
     if(item.href) {
-      item.href = item.href.replace('{ids}',stringify(props.selectedRowKeys));
+      item.href = replaceQueryVariable(item.href);
       // 跳转行为
       if(item.target === '_blank') {
         component = 
@@ -122,7 +141,7 @@ const BatchAction: React.FC<Action> = (props) => {
   const buttonStyle = (item:any) => {
     let component = null;
     if(item.href) {
-      item.href = item.href.replace('{ids}',stringify(props.selectedRowKeys));
+      item.href = replaceQueryVariable(item.href);
       if(item.target === '_blank') {
         component = 
         <Button

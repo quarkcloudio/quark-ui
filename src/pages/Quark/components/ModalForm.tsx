@@ -88,14 +88,18 @@ const ModalForm: React.FC<any> = (props:any) => {
         {props.name}
       </Button>
       break;
-  
     case 'aStyle':
       trigger =
         <a key={props.key} style={props.style} onClick={()=>{getComponent()}}>
           {props.name}
         </a>
       break;
-
+    case 'itemStyle':
+      trigger =
+        <a key={props.key} style={props.style} onClick={()=>{getComponent()}}>
+          {props.name}
+        </a>
+      break;
     default:
       break;
   }
@@ -153,7 +157,7 @@ const ModalForm: React.FC<any> = (props:any) => {
           labelCol={formComponent.labelCol}
           wrapperCol={formComponent.wrapperCol}
         >
-          <FormItem form={form} initialValues={formComponent.initialValues} items={formComponent.items} />
+          <FormItem items={formComponent.items} />
         </Form>
       </Modal>
     </>
