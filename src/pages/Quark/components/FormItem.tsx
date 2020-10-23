@@ -80,7 +80,8 @@ const FormItem: React.FC<FormItem> = (props:any) => {
                   maxLength:item.maxLength,
                   addonAfter:item.addonAfter,
                   addonBefore:item.addonBefore,
-                  size:item.size
+                  size:item.size,
+                  onChange:(e)=>{onChange(e,item.name)}
                 }}
               />;
             }
@@ -206,6 +207,9 @@ const FormItem: React.FC<FormItem> = (props:any) => {
               rules={item.frontendRules}
               extra={item.extra}
               help={item.help ? item.help : undefined}
+              fieldProps={{
+                onChange:(e)=>{onChange(e,item.name)}
+              }}
             />;
             break;
           case 'radio':
@@ -291,7 +295,8 @@ const FormItem: React.FC<FormItem> = (props:any) => {
               valuePropName={'checked'}
               fieldProps={{
                 checkedChildren:item.options.on,
-                unCheckedChildren:item.options.off
+                unCheckedChildren:item.options.off,
+                onChange:(e)=>{onChange(e,item.name)}
               }}
             />;
             break;
@@ -314,7 +319,8 @@ const FormItem: React.FC<FormItem> = (props:any) => {
               mode={item.mode}
               fieldProps={{
                 allowClear:item.allowClear,
-                size:item.size
+                size:item.size,
+                onChange:(e)=>{onChange(e,item.name)}
               }}
             />;
             break;

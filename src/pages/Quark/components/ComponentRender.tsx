@@ -125,11 +125,14 @@ const ComponentRender: React.FC<any> = (props:any) => {
   }
 
   const getComponent = async () => {
-    const result = await get({
-      actionUrl: props.api ? props.api : history.location.query.api,
-      ...history.location.query
-    });
-    setComponentState(result.data)
+    const api = props.api ? props.api : history.location.query.api;
+    if(api) {
+      const result = await get({
+        actionUrl: api,
+        ...history.location.query
+      });
+      setComponentState(result.data)
+    }
   }
 
   return (
