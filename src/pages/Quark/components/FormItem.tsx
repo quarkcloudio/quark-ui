@@ -46,9 +46,9 @@ const FormItem: React.FC<FormItem> = (props:any) => {
   //hack
   const [random, setRandom] = useState(0);
 
-  const onChange = (e:any,name:string) => {
+  const onChange = (value:any,name:string) => {
     let item = {};
-    item[name] = e.target.value;
+    item[name] = value;
     props.form.setFieldsValue(item);
     setRandom(Math.random);
   };
@@ -81,7 +81,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
                   addonAfter:item.addonAfter,
                   addonBefore:item.addonBefore,
                   size:item.size,
-                  onChange:(e)=>{onChange(e,item.name)}
+                  onChange:(e)=>{onChange(e.target.value,item.name)}
                 }}
               />;
             }
@@ -208,7 +208,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
               extra={item.extra}
               help={item.help ? item.help : undefined}
               fieldProps={{
-                onChange:(e)=>{onChange(e,item.name)}
+                onChange:(value)=>{onChange(value,item.name)}
               }}
             />;
             break;
@@ -227,7 +227,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
               extra={item.extra}
               help={item.help ? item.help : undefined}
               fieldProps={{
-                onChange:(e)=>{onChange(e,item.name)}
+                onChange:(e)=>{onChange(e.target.value,item.name)}
               }}
             />;
             break;
@@ -320,7 +320,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
               fieldProps={{
                 allowClear:item.allowClear,
                 size:item.size,
-                onChange:(e)=>{onChange(e,item.name)}
+                onChange:(value)=>{onChange(value,item.name)}
               }}
             />;
             break;
