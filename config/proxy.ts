@@ -8,7 +8,7 @@
 export default {
   dev: {
     '/api/': {
-      target: 'http://www.develop.com',
+      target: 'http://www.project.com',
       changeOrigin: true,
       pathRewrite: { '^/api': '/api' },
     },

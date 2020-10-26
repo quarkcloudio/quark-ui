@@ -7,6 +7,7 @@ import Table from '@/pages/Quark/components/Table';
 import Form from '@/pages/Quark/components/Form';
 import TabForm from '@/pages/Quark/components/TabForm';
 import Show from '@/pages/Quark/components/Show';
+import Upgrade from '@/pages/Quark/components/Upgrade';
 
 import {
   Statistic,
@@ -89,6 +90,12 @@ const ComponentRender: React.FC<any> = (props:any) => {
       case 'statistic':
         component =
           <Statistic
+            {...content}
+          />
+        break;
+      case 'upgrade':
+        component =
+          <Upgrade
             {...content}
           />
         break;
