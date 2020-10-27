@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { history } from 'umi';
+import { accountLogout } from '@/services/quark';
+import { stringify } from 'querystring';
 import { get } from '@/services/action';
 
 import {
@@ -65,6 +68,23 @@ const Upgrade: React.FC<any> = props => {
     upgradeApp(1);
   };
 
+  /**
+   * 退出登录
+   */
+  const loginOut = async () => {
+    await accountLogout();
+    const { query, pathname } = history.location;
+    const { redirect } = query;
+    if (window.location.pathname !== '/user/login' && !redirect) {
+      history.replace({
+        pathname: '/user/login',
+        search: stringify({
+          redirect: pathname+'?'+stringify(query),
+        }),
+      });
+    }
+  };
+  
   const upgradeApp = async (currentStep:number) => {
     if(currentStep <= steps.length) {
       let result = await get({
@@ -79,6 +99,9 @@ const Upgrade: React.FC<any> = props => {
       } else {
         alert(result.msg);
       }
+    } else {
+      // 升级完成后，重新登录
+      loginOut();
     }
   };
 
