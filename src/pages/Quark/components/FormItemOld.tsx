@@ -21,13 +21,7 @@ import {
   Cascader,
   Space,
   Button,
-  TimePicker,
-  Input,
-  InputNumber,
-  Checkbox,
-  Radio,
-  Switch,
-  Divider
+  TimePicker
 } from 'antd';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 
@@ -67,105 +61,98 @@ const FormItem: React.FC<FormItem> = (props:any) => {
           case 'text':
             if(item.type === 'text') {
               component = 
-              <Form.Item
+              <ProFormText
                 key={item.key}
                 name={field ? [field.name, item.name] : item.name}
                 fieldKey={field ? [field.fieldKey, item.name] : item.name}
                 label={item.label}
                 tooltip={item.tooltip}
+                placeholder={item.placeholder}
+                style={item.style}
+                width={item.width}
+                disabled={item.disabled}
                 rules={item.frontendRules}
                 extra={item.extra}
                 help={item.help ? item.help : undefined}
-              >
-                <Input
-                  placeholder={item.placeholder}
-                  style={item.style ? item.style : []}
-                  width={item.width}
-                  disabled={item.disabled}
-                  allowClear={item.allowClear}
-                  maxLength={item.maxLength}
-                  addonAfter={item.addonAfter}
-                  addonBefore={item.addonBefore}
-                  size={item.size}
-                  onChange={(e)=>{onChange(e.target.value,item.name)}}
-                />
-              </Form.Item>;
+                fieldProps={{
+                  allowClear:item.allowClear,
+                  maxLength:item.maxLength,
+                  addonAfter:item.addonAfter,
+                  addonBefore:item.addonBefore,
+                  size:item.size,
+                  onChange:(e)=>{onChange(e.target.value,item.name)}
+                }}
+              />;
             }
 
             if(item.type === 'password') {
               component = 
-              <Form.Item
+              <ProFormText.Password
                 key={item.key}
                 name={field ? [field.name, item.name] : item.name}
                 fieldKey={field ? [field.fieldKey, item.name] : item.name}
                 label={item.label}
                 tooltip={item.tooltip}
+                placeholder={item.placeholder}
+                style={item.style}
+                width={item.width}
+                disabled={item.disabled}
                 rules={item.frontendRules}
                 extra={item.extra}
                 help={item.help ? item.help : undefined}
-              >
-                <Input.Password
-                  placeholder={item.placeholder}
-                  style={item.style ? item.style : []}
-                  width={item.width}
-                  disabled={item.disabled}
-                  allowClear={item.allowClear}
-                  maxLength={item.maxLength}
-                  addonAfter={item.addonAfter}
-                  addonBefore={item.addonBefore}
-                  size={item.size}
-                  onChange={(e)=>{onChange(e.target.value,item.name)}}
-                />
-              </Form.Item>;
+                fieldProps={{
+                  allowClear:item.allowClear,
+                  maxLength:item.maxLength,
+                  addonAfter:item.addonAfter,
+                  addonBefore:item.addonBefore,
+                  size:item.size
+                }}
+              />;
             }
             break;
           case 'textArea':
             component = 
-            <Form.Item
+            <ProFormTextArea
               key={item.key}
               name={field ? [field.name, item.name] : item.name}
               fieldKey={field ? [field.fieldKey, item.name] : item.name}
               label={item.label}
               tooltip={item.tooltip}
+              placeholder={item.placeholder}
+              style={item.style}
+              width={item.width}
+              disabled={item.disabled}
               rules={item.frontendRules}
               extra={item.extra}
               help={item.help ? item.help : undefined}
-            >
-              <Input.TextArea
-                placeholder={item.placeholder}
-                style={item.style ? item.style : []}
-                disabled={item.disabled}
-                allowClear={item.allowClear}
-                maxLength={item.maxLength}
-                autoSize={item.autoSize}
-                onChange={(e)=>{onChange(e.target.value,item.name)}}
-              />
-            </Form.Item>;
+              fieldProps={{
+                maxLength:item.maxLength,
+                autoSize:item.autoSize
+              }}
+            />;
             break;
           case 'inputNumber':
             component = 
-            <Form.Item
+            <ProFormDigit
               key={item.key}
               name={field ? [field.name, item.name] : item.name}
               fieldKey={field ? [field.fieldKey, item.name] : item.name}
               label={item.label}
+              style={item.style}
+              width={item.width}
               tooltip={item.tooltip}
-              rules={item.frontendRules}
+              disabled={item.disabled}
               extra={item.extra}
               help={item.help ? item.help : undefined}
-            >
-              <InputNumber
-                placeholder={item.placeholder}
-                style={item.style ? item.style : []}
-                disabled={item.disabled}
-                maxLength={item.maxLength}
-                min={item.min}
-                max={item.max}
-                step={item.step}
-                precision={item.precision}
-                onChange={(value)=>{onChange(value,item.name)}}
-              />
-            </Form.Item>;
+              rules={item.frontendRules}
+              placeholder={item.placeholder}
+              min={item.min}
+              max={item.max}
+              fieldProps={{
+                step:item.step,
+                precision:item.precision,
+              }}
+            />;
             break;
           case 'icon':
             component = 
@@ -174,12 +161,13 @@ const FormItem: React.FC<FormItem> = (props:any) => {
               label={item.label}
               name={field ? [field.name, item.name] : item.name}
               fieldKey={field ? [field.fieldKey, item.name] : item.name}
+              style={item.style}
               tooltip={item.tooltip}
               rules={item.frontendRules}
               help={item.help ? item.help : undefined}
               extra={item.extra}
             >
-              <Select style={item.style ? item.style : []} disabled={item.disabled}>
+              <Select disabled={item.disabled}>
                 <Select.Option key={0} value={0}>
                   无图标
                 </Select.Option>
@@ -205,43 +193,42 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             break;
           case 'checkbox':
             component = 
-            <Form.Item
+            <ProFormCheckbox.Group
               key={item.key}
               name={field ? [field.name, item.name] : item.name}
               fieldKey={field ? [field.fieldKey, item.name] : item.name}
               label={item.label}
-              tooltip={item.tooltip}
+              style={item.style}
+              width={item.width}
+              disabled={item.disabled}
+              options={item.options}
+              layout={item.layout}
               rules={item.frontendRules}
               extra={item.extra}
               help={item.help ? item.help : undefined}
-            >
-              <Checkbox.Group
-                style={item.style ? item.style : []}
-                options={item.options}
-                disabled={item.disabled}
-                onChange={(value)=>{onChange(value,item.name)}}
-              />
-            </Form.Item>;
+              fieldProps={{
+                onChange:(value)=>{onChange(value,item.name)}
+              }}
+            />;
             break;
           case 'radio':
             component = 
-            <Form.Item
+            <ProFormRadio.Group
               key={item.key}
               name={field ? [field.name, item.name] : item.name}
               fieldKey={field ? [field.fieldKey, item.name] : item.name}
               label={item.label}
-              tooltip={item.tooltip}
+              style={item.style}
+              width={item.width}
+              disabled={item.disabled}
+              options={item.options}
               rules={item.frontendRules}
               extra={item.extra}
               help={item.help ? item.help : undefined}
-            >
-              <Radio.Group
-                style={item.style ? item.style : []}
-                options={item.options}
-                disabled={item.disabled}
-                onChange={(e)=>{onChange(e.target.value,item.name)}}
-              />
-            </Form.Item>;
+              fieldProps={{
+                onChange:(e)=>{onChange(e.target.value,item.name)}
+              }}
+            />;
             break;
           case 'image':
             component = 
@@ -292,47 +279,49 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             break;
           case 'switch':
             component = 
-            <Form.Item
+            <ProFormSwitch
               key={item.key}
               name={field ? [field.name, item.name] : item.name}
               fieldKey={field ? [field.fieldKey, item.name] : item.name}
               label={item.label}
+              style={item.style}
+              width={item.width}
               tooltip={item.tooltip}
-              rules={item.frontendRules}
+              disabled={item.disabled}
               extra={item.extra}
               help={item.help ? item.help : undefined}
+              rules={item.frontendRules}
               valuePropName={'checked'}
-            >
-              <Switch
-                style={item.style ? item.style : []}
-                disabled={item.disabled}
-                onChange={(value)=>{onChange(value,item.name)}}
-                checkedChildren={item.options.on}
-                unCheckedChildren={item.options.off}
-              />
-            </Form.Item>;
+              fieldProps={{
+                checkedChildren:item.options.on,
+                unCheckedChildren:item.options.off,
+                onChange:(e)=>{onChange(e,item.name)}
+              }}
+            />;
             break;
           case 'select':
             component = 
-            <Form.Item
+            <ProFormSelect
               key={item.key}
+              name={field ? [field.name, item.name] : item.name}
               fieldKey={field ? [field.fieldKey, item.name] : item.name}
               label={item.label}
+              style={item.style}
+              width={item.width}
               tooltip={item.tooltip}
-              rules={item.frontendRules}
+              disabled={item.disabled}
               extra={item.extra}
               help={item.help ? item.help : undefined}
-            >
-              <Select
-                style={item.style ? item.style : []}
-                options={item.options}
-                disabled={item.disabled}
-                mode={item.mode}
-                allowClear={item.allowClear}
-                size={item.size}
-                onChange={(value)=>{onChange(value,item.name)}}
-              />
-            </Form.Item>;
+              rules={item.frontendRules}
+              placeholder={item.placeholder}
+              options={item.options}
+              mode={item.mode}
+              fieldProps={{
+                allowClear:item.allowClear,
+                size:item.size,
+                onChange:(value)=>{onChange(value,item.name)}
+              }}
+            />;
             break;
           case 'tree':
             component = 
@@ -490,8 +479,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             <Form.Item
               key={item.name}
               label={item.label}
-              name={field ? [field.name, item.name] : item.name}
-              fieldKey={field ? [field.fieldKey, item.name] : item.name}
+              name={item.name}
               rules={item.frontendRules}
               help={item.help ? item.help : undefined}
               extra={item.extra}
@@ -501,22 +489,26 @@ const FormItem: React.FC<FormItem> = (props:any) => {
                   return (
                     <div>
                       {fields.map(field => (
-                        <Space align="start" style={{width:'100%'}}>
-                          <Space
-                            key={field.key}
-                            align="start"
-                            style={{ display: 'flex' }}
-                            direction="vertical"
-                          >
-                            {formItemRender(item.items,field)}
-                          </Space>
-                          <Button onClick={() => { remove(field.name); }} type="primary">删除</Button>
+                        <Space
+                          key={field.key}
+                          style={{ display: 'flex', marginBottom: 8 }}
+                          align="start"
+                        >
+                          { formItemRender(item.items,field) }
+                          <MinusCircleOutlined
+                            onClick={() => {
+                              remove(field.name);
+                            }}
+                          />
                         </Space>
                       ))}
+
                       <Form.Item>
                         <Button
                           type="dashed"
-                          onClick={() => {add();}}
+                          onClick={() => {
+                            add();
+                          }}
                           block
                         >
                           <PlusOutlined /> {item.button}
