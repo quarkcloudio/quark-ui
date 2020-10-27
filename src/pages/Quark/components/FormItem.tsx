@@ -157,6 +157,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
               <InputNumber
                 placeholder={item.placeholder}
                 style={item.style ? item.style : []}
+                width={item.width}
                 disabled={item.disabled}
                 maxLength={item.maxLength}
                 min={item.min}
