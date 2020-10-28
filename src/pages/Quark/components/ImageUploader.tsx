@@ -37,7 +37,7 @@ const ImageUploader: React.FC<ImageUploader> = ({ title, action, limitType, limi
         status:''
       };
 
-      fileInfo.uid = file.id;
+      fileInfo.uid = file.uid;
       fileInfo.id = file.id;
       fileInfo.name = file.name;
       fileInfo.url = file.url;
