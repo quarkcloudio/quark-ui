@@ -13,7 +13,7 @@ import {
   ProFormDateRangePicker,
   ProFormDateTimeRangePicker
 } from '@ant-design/pro-form';
-import { createFromIconfontCN,MinusCircleOutlined,PlusOutlined } from '@ant-design/icons';
+import { createFromIconfontCN,PlusOutlined } from '@ant-design/icons';
 import {
   Tree,
   Form,
@@ -26,8 +26,7 @@ import {
   InputNumber,
   Checkbox,
   Radio,
-  Switch,
-  Divider
+  Switch
 } from 'antd';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 
@@ -317,6 +316,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             component = 
             <Form.Item
               key={item.key}
+              name={field ? [field.name, item.name] : item.name}
               fieldKey={field ? [field.fieldKey, item.name] : item.name}
               label={item.label}
               tooltip={item.tooltip}

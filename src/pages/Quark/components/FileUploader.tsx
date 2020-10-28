@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Upload, message } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { Upload, message, Button } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 
 export interface FileUploader {
   title: string;
@@ -33,14 +33,14 @@ const FileUploader: React.FC<FileUploader> = ({ title, action, limitType, limitS
         size:null,
         status:''
       };
-      if (file.response) {
-        fileInfo.uid = file.response.data.id;
-        fileInfo.id = file.response.data.id;
-        fileInfo.name = file.response.data.name;
-        fileInfo.url = file.response.data.url;
-        fileInfo.size = file.response.data.size;
-        fileInfo.status = 'done';
-      }
+
+      fileInfo.uid = file.id;
+      fileInfo.id = file.id;
+      fileInfo.name = file.name;
+      fileInfo.url = file.url;
+      fileInfo.size = file.size;
+      fileInfo.status = 'done';
+
       fileList[key] = fileInfo;
     });
     triggerChange({ ...fileList });
@@ -48,10 +48,7 @@ const FileUploader: React.FC<FileUploader> = ({ title, action, limitType, limitS
 
   const uploadButton = (title:string) => {
     return(
-    <div>
-      <PlusOutlined />
-      <div>{title}</div>
-    </div>
+      <Button icon={<UploadOutlined />}>{title}</Button>
     )
   }
 

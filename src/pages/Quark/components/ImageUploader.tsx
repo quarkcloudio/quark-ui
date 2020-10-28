@@ -36,14 +36,14 @@ const ImageUploader: React.FC<ImageUploader> = ({ title, action, limitType, limi
         size:null,
         status:''
       };
-      if (file.response) {
-        fileInfo.uid = file.response.data.id;
-        fileInfo.id = file.response.data.id;
-        fileInfo.name = file.response.data.name;
-        fileInfo.url = file.response.data.url;
-        fileInfo.size = file.response.data.size;
-        fileInfo.status = 'done';
-      }
+
+      fileInfo.uid = file.id;
+      fileInfo.id = file.id;
+      fileInfo.name = file.name;
+      fileInfo.url = file.url;
+      fileInfo.size = file.size;
+      fileInfo.status = 'done';
+
       fileList[key] = fileInfo;
     });
     triggerChange({ ...fileList });
@@ -149,7 +149,6 @@ const ImageUploader: React.FC<ImageUploader> = ({ title, action, limitType, limi
               return false;
             }
           });
-
           // 重组数据
           fileList = fileList.map((file: any,key: number) => {
             if (file.response) {
@@ -160,7 +159,6 @@ const ImageUploader: React.FC<ImageUploader> = ({ title, action, limitType, limi
             }
             return file;
           });
-
           onFileListChange(fileList);
         }}
       >
