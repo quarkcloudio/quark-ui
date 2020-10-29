@@ -6,6 +6,8 @@ import ProForm, {
   ProFormText,
   ProFormDatePicker,
   ProFormDateRangePicker,
+  ProFormDateTimePicker,
+  ProFormDateTimeRangePicker,
   ProFormSelect
 } from '@ant-design/pro-form';
 
@@ -17,6 +19,7 @@ export interface Action {
 const QueryFilter: React.FC<Action> = (props) => {
   const onFinish = (values: any) => {
     let query = {};
+
     query['api'] = history.location.query.api;
     query['page'] = history.location.query.page;
     query['pageSize'] = history.location.query.pageSize;
@@ -30,6 +33,34 @@ const QueryFilter: React.FC<Action> = (props) => {
       query['filter'] = history.location.query.filter;
     }
 
+    // hack random
+    query['random'] = Math.random();
+
+    history.push({ pathname: history.location.pathname, query: query });
+    
+    if (props.current) {
+      props.current.reload();
+    }
+  };
+
+  const onReset = () => {
+    let query = {};
+
+    query['api'] = history.location.query.api;
+    query['page'] = history.location.query.page;
+    query['pageSize'] = history.location.query.pageSize;
+
+    if(history.location.query.sorter) {
+      query['sorter'] = history.location.query.sorter;
+    }
+
+    if(history.location.query.filter) {
+      query['filter'] = history.location.query.filter;
+    }
+
+    // hack random
+    query['random'] = Math.random();
+
     history.push({ pathname: history.location.pathname, query: query });
     
     if (props.current) {
@@ -38,10 +69,11 @@ const QueryFilter: React.FC<Action> = (props) => {
   };
 
   const searchComponent = (item:any) => {
+    let component = null;
     switch(item.component) {
       case 'input':
         if(item.operator == 'between') {
-          return (
+          component = 
           <ProForm.Group title={item.label}>
             <ProFormText
               key={item.name+'_start'}
@@ -56,98 +88,113 @@ const QueryFilter: React.FC<Action> = (props) => {
               style={item.style ? item.style : []}
             />
           </ProForm.Group>
-          )
         } else {
-          return (
-            <ProFormText
-              key={item.name}
-              name={item.name}
-              label={item.label}
-              placeholder={item.placeholder}
-              style={item.style ? item.style : []}
-            />
-          )
+          component = 
+          <ProFormText
+            key={item.name}
+            name={item.name}
+            label={item.label}
+            placeholder={item.placeholder}
+            style={item.style ? item.style : []}
+          />
         }
 
         break;
       case 'select':
-        return (
-          <ProFormSelect
-            key={item.name}
-            label={item.label}
-            name={item.name}
-            options={item.options}
-            style={item.style ? item.style : []}
-            placeholder={item.placeholder}
-          />
-        )
-        
+        component = 
+        <ProFormSelect
+          key={item.name}
+          label={item.label}
+          name={item.name}
+          options={item.options}
+          style={item.style ? item.style : []}
+          placeholder={item.placeholder}
+        />
         break;
       case 'multipleSelect':
-        return (
-          <ProFormSelect
-            mode="multiple"
-            key={item.name}
-            label={item.label}
-            name={item.name}
-            options={item.options}
-            style={item.style ? item.style : []}
-            placeholder={item.placeholder}
-          />
-        )
-
+        component = 
+        <ProFormSelect
+          mode="multiple"
+          key={item.name}
+          label={item.label}
+          name={item.name}
+          options={item.options}
+          style={item.style ? item.style : []}
+          placeholder={item.placeholder}
+        />
         break;
 
       case 'datetime':
         if(item.operator == 'between') {
-          return (
-            <ProFormDateRangePicker
-              key={item.name}
-              label={item.label}
-              name={item.name}
-              style={item.style ? item.style : []}
-            />
-          )
+          component = 
+          <ProFormDateTimeRangePicker
+            key={item.name}
+            label={item.label}
+            name={item.name}
+            style={item.style ? item.style : []}
+          />
         } else {
-          return (
-            <ProFormDatePicker
-              key={item.name}
-              name={item.name}
-              label={item.label}
-              placeholder={item.placeholder}
-              style={item.style ? item.style : []}
-            />
-          )
+          component = 
+          <ProFormDateTimePicker
+            key={item.name}
+            name={item.name}
+            label={item.label}
+            placeholder={item.placeholder}
+            style={item.style ? item.style : []}
+          />
+        }
+        break;
+
+      case 'date':
+        if(item.operator == 'between') {
+          component = 
+          <ProFormDateRangePicker
+            key={item.name}
+            label={item.label}
+            name={item.name}
+            style={item.style ? item.style : []}
+          />
+        } else {
+          component = 
+          <ProFormDatePicker
+            key={item.name}
+            name={item.name}
+            label={item.label}
+            placeholder={item.placeholder}
+            style={item.style ? item.style : []}
+          />
         }
         break;
 
       case 'inputGroup':
-        return (
-          <ProForm.Group title={item.label}>
-            <ProFormSelect
-              key={item.name+'_start'}
-              name={item.name+'_start'}
-              options={item.options}
-              style={{ width : (item.style.width[0] ? item.style.width[0] : null)}}
-            />
-            <ProFormText
-              key={item.name+'_end'}
-              name={item.name+'_end'}
-              style={{ width : (item.style.width[1] ? item.style.width[1] : null)}}
-              placeholder={item.placeholder}
-            />
-          </ProForm.Group>
-        )
+        component = 
+        <ProForm.Group title={item.label}>
+          <ProFormSelect
+            key={item.name+'_start'}
+            name={item.name+'_start'}
+            options={item.options}
+            style={{ width : (item.style.width[0] ? item.style.width[0] : null)}}
+          />
+          <ProFormText
+            key={item.name+'_end'}
+            name={item.name+'_end'}
+            style={{ width : (item.style.width[1] ? item.style.width[1] : null)}}
+            placeholder={item.placeholder}
+          />
+        </ProForm.Group>
         break;
 
       default:
-        return null;
+        component = null;
     }
+
+    return component;
   };
 
   return (
     <ProQueryFilter
-      onFinish = {onFinish}
+      onFinish = {async (values) => { onFinish(values) }}
+      onReset = {async () => { onReset() }}
       labelAlign = {props.search.labelAlign}
       size = {props.search.size}
       defaultCollapsed = {props.search.defaultCollapsed}

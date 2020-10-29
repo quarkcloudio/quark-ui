@@ -107,72 +107,72 @@ const Upgrade: React.FC<any> = props => {
 
 
   return (
-    <Affix offsetBottom={offsetBottom} offsetTop={offsetTop} style={style}>
-      {canUpgrade ?
-        <>
+    <>
+      <Affix offsetBottom={offsetBottom} offsetTop={offsetTop} style={style}>
+        {canUpgrade ?
           <Tooltip title={upgradeTip}>
             <Badge dot>
               <Button size={'large'} type="primary" shape="circle" onClick={()=> setUpgradeModalVisible(true)} icon={<ArrowUpOutlined />} />
             </Badge>
           </Tooltip>
-          <Modal
-            title={'当前版本'+upgradeInfo.app_version}
-            visible={upgradeModalVisible}
-            onOk={() => setUpgradeModalVisible(false)}
-            onCancel={() => setUpgradeModalVisible(false)}
-            footer={null}
-            width={350}
-          >
-            <div>
-              <div>{upgradeInfo.next_package.version} 更新日志：</div>
-              <pre style={{minHeight:250}}>
-                {upgradeInfo.next_package.description}
-              </pre>
-              <div style={{textAlign:'center'}}>
-                <Space>
-                  <Popconfirm
-                    title="已经对系统进行了备份？"
-                    onConfirm={showModal}
-                    okText="是"
-                    cancelText="否"
-                  >
-                    <Button type="primary">立即升级</Button>
-                  </Popconfirm>
-                  <Button onClick={() => setUpgradeModalVisible(false)}>暂不升级</Button>
-                </Space>
-              </div>
-            </div>
-          </Modal>
-          <Modal
-            title="系统升级"
-            visible={upgradingModalVisible}
-            width={'860px'}
-            footer={false}
-            closable={false}
-          >
-            <div>正在进行 {upgradeInfo.next_package.version} 版本升级，此过程将会持续几分钟，请您耐心等待。</div>
-            <div style={{marginTop:20}}>
-              <Steps size="small" current={currentStep}>
-                {steps.map((step:any,key:any) => {
-                  return <Steps.Step title={step.title} icon={(currentStep==key+1) ? <LoadingOutlined /> : false} />
-                })}
-              </Steps>
-            </div>
-            <div style={{ textAlign: 'center',marginTop:20 }}>
-              <Progress type="circle" percent={steps[currentStep-1]['percent']} />
-            </div>
-            <div style={{ textAlign: 'center',marginTop:20 }}>
-              {steps[currentStep-1]['tip']}
-              <span>（<span style={{ color: '#cf1322' }}>系统升级中，请勿关闭本页面</span>）</span>
-            </div>
-          </Modal>
-        </>
-      :
-        <Tooltip title={tip}>
-          <Button size={'large'} type="primary" shape="circle" onClick={() => checkUpdate(api)} icon={<SyncOutlined spin={checking}/> }/>
-        </Tooltip>
-      }
-    </Affix>
+        :
+          <Tooltip title={tip}>
+            <Button size={'large'} type="primary" shape="circle" onClick={() => checkUpdate(api)} icon={<SyncOutlined spin={checking}/> }/>
+          </Tooltip>
+        }
+      </Affix>
+      <Modal
+        title={'当前版本'+upgradeInfo.app_version}
+        visible={upgradeModalVisible}
+        onOk={() => setUpgradeModalVisible(false)}
+        onCancel={() => setUpgradeModalVisible(false)}
+        footer={null}
+        width={350}
+      >
+        <div>
+          <div>{upgradeInfo.next_package.version} 更新日志：</div>
+          <pre style={{minHeight:250}}>
+            {upgradeInfo.next_package.description}
+          </pre>
+          <div style={{textAlign:'center'}}>
+            <Space>
+              <Popconfirm
+                title="已经对系统进行了备份？"
+                onConfirm={showModal}
+                okText="是"
+                cancelText="否"
+              >
+                <Button type="primary">立即升级</Button>
+              </Popconfirm>
+              <Button onClick={() => setUpgradeModalVisible(false)}>暂不升级</Button>
+            </Space>
+          </div>
+        </div>
+      </Modal>
+      <Modal
+        title="系统升级"
+        visible={upgradingModalVisible}
+        width={'860px'}
+        footer={false}
+        closable={false}
+      >
+        <div>正在进行 {upgradeInfo.next_package.version} 版本升级，此过程将会持续几分钟，请您耐心等待。</div>
+        <div style={{marginTop:20}}>
+          <Steps size="small" current={currentStep}>
+            {steps.map((step:any,key:any) => {
+              return <Steps.Step key={step.key} title={step.title} icon={(currentStep==key+1) ? <LoadingOutlined /> : false} />
+            })}
+          </Steps>
+        </div>
+        <div style={{ textAlign: 'center',marginTop:20 }}>
+          <Progress type="circle" percent={steps[currentStep-1]['percent']} />
+        </div>
+        <div style={{ textAlign: 'center',marginTop:20 }}>
+          {steps[currentStep-1]['tip']}
+          <span>（<span style={{ color: '#cf1322' }}>系统升级中，请勿关闭本页面</span>）</span>
+        </div>
+      </Modal>
+    </>
   );
 };
 

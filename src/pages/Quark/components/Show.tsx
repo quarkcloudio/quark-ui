@@ -23,7 +23,7 @@ const Show: React.FC<any> = (props:any) => {
           }
         }
 
-        return <ProDescriptions.Item label={item.label}>{component}</ProDescriptions.Item>;
+        return <ProDescriptions.Item key={item.key} label={item.label}>{component}</ProDescriptions.Item>;
       })
     )
     return formItemComponent;
