@@ -179,7 +179,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
               help={item.help ? item.help : undefined}
               extra={item.extra}
             >
-              <Select style={item.style ? item.style : []} disabled={item.disabled}>
+              <Select style={item.style ? item.style : []} disabled={item.disabled} placeholder={item.placeholder}>
                 <Select.Option key={0} value={0}>
                   无图标
                 </Select.Option>
@@ -325,6 +325,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
               help={item.help ? item.help : undefined}
             >
               <Select
+                placeholder={item.placeholder}
                 style={item.style ? item.style : []}
                 options={item.options}
                 disabled={item.disabled}
@@ -547,6 +548,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
                 style={item.style}
                 options={item.options}
                 api={item.api}
+                allowClear={item.allowClear}
               />
             </Form.Item>;
             break;

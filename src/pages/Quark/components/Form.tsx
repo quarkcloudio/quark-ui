@@ -62,6 +62,7 @@ const Form: React.FC<Form> = (props:any) => {
           layout={props.form.layout}
           labelCol={props.form.labelCol}
           wrapperCol={props.form.wrapperCol}
+          dateFormatter={props.form.dateFormatter}
         >
           <FormItem form={form} items={props.form.items} />
         </ProForm>
@@ -84,6 +85,7 @@ const Form: React.FC<Form> = (props:any) => {
         layout={props.form.layout}
         labelCol={props.form.labelCol}
         wrapperCol={props.form.wrapperCol}
+        dateFormatter={props.form.dateFormatter}
       >
         <FormItem form={form} items={props.form.items} />
       </ProForm>

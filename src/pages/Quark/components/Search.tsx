@@ -10,10 +10,11 @@ export interface Search {
   placeholder?:any;
   style?:any;
   options?:any;
+  allowClear?:any;
   onChange?:(value: any) => void;
 }
 
-const Search: React.FC<Search> = ({ api=null, mode=undefined, size=undefined, value=null, placeholder=null, style=[], options=[], onChange }) => {
+const Search: React.FC<Search> = ({ api=null, mode=undefined, size=undefined, value=null, placeholder=null, style=[], options=[],allowClear=false, onChange }) => {
   const [selectOptions, setSelectOptions] = useState(undefined);
   
   const triggerChange = (changedValue:any) => {
@@ -57,6 +58,7 @@ const Search: React.FC<Search> = ({ api=null, mode=undefined, size=undefined, va
       onSearch={(value: any) => onInputSearch(value)}
       placeholder={placeholder}
       style={style}
+      allowClear={allowClear}
       onChange={onSelectChange}
     >
       {!!getSelectOptions &&
