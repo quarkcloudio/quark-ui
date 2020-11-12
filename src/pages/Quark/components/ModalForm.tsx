@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useModel, history } from 'umi';
 import { get, post } from '@/services/action';
+import moment from 'moment';
 import {
   Form,
   Button,
@@ -16,6 +17,18 @@ const ModalForm: React.FC<any> = (props:any) => {
   const IconFont = createFromIconfontCN({
     scriptUrl: initialState.settings.iconfontUrl,
   });
+
+  useEffect(() => {
+    let initialValues = props.form.initialValues;
+    props.form.items.map((item:any) => {
+      if(item.component === 'time') {
+        if(initialValues.hasOwnProperty(item.name)) {
+          initialValues[item.name] = moment(initialValues[item.name],item.format);
+        }
+      }
+    })
+    form.setFieldsValue(initialValues);
+  }, []);
 
   const [formComponent, setFormComponentState] = useState({
     api:null,
@@ -146,7 +159,6 @@ const ModalForm: React.FC<any> = (props:any) => {
           form={form}
           style={formComponent.style}
           colon={formComponent.colon}
-          initialValues={formComponent.initialValues}
           labelAlign={formComponent.labelAlign}
           name={formComponent.name}
           preserve={formComponent.preserve}

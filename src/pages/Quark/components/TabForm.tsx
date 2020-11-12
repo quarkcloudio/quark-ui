@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import ProCard from '@ant-design/pro-card';
 import FormItem from './FormItem';
 import { history } from 'umi';
 import { post } from '@/services/action';
+import moment from 'moment';
 import {
   Form,
   message,
@@ -17,6 +18,18 @@ export interface Form {
 
 const TabForm: React.FC<Form> = (props:any) => {
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    let initialValues = props.form.initialValues;
+    props.form.items.map((item:any) => {
+      if(item.component === 'time') {
+        if(initialValues.hasOwnProperty(item.name)) {
+          initialValues[item.name] = moment(initialValues[item.name],item.format);
+        }
+      }
+    })
+    form.setFieldsValue(initialValues);
+  }, []);
 
   const onFinish = async (values: any) => {
     const result = await post({

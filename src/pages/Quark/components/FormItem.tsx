@@ -11,7 +11,8 @@ import {
   ProFormDatePicker,
   ProFormDateTimePicker,
   ProFormDateRangePicker,
-  ProFormDateTimeRangePicker
+  ProFormDateTimeRangePicker,
+  ProFormTimePicker
 } from '@ant-design/pro-form';
 import { createFromIconfontCN,PlusOutlined } from '@ant-design/icons';
 import {

@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {  useEffect } from 'react';
 import ProForm from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import FormItem from './FormItem';
 import { history } from 'umi';
 import { post } from '@/services/action';
+import moment from 'moment';
 import {
   Form as AntForm,
   message,
@@ -17,6 +18,18 @@ export interface Form {
 const Form: React.FC<Form> = (props:any) => {
 
   const [form] = AntForm.useForm();
+
+  useEffect(() => {
+    let initialValues = props.form.initialValues;
+    props.form.items.map((item:any) => {
+      if(item.component === 'time') {
+        if(initialValues.hasOwnProperty(item.name)) {
+          initialValues[item.name] = moment(initialValues[item.name],item.format);
+        }
+      }
+    })
+    form.setFieldsValue(initialValues);
+  }, []);
 
   const onFinish = async (values: any) => {
     const result = await post({
@@ -52,7 +65,6 @@ const Form: React.FC<Form> = (props:any) => {
           onFinish={async (values) => { onFinish(values) }}
           style={props.form.style ? props.form.style : {margin:'25px',width:'100%'}}
           colon={props.form.colon}
-          initialValues={props.form.initialValues}
           labelAlign={props.form.labelAlign}
           name={props.form.name}
           preserve={props.form.preserve}
@@ -75,7 +87,6 @@ const Form: React.FC<Form> = (props:any) => {
         onFinish={async (values) => { onFinish(values) }}
         style={props.form.style}
         colon={props.form.colon}
-        initialValues={props.form.initialValues}
         labelAlign={props.form.labelAlign}
         name={props.form.name}
         preserve={props.form.preserve}
