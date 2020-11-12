@@ -443,6 +443,24 @@ const FormItem: React.FC<FormItem> = (props:any) => {
               }}
             />;
             break;
+          case 'time':
+            component = 
+            <Form.Item
+              key={item.key}
+              label={item.label}
+              name={field ? [field.name, item.name] : item.name}
+              fieldKey={field ? [field.fieldKey, item.name] : item.name}
+              rules={item.frontendRules}
+              help={item.help ? item.help : undefined}
+              extra={item.extra}
+            >
+              <TimePicker
+                size={item.size}
+                locale={locale}
+                format={item.format}
+              />
+            </Form.Item>;
+            break;
           case 'timeRange':
             component = 
             <Form.Item
