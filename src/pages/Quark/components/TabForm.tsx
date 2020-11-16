@@ -83,7 +83,6 @@ const TabForm: React.FC<Form> = (props:any) => {
         }}
       >
         {props.form.tab.map((tab: any, index: any) => {
-          console.log(props.form.key + 'formItem' + (index + 1).toString());
           return (
             <ProCard.TabPane key={(index + 1).toString()} tab={tab.title}>
               <FormItem key={props.form.key + 'formItem' + (index + 1).toString()} form={form} items={tab.items} />
