@@ -21,13 +21,17 @@ const TabForm: React.FC<Form> = (props:any) => {
 
   useEffect(() => {
     let initialValues = props.form.initialValues;
-    props.form.items.map((item:any) => {
-      if(item.component === 'time') {
-        if(initialValues.hasOwnProperty(item.name)) {
-          initialValues[item.name] = moment(initialValues[item.name],item.format);
+
+    props.form.tab.map((tab: any, index: any) => {
+      tab.items.map((item:any) => {
+        if(item.component === 'time') {
+          if(initialValues.hasOwnProperty(item.name)) {
+            initialValues[item.name] = moment(initialValues[item.name],item.format);
+          }
         }
-      }
+      })
     })
+
     form.setFieldsValue(initialValues);
   }, []);
 
@@ -52,6 +56,7 @@ const TabForm: React.FC<Form> = (props:any) => {
     <Form
       form={form}
       onFinish={async (values) => { onFinish(values) }}
+      key={props.form.key}
       style={props.form.style}
       colon={props.form.colon}
       initialValues={props.form.initialValues}
@@ -78,10 +83,11 @@ const TabForm: React.FC<Form> = (props:any) => {
         }}
       >
         {props.form.tab.map((tab: any, index: any) => {
+          console.log(props.form.key + 'formItem' + (index + 1).toString());
           return (
             <ProCard.TabPane key={(index + 1).toString()} tab={tab.title}>
-              <FormItem form={form} items={tab.items} />
-              <Form.Item >
+              <FormItem key={props.form.key + 'formItem' + (index + 1).toString()} form={form} items={tab.items} />
+              <Form.Item>
                <Space>
                   <Button type="primary" htmlType="submit">
                     提交

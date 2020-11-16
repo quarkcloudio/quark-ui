@@ -38,6 +38,7 @@ import Map from './Map';
 import Editor from './Editor';
 
 export interface FormItem {
+  key?:any;
   items: any;
   form?:any;
 }

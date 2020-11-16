@@ -44,7 +44,7 @@
     "not ie <= 10"
   ],
   "dependencies": {
-    "@ant-design/icons": "^4.0.0",
+    "@ant-design/icons": "^4.3.0",
     "@ant-design/pro-card": "^1.4.6",
     "@ant-design/pro-descriptions": "^1.0.33",
     "@ant-design/pro-form": "^1.4.1",

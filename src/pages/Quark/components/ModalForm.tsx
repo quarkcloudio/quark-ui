@@ -18,18 +18,6 @@ const ModalForm: React.FC<any> = (props:any) => {
     scriptUrl: initialState.settings.iconfontUrl,
   });
 
-  useEffect(() => {
-    let initialValues = props.form.initialValues;
-    props.form.items.map((item:any) => {
-      if(item.component === 'time') {
-        if(initialValues.hasOwnProperty(item.name)) {
-          initialValues[item.name] = moment(initialValues[item.name],item.format);
-        }
-      }
-    })
-    form.setFieldsValue(initialValues);
-  }, []);
-
   const [formComponent, setFormComponentState] = useState({
     api:null,
     style:undefined,
@@ -57,7 +45,17 @@ const ModalForm: React.FC<any> = (props:any) => {
     });
     const formComponent = findFormComponent(result.data);
     setFormComponentState(formComponent)
-    form.setFieldsValue({...formComponent.initialValues});
+
+    let initialValues = formComponent.initialValues;
+    formComponent.items.map((item:any) => {
+      if(item.component === 'time') {
+        if(initialValues.hasOwnProperty(item.name)) {
+          initialValues[item.name] = moment(initialValues[item.name],item.format);
+        }
+      }
+    });
+    
+    form.setFieldsValue(initialValues);
     setVisible(true);
   }
 

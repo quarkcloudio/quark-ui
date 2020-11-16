@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useModel, history } from 'umi';
 import { get, post } from '@/services/action';
+import moment from 'moment';
 import {
   Form,
   Button,
@@ -44,7 +45,17 @@ const DrawerForm: React.FC<any> = (props:any) => {
     });
     const formComponent = findFormComponent(result.data);
     setFormComponentState(formComponent)
-    form.setFieldsValue({...formComponent.initialValues});
+
+    let initialValues = formComponent.initialValues;
+    formComponent.items.map((item:any) => {
+      if(item.component === 'time') {
+        if(initialValues.hasOwnProperty(item.name)) {
+          initialValues[item.name] = moment(initialValues[item.name],item.format);
+        }
+      }
+    });
+    
+    form.setFieldsValue(initialValues);
     setVisible(true);
   }
 
