@@ -76,6 +76,7 @@ const Index: React.FC<{}> = (props) => {
         logo={settings.logo ? settings.logo : logo}
         contentStyle={settings.contentStyle}
         layout={settings.layout}
+        headerTheme={settings.headerTheme}
         contentWidth={settings.contentWidth}
         navTheme={settings.navTheme}
         primaryColor={settings.primaryColor}
