@@ -6,6 +6,7 @@ import { history } from 'umi';
 import { post } from '@/services/action';
 import moment from 'moment';
 import {
+  Space,
   Form as AntForm,
   message,
   Button
@@ -62,7 +63,7 @@ const Form: React.FC<Form> = (props:any) => {
       >
         <ProForm
           form={form}
-          onFinish={async (values) => { onFinish(values) }}
+          onFinish={async (values:any) => { onFinish(values) }}
           style={props.form.style ? props.form.style : {margin:'25px',width:'100%'}}
           colon={props.form.colon}
           labelAlign={props.form.labelAlign}
@@ -75,6 +76,15 @@ const Form: React.FC<Form> = (props:any) => {
           labelCol={props.form.labelCol}
           wrapperCol={props.form.wrapperCol}
           dateFormatter={props.form.dateFormatter}
+          submitter={{
+            render: (proFormProps:any, doms:any) => {
+              return (
+                <AntForm.Item wrapperCol={props.form.buttonWrapperCol}>
+                  <Space>{doms}</Space>
+                </AntForm.Item>
+              );
+            },
+          }}
         >
           <FormItem form={form} items={props.form.items} />
         </ProForm>
@@ -84,7 +94,7 @@ const Form: React.FC<Form> = (props:any) => {
     return (
       <ProForm
         form={form}
-        onFinish={async (values) => { onFinish(values) }}
+        onFinish={async (values:any) => { onFinish(values) }}
         style={props.form.style}
         colon={props.form.colon}
         labelAlign={props.form.labelAlign}
@@ -97,6 +107,15 @@ const Form: React.FC<Form> = (props:any) => {
         labelCol={props.form.labelCol}
         wrapperCol={props.form.wrapperCol}
         dateFormatter={props.form.dateFormatter}
+        submitter={{
+          render: (proFormProps:any, doms:any) => {
+            return (
+              <AntForm.Item wrapperCol={props.form.buttonWrapperCol}>
+                <Space>{doms}</Space>
+              </AntForm.Item>
+            );
+          },
+        }}
       >
         <FormItem form={form} items={props.form.items} />
       </ProForm>
