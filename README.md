@@ -33,8 +33,7 @@ npm run build
 ```
 
 ## 技术支持
-为了避免打扰作者日常工作，你可以在Github上提交 [Issues](https://github.com/quarkcms/quark-ui/issues)
+[提交 Issues](https://github.com/quarkcms/quark-ui/issues) [在线文档](http://www.quarkcms.com/quark-ui/) [Ant Design Pro 官网](https://pro.ant.design)
 
-[在线文档](http://www.quarkcms.com/quark-ui/)
-
-[Ant Design Pro 官网](https://pro.ant.design)
+## License
+QuarkUI is licensed under The MIT License (MIT).
