@@ -1,10 +1,9 @@
-# Ant Design Pro
+## 介绍
+QuarkUI 是基于 [Ant Design Pro](https://pro.ant.design) 的前端引擎，配合 QuarkAdmin，你可以快速创建一个功能完善的管理后台。
 
-This project is initialized with [Ant Design Pro](https://pro.ant.design). Follow is the quick guide for how to use.
+## 环境准备
 
-## Environment Prepare
-
-Install `node_modules`:
+安装依赖:
 
 ```bash
 npm install
@@ -16,42 +15,25 @@ or
 yarn
 ```
 
-## Provided Scripts
+## 脚本命令
 
-Ant Design Pro provides some useful script to help you quick start and build with web project, code style check and test.
+QuarkUI 提供了一些有用的脚本来帮助您快速启动和构建项目
 
-Scripts provided in `package.json`. It's safe to modify or add additional script:
 
-### Start project
+### 运行项目
 
 ```bash
 npm start
 ```
 
-### Build project
+### 构建项目
 
 ```bash
 npm run build
 ```
 
-### Check code style
+## 技术支持
+[提交 Issues](https://github.com/quarkcms/quark-ui/issues) 、 [在线文档](http://www.quarkcms.com/quark-ui/) 、 [Ant Design Pro 官网](https://pro.ant.design)
 
-```bash
-npm run lint
-```
-
-You can also use script to auto fix some lint error:
-
-```bash
-npm run lint:fix
-```
-
-### Test code
-
-```bash
-npm test
-```
-
-## More
-
-You can view full document on our [official website](https://pro.ant.design). And welcome any feedback in our [github](https://github.com/ant-design/ant-design-pro).
+## License
+QuarkUI is licensed under The MIT License (MIT).

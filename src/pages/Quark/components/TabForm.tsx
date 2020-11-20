@@ -86,13 +86,13 @@ const TabForm: React.FC<Form> = (props:any) => {
           return (
             <ProCard.TabPane key={(index + 1).toString()} tab={tab.title}>
               <FormItem key={props.form.key + 'formItem' + (index + 1).toString()} form={form} items={tab.items} />
-              <Form.Item>
+              <Form.Item wrapperCol={props.form.buttonWrapperCol}>
                <Space>
-                  <Button type="primary" htmlType="submit">
-                    提交
-                  </Button>
                   <Button onClick={()=>form.resetFields()}>
                     重置
+                  </Button>
+                  <Button type="primary" htmlType="submit">
+                    提交
                   </Button>
                 </Space>
               </Form.Item>
