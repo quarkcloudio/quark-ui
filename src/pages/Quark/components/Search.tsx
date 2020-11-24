@@ -19,12 +19,12 @@ const Search: React.FC<Search> = ({ api=null, mode=undefined, size=undefined, va
   
   const triggerChange = (changedValue:any) => {
     if (onChange) {
-      onChange({...value, ...changedValue });
+      onChange(changedValue);
     }
   };
 
   const onSelectChange = (value:any) => {
-    triggerChange({ ...value });
+    triggerChange(value);
   };
 
   const onInputSearch = (value: any) => {
@@ -60,6 +60,7 @@ const Search: React.FC<Search> = ({ api=null, mode=undefined, size=undefined, va
       style={style}
       allowClear={allowClear}
       onChange={onSelectChange}
+      value={value}
     >
       {!!getSelectOptions &&
         getSelectOptions.map((option: any) => {
