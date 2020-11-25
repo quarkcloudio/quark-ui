@@ -19,7 +19,6 @@ import {
   Tree,
   Form,
   Select,
-  Cascader,
   Space,
   Button,
   TimePicker,
@@ -36,6 +35,7 @@ import FileUploader from './FileUploader';
 import Search from './Search';
 import Map from './Map';
 import Editor from './Editor';
+import Cascader from './Cascader';
 
 export interface FormItem {
   key?:any;
@@ -370,6 +370,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
               extra={item.extra}
             >
               <Cascader
+                api={item.api}
                 size={item.size}
                 options={item.options}
                 style={item.style}
