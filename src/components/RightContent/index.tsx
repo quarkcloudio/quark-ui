@@ -21,12 +21,8 @@ const GlobalHeaderRight: React.FC<{}> = () => {
     return null;
   }
 
-  const { navTheme, layout } = initialState.settings;
-  let className = styles.right;
+  const className = styles.right;
 
-  if ((navTheme === 'dark' && layout === 'top') || layout === 'mix') {
-    className = `${styles.right}  ${styles.dark}`;
-  }
   return (
     <Space className={className}>
       <HeaderSearch
