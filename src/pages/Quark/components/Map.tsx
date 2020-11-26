@@ -25,7 +25,8 @@ const Map: React.FC<Map> = ({ zoom=null, mapKey=undefined, value={ longitude: un
       }
       position.longitude = instance.lnglat.lng;
       position.latitude = instance.lnglat.lat;
-      setMapPosition(position)
+      setMapPosition(position);
+      triggerChange({ ...position });
     },
   };
   
