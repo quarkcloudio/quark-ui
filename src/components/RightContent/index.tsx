@@ -21,28 +21,55 @@ const GlobalHeaderRight: React.FC<{}> = () => {
     return null;
   }
 
+  const settings = initialState.settings;
   const className = styles.right;
+
+  // 解析actions
+  const parseHeaderActions = (actions:any) => {
+    let actionComponent:any = null;
+    actionComponent = (
+      actions.map((item:any,key:any) => {
+        let component:any = null;
+        switch (item.component) {
+          case 'a':
+            // 跳转行为
+            if(item.target === '_blank') {
+              component = 
+              <a key={item.key} href={item.href} target={item.target} style={item.style}>
+                {item.name}
+              </a>
+            } else {
+              component = 
+              <Link key={item.key} style={item.style} to={item.href}>
+                {item.name}
+              </Link>
+            }
+            break;
+
+          case 'icon':
+            component = <Tooltip title={item.tooltip}>
+                          <span
+                            onClick={() => {
+                              window.location.href = 'http://www.quarkcms.com/';
+                            }}
+                          >
+                            <QuestionCircleOutlined />
+                          </span>
+                        </Tooltip>
+            break;
+
+          default:
+            break;
+        }
+        return component;
+      })
+    )
+    return actionComponent;
+  }
 
   return (
     <Space className={className}>
-      <HeaderSearch
-        className={`${styles.action} ${styles.search}`}
-        placeholder="站内搜索"
-        options={[]}
-        // onSearch={value => {
-        //   //console.log('input', value);
-        // }}
-      />
-      <Tooltip title="使用文档">
-        <span
-          className={styles.action}
-          onClick={() => {
-            window.location.href = 'http://www.quarkcms.com/';
-          }}
-        >
-          <QuestionCircleOutlined />
-        </span>
-      </Tooltip>
+      { parseHeaderActions(settings.headerActions) }
       <Avatar menu={true} />
       {REACT_APP_ENV && (
         <span>
