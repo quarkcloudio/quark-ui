@@ -5,6 +5,7 @@ import { useModel, SelectLang, Link } from 'umi';
 import Avatar from './AvatarDropdown';
 import HeaderSearch from '../HeaderSearch';
 import styles from './index.less';
+import { createFromIconfontCN } from '@ant-design/icons';
 
 export type SiderTheme = 'light' | 'dark';
 
@@ -20,6 +21,10 @@ const GlobalHeaderRight: React.FC<{}> = () => {
   if (!initialState || !initialState.settings) {
     return null;
   }
+
+  const IconFont = createFromIconfontCN({
+    scriptUrl: initialState.settings.iconfontUrl,
+  });
 
   const settings = initialState.settings;
   const className = styles.right;
@@ -51,25 +56,15 @@ const GlobalHeaderRight: React.FC<{}> = () => {
               component = 
               <a key={item.key} href={item.href} target={item.target} style={item.style}>
                 <Tooltip title={item.tooltip}>
-                  {item.name}
+                  {item.icon ? <IconFont type={item.icon} /> : null}
                 </Tooltip>
               </a>
             } else {
               component = 
               <Link key={item.key} style={item.style} to={item.href}>
-                {item.name}
+                {item.icon ? <IconFont type={item.icon} /> : null}
               </Link>
             }
-            component = <Tooltip title={item.tooltip}>
-                          <span
-                            onClick={() => {
-                              window.location.href = 'http://www.quarkcms.com/';
-                            }}
-                            style={item.style}
-                          >
-                            <QuestionCircleOutlined />
-                          </span>
-                        </Tooltip>
             break;
 
           default:
