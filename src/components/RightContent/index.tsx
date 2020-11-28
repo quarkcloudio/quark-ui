@@ -1,5 +1,4 @@
 import { Tooltip, Tag, Space } from 'antd';
-import { QuestionCircleOutlined } from '@ant-design/icons';
 import React from 'react';
 import { useModel, SelectLang, Link } from 'umi';
 import Avatar from './AvatarDropdown';
@@ -31,6 +30,7 @@ const GlobalHeaderRight: React.FC<{}> = () => {
 
   // 解析actions
   const parseHeaderActions = (actions:any) => {
+    
     let actionComponent:any = null;
     actionComponent = (
       actions.map((item:any,key:any) => {
@@ -40,28 +40,28 @@ const GlobalHeaderRight: React.FC<{}> = () => {
             // 跳转行为
             if(item.target === '_blank') {
               component = 
-              <a key={item.key} href={item.href} target={item.target} style={item.style}>
-                {item.name}
+              <a key={key} href={item.href} target={item.target} style={item.style}>
+                {item.title}
               </a>
             } else {
               component = 
-              <Link key={item.key} style={item.style} to={item.href}>
-                {item.name}
+              <Link key={key} style={item.style} to={item.href}>
+                {item.title}
               </Link>
             }
             break;
-
+            
           case 'icon':
             if(item.target === '_blank') {
               component = 
-              <a key={item.key} href={item.href} target={item.target} style={item.style}>
+              <a key={key} href={item.href} target={item.target} style={item.style}>
                 <Tooltip title={item.tooltip}>
                   {item.icon ? <IconFont type={item.icon} /> : null}
                 </Tooltip>
               </a>
             } else {
               component = 
-              <Link key={item.key} style={item.style} to={item.href}>
+              <Link key={key} style={item.style} to={item.href}>
                 {item.icon ? <IconFont type={item.icon} /> : null}
               </Link>
             }
@@ -78,7 +78,7 @@ const GlobalHeaderRight: React.FC<{}> = () => {
 
   return (
     <Space className={className}>
-      { parseHeaderActions(settings.headerActions) }
+      { settings.headerActions ? parseHeaderActions(settings.headerActions) : null}
       <Avatar menu={true} />
       {REACT_APP_ENV && (
         <span>
