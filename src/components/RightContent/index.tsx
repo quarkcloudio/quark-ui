@@ -1,7 +1,7 @@
 import { Tooltip, Tag, Space } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import React from 'react';
-import { useModel, SelectLang } from 'umi';
+import { useModel, SelectLang, Link } from 'umi';
 import Avatar from './AvatarDropdown';
 import HeaderSearch from '../HeaderSearch';
 import styles from './index.less';
@@ -47,11 +47,25 @@ const GlobalHeaderRight: React.FC<{}> = () => {
             break;
 
           case 'icon':
+            if(item.target === '_blank') {
+              component = 
+              <a key={item.key} href={item.href} target={item.target} style={item.style}>
+                <Tooltip title={item.tooltip}>
+                  {item.name}
+                </Tooltip>
+              </a>
+            } else {
+              component = 
+              <Link key={item.key} style={item.style} to={item.href}>
+                {item.name}
+              </Link>
+            }
             component = <Tooltip title={item.tooltip}>
                           <span
                             onClick={() => {
                               window.location.href = 'http://www.quarkcms.com/';
                             }}
+                            style={item.style}
                           >
                             <QuestionCircleOutlined />
                           </span>
