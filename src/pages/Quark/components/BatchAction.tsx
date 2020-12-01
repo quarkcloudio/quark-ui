@@ -58,7 +58,6 @@ const BatchAction: React.FC<Action> = (props) => {
         }
         query[pair[0]] = pair[1];
       }
-
       return urls[0]+'?'+stringify(query)
     }
     return url;
@@ -87,16 +86,16 @@ const BatchAction: React.FC<Action> = (props) => {
   const aStyle = (item:any) => {
     let component = null;
     if(item.href) {
-      item.href = replaceQueryVariable(item.href);
+      const href = replaceQueryVariable(item.href);
       // 跳转行为
       if(item.target === '_blank') {
         component = 
-        <a key={item.key} href={item.href} target={item.target} style={item.style}>
+        <a key={item.key} href={href} target={item.target} style={item.style}>
           {item.name}
         </a>
       } else {
         component = 
-        <Link key={item.key} style={item.style} to={item.href}>
+        <Link key={item.key} style={item.style} to={href}>
           {item.name}
         </Link>
       }
@@ -141,7 +140,7 @@ const BatchAction: React.FC<Action> = (props) => {
   const buttonStyle = (item:any) => {
     let component = null;
     if(item.href) {
-      item.href = replaceQueryVariable(item.href);
+      const href = replaceQueryVariable(item.href);
       if(item.target === '_blank') {
         component = 
         <Button
@@ -154,7 +153,7 @@ const BatchAction: React.FC<Action> = (props) => {
           shape={item.shape}
           size={item.size}
           icon={item.icon ? <IconFont type={item.icon} /> : null}
-          href={item.href}
+          href={href}
           target={item.target}
           style={item.style}
         >
@@ -162,7 +161,7 @@ const BatchAction: React.FC<Action> = (props) => {
         </Button>
       } else {
         component = 
-        <Link key={item.key} to={item.href}>
+        <Link key={item.key} to={href}>
           <Button
             key={item.key}
             type={item.type}
