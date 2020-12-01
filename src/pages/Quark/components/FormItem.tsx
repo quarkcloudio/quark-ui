@@ -52,7 +52,6 @@ const FormItem: React.FC<FormItem> = (props:any) => {
   
   //hack
   const [random, setRandom] = useState(0);
-
   const [items, setItems] = useState(props.items);
 
   const onChange = (value:any,name:string) => {
@@ -67,7 +66,8 @@ const FormItem: React.FC<FormItem> = (props:any) => {
       const promises = items.map(async (item:any,key:any) => {
         if(load.field === item.name && load.api) {
           const result = await get({
-            actionUrl: load.api
+            actionUrl: load.api,
+            search: value
           });
 
           item.options = result.data;

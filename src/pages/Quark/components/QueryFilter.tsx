@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ActionType }from '@ant-design/pro-table';
 import { history } from 'umi';
+import { get } from '@/services/action';
 import ProForm, { 
   QueryFilter as ProQueryFilter,
   ProFormText,
@@ -17,6 +18,12 @@ export interface Action {
 }
 
 const QueryFilter: React.FC<Action> = (props) => {
+
+  const [form] = ProForm.useForm();
+  //hack
+  const [random, setRandom] = useState(0);
+  const [items, setItems] = useState(props.search.items);
+
   const onFinish = (values: any) => {
     let query = {};
 
@@ -68,6 +75,30 @@ const QueryFilter: React.FC<Action> = (props) => {
     }
   };
 
+  const onSelectChange = async (value:any, name:string, load:any = null) => {
+    if(load) {
+      const promises = items.map(async (item:any,key:any) => {
+        if(load.field === item.name && load.api) {
+          const result = await get({
+            actionUrl: load.api,
+            search: value
+          });
+
+          item.options = result.data;
+        }
+        return item;
+      });
+      
+      const getItems = await Promise.all(promises);
+      setItems(getItems);
+    }
+
+    let getItem = {};
+    getItem[name] = value;
+    form.setFieldsValue(getItem);
+    setRandom(Math.random);
+  };
+
   const searchComponent = (item:any) => {
     let component = null;
     switch(item.component) {
@@ -109,6 +140,9 @@ const QueryFilter: React.FC<Action> = (props) => {
           options={item.options}
           style={item.style ? item.style : []}
           placeholder={item.placeholder}
+          fieldProps={{
+            onChange:(value)=>{onSelectChange(value,item.name,item.load)}
+          }}
         />
         break;
       case 'multipleSelect':
@@ -193,6 +227,7 @@ const QueryFilter: React.FC<Action> = (props) => {
 
   return (
     <ProQueryFilter
+      form={form}
       onFinish = {async (values) => { onFinish(values) }}
       onReset = {async () => { onReset() }}
       labelAlign = {props.search.labelAlign}
@@ -206,9 +241,9 @@ const QueryFilter: React.FC<Action> = (props) => {
       style={{padding:'30px 30px 0px 0px'}}
     >
       {
-        props.search.items.map((item: any, key: any) => {
+        items.length >0 ? items.map((item: any, key: any) => {
           return searchComponent(item);
-        })
+        }) : null
       }
     </ProQueryFilter>
   );
