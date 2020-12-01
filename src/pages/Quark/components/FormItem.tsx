@@ -166,7 +166,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
                 maxLength={item.maxLength}
                 autoSize={item.autoSize}
                 onChange={(e)=>{onChange(e.target.value,item.name)}}
-                onPressEnter={(e) => {
+                onKeyPress={(e) => {
                   e.stopPropagation();
                 }}
               />
