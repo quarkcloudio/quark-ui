@@ -52,6 +52,49 @@ const TabForm: React.FC<Form> = (props:any) => {
     }
   };
 
+  const formButtonRender = (form: any) => {
+    if(form.disabledResetButton === true && form.disabledSubmitButton === true) {
+      return null;
+    }
+
+    if(form.disabledResetButton) {
+      return (
+      <Form.Item wrapperCol={props.form.buttonWrapperCol}>
+        <Space>
+          <Button type="primary" htmlType="submit">
+            {form.submitButtonText}
+          </Button>
+        </Space>
+      </Form.Item>
+      );
+    }
+
+    if(form.disabledSubmitButton) {
+      return (
+      <Form.Item wrapperCol={props.form.buttonWrapperCol}>
+        <Space>
+          <Button onClick={()=>form.resetFields()}>
+            {form.resetButtonText}
+          </Button>
+        </Space>
+      </Form.Item>
+      );
+    }
+    
+    return (
+      <Form.Item wrapperCol={props.form.buttonWrapperCol}>
+        <Space>
+          <Button onClick={()=>form.resetFields()}>
+          {form.resetButtonText}
+          </Button>
+          <Button type="primary" htmlType="submit">
+            {form.submitButtonText}
+          </Button>
+        </Space>
+      </Form.Item>
+    );
+  };
+
   return (
     <Form
       form={form}
@@ -86,16 +129,7 @@ const TabForm: React.FC<Form> = (props:any) => {
           return (
             <ProCard.TabPane key={(index + 1).toString()} tab={tab.title}>
               <FormItem key={props.form.key + 'formItem' + (index + 1).toString()} form={form} items={tab.items} />
-              <Form.Item wrapperCol={props.form.buttonWrapperCol}>
-               <Space>
-                  <Button onClick={()=>form.resetFields()}>
-                    重置
-                  </Button>
-                  <Button type="primary" htmlType="submit">
-                    提交
-                  </Button>
-                </Space>
-              </Form.Item>
+              {formButtonRender(props.form)}
             </ProCard.TabPane>
           );
         })}

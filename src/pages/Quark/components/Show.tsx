@@ -12,7 +12,13 @@ const Show: React.FC<any> = (props:any) => {
         let component = item.value;
 
         if(item.image) {
-          component = <img src={component} width={item.image.width} height={item.image.height} />
+          if(typeof component === 'object') {
+            component = (component.map((componentItem:any,key:any) => {
+              return <img src={componentItem} width={item.image.width} height={item.image.height} />
+            }));
+          } else {
+            component = <img src={component} width={item.image.width} height={item.image.height} />
+          }
         }
 
         if(item.link) {

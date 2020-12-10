@@ -77,7 +77,31 @@ const Form: React.FC<Form> = (props:any) => {
           wrapperCol={props.form.wrapperCol}
           dateFormatter={props.form.dateFormatter}
           submitter={{
+            searchConfig: {
+              resetText: props.form.resetButtonText,
+              submitText: props.form.submitButtonText,
+            },
             render: (proFormProps:any, doms:any) => {
+              if(props.form.disabledResetButton === true && props.form.disabledSubmitButton === true) {
+                return null;
+              }
+
+              if(props.form.disabledResetButton) {
+                return (
+                  <AntForm.Item wrapperCol={props.form.buttonWrapperCol}>
+                    <Space>{doms[1]}</Space>
+                  </AntForm.Item>
+                );
+              }
+
+              if(props.form.disabledSubmitButton) {
+                return (
+                  <AntForm.Item wrapperCol={props.form.buttonWrapperCol}>
+                    <Space>{doms[0]}</Space>
+                  </AntForm.Item>
+                );
+              }
+              
               return (
                 <AntForm.Item wrapperCol={props.form.buttonWrapperCol}>
                   <Space>{doms}</Space>
@@ -108,7 +132,31 @@ const Form: React.FC<Form> = (props:any) => {
         wrapperCol={props.form.wrapperCol}
         dateFormatter={props.form.dateFormatter}
         submitter={{
+          searchConfig: {
+            resetText: props.form.resetButtonText,
+            submitText: props.form.submitButtonText,
+          },
           render: (proFormProps:any, doms:any) => {
+            if(props.form.disabledResetButton === true && props.form.disabledSubmitButton === true) {
+              return null;
+            }
+
+            if(props.form.disabledResetButton) {
+              return (
+                <AntForm.Item wrapperCol={props.form.buttonWrapperCol}>
+                  <Space>{doms[1]}</Space>
+                </AntForm.Item>
+              );
+            }
+
+            if(props.form.disabledSubmitButton) {
+              return (
+                <AntForm.Item wrapperCol={props.form.buttonWrapperCol}>
+                  <Space>{doms[0]}</Space>
+                </AntForm.Item>
+              );
+            }
+            
             return (
               <AntForm.Item wrapperCol={props.form.buttonWrapperCol}>
                 <Space>{doms}</Space>

@@ -6,7 +6,8 @@ import {
   Form,
   Button,
   message,
-  Drawer
+  Drawer,
+  Space
 } from 'antd';
 import { createFromIconfontCN } from '@ant-design/icons';
 import FormItem from './FormItem';
@@ -115,6 +116,32 @@ const DrawerForm: React.FC<any> = (props:any) => {
       break;
   }
 
+  const formButtonRender = (formComponent: any) => {
+    if(formComponent.disabledSubmitButton === true) {
+      return null;
+    }
+    
+    return (
+      <Space>
+        <Button onClick={()=>setVisible(false)}>
+          取消
+        </Button>
+        <Button
+          onClick={() => {
+            form.validateFields().then((values:any) => {
+                onFinish(values);
+              }).catch((info:any) => {
+                console.log('Validate Failed:', info);
+              });
+          }}
+          type="primary"
+        >
+          {formComponent.submitButtonText}
+        </Button>
+      </Space>
+    );
+  };
+
   const onFinish = async (values: any) => {
     const result = await post({
       actionUrl: formComponent.api,
@@ -151,21 +178,7 @@ const DrawerForm: React.FC<any> = (props:any) => {
               textAlign: 'right',
             }}
           >
-            <Button onClick={()=>setVisible(false)} style={{ marginRight: 8 }}>
-              取消
-            </Button>
-            <Button
-              onClick={() => {
-                form.validateFields().then(values => {
-                    onFinish(values);
-                  }).catch(info => {
-                    console.log('Validate Failed:', info);
-                  });
-              }}
-              type="primary"
-            >
-              提交
-            </Button>
+            {formButtonRender(formComponent)}
           </div>
         }
       >
