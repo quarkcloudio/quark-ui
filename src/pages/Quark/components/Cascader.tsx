@@ -46,6 +46,8 @@ const Cascader: React.FC<Search> = ({ api=null, size=undefined, value=null, plac
     }, 300);
   };
 
+  let getSelectOptions = selectOptions || options;
+
   if(api) {
     return (
       <AntCascader
@@ -56,7 +58,7 @@ const Cascader: React.FC<Search> = ({ api=null, size=undefined, value=null, plac
         allowClear={allowClear}
         onChange={onSelectChange}
         value={value}
-        options={selectOptions}
+        options={getSelectOptions}
         changeOnSelect
       />
     );
@@ -69,7 +71,7 @@ const Cascader: React.FC<Search> = ({ api=null, size=undefined, value=null, plac
         allowClear={allowClear}
         onChange={onSelectChange}
         value={value}
-        options={selectOptions}
+        options={getSelectOptions}
       />
     );
   }
