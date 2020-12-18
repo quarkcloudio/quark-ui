@@ -27,18 +27,49 @@ const Table: React.FC<Table> = (props:any) => {
 
     if(column.link) {
       if(text.target === '_blank') {
-        columnComponent = <a style={column.style} href={text.href} target={text.target}>{text.title}</a>
+        if(column.isHtml) {
+          columnComponent = 
+          <a
+            style={column.style}
+            href={text.href}
+            target={text.target}
+            dangerouslySetInnerHTML={{__html:text.title}}
+          />
+        } else {
+          columnComponent = 
+          <a
+            style={column.style}
+            href={text.href}
+            target={text.target}
+          >
+            {text.title}
+          </a>
+        }
       } else {
-        columnComponent =
-        <Link
-          to={text.href}
-          style={column.style}
-        >
-          {text.title}
-        </Link>
+        if(column.isHtml) {
+          columnComponent =
+          <Link
+            to={text.href}
+            style={column.style}
+          >
+            <span dangerouslySetInnerHTML={{__html:text.title}}/>
+          </Link>
+        } else {
+          columnComponent =
+          <Link
+            to={text.href}
+            style={column.style}
+          >
+            {text.title}
+          </Link>
+        }
       }
     } else {
-      columnComponent = <span style={column.style}>{text}</span>;
+      if(column.isHtml) {
+        columnComponent = <span style={column.style} dangerouslySetInnerHTML={{__html:text}} />;
+      } else {
+        columnComponent = <span style={column.style}>{text}</span>;
+      }
     }
 
     if(column.image) {
