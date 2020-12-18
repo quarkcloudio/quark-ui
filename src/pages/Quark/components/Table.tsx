@@ -27,17 +27,18 @@ const Table: React.FC<Table> = (props:any) => {
 
     if(column.link) {
       if(text.target === '_blank') {
-        columnComponent = <a href={text.href} target={text.target}>{text.title}</a>
+        columnComponent = <a style={column.style} href={text.href} target={text.target}>{text.title}</a>
       } else {
         columnComponent =
         <Link
           to={text.href}
+          style={column.style}
         >
           {text.title}
         </Link>
       }
     } else {
-      columnComponent = text;
+      columnComponent = <span style={column.style}>{text}</span>;
     }
 
     if(column.image) {
