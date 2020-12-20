@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
-import { Select } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Select, Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 import { get } from '@/services/action';
+
+const antIcon = <LoadingOutlined style={{ fontSize: 14 }} spin />;
 
 export interface Search {
   api?:any;
@@ -16,7 +19,22 @@ export interface Search {
 
 const Search: React.FC<Search> = ({ api=null, mode=undefined, size=undefined, value=null, placeholder=null, style=[], options=[],allowClear=false, onChange }) => {
   const [selectOptions, setSelectOptions] = useState(undefined);
-  
+  const [loading, setLoading] = useState(false);
+
+  let  getSelectOptions = selectOptions||options;
+
+  useEffect(() => {
+    if(value && getSelectOptions.length == 0) {
+      setLoading(true);
+      onInputSearch(value,'value');
+    } else if(value && getSelectOptions.length > 0) {
+      if(getSelectOptions.indexOf(value) == -1) {
+        setLoading(true);
+        onInputSearch(value,'value');
+      }
+    }
+  }, [value]);
+
   const triggerChange = (changedValue:any) => {
     if (onChange) {
       onChange(changedValue);
@@ -27,7 +45,7 @@ const Search: React.FC<Search> = ({ api=null, mode=undefined, size=undefined, va
     triggerChange(value);
   };
 
-  const onInputSearch = (value: any) => {
+  const onInputSearch = (value: any, type='label') => {
     let timeout: any = null;
 
     if (value) {
@@ -40,37 +58,39 @@ const Search: React.FC<Search> = ({ api=null, mode=undefined, size=undefined, va
         const result = await get({
           actionUrl: api,
           search: value,
+          type: type
         });
         setSelectOptions(result.data)
+        setLoading(false);
       }, 300);
     }
   };
 
-  let  getSelectOptions = selectOptions||options;
-
   return (
-    <Select
-      showSearch
-      defaultActiveFirstOption={false}
-      mode={mode}
-      size={size}
-      filterOption={false}
-      onSearch={(value: any) => onInputSearch(value)}
-      placeholder={placeholder}
-      style={style}
-      allowClear={allowClear}
-      onChange={onSelectChange}
-      value={value}
-    >
-      {!!getSelectOptions &&
-        getSelectOptions.map((option: any) => {
-          return (
-            <Select.Option key={option.value} value={option.value}>
-              {option.label}
-            </Select.Option>
-          );
-        })}
-    </Select>
+    <Spin size="small" indicator={antIcon} style={style} spinning={loading}>
+      <Select
+        showSearch
+        defaultActiveFirstOption={false}
+        mode={mode}
+        size={size}
+        filterOption={false}
+        onSearch={(value: any) => onInputSearch(value)}
+        placeholder={placeholder}
+        style={style}
+        allowClear={allowClear}
+        onChange={onSelectChange}
+        value={value}
+      >
+        {!!getSelectOptions &&
+          getSelectOptions.map((option: any) => {
+            return (
+              <Select.Option key={option.value} value={option.value}>
+                {option.label}
+              </Select.Option>
+            );
+          })}
+      </Select>
+    </Spin>
   );
 }
 
