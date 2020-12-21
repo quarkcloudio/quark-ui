@@ -11,6 +11,9 @@ import ProForm, {
   ProFormDateTimeRangePicker,
   ProFormSelect
 } from '@ant-design/pro-form';
+import { 
+  Input,Form
+} from 'antd';
 
 export interface Action {
   search: any;
@@ -202,20 +205,21 @@ const QueryFilter: React.FC<Action> = (props) => {
 
       case 'inputGroup':
         component = 
-        <ProForm.Group title={item.label}>
-          <ProFormSelect
-            key={item.name+'_start'}
-            name={item.name+'_start'}
-            options={item.options}
-            style={{ width : (item.style.width[0] ? item.style.width[0] : null)}}
-          />
-          <ProFormText
-            key={item.name+'_end'}
-            name={item.name+'_end'}
-            style={{ width : (item.style.width[1] ? item.style.width[1] : null)}}
-            placeholder={item.placeholder}
-          />
-        </ProForm.Group>
+          <Form.Item label={item.label} labelAlign={props.search.labelAlign}>
+            <Input.Group compact>
+              <ProFormSelect
+                key={item.name+'_start'}
+                name={item.name+'_start'}
+                options={item.options}
+              />
+              <ProFormText
+                key={item.name+'_end'}
+                name={item.name+'_end'}
+                placeholder={item.placeholder}
+              />
+            </Input.Group>
+          </Form.Item>
+        ;
         break;
 
       default:
