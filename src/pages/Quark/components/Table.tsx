@@ -161,7 +161,7 @@ const Table: React.FC<Table> = (props:any) => {
     });
 
     const table = findComponent(result.data,key);
-    return table.datasource;
+    return table;
   }
 
   return (
@@ -199,7 +199,7 @@ const Table: React.FC<Table> = (props:any) => {
         options={props.table.options}
         search={false}
         request={async (params:any, sorter:any, filter:any) => {
-          let query = {},datasource = null;
+          let query = {},table = null;
           query = history.location.query;
 
           query['page'] = params.current;
@@ -216,14 +216,17 @@ const Table: React.FC<Table> = (props:any) => {
 
           history.push({ pathname: history.location.pathname, query: query });
 
-          datasource = await getTableDatasource(props.table.key);
+          table = await getTableDatasource(props.table.key);
 
           return Promise.resolve({
-            data: datasource,
+            data: table.datasource,
+            total: table.pagination.total,
             success: true,
           });
         }}
-        pagination={props.table.pagination}
+        pagination={{
+          pageSize: props.table.pagination.pageSize,
+        }}
         dateFormatter={props.table.dateFormatter}
         columnEmptyText={props.table.columnEmptyText}
         toolbar={{
