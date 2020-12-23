@@ -233,6 +233,7 @@ const Table: React.FC<Table> = (props:any) => {
           multipleLine: false,
           actions: props.table.toolbar.actions.length > 0 ? [<ToolBarAction key={props.table.toolbar.key} actions={props.table.toolbar.actions} current={actionRef.current} />] : undefined,
         }}
+        scroll={props.table.scroll}
       />
     </>
   );
