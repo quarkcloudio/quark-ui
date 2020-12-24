@@ -11,7 +11,8 @@ import {
   Popconfirm,
   Dropdown,
   Menu,
-  Space
+  Space,
+  message
 } from 'antd';
 import { ExclamationCircleOutlined, DownOutlined, createFromIconfontCN } from '@ant-design/icons';
 
@@ -74,6 +75,8 @@ const BatchAction: React.FC<Action> = (props) => {
       if (props.current) {
         props.current.reload();
       }
+    } else {
+      message.error(result.msg);
     }
   }
 

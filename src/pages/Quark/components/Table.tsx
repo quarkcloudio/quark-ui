@@ -226,6 +226,8 @@ const Table: React.FC<Table> = (props:any) => {
         }}
         pagination={{
           pageSize: props.table.pagination.pageSize,
+          current: props.table.pagination.current,
+          defaultCurrent: props.table.pagination.defaultCurrent
         }}
         dateFormatter={props.table.dateFormatter}
         columnEmptyText={props.table.columnEmptyText}
