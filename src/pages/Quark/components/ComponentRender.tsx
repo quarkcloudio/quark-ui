@@ -25,17 +25,37 @@ const ComponentRender: React.FC<any> = (props:any) => {
     getComponent();
   }, [history.location.query.api]);
 
+  // Container返回按钮跳转方法
+  const onBack = (backButton:string|boolean) => {
+    if(backButton === true) {
+      history.go(-1);
+    } else {
+      history.push(backButton);
+    }
+  }
+
   const parseComponent = (content:any) => {
     let component = null;
     switch (content.component) {
       case 'container':
-        component =
+        if(content.backButton) {
+          component =
+          <PageContainer
+            title={content.title}
+            subTitle={content.subTitle}
+            onBack={() => onBack(content.backButton)}
+          >
+            {componentRender(content.content)}
+          </PageContainer>
+        } else {
+          component =
           <PageContainer
             title={content.title}
             subTitle={content.subTitle}
           >
             {componentRender(content.content)}
           </PageContainer>
+        }
         break;
       case 'card':
         component =
