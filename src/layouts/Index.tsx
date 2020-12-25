@@ -12,13 +12,26 @@ const Index: React.FC<{}> = (props) => {
   const quarkMenus = initialState.quarkMenus;
   const settings = initialState.settings;
   const [title, setTitle] = useState<string>('QuarkCMS');
-  const [menuOpenKeys, setMenuOpenKeys] = useState([quarkMenus?quarkMenus[0]['key']:null]);
-  const [menuSelectedKeys, setMenuSelectedKeys] = useState([quarkMenus?quarkMenus[0]['children'][0]['key']:null]);
+  const [menuOpenKeys, setMenuOpenKeys] = useState([null]);
+  const [menuSelectedKeys, setMenuSelectedKeys] = useState([null]);
 
   useEffect(() => {
     if(quarkMenus) {
-      const title = getMenuName(quarkMenus, window.location.href);
+      const title = getMenuName(quarkMenus, decodeURIComponent(window.location.href));
       setTitle(title);
+      const menuSelectedKey = getMenuKey(quarkMenus, decodeURIComponent(window.location.href));
+      if(menuSelectedKey) {
+        const menuOpenKey1 = getParentMenuKey(quarkMenus,menuSelectedKey, decodeURIComponent(window.location.href));
+        if(menuOpenKey1) {
+          menuOpenKeys.push(menuOpenKey1);
+          const menuOpenKey2 = getParentMenuKey(quarkMenus,menuOpenKey1, decodeURIComponent(window.location.href));
+          if(menuOpenKey2) {
+            menuOpenKeys.push(menuOpenKey2);
+          }
+        }
+        setMenuOpenKeys(menuOpenKeys);
+        setMenuSelectedKeys([menuSelectedKey]);
+      }
     }
   }, [api]);
 
@@ -36,6 +49,36 @@ const Index: React.FC<{}> = (props) => {
       }
     });
     return menuName;
+  };
+
+  const getMenuKey = (menus: any, path: string) => {
+    let menuKey:any = '';
+    menus.map((item: any) => {
+      if (path.indexOf(item.path) != -1 && item.path.split('/').length >= 3) {
+        menuKey = item.key
+      } else {
+        if (item.hasOwnProperty('children')) {
+          if (getMenuKey(item.children, path)) {
+            menuKey = getMenuKey(item.children, path);
+          }
+        }
+      }
+    });
+    return menuKey;
+  };
+
+  const getParentMenuKey = (menus: any, key: string, path: string) => {
+    let parentMenuKey:any = '';
+    menus.map((item: any) => {
+      if (item.hasOwnProperty('children')) {
+        if (getMenuKey(item.children, path)) {
+          if(key === getMenuKey(item.children, path)) {
+            parentMenuKey = item.key;
+          }
+        }
+      }
+    });
+    return parentMenuKey;
   };
 
   const getMenuPath = (menus: any, key: string) => {
@@ -76,7 +119,6 @@ const Index: React.FC<{}> = (props) => {
         logo={settings.logo ? settings.logo : logo}
         contentStyle={settings.contentStyle}
         layout={settings.layout}
-        headerTheme={settings.headerTheme}
         contentWidth={settings.contentWidth}
         navTheme={settings.navTheme}
         primaryColor={settings.primaryColor}
