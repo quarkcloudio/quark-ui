@@ -55,9 +55,12 @@ const Show: React.FC<any> = (props:any) => {
         layout={props.show.layout}
         colon={props.show.colon}
         extra={
-          <Button type="link" onClick={e => {history.go(-1);}}>
-            返回上一页
-          </Button>
+          props.show.backButton ? 
+            <Button type="link" onClick={e => {history.go(-1);}}>
+              返回上一页
+            </Button>
+          :
+            null
         }
       >
         {itemRender(props.show.items)}
