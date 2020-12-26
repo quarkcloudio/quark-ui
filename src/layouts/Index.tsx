@@ -5,6 +5,10 @@ import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import logo from '@/assets/logo.png';
 
+import {
+  Spin,
+} from 'antd';
+
 const Index: React.FC<{}> = (props) => {
   const api = history.location.query.api;
   const { initialState } = useModel('@@initialState');
@@ -13,7 +17,7 @@ const Index: React.FC<{}> = (props) => {
   const settings = initialState.settings;
   const [title, setTitle] = useState<string>('QuarkCMS');
   const [menuOpenKeys, setMenuOpenKeys] = useState([]);
-  const [menuSelectedKeys, setMenuSelectedKeys] = useState([]);
+  const [menuSelectedKeys, setMenuSelectedKeys] = useState([null]);
 
   var menuTreeList:any = [];
 
@@ -32,21 +36,16 @@ const Index: React.FC<{}> = (props) => {
 
   useEffect(() => {
     if(quarkMenus) {
-
       // 获取当前选中菜单的名称
       const title = getMenuName(quarkMenus, decodeURIComponent(window.location.href));
-
       // 设置页面标题
       setTitle(title);
-
       // 获取当前选中的菜单
       const menuSelectedKey = getMenuKey(quarkMenus, decodeURIComponent(window.location.href));
-
       // 获取当前展开的菜单
       getMenuOpenKeys(menuSelectedKey);
-
       // 设置选中菜单
-      setMenuSelectedKeys(menuSelectedKey);
+      setMenuSelectedKeys([menuSelectedKey]);
     }
   }, [api]);
 
@@ -154,47 +153,63 @@ const Index: React.FC<{}> = (props) => {
     setMenuOpenKeys(openKeys);
   };
 
+  if (!accountInfo?.id && location.pathname !== '/user/login') {
+    history.push('/user/login');
+  }
+
   return (
     <>
       <Helmet>
         <meta charSet="utf-8" />
         <title>{title ? title : 'QuarkCMS'}</title>
       </Helmet>
-      <ProLayout
-        title={settings.title ? settings.title : 'QuarkCMS'}
-        logo={settings.logo ? settings.logo : logo}
-        contentStyle={settings.contentStyle}
-        layout={settings.layout}
-        contentWidth={settings.contentWidth}
-        navTheme={settings.navTheme}
-        primaryColor={settings.primaryColor}
-        fixedHeader={settings.fixedHeader}
-        fixSiderbar={settings.fixSiderbar}
-        iconfontUrl={settings.iconfontUrl}
-        locale={settings.locale}
-        siderWidth={settings.siderWidth}
-        splitMenus={settings.splitMenus}
-        disableContentMargin={false}
-        rightContentRender={() => <RightContent/>}
-        menuDataRender= {() => quarkMenus}
-        footerRender= {() => <Footer />}
-        onPageChange= {() => {
-          const { location } = history;
-          // 如果没有登录，重定向到 login
-          if (!accountInfo?.id && location.pathname !== '/user/login') {
-            history.push('/user/login');
-          }
-        }}
-        menuHeaderRender={ undefined }
-        menuProps={{
-          onOpenChange: onMenuOpenChange,
-          onClick: onMenuClick,
-        }}
-        openKeys={menuOpenKeys}
-        selectedKeys={menuSelectedKeys}
-      >
-        { props.children }
-      </ProLayout>
+      {!accountInfo?.id && location.pathname !== '/user/login' ?
+        <Spin size="large">
+          <div style={{
+            display: 'flex',
+            height: '100vh',
+            overflow: 'auto'
+          }}>
+
+          </div>
+        </Spin>
+      :
+        <ProLayout
+          title={settings.title ? settings.title : 'QuarkCMS'}
+          logo={settings.logo ? settings.logo : logo}
+          contentStyle={settings.contentStyle}
+          layout={settings.layout}
+          contentWidth={settings.contentWidth}
+          navTheme={settings.navTheme}
+          primaryColor={settings.primaryColor}
+          fixedHeader={settings.fixedHeader}
+          fixSiderbar={settings.fixSiderbar}
+          iconfontUrl={settings.iconfontUrl}
+          locale={settings.locale}
+          siderWidth={settings.siderWidth}
+          splitMenus={settings.splitMenus}
+          disableContentMargin={false}
+          rightContentRender={() => <RightContent/>}
+          menuDataRender= {() => quarkMenus}
+          footerRender= {() => <Footer />}
+          onPageChange= {() => {
+            const { location } = history;
+            // 如果没有登录，重定向到 login
+            if (!accountInfo?.id && location.pathname !== '/user/login') {
+              history.push('/user/login');
+            }
+          }}
+          menuHeaderRender={ undefined }
+          menuProps={{
+            onOpenChange: onMenuOpenChange,
+            onClick: onMenuClick,
+          }}
+          openKeys={menuOpenKeys}
+          selectedKeys={menuSelectedKeys}
+        >
+          { props.children }
+        </ProLayout>
+      }
     </>
   );
 }
