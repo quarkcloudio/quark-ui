@@ -12,42 +12,43 @@ const Index: React.FC<{}> = (props) => {
   const quarkMenus = initialState.quarkMenus;
   const settings = initialState.settings;
   const [title, setTitle] = useState<string>('QuarkCMS');
-  const [menuOpenKeys, setMenuOpenKeys] = useState([null]);
-  const [menuSelectedKeys, setMenuSelectedKeys] = useState([null]);
+  const [menuOpenKeys, setMenuOpenKeys] = useState([]);
+  const [menuSelectedKeys, setMenuSelectedKeys] = useState([]);
+
+  var menuTreeList:any = [];
+
+  const menuTreeToList = (menus: any) => {
+    menus.map((item: any) => {
+      menuTreeList.push(item);
+      if (item.hasOwnProperty('children')) {
+        menuTreeToList(item.children);
+      }
+    });
+  };
+
+  if(quarkMenus) {
+    menuTreeToList(quarkMenus);
+  }
 
   useEffect(() => {
     if(quarkMenus) {
+
+      // 获取当前选中菜单的名称
       const title = getMenuName(quarkMenus, decodeURIComponent(window.location.href));
+
+      // 设置页面标题
       setTitle(title);
+
+      // 获取当前选中的菜单
       const menuSelectedKey = getMenuKey(quarkMenus, decodeURIComponent(window.location.href));
-      if(menuSelectedKey) {
-        const menuOpenKey1 = getParentMenuKey(quarkMenus,menuSelectedKey, decodeURIComponent(window.location.href));
-        if(menuOpenKey1) {
-          if(!hasOpenKey(menuOpenKey1)) {
-            menuOpenKeys.push(menuOpenKey1);
-          }
-          const menuOpenKey2 = getParentMenuKey(quarkMenus,menuOpenKey1, decodeURIComponent(window.location.href));
-          if(menuOpenKey2) {
-            if(!hasOpenKey(menuOpenKey2)) {
-              menuOpenKeys.push(menuOpenKey2);
-            }
-          }
-        }
-        setMenuOpenKeys(menuOpenKeys);
-        setMenuSelectedKeys([menuSelectedKey]);
-      }
+
+      // 获取当前展开的菜单
+      getMenuOpenKeys(menuSelectedKey);
+
+      // 设置选中菜单
+      setMenuSelectedKeys(menuSelectedKey);
     }
   }, [api]);
-
-  const hasOpenKey = (key: any) => {
-    let result = false;
-    menuOpenKeys.map((item: any) => {
-      if(item == key) {
-        result = true;
-      }
-    });
-    return result;
-  };
 
   const getMenuName = (menus: any, path: string) => {
     let menuName = '';
@@ -81,18 +82,49 @@ const Index: React.FC<{}> = (props) => {
     return menuKey;
   };
 
-  const getParentMenuKey = (menus: any, key: string, path: string) => {
-    let parentMenuKey:any = '';
-    menus.map((item: any) => {
-      if (item.hasOwnProperty('children')) {
-        if (getMenuKey(item.children, path)) {
-          if(key === getMenuKey(item.children, path)) {
-            parentMenuKey = item.key;
-          }
-        }
+  // 获取当前展开的菜单
+  const getMenuOpenKeys = (key: string) => {
+    let menuRow = getMenuWithKey(key);
+    let menuKey = getParentMenuKey(menuRow['pid']);
+    if(menuKey) {
+      if(!hasOpenKey(menuKey)) {
+        menuOpenKeys.push(menuKey);
+        setMenuOpenKeys(menuOpenKeys);
+      }
+      getMenuOpenKeys(menuKey);
+    }
+  };
+
+  // 根据key获取菜单行
+  const getMenuWithKey = (key: string) => {
+    let row:any = '';
+    menuTreeList.map((item: any) => {
+      if (item.key == key) {
+        row = item
       }
     });
-    return parentMenuKey;
+    return row;
+  };
+
+  // 根据pid获取父亲菜单的key
+  const getParentMenuKey = (pid: string) => {
+    let menuKey:string = '';
+    menuTreeList.map((item: any) => {
+      if (item.id == pid) {
+        menuKey = item.key
+      }
+    });
+    return menuKey;
+  };
+
+  const hasOpenKey = (key: any) => {
+    let isHas = false;
+    menuOpenKeys.map((item: any) => {
+      if(item == key) {
+        isHas = true;
+      }
+    });
+    return isHas;
   };
 
   const getMenuPath = (menus: any, key: string) => {
