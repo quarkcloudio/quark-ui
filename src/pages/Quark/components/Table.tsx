@@ -12,6 +12,7 @@ import { QrcodeOutlined } from '@ant-design/icons';
 import BatchAction from './BatchAction';
 import ToolBarAction from './ToolBarAction';
 import { EditableRow, EditableCell } from './Editable';
+import styles from './Table.less'
 
 export interface Table {
   key: number;
@@ -236,6 +237,15 @@ const Table: React.FC<Table> = (props:any) => {
           actions: props.table.toolbar.actions.length > 0 ? [<ToolBarAction key={props.table.toolbar.key} actions={props.table.toolbar.actions} current={actionRef.current} />] : undefined,
         }}
         scroll={props.table.scroll}
+        rowClassName={(record, index)=> {
+          if(props.table.striped) {
+            if(index%2 != 0) {
+              return styles.oddTr;
+            } 
+          } else {
+            return null;
+          }
+        }}
       />
     </>
   );
