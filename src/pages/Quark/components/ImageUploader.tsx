@@ -8,14 +8,26 @@ export interface ImageUploader {
   limitType: [];
   limitSize: number;
   limitNum: number;
+  limitWH: {
+    width:null,
+    height:null
+  };
   mode: string;
   value?: any;
   onChange?:(value: any) => void;
 }
 
-const ImageUploader: React.FC<ImageUploader> = ({ title, action, limitType, limitSize, limitNum, mode, value = null, onChange }) => {
+const ImageUploader: React.FC<ImageUploader> = ({ title, action, limitType, limitSize, limitNum, limitWH, mode, value = null, onChange }) => {
   const [getFileList, setGetFileList] = useState(undefined);
   
+  if(limitWH.width && limitWH.height) {
+    action = action+'?limitW='+limitWH.width+'&limitH='+limitWH.height;
+  } else if(limitWH.width) {
+    action = action+'?limitW='+limitWH.width;
+  } else if(limitWH.height) {
+    action = action+'?limitH='+limitWH.height;
+  }
+
   const triggerChange = (changedValue:any) => {
     if (onChange) {
       onChange({...value, ...changedValue });

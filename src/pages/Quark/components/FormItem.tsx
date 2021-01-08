@@ -294,6 +294,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
                 limitType={item.limitType}
                 limitSize={item.limitSize}
                 limitNum={item.limitNum}
+                limitWH={item.limitWH}
                 action={item.api}
               />
             </Form.Item>;
