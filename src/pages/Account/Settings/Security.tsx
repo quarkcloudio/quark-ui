@@ -130,4 +130,11 @@ class SecurityPage extends Component<IProps> {
   }
 }
 
-export default (SecurityPage);
+function mapStateToProps(state:any) {
+  const { submitting } = state.request;
+  return {
+    submitting
+  };
+}
+
+export default connect(mapStateToProps)(SecurityPage);
