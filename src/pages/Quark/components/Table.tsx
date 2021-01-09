@@ -78,7 +78,7 @@ const Table: React.FC<Table> = (props:any) => {
     }
 
     if(column.qrcode) {
-      let img:any = <img src={columnComponent} width={column.qrcode.width} height={column.qrcode.height} />;
+      let img:any = <img src={text} width={column.qrcode.width} height={column.qrcode.height} />;
       columnComponent =
       <Popover placement="left" content={img}>
         <QrcodeOutlined style={{cursor:'pointer',fontSize:'18px'}} />
