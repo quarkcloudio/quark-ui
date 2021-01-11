@@ -82,29 +82,23 @@ const Form: React.FC<Form> = (props:any) => {
               submitText: props.form.submitButtonText,
             },
             render: (proFormProps:any, doms:any) => {
-              if(props.form.disabledResetButton === true && props.form.disabledSubmitButton === true) {
+              if(props.form.disabledResetButton === true && props.form.disabledSubmitButton === true && props.form.disabledBackButton === true) {
                 return null;
               }
 
-              if(props.form.disabledResetButton) {
-                return (
-                  <AntForm.Item wrapperCol={props.form.buttonWrapperCol}>
-                    <Space>{doms[1]}</Space>
-                  </AntForm.Item>
-                );
-              }
-
-              if(props.form.disabledSubmitButton) {
-                return (
-                  <AntForm.Item wrapperCol={props.form.buttonWrapperCol}>
-                    <Space>{doms[0]}</Space>
-                  </AntForm.Item>
-                );
-              }
-              
               return (
                 <AntForm.Item wrapperCol={props.form.buttonWrapperCol}>
-                  <Space>{doms}</Space>
+                  <Space>
+                    {!props.form.disabledResetButton ? 
+                        doms[0]
+                      : null}
+                    {!props.form.disabledSubmitButton ? 
+                        doms[1]
+                      : null}
+                    {!props.form.disabledBackButton ? 
+                        <Button onClick={e => history.go(-1)}>{props.form.backButtonText}</Button>
+                      : null}
+                  </Space>
                 </AntForm.Item>
               );
             },
@@ -137,29 +131,23 @@ const Form: React.FC<Form> = (props:any) => {
             submitText: props.form.submitButtonText,
           },
           render: (proFormProps:any, doms:any) => {
-            if(props.form.disabledResetButton === true && props.form.disabledSubmitButton === true) {
+            if(props.form.disabledResetButton === true && props.form.disabledSubmitButton === true && props.form.disabledBackButton === true) {
               return null;
             }
 
-            if(props.form.disabledResetButton) {
-              return (
-                <AntForm.Item wrapperCol={props.form.buttonWrapperCol}>
-                  <Space>{doms[1]}</Space>
-                </AntForm.Item>
-              );
-            }
-
-            if(props.form.disabledSubmitButton) {
-              return (
-                <AntForm.Item wrapperCol={props.form.buttonWrapperCol}>
-                  <Space>{doms[0]}</Space>
-                </AntForm.Item>
-              );
-            }
-            
             return (
               <AntForm.Item wrapperCol={props.form.buttonWrapperCol}>
-                <Space>{doms}</Space>
+                <Space>
+                  {!props.form.disabledResetButton ? 
+                      doms[0]
+                    : null}
+                  {!props.form.disabledSubmitButton ? 
+                      doms[1]
+                    : null}
+                  {!props.form.disabledBackButton ? 
+                      <Button onClick={e => history.go(-1)}>{props.form.backButtonText}</Button>
+                    : null}
+                </Space>
               </AntForm.Item>
             );
           },

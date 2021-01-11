@@ -53,43 +53,26 @@ const TabForm: React.FC<Form> = (props:any) => {
   };
 
   const formButtonRender = (form: any) => {
-    if(form.disabledResetButton === true && form.disabledSubmitButton === true) {
+    if(form.disabledResetButton === true && form.disabledSubmitButton === true && form.disabledBackButton === true) {
       return null;
     }
 
-    if(form.disabledResetButton) {
-      return (
-      <Form.Item wrapperCol={props.form.buttonWrapperCol}>
-        <Space>
-          <Button type="primary" htmlType="submit">
-            {form.submitButtonText}
-          </Button>
-        </Space>
-      </Form.Item>
-      );
-    }
-
-    if(form.disabledSubmitButton) {
-      return (
-      <Form.Item wrapperCol={props.form.buttonWrapperCol}>
-        <Space>
-          <Button onClick={()=>form.resetFields()}>
-            {form.resetButtonText}
-          </Button>
-        </Space>
-      </Form.Item>
-      );
-    }
-    
     return (
       <Form.Item wrapperCol={props.form.buttonWrapperCol}>
         <Space>
-          <Button onClick={()=>form.resetFields()}>
-          {form.resetButtonText}
-          </Button>
-          <Button type="primary" htmlType="submit">
-            {form.submitButtonText}
-          </Button>
+          {!form.disabledResetButton ? 
+              <Button onClick={()=>form.resetFields()}>
+                {form.resetButtonText}
+              </Button>
+            : null}
+          {!form.disabledSubmitButton ? 
+              <Button type="primary" htmlType="submit">
+                {form.submitButtonText}
+              </Button>
+            : null}
+          {!form.disabledBackButton ? 
+              <Button onClick={e => history.go(-1)}>{form.backButtonText}</Button>
+            : null}
         </Space>
       </Form.Item>
     );
