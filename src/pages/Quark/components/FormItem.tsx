@@ -35,6 +35,7 @@ import ImageUploader from './ImageUploader';
 import FileUploader from './FileUploader';
 import Search from './Search';
 import Map from './Map';
+import Geofence from './Geofence';
 import Editor from './Editor';
 import Cascader from './Cascader';
 
@@ -615,6 +616,24 @@ const FormItem: React.FC<FormItem> = (props:any) => {
               extra={item.extra}
             >
               <Map
+                zoom={item.zoom}
+                mapKey={item.mapKey}
+                style={item.style}
+              />
+            </Form.Item>;
+            break;
+          case 'geofence':
+            component = 
+            <Form.Item
+              key={item.key}
+              label={item.label}
+              name={field ? [field.name, item.name] : item.name}
+              fieldKey={field ? [field.fieldKey, item.name] : item.name}
+              rules={item.frontendRules}
+              help={item.help ? item.help : undefined}
+              extra={item.extra}
+            >
+              <Geofence
                 zoom={item.zoom}
                 mapKey={item.mapKey}
                 style={item.style}
