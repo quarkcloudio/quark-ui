@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { history } from 'umi';
 import { get } from '@/services/action';
 import Render from '@/components/Render';
-import { PageContainer } from '@ant-design/pro-layout';
 
 const Page: React.FC<any> = (props:any) => {
 
@@ -25,9 +24,9 @@ const Page: React.FC<any> = (props:any) => {
   };
 
   return (
-    <PageContainer {...props}>
-      <Render body={props.body} data={data} />
-    </PageContainer>
+    <div style={props?.style}>
+      <Render body={props.body} data={data ? data : props.data} />
+    </div>
   );
 }
 

@@ -1,17 +1,28 @@
 import React from 'react';
 import Page from '@/components/Layout/Page';
 import Container from '@/components/Layout/Container';
+import PageContainer from '@/components/Layout/PageContainer';
+import Layout from '@/components/Layout';
+import Login from '@/components/Login';
+import { parseTemplate } from '@/utils/template';
 
 const Render: React.FC<any> = (props:any) => {
 
   // 渲染组件
-  const renderComponents = (body:any) => {
+  const componentRender = () => {
 
-    if(body === null || body === undefined) {
+    if(props.body === null || props.body === undefined) {
       return null;
     }
 
-    if(typeof body === 'string' || typeof body === 'number') {
+    if(typeof props.body === 'string' || typeof props.body === 'number') {
+      let body = props.body;
+      if(props.hasOwnProperty('data')) {
+
+        // 解析数据
+        body = parseTemplate(props.body,props.data);
+      }
+
       return body;
     }
 
@@ -19,18 +30,29 @@ const Render: React.FC<any> = (props:any) => {
     const components:any = [
       {
         key: 'page',
-        component: <Page {...body} />
+        component: <Page {...props.body} />
+      },
+      {
+        key: 'layout',
+        component: <Layout {...props.body} data={props.data} />
       },
       {
         key: 'container',
-        component: <Container {...body} />
+        component: <Container {...props.body} data={props.data} />
+      },
+      {
+        key: 'pageContainer',
+        component: <PageContainer {...props.body} data={props.data} />
+      },
+      {
+        key: 'login',
+        component: <Login {...props.body} data={props.data} />
       }
     ]
 
     let component:any = null;
-
-    components.map((item:any,key:any) => {
-      if(item.key === body.type) {
+    components.map((item:any) => {
+      if(item.key === props.body.type) {
         component = item.component;
       }
     });
@@ -39,7 +61,7 @@ const Render: React.FC<any> = (props:any) => {
   }
 
   return (
-    renderComponents(props.body)
+    componentRender()
   );
 }
 

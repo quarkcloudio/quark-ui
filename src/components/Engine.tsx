@@ -6,24 +6,17 @@ import Render from '@/components/Render';
 const Engine: React.FC<any> = (props:any) => {
 
   const [components, setComponentsState] = useState(null);
+  const query:any = history.location.query;
 
   useEffect(() => {
-    onSetComponentsState(props.api)
-  }, [props.api]);
+    onSetComponentsState()
+  }, [query.api]);
 
-  const onSetComponentsState = async (api:string) => {
-
-    // url参数
-    const query:any = history.location.query;
-
-    // 当前接口
-    const actionUrl = api ? api : query.api;
-
+  const onSetComponentsState = async () => {
     const result = await get({
-      actionUrl: actionUrl,
+      actionUrl: query.api,
       ...history.location.query
     });
-
     setComponentsState(result);
   };
 

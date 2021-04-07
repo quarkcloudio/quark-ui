@@ -8,7 +8,7 @@ import {
 const Index: React.FC<{}> = () => {
   return (
     <ConfigProvider locale={zhCN}>
-      <Engine api='layout/container' />
+      <Engine />
     </ConfigProvider>
   );
 }
