@@ -5,19 +5,24 @@ import Render from '@/components/Render';
 
 const Engine: React.FC<any> = (props:any) => {
 
-  const [components, setComponentsState] = useState(null);
+  const [components, setComponentsState] = useState('');
   const query:any = history.location.query;
+  const api = query.api ? query.api : props.initApi;
 
   useEffect(() => {
     onSetComponentsState()
-  }, [query.api]);
+  }, [api]);
 
   const onSetComponentsState = async () => {
-    const result = await get({
-      actionUrl: query.api,
-      ...history.location.query
-    });
-    setComponentsState(result);
+    if(api) {
+      const result = await get({
+        actionUrl: api,
+        ...history.location.query
+      });
+      setComponentsState(result);
+    } else {
+      setComponentsState('请配置初始接口！');
+    }
   };
 
   return (

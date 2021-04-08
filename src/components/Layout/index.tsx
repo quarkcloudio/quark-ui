@@ -1,12 +1,174 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { history, Helmet } from 'umi';
 import Render from '@/components/Render';
 import ProLayout from '@ant-design/pro-layout';
 
 const Layout: React.FC<any> = (props:any) => {
+
+  const query:any = history.location.query;
+  const [title, setTitle] = useState<string>(props.title);
+  const [menuOpenKeys, setMenuOpenKeys] = useState<any>([]);
+  const [menuSelectedKeys, setMenuSelectedKeys] = useState([null]);
+
+  var menuTreeList:any = [];
+
+  const menuTreeToList = (menus: any,pkey: any = 0) => {
+    menus.map((item: any) => {
+      item['pkey'] = pkey
+      menuTreeList.push(item);
+      if (item.hasOwnProperty('children')) {
+        menuTreeToList(item.children,item.key);
+      }
+    });
+  };
+
+  if(props.menu) {
+    menuTreeToList(props.menu);
+  }
+
+  useEffect(() => {
+    if(props.menu) {
+
+      // 获取当前选中菜单的名称
+      const title = getMenuName(props.menu, decodeURIComponent(query.api));
+
+      // 设置页面标题
+      setTitle(title);
+
+      // 获取当前选中的菜单
+      const menuSelectedKey = getMenuKey(props.menu, decodeURIComponent(query.api));
+
+      // 获取当前展开的菜单
+      getMenuOpenKeys(menuSelectedKey);
+
+      // 设置选中菜单
+      setMenuSelectedKeys([menuSelectedKey]);
+    }
+  }, [query.api]);
+
+  const getMenuName = (menus: any, path: string) => {
+    let menuName = '';
+    menus.map((item: any) => {
+      if (item.path.indexOf(path) != -1) {
+        menuName = item.name;
+      } else {
+        if (item.hasOwnProperty('children')) {
+          if (getMenuName(item.children, path)) {
+            menuName = getMenuName(item.children, path);
+          }
+        }
+      }
+    });
+    return menuName;
+  };
+
+  const getMenuKey = (menus: any, path: string) => {
+    let menuKey:any = '';
+    menus.map((item: any) => {
+      if (item.path.indexOf(path) != -1) {
+        menuKey = item.key
+      } else {
+        if (item.hasOwnProperty('children')) {
+          if (getMenuKey(item.children, path)) {
+            menuKey = getMenuKey(item.children, path);
+          }
+        }
+      }
+    });
+    return menuKey;
+  };
+
+  // 获取当前展开的菜单
+  const getMenuOpenKeys = (key: string) => {
+    let menuRow = getMenuWithKey(key);
+    let menuKey = getParentMenuKey(menuRow['pkey']);
+    if(menuKey) {
+      if(!hasOpenKey(menuKey)) {
+        menuOpenKeys.push(menuKey);
+        setMenuOpenKeys(menuOpenKeys);
+      }
+      getMenuOpenKeys(menuKey);
+    }
+  };
+
+  // 根据key获取菜单行
+  const getMenuWithKey = (key: string) => {
+    let row:any = '';
+    menuTreeList.map((item: any) => {
+      if (item.key == key) {
+        row = item
+      }
+    });
+    return row;
+  };
+
+  // 根据pkey获取父亲菜单的key
+  const getParentMenuKey = (pkey: string) => {
+    let menuKey:string = '';
+    menuTreeList.map((item: any) => {
+      if (item.key == pkey) {
+        menuKey = item.key
+      }
+    });
+    return menuKey;
+  };
+
+  const hasOpenKey = (key: any) => {
+    let isHas = false;
+    menuOpenKeys.map((item: any) => {
+      if(item == key) {
+        isHas = true;
+      }
+    });
+    return isHas;
+  };
+
+  const getMenuPath = (menus: any, key: string) => {
+    let menuPath = '';
+    menus.map((item: any) => {
+      if (key == item.key) {
+        menuPath = item.path;
+      } else {
+        if (item.hasOwnProperty('children')) {
+          if (getMenuPath(item.children, key)) {
+            menuPath = getMenuPath(item.children, key);
+          }
+        }
+      }
+    });
+    return menuPath;
+  };
+
+  const onMenuClick = (event: any) => {
+    let menuSelectedKeys = [];
+    menuSelectedKeys.push(event.key);
+    setMenuSelectedKeys(menuSelectedKeys);
+    history.push(getMenuPath(props.menu, event.key));
+  };
+
+  const onMenuOpenChange = (openKeys: any) => {
+    setMenuOpenKeys(openKeys);
+  };
+
   return (
-    <ProLayout {...props}>
-      <Render body={props.body} data={props.data} />
-    </ProLayout>
+    <>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>{title}</title>
+      </Helmet>
+      <ProLayout
+        {...props}
+        menuDataRender= {() => props.menu}
+        openKeys={menuOpenKeys}
+        selectedKeys={menuSelectedKeys}
+        menuProps={{
+          onOpenChange: onMenuOpenChange,
+          onClick: onMenuClick,
+        }}
+      >
+        <Render body={props.body} data={props.data} />
+      </ProLayout>
+    </>
   );
 }
 
