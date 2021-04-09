@@ -39,16 +39,15 @@ import Geofence from './Geofence';
 import Editor from './Editor';
 import Cascader from './Cascader';
 
-export interface FormItem {
+export interface Item {
   key?:any;
   items: any;
   form?:any;
 }
 
-const FormItem: React.FC<FormItem> = (props:any) => {
-  const { initialState } = useModel('@@initialState');
+const Item: React.FC<Item> = (props:any) => {
   const IconFont = createFromIconfontCN({
-    scriptUrl: initialState.settings.iconfontUrl,
+    scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js',
   });
   
   //hack
@@ -91,12 +90,11 @@ const FormItem: React.FC<FormItem> = (props:any) => {
     const formItemComponent = (
       items.map((item:any,key:any) => {
         let component:any = null;
-        switch (item.component) {
+        switch (item.type) {
           case 'text':
-            if(item.type === 'text') {
               component = 
               <Form.Item
-                key={item.key}
+                key={item.name}
                 name={field ? [field.name, item.name] : item.name}
                 fieldKey={field ? [field.fieldKey, item.name] : item.name}
                 label={item.label}
@@ -118,39 +116,37 @@ const FormItem: React.FC<FormItem> = (props:any) => {
                   onChange={(e)=>{onChange(e.target.value,item.name)}}
                 />
               </Form.Item>;
-            }
-
-            if(item.type === 'password') {
-              component = 
-              <Form.Item
-                key={item.key}
-                name={field ? [field.name, item.name] : item.name}
-                fieldKey={field ? [field.fieldKey, item.name] : item.name}
-                label={item.label}
-                tooltip={item.tooltip}
-                rules={item.frontendRules}
-                extra={item.extra}
-                help={item.help ? item.help : undefined}
-              >
-                <Input.Password
-                  placeholder={item.placeholder}
-                  style={item.style ? item.style : []}
-                  width={item.width}
-                  disabled={item.disabled}
-                  allowClear={item.allowClear}
-                  maxLength={item.maxLength}
-                  addonAfter={item.addonAfter}
-                  addonBefore={item.addonBefore}
-                  size={item.size}
-                  onChange={(e)=>{onChange(e.target.value,item.name)}}
-                />
-              </Form.Item>;
-            }
+            break;
+          case 'password':
+            component = 
+            <Form.Item
+              key={item.name}
+              name={field ? [field.name, item.name] : item.name}
+              fieldKey={field ? [field.fieldKey, item.name] : item.name}
+              label={item.label}
+              tooltip={item.tooltip}
+              rules={item.frontendRules}
+              extra={item.extra}
+              help={item.help ? item.help : undefined}
+            >
+              <Input.Password
+                placeholder={item.placeholder}
+                style={item.style ? item.style : []}
+                width={item.width}
+                disabled={item.disabled}
+                allowClear={item.allowClear}
+                maxLength={item.maxLength}
+                addonAfter={item.addonAfter}
+                addonBefore={item.addonBefore}
+                size={item.size}
+                onChange={(e)=>{onChange(e.target.value,item.name)}}
+              />
+            </Form.Item>;
             break;
           case 'textArea':
             component = 
             <Form.Item
-              key={item.key}
+              key={item.name}
               name={field ? [field.name, item.name] : item.name}
               fieldKey={field ? [field.fieldKey, item.name] : item.name}
               label={item.label}
@@ -176,7 +172,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
           case 'inputNumber':
             component = 
             <Form.Item
-              key={item.key}
+              key={item.name}
               name={field ? [field.name, item.name] : item.name}
               fieldKey={field ? [field.fieldKey, item.name] : item.name}
               label={item.label}
@@ -227,9 +223,9 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             break;
           case 'hidden':
             component = 
-            <span key={item.key} style={{display:'none'}}>
+            <span key={item.name} style={{display:'none'}}>
               <ProFormText
-                key={item.key}
+                key={item.name}
                 name={field ? [field.name, item.name] : item.name}
                 fieldKey={field ? [field.fieldKey, item.name] : item.name}
               />
@@ -238,7 +234,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
           case 'checkbox':
             component = 
             <Form.Item
-              key={item.key}
+              key={item.name}
               name={field ? [field.name, item.name] : item.name}
               fieldKey={field ? [field.fieldKey, item.name] : item.name}
               label={item.label}
@@ -258,7 +254,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
           case 'radio':
             component = 
             <Form.Item
-              key={item.key}
+              key={item.name}
               name={field ? [field.name, item.name] : item.name}
               fieldKey={field ? [field.fieldKey, item.name] : item.name}
               label={item.label}
@@ -278,7 +274,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
           case 'image':
             component = 
             <Form.Item
-              key={item.key}
+              key={item.name}
               label={item.label}
               name={field ? [field.name, item.name] : item.name}
               fieldKey={field ? [field.fieldKey, item.name] : item.name}
@@ -289,7 +285,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
               extra={item.extra}
             >
               <ImageUploader
-                key={item.key}
+                key={item.name}
                 mode={item.mode}
                 title={item.button}
                 limitType={item.limitType}
@@ -303,7 +299,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
           case 'file':
             component =
             <Form.Item
-              key={item.key}
+              key={item.name}
               label={item.label}
               name={field ? [field.name, item.name] : item.name}
               fieldKey={field ? [field.fieldKey, item.name] : item.name}
@@ -314,7 +310,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
               extra={item.extra}
             >
               <FileUploader
-                key={item.key}
+                key={item.name}
                 title={item.button}
                 limitType={item.limitType}
                 limitSize={item.limitSize}
@@ -326,7 +322,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
           case 'switch':
             component = 
             <Form.Item
-              key={item.key}
+              key={item.name}
               name={field ? [field.name, item.name] : item.name}
               fieldKey={field ? [field.fieldKey, item.name] : item.name}
               label={item.label}
@@ -348,7 +344,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
           case 'select':
             component = 
             <Form.Item
-              key={item.key}
+              key={item.name}
               name={field ? [field.name, item.name] : item.name}
               fieldKey={field ? [field.fieldKey, item.name] : item.name}
               label={item.label}
@@ -372,7 +368,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
           case 'tree':
             component = 
             <Form.Item
-              key={item.key}
+              key={item.name}
               label={item.label}
               name={field ? [field.name, item.name] : item.name}
               fieldKey={field ? [field.fieldKey, item.name] : item.name}
@@ -392,7 +388,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
           case 'cascader':
             component = 
             <Form.Item
-              key={item.key}
+              key={item.name}
               label={item.label}
               name={field ? [field.name, item.name] : item.name}
               fieldKey={field ? [field.fieldKey, item.name] : item.name}
@@ -412,7 +408,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
           case 'date':
             component = 
             <ProFormDatePicker
-              key={item.key}
+              key={item.name}
               label={item.label}
               name={field ? [field.name, item.name] : item.name}
               fieldKey={field ? [field.fieldKey, item.name] : item.name}
@@ -429,7 +425,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
           case 'datetime':
             component = 
             <ProFormDateTimePicker
-              key={item.key}
+              key={item.name}
               label={item.label}
               name={field ? [field.name, item.name] : item.name}
               fieldKey={field ? [field.fieldKey, item.name] : item.name}
@@ -446,7 +442,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
           case 'dateRange':
             component = 
             <ProFormDateRangePicker
-              key={item.key}
+              key={item.name}
               label={item.label}
               name={field ? [field.name, item.name] : item.name}
               fieldKey={field ? [field.fieldKey, item.name] : item.name}
@@ -463,7 +459,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
           case 'datetimeRange':
             component = 
             <ProFormDateTimeRangePicker
-              key={item.key}
+              key={item.name}
               label={item.label}
               name={field ? [field.name, item.name] : item.name}
               fieldKey={field ? [field.fieldKey, item.name] : item.name}
@@ -480,7 +476,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
           case 'time':
             component = 
             <Form.Item
-              key={item.key}
+              key={item.name}
               label={item.label}
               name={field ? [field.name, item.name] : item.name}
               fieldKey={field ? [field.fieldKey, item.name] : item.name}
@@ -498,7 +494,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
           case 'timeRange':
             component = 
             <Form.Item
-              key={item.key}
+              key={item.name}
               label={item.label}
               name={field ? [field.name, item.name] : item.name}
               fieldKey={field ? [field.fieldKey, item.name] : item.name}
@@ -524,7 +520,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
           case 'editor':
             component = 
             <Form.Item
-              key={item.key}
+              key={item.name}
               label={item.label}
               name={field ? [field.name, item.name] : item.name}
               fieldKey={field ? [field.fieldKey, item.name] : item.name}
@@ -533,7 +529,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
               extra={item.extra}
             >
               <Editor
-                key={item.key}
+                key={item.name}
                 height={item?.style?.height}
                 width={item?.style?.width}
               />
@@ -585,7 +581,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
           case 'search':
             component = 
             <Form.Item
-              key={item.key}
+              key={item.name}
               label={item.label}
               name={field ? [field.name, item.name] : item.name}
               fieldKey={field ? [field.fieldKey, item.name] : item.name}
@@ -607,7 +603,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
           case 'map':
             component = 
             <Form.Item
-              key={item.key}
+              key={item.name}
               label={item.label}
               name={field ? [field.name, item.name] : item.name}
               fieldKey={field ? [field.fieldKey, item.name] : item.name}
@@ -625,7 +621,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
           case 'geofence':
             component = 
             <Form.Item
-              key={item.key}
+              key={item.name}
               label={item.label}
               name={field ? [field.name, item.name] : item.name}
               fieldKey={field ? [field.fieldKey, item.name] : item.name}
@@ -650,7 +646,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
               help={item.help ? item.help : undefined}
               extra={item.extra}
             >
-              <span key={item.key}>
+              <span key={item.name}>
                 无{item.component}组件
               </span>
             </Form.Item>;
@@ -715,8 +711,8 @@ const FormItem: React.FC<FormItem> = (props:any) => {
   }
 
   return (
-    items.length > 0 ? formItemRender(items) : null
+    items?.length > 0 ? formItemRender(items) : null
   );
 }
 
-export default FormItem;
+export default Item;

@@ -10,7 +10,7 @@ import {
   Space
 } from 'antd';
 import { createFromIconfontCN } from '@ant-design/icons';
-import FormItem from './FormItem';
+import Item from './Item';
 
 const DrawerForm: React.FC<any> = (props:any) => {
   const [form] = Form.useForm();
@@ -197,7 +197,7 @@ const DrawerForm: React.FC<any> = (props:any) => {
           labelCol={formComponent.labelCol}
           wrapperCol={formComponent.wrapperCol}
         >
-          <FormItem form={form} items={formComponent.items} />
+          <Item form={form} items={formComponent.items} />
         </Form>
       </Drawer>
     </>

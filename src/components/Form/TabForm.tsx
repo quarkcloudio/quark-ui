@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import ProCard from '@ant-design/pro-card';
-import FormItem from './FormItem';
+import Item from './Item';
 import { history } from 'umi';
 import { post } from '@/services/action';
 import moment from 'moment';
@@ -111,7 +111,7 @@ const TabForm: React.FC<Form> = (props:any) => {
         {props.form.tab.map((tab: any, index: any) => {
           return (
             <ProCard.TabPane key={(index + 1).toString()} tab={tab.title}>
-              <FormItem key={props.form.key + 'formItem' + (index + 1).toString()} form={form} items={tab.items} />
+              <Item key={props.form.key + 'Item' + (index + 1).toString()} form={form} items={tab.items} />
               {formButtonRender(props.form)}
             </ProCard.TabPane>
           );

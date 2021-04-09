@@ -21,20 +21,24 @@
   },
   "dependencies": {
     "@ant-design/pro-card": "^1.11.4",
+    "@ant-design/pro-form": "^1.20.0",
     "@ant-design/pro-layout": "^6.5.0",
+    "@tinymce/tinymce-react": "^3.12.2",
     "@umijs/preset-react": "1.x",
+    "react-amap": "^1.2.8",
+    "react-amap-plugin-autocomplete": "^0.0.4",
     "umi": "^3.4.7"
   },
   "devDependencies": {
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@umijs/test": "^3.4.7",
+    "husky": "^4.3.0",
     "lint-staged": "^10.0.7",
     "prettier": "^2.2.0",
     "react": "17.x",
     "react-dom": "17.x",
     "typescript": "^4.1.2",
-    "yorkie": "^2.0.0",
-    "husky": "^4.3.0"
+    "yorkie": "^2.0.0"
   }
 }

@@ -37,6 +37,7 @@ export default {
         },
         body: {
             type: "layout",
+            cache: true,
             title: 'QuarkCMS',
             iconfontUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js',
             defaultCollapsed: true,
@@ -48,34 +49,62 @@ export default {
                     icon: 'icon-home',
                     children: [
                         {
-                            key: '2',
+                            key: '1-1',
                             path: '/index?api=app/dashboard/index',
                             name: '主页',
                         },
                     ],
                 },
                 {
-                    key: '3',
-                    path: '/page',
-                    name: '页面',
+                    key: '2',
+                    path: '/layout',
+                    name: '布局',
                     icon: 'icon-page',
                     children: [
                         {
-                            key: '4',
-                            path: '/index?api=app/page/index',
-                            name: '简单页面',
+                            key: '2-1',
+                            path: '/index?api=layout/page',
+                            name: '初始页面',
+                        },
+                        {
+                            key: '2-2',
+                            path: '/index?api=layout/container',
+                            name: '容器',
+                        },
+                        {
+                            key: '2-3',
+                            path: '/index?api=layout/index',
+                            name: '高级布局',
                         },
                     ],
                 },
                 {
-                    key: '5',
+                    key: '3',
+                    path: '/card',
+                    name: '卡片',
+                    icon: 'icon-creditcard',
+                    children: [
+                        {
+                            key: '3-1',
+                            path: '/index?api=card/index',
+                            name: '基础卡片',
+                        },
+                        {
+                            key: '3-2',
+                            path: '/index?api=card/grid',
+                            name: '栅格布局',
+                        },
+                    ],
+                },
+                {
+                    key: '4',
                     path: '/form',
                     name: '表单',
                     icon: 'icon-plugin',
                     children: [
                         {
-                            key: '6',
-                            path: '/index?api=app/form/index',
+                            key: '4-1',
+                            path: '/index?api=form/index',
                             name: '简单表单',
                         },
                     ],
@@ -83,68 +112,8 @@ export default {
             ],
             body: {
                 type: "pageContainer",
-                title: '标题',
+                title: '仪表盘',
                 body: "这个是仪表盘实例"
-            }
-        }
-    },
-
-    // 仪表盘实例
-    'GET /api/app/page/index': {
-        type: "page",
-        style: {
-            height: '100vh',
-        },
-        body: {
-            type: "layout",
-            title: 'QuarkCMS',
-            iconfontUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js',
-            defaultCollapsed: true,
-            menu: [
-                {
-                    key: '1',
-                    path: '/dashboard',
-                    name: '控制台',
-                    icon: 'icon-home',
-                    children: [
-                        {
-                            key: '2',
-                            path: '/index?api=app/dashboard/index',
-                            name: '主页',
-                        },
-                    ],
-                },
-                {
-                    key: '3',
-                    path: '/page',
-                    name: '页面',
-                    icon: 'icon-page',
-                    children: [
-                        {
-                            key: '4',
-                            path: '/index?api=app/page/index',
-                            name: '简单页面',
-                        },
-                    ],
-                },
-                {
-                    key: '5',
-                    path: '/form',
-                    name: '表单',
-                    icon: 'icon-plugin',
-                    children: [
-                        {
-                            key: '6',
-                            path: '/index?api=app/form/index',
-                            name: '简单表单',
-                        },
-                    ],
-                },
-            ],
-            body: {
-                type: "pageContainer",
-                title: '标题',
-                body: "这个是页面实例"
             }
         }
     },

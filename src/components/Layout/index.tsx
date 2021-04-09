@@ -5,6 +5,18 @@ import ProLayout from '@ant-design/pro-layout';
 
 const Layout: React.FC<any> = (props:any) => {
 
+  const body = props.body;
+
+  if(props.cache) {
+    const layout = sessionStorage.getItem('layout');
+    if(!layout) {
+      // 记录布局
+      sessionStorage.setItem('layout', JSON.stringify(props));
+    } else {
+      props = JSON.parse(layout);
+    }
+  }
+
   const query:any = history.location.query;
   const [title, setTitle] = useState<string>(props.title);
   const [menuOpenKeys, setMenuOpenKeys] = useState<any>([]);
@@ -158,6 +170,7 @@ const Layout: React.FC<any> = (props:any) => {
       </Helmet>
       <ProLayout
         {...props}
+        iconfontUrl={props.iconfontUrl ? props.iconfontUrl : '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js'}
         menuDataRender= {() => props.menu}
         openKeys={menuOpenKeys}
         selectedKeys={menuSelectedKeys}
@@ -166,7 +179,7 @@ const Layout: React.FC<any> = (props:any) => {
           onClick: onMenuClick,
         }}
       >
-        <Render body={props.body} data={props.data} />
+        <Render body={body} data={props.data} />
       </ProLayout>
     </>
   );
