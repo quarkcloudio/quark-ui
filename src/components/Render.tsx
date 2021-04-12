@@ -2,8 +2,10 @@ import React from 'react';
 import Page from '@/components/Layout/Page';
 import Container from '@/components/Layout/Container';
 import PageContainer from '@/components/Layout/PageContainer';
-import Card from '@/components/Layout/Card';
 import Layout from '@/components/Layout';
+import Card from '@/components/Layout/Card';
+import Row from '@/components/Layout/Row';
+import Col from '@/components/Layout/Col';
 import Login from '@/components/Login';
 import Form from '@/components/Form/Form';
 import { parseTemplate } from '@/utils/template';
@@ -32,6 +34,14 @@ const Render: React.FC<any> = (props:any) => {
       {
         key: 'card',
         component: <Card {...body} data={data} />
+      },
+      {
+        key: 'row',
+        component: <Row {...body} data={data} />
+      },
+      {
+        key: 'col',
+        component: <Col {...body} data={data} />
       },
       {
         key: 'form',

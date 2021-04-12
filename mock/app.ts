@@ -98,14 +98,37 @@ export default {
                 },
                 {
                     key: '4',
+                    path: '/grid',
+                    name: '栅格',
+                    icon: 'icon-block',
+                    children: [
+                        {
+                            key: '4-1',
+                            path: '/index?api=grid/index',
+                            name: '基础栅格',
+                        },
+                        {
+                            key: '4-2',
+                            path: '/index?api=grid/gutter',
+                            name: '区块间隔',
+                        },
+                        {
+                            key: '4-3',
+                            path: '/index?api=grid/offset',
+                            name: '左右偏移',
+                        },
+                    ],
+                },
+                {
+                    key: '5',
                     path: '/form',
                     name: '表单',
                     icon: 'icon-plugin',
                     children: [
                         {
-                            key: '4-1',
+                            key: '5-1',
                             path: '/index?api=form/index',
-                            name: '简单表单',
+                            name: '基础表单',
                         },
                     ],
                 },
