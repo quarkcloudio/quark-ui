@@ -13,7 +13,6 @@ const Descriptions: React.FC<any> = (props:any) => {
     const itemComponent = (
       items.map((item:any) => {
         let component = item.value;
-
         switch (item.type) {
           case "image":
             if(typeof component === 'object') {
@@ -37,7 +36,6 @@ const Descriptions: React.FC<any> = (props:any) => {
           default:
             break;
         }
-
         return <ProDescriptions.Item key={item.key} label={item.label}>{component}</ProDescriptions.Item>;
       })
     )
