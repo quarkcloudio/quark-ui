@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@ant-design/pro-card": "^1.11.4",
+    "@ant-design/pro-descriptions": "^1.6.12",
     "@ant-design/pro-form": "^1.20.0",
     "@ant-design/pro-layout": "^6.5.0",
     "@tinymce/tinymce-react": "^3.12.2",

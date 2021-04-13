@@ -66,6 +66,9 @@ export default {
                     {
                         type: "card",
                         title: "24栅格",
+                        style:{
+                            marginTop:8
+                        },
                         gutter: 8,
                         body: [
                             {

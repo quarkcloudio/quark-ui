@@ -3,11 +3,13 @@ import Page from '@/components/Layout/Page';
 import Container from '@/components/Layout/Container';
 import PageContainer from '@/components/Layout/PageContainer';
 import Layout from '@/components/Layout';
-import Card from '@/components/Layout/Card';
 import Row from '@/components/Layout/Row';
 import Col from '@/components/Layout/Col';
-import Login from '@/components/Login';
+import ProCard from '@ant-design/pro-card';
 import Form from '@/components/Form/Form';
+import Statistic from '@/components/Display/Statistic';
+import Descriptions from '@/components/Display/Descriptions';
+import Login from '@/components/Login';
 import { parseTemplate } from '@/utils/template';
 
 const Render: React.FC<any> = (props:any) => {
@@ -33,7 +35,7 @@ const Render: React.FC<any> = (props:any) => {
       },
       {
         key: 'card',
-        component: <Card {...body} data={data} />
+        component: <ProCard {...body} data={data} >{ componentRender(body.body,data) }</ProCard>
       },
       {
         key: 'row',
@@ -42,6 +44,14 @@ const Render: React.FC<any> = (props:any) => {
       {
         key: 'col',
         component: <Col {...body} data={data} />
+      },
+      {
+        key: 'statistic',
+        component: <Statistic {...body} data={data} />
+      },
+      {
+        key: 'descriptions',
+        component: <Descriptions {...body} data={data} />
       },
       {
         key: 'form',
@@ -55,32 +65,31 @@ const Render: React.FC<any> = (props:any) => {
   }
 
   // 渲染组件
-  const componentRender = () => {
+  const componentRender = (body:any,data:any) => {
 
-    if(props.body === null || props.body === undefined) {
+    if(body === null || body === undefined) {
       return null;
     }
 
-    if(typeof props.body === 'string' || typeof props.body === 'number') {
-      let body = props.body;
+    if(typeof body === 'string' || typeof body === 'number') {
       if(props.hasOwnProperty('data')) {
         // 解析数据
-        body = parseTemplate(props.body,props.data);
+        body = parseTemplate(body, data);
       }
       return body;
     }
 
     let component:any = null;
-    if(props.body.hasOwnProperty('type')) {
-      registerComponent(props.body,props.data).map((item:any) => {
-        if(item.key === props.body.type) {
+    if(body.hasOwnProperty('type')) {
+      registerComponent(body,data).map((item:any) => {
+        if(item.key === body.type) {
           component = item.component;
         }
       });
     } else {
       component = (
-        props.body.map((item:any) => {
-          return registerComponent(item,props.data).map((componentItem:any) => {
+        body.map((item:any) => {
+          return registerComponent(item,data).map((componentItem:any) => {
             if(componentItem.key === item.type) {
               return componentItem.component;
             }
@@ -93,7 +102,7 @@ const Render: React.FC<any> = (props:any) => {
   }
 
   return (
-    componentRender()
+    componentRender(props.body,props.data)
   );
 }
 

@@ -136,7 +136,175 @@ export default {
             body: {
                 type: "pageContainer",
                 title: '仪表盘',
-                body: "这个是仪表盘实例"
+                body:[
+                    {
+                        type: "row",
+                        gutter: 8,
+                        body: [
+                            {
+                                type: "col",
+                                span: 6,
+                                body: {
+                                    type: "statistic",
+                                    statistic: {
+                                        title:'管理员数',
+                                        valueStyle:{
+                                            color:'#3f8600'
+                                        },
+                                        value:10086
+                                    }
+                                }
+                            },
+                            {
+                                type: "col",
+                                span: 6,
+                                body: {
+                                    type: "statistic",
+                                    statistic: {
+                                        title:'日志数量',
+                                        valueStyle:{
+                                            color:'#999999'
+                                        },
+                                        value:10010
+                                    }
+                                }
+                            },
+                            {
+                                type: "col",
+                                span: 6,
+                                body: {
+                                    type: "statistic",
+                                    statistic: {
+                                        title:'图片数量',
+                                        valueStyle:{
+                                            color:'#cf1322'
+                                        },
+                                        value:100
+                                    }
+                                }
+                            },
+                            {
+                                type: "col",
+                                span: 6,
+                                body: {
+                                    type: "statistic",
+                                    statistic: {
+                                        title:'文件数量',
+                                        valueStyle:{
+                                            color:'#cf1322'
+                                        },
+                                        value:1008
+                                    }
+                                }
+                            },
+                        ]
+                    },
+                    {
+                        type: "row",
+                        style: {
+                            marginTop: '8px'
+                        },
+                        gutter: 8,
+                        body: [
+                            {
+                                type: "col",
+                                span: 12,
+                                body: {
+                                    type: "card",
+                                    body: {
+                                        type: "descriptions",
+                                        title: "系统信息",
+                                        column: 1,
+                                        items: [
+                                            {
+                                                type: "text",
+                                                label: "系统版本",
+                                                value: "v1.1.7"
+                                            },
+                                            {
+                                                type: "text",
+                                                label: "服务器操作系统",
+                                                value: "windows"
+                                            },
+                                            {
+                                                type: "text",
+                                                label: "Laravel版本",
+                                                value: "7.30.3"
+                                            },
+                                            {
+                                                type: "text",
+                                                label: "运行环境",
+                                                value: "Apache/2.4.39 (Win64) OpenSSL/1.1.1b mod_fcgid/2.3"
+                                            },
+                                            {
+                                                type: "text",
+                                                label: "MYSQL版本",
+                                                value: "5.5.62"
+                                            },
+                                            {
+                                                type: "text",
+                                                label: "上传限制",
+                                                value: "100M"
+                                            },
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                type: "col",
+                                span: 12,
+                                body: {
+                                    type: "card",
+                                    body: {
+                                        type: "descriptions",
+                                        title: "团队信息",
+                                        column: 1,
+                                        items: [
+                                            {
+                                                type: "text",
+                                                label: "作者",
+                                                value: "tangtanglove"
+                                            },
+                                            {
+                                                type: "text",
+                                                label: "联系方式",
+                                                value: "dai_hang_love@126.com"
+                                            },
+                                            {
+                                                type: "link",
+                                                label: "官方网址",
+                                                value: "www.quarkcms.com",
+                                                target: '_blank',
+                                                href: 'https://www.quarkcms.com'
+                                            },
+                                            {
+                                                type: "link",
+                                                label: "文档地址",
+                                                value: "查看文档",
+                                                target: '_blank',
+                                                href: 'https://www.quarkcms.com'
+                                            },
+                                            {
+                                                type: "link",
+                                                label: "BUG反馈",
+                                                value: "提交漏洞",
+                                                target: '_blank',
+                                                href: 'https://github.com/quarkcms/quark-admin/issues'
+                                            },
+                                            {
+                                                type: "link",
+                                                label: "Github",
+                                                value: "Github",
+                                                target: '_blank',
+                                                href: 'https://github.com/quarkcms'
+                                            },
+                                        ]
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                ]
             }
         }
     },
