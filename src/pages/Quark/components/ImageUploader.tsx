@@ -30,7 +30,7 @@ const ImageUploader: React.FC<ImageUploader> = ({ title, action, limitType, limi
 
   const triggerChange = (changedValue:any) => {
     if (onChange) {
-      onChange({...value, ...changedValue });
+      onChange({ ...changedValue });
     }
   };
   const onFileInfoChange = (value:any) => {

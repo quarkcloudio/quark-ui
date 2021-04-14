@@ -17,7 +17,7 @@ const FileUploader: React.FC<FileUploader> = ({ title, action, limitType, limitS
   
   const triggerChange = (changedValue:any) => {
     if (onChange) {
-      onChange({...value, ...changedValue });
+      onChange({ ...changedValue });
     }
   };
 
