@@ -7,7 +7,7 @@ import Row from '@/components/Layout/Row';
 import Col from '@/components/Layout/Col';
 import ProCard from '@ant-design/pro-card';
 import Form from '@/components/Form/Form';
-import Statistic from '@/components/Display/Statistic';
+import StatisticCard from '@/components/Display/StatisticCard';
 import Descriptions from '@/components/Display/Descriptions';
 import Login from '@/components/Login';
 import { parseTemplate } from '@/utils/template';
@@ -46,8 +46,8 @@ const Render: React.FC<any> = (props:any) => {
         component: <Col {...body} data={data} />
       },
       {
-        key: 'statistic',
-        component: <Statistic {...body} data={data} />
+        key: 'statisticCard',
+        component: <StatisticCard {...body} data={data} />
       },
       {
         key: 'descriptions',

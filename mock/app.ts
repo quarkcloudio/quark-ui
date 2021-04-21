@@ -145,7 +145,7 @@ export default {
                                 type: "col",
                                 span: 6,
                                 body: {
-                                    type: "statistic",
+                                    type: "statisticCard",
                                     statistic: {
                                         title:'管理员数',
                                         valueStyle:{
@@ -159,7 +159,7 @@ export default {
                                 type: "col",
                                 span: 6,
                                 body: {
-                                    type: "statistic",
+                                    type: "statisticCard",
                                     statistic: {
                                         title:'日志数量',
                                         valueStyle:{
@@ -173,7 +173,7 @@ export default {
                                 type: "col",
                                 span: 6,
                                 body: {
-                                    type: "statistic",
+                                    type: "statisticCard",
                                     statistic: {
                                         title:'图片数量',
                                         valueStyle:{
@@ -187,7 +187,7 @@ export default {
                                 type: "col",
                                 span: 6,
                                 body: {
-                                    type: "statistic",
+                                    type: "statisticCard",
                                     statistic: {
                                         title:'文件数量',
                                         valueStyle:{

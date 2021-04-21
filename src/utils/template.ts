@@ -4,9 +4,9 @@ import { trim } from '@/utils/trim';
 export function parseTemplate(template: any,data: any) {
 
     let result = template;
-    let tplValues = template.match(/{[^+]+}/g);
 
     if(typeof template === 'string') {
+        let tplValues = template.match(/{[^+]+}/g);
         if(tplValues !== null) {
             tplValues.map((item:any) => {
                 

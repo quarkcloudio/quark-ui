@@ -4,7 +4,7 @@ import { LockTwoTone, UserOutlined,SafetyCertificateTwoTone } from '@ant-design/
 import { Link, history, History, Helmet } from 'umi';
 import { DefaultFooter } from '@ant-design/pro-layout';
 import { post } from '@/services/action';
-import logo from '@/assets/logo.svg';
+import logo from '@/assets/logo.png';
 import styles from './style.less';
 
 /**
@@ -46,6 +46,7 @@ const Login: React.FC<any> = (props:any) => {
         return;
       } else {
         message.error(result.msg);
+        getImageCaptcha(props.captchaUrl+'?random='+Math.random());
       }
     } catch (error) {
       message.error('登录失败，请重试！');
@@ -114,35 +115,37 @@ const Login: React.FC<any> = (props:any) => {
                   placeholder="密码"
                 />
               </Form.Item>
-              <Form.Item
-                name="captcha"
-                rules= {[
-                  {
-                    required: true,
-                    message: '请输入图形验证码!',
-                  },
-                ]}
-              >
-                <Row gutter={10}>
-                  <Col span={16}>
-                    <Input
-                      size="large"
-                      prefix={ <SafetyCertificateTwoTone className={styles.prefixIcon} /> }
-                      placeholder="图形验证码"
-                    />
-                  </Col>
-                  <Col span={8}>
-                    {<img 
-                      style={{ cursor: 'pointer' }}
-                      onClick={() => {
-                        getImageCaptcha(props.captchaUrl+'?random='+Math.random());
-                      }}
-                      src={imageCaptcha}
-                      alt="验证码"
-                    />}
-                  </Col>
-                </Row>
-              </Form.Item>
+              { imageCaptcha ? 
+                <Form.Item
+                  name="captcha"
+                  rules= {[
+                    {
+                      required: true,
+                      message: '请输入图形验证码!',
+                    },
+                  ]}
+                >
+                  <Row gutter={10}>
+                    <Col span={16}>
+                      <Input
+                        size="large"
+                        prefix={ <SafetyCertificateTwoTone className={styles.prefixIcon} /> }
+                        placeholder="图形验证码"
+                      />
+                    </Col>
+                    <Col span={8}>
+                      {<img 
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => {
+                          getImageCaptcha(props.captchaUrl+'?random='+Math.random());
+                        }}
+                        src={imageCaptcha}
+                        alt="验证码"
+                      />}
+                    </Col>
+                  </Row>
+                </Form.Item>
+              : null }
               <Form.Item>
                 <Button loading={submitting} size="large" className={styles.submit} type="primary" htmlType="submit">登录</Button>
               </Form.Item>

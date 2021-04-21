@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { history, Helmet } from 'umi';
 import Render from '@/components/Render';
 import ProLayout from '@ant-design/pro-layout';
+import logo from '@/assets/logo.png';
 
 const Layout: React.FC<any> = (props:any) => {
 
@@ -170,6 +171,7 @@ const Layout: React.FC<any> = (props:any) => {
       </Helmet>
       <ProLayout
         {...props}
+        logo={props.logo ? props.logo : logo}
         iconfontUrl={props.iconfontUrl ? props.iconfontUrl : '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js'}
         menuDataRender= {() => props.menu}
         openKeys={menuOpenKeys}
