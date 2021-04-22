@@ -17,11 +17,11 @@ const Descriptions: React.FC<any> = (props:any) => {
           case "image":
             if(typeof component === 'object') {
               component = (component.map((componentItem:any) => {
-                return <Image src={componentItem} width={item.image.width} height={item.image.height} />
+                return <Image src={componentItem} width={item.width} height={item.height} />
               }));
               component = <Image.PreviewGroup><Space>{component}</Space></Image.PreviewGroup>
             } else {
-              component = <Image src={component} width={item.image.width} height={item.image.height} />
+              component = <Image src={component} width={item.width} height={item.height} />
             }
             break;
         
