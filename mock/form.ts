@@ -11,10 +11,10 @@ export default {
             cache: true,
             body: {
                 type: "pageContainer",
-                title: '表单',
+                title: '基础表单',
                 body: {
                     type: "card",
-                    title: '表单',
+                    title: '基础表单',
                     headerBordered: true,
                     body: {
                         type: "form",

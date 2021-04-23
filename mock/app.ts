@@ -132,6 +132,19 @@ export default {
                         },
                     ],
                 },
+                {
+                    key: '6',
+                    path: '/table',
+                    name: '表格',
+                    icon: 'icon-plugin',
+                    children: [
+                        {
+                            key: '6-1',
+                            path: '/index?api=table/index',
+                            name: '基础表格',
+                        },
+                    ],
+                },
             ],
             body: {
                 type: "pageContainer",

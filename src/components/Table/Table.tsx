@@ -2,8 +2,8 @@ import React, { useRef } from 'react';
 import ProTable from '@ant-design/pro-table';
 import { history, Link } from 'umi';
 import { get } from '@/services/action';
-import RowAction from '@/pages/Quark/components/RowAction';
-import QueryFilter from '@/pages/Quark/components/QueryFilter';
+import RowAction from './RowAction';
+import QueryFilter from './QueryFilter';
 import {
   Popover,
   Space
@@ -134,48 +134,23 @@ const Table: React.FC<Table> = (props:any) => {
     return columns;
   }
 
-  const findComponent:any = (data:any,key:string) => {
-    if(data.key === key) {
-      return data;
-    }
-
-    if(data.hasOwnProperty('content')) {
-      return findComponent(data.content,key);
-    }
-  
-    let conmpontent = [];
-
-    if(data.hasOwnProperty(0)) {
-      conmpontent = (data.map((item:any) => {
-        return findComponent(item,key);
-      }));
-    }
-
-    return conmpontent
-  }
-
-  const getTableDatasource:any = async (key:string) =>  {
+  const getTableDatasource:any = async () =>  {
 
     const result = await get({
-      actionUrl: history.location.query.api,
+      actionUrl: props.initApi,
       ...history.location.query
     });
 
-    const table = findComponent(result.data,key);
-    return table;
+    return result.data;
   }
 
   return (
     <>
-      <QueryFilter search={props.table.search} current={actionRef.current}/>
+      {props.search ? <QueryFilter search={props.search} current={actionRef.current}/> : null}
       <ProTable
-        key={props.table.key}
+        {...props}
         actionRef={actionRef}
-        rowKey={props.table.rowKey}
-        tableLayout={props.table.tableLayout}
-        headerTitle={props.table.headerTitle}
-        columns={parseColumns(props.table.columns)}
-        rowSelection={{}}
+        columns={props.columns ? parseColumns(props.columns) : []}
         components={{
           body: {
             row: EditableRow,
@@ -194,11 +169,9 @@ const Table: React.FC<Table> = (props:any) => {
         )}
         tableAlertOptionRender={({ selectedRowKeys, onCleanSelected}) => {
           return (
-            <BatchAction actions={props.table.batchActions} selectedRowKeys={selectedRowKeys} onCleanSelected={onCleanSelected} current={actionRef.current} />
+            <BatchAction actions={props.batchActions} selectedRowKeys={selectedRowKeys} onCleanSelected={onCleanSelected} current={actionRef.current} />
           );
         }}
-        options={props.table.options}
-        search={false}
         request={async (params:any, sorter:any, filter:any) => {
           let query = {},table = null;
           query = history.location.query;
@@ -217,7 +190,7 @@ const Table: React.FC<Table> = (props:any) => {
 
           history.push({ pathname: history.location.pathname, query: query });
 
-          table = await getTableDatasource(props.table.key);
+          table = await getTableDatasource();
 
           return Promise.resolve({
             data: table.datasource,
@@ -225,20 +198,13 @@ const Table: React.FC<Table> = (props:any) => {
             success: true,
           });
         }}
-        pagination={{
-          pageSize: props.table.pagination.pageSize,
-          current: props.table.pagination.current,
-          defaultCurrent: props.table.pagination.defaultCurrent
-        }}
-        dateFormatter={props.table.dateFormatter}
-        columnEmptyText={props.table.columnEmptyText}
+        pagination={{...props.pagination}}
         toolbar={{
           multipleLine: false,
-          actions: props.table.toolbar.actions.length > 0 ? [<ToolBarAction key={props.table.toolbar.key} actions={props.table.toolbar.actions} current={actionRef.current} />] : undefined,
+          actions: props.toolbar?.actions?.length > 0 ? [<ToolBarAction key={props.toolbar.key} actions={props.toolbar.actions} current={actionRef.current} />] : undefined,
         }}
-        scroll={props.table.scroll}
         rowClassName={(record, index)=> {
-          if(props.table.striped) {
+          if(props.striped) {
             if(index%2 != 0) {
               return styles.oddTr;
             } 

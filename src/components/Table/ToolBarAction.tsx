@@ -2,8 +2,8 @@ import React from 'react';
 import { ActionType }from '@ant-design/pro-table';
 import { history, useModel, Link } from 'umi';
 import { get } from '@/services/action';
-import ModalForm from './ModalForm';
-import DrawerForm from './DrawerForm';
+import ModalForm from '@/components/Form/ModalForm';
+import DrawerForm from '@/components/Form/DrawerForm';
 import { stringify } from 'qs';
 import {
   Button,
@@ -22,9 +22,8 @@ export interface Action {
 }
 
 const ToolBarAction: React.FC<Action> = (props) => {
-  const { initialState } = useModel('@@initialState');
   const IconFont = createFromIconfontCN({
-    scriptUrl: initialState.settings.iconfontUrl,
+    scriptUrl: props.iconfontUrl ? props.iconfontUrl : '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js'
   });
   const { confirm } = Modal;
 

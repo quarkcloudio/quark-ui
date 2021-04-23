@@ -24,6 +24,7 @@
     "@ant-design/pro-descriptions": "^1.6.12",
     "@ant-design/pro-form": "^1.20.0",
     "@ant-design/pro-layout": "^6.5.0",
+    "@ant-design/pro-table": "^2.34.5",
     "@tinymce/tinymce-react": "^3.12.2",
     "@umijs/preset-react": "1.x",
     "react-amap": "^1.2.8",

@@ -9,6 +9,7 @@ import ProCard from '@ant-design/pro-card';
 import Form from '@/components/Form/Form';
 import StatisticCard from '@/components/Display/StatisticCard';
 import Descriptions from '@/components/Display/Descriptions';
+import Table from '@/components/Table/Table';
 import Login from '@/components/Login';
 import { parseTemplate } from '@/utils/template';
 
@@ -56,6 +57,10 @@ const Render: React.FC<any> = (props:any) => {
       {
         key: 'form',
         component: <Form {...body} data={data} />
+      },
+      {
+        key: 'table',
+        component: <Table {...body} data={data} />
       },
       {
         key: 'login',
