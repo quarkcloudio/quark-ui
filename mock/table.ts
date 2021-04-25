@@ -18,7 +18,7 @@ export default {
                     headerBordered: true,
                     body: {
                         type: "table",
-                        initApi: 'table/datasource',
+                        api: 'table/datasource',
                         columns: [
                             {
                                 title: 'Name',

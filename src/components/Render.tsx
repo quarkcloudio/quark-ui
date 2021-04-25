@@ -60,7 +60,7 @@ const Render: React.FC<any> = (props:any) => {
       },
       {
         key: 'table',
-        component: <Table {...body} data={data} />
+        component: <Table {...body} tableKey={body.key} data={data} />
       },
       {
         key: 'login',
