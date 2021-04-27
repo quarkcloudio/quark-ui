@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import ProTable from '@ant-design/pro-table';
 import { history, Link } from 'umi';
 import { get, post } from '@/services/action';
@@ -11,6 +11,7 @@ import { QrcodeOutlined } from '@ant-design/icons';
 import BatchAction from './BatchAction';
 import ToolBarAction from './ToolBarAction';
 import { EditableRow, EditableCell } from './Editable';
+import { useTableKeep } from './useTableKeep';
 import styles from './Table.less'
 
 export interface Table {
@@ -154,19 +155,19 @@ const Table: React.FC<Table> = (props:any) => {
     return conmpontent
   }
 
-  const getTableDatasource:any = async (key:string) =>  {
+  const getTableDatasource:any = async (key:string,params:any) =>  {
     let result,table = null;
-    const api = props.api ? props.api : query.api;
+    const api = props.api ? props.api : params.api;
 
     if(props.apiType === 'GET') {
       result = await get({
         actionUrl: api,
-        ...query
+        ...params
       });
     } else if(props.apiType === 'POST') {
       result = await post({
         actionUrl: api,
-        ...query
+        ...params
       });
     }
 
@@ -179,9 +180,12 @@ const Table: React.FC<Table> = (props:any) => {
     return table;
   }
 
+  const keep = useTableKeep<any>()
+
   return (
     <ProTable
       {...props}
+      {...keep}
       actionRef={actionRef}
       columns={props.columns ? parseColumns(props.columns) : []}
       components={{
@@ -206,15 +210,19 @@ const Table: React.FC<Table> = (props:any) => {
         );
       }}
       request={async (params:any, sorter:any, filter:any) => {
-        let table = null;
 
         params['api'] = query.api;
-        params['sorter'] = sorter;
-        params['filter'] = filter;
+        params['page'] = params.current;
 
-        history.push({ pathname: history.location.pathname, query: params });
+        if(JSON.stringify(sorter) != "{}") {
+          params['sorter'] = sorter;
+        }
 
-        table = await getTableDatasource(props.tableKey);
+        if(JSON.stringify(filter) != "{}") {
+          params['filter'] = filter;
+        }
+
+        const table = await getTableDatasource(props.tableKey, params);
 
         return Promise.resolve({
           data: table.datasource,
@@ -222,7 +230,6 @@ const Table: React.FC<Table> = (props:any) => {
           success: true,
         });
       }}
-      pagination={{...props.pagination}}
       toolbar={{
         multipleLine: false,
         actions: props.toolbar?.actions?.length > 0 ? [<ToolBarAction key={props.toolbar.key} actions={props.toolbar.actions} current={actionRef.current} />] : undefined,
