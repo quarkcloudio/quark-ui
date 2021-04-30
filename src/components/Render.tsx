@@ -10,7 +10,9 @@ import Form from '@/components/Form/Form';
 import StatisticCard from '@/components/Display/StatisticCard';
 import Descriptions from '@/components/Display/Descriptions';
 import Table from '@/components/Table/Table';
+import Action from '@/components/Action/Action';
 import Login from '@/components/Login';
+import { Space } from 'antd';
 import { parseTemplate } from '@/utils/template';
 
 const Render: React.FC<any> = (props:any) => {
@@ -47,6 +49,10 @@ const Render: React.FC<any> = (props:any) => {
         component: <Col {...body} data={data} />
       },
       {
+        key: 'space',
+        component: <Space {...body} data={data} >{ componentRender(body.body,data) }</Space>
+      },
+      {
         key: 'statisticCard',
         component: <StatisticCard {...body} data={data} />
       },
@@ -61,6 +67,10 @@ const Render: React.FC<any> = (props:any) => {
       {
         key: 'table',
         component: <Table {...body} tableKey={body.key} data={data} />
+      },
+      {
+        key: 'action',
+        component: <Action {...body} data={data} />
       },
       {
         key: 'login',

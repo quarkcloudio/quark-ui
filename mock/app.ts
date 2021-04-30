@@ -145,6 +145,19 @@ export default {
                         },
                     ],
                 },
+                {
+                    key: '7',
+                    path: '/action',
+                    name: '行为',
+                    icon: 'icon-plugin',
+                    children: [
+                        {
+                            key: '6-1',
+                            path: '/index?api=action/index',
+                            name: '行为按钮',
+                        },
+                    ],
+                },
             ],
             body: {
                 type: "pageContainer",

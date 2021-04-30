@@ -62,6 +62,7 @@ export function useTableKeep<T>() {
      * @param params
      */
     const onSearchChange = (params: Partial<T>) => {
+        delete params.current
         searchData = Object.assign(searchData, params)
         routerReplace()
         return params

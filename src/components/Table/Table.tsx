@@ -1,13 +1,12 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import ProTable from '@ant-design/pro-table';
 import { history, Link } from 'umi';
 import { get, post } from '@/services/action';
-import RowAction from './RowAction';
+import Render from '@/components/Render';
 import {
   Popover,
   Space
 } from 'antd';
-import { QrcodeOutlined } from '@ant-design/icons';
 import BatchAction from './BatchAction';
 import ToolBarAction from './ToolBarAction';
 import { EditableRow, EditableCell } from './Editable';
@@ -23,71 +22,21 @@ const Table: React.FC<Table> = (props:any) => {
   const actionRef = useRef<any>(undefined);
   const query:any = history.location.query;
 
+  // 注册全局变量
+  window[props.tableKey] = actionRef;
+
   // 渲染column
-  const columnRender = (column:any, text:any) => {
+  const columnRender = (column:any, row:any, text:any) => {
     let columnComponent = null;
 
-    if(column.link) {
-      if(text.target === '_blank') {
-        if(column.isHtml) {
-          columnComponent = 
-          <a
-            style={column.style}
-            href={text.href}
-            target={text.target}
-            dangerouslySetInnerHTML={{__html:text.title}}
-          />
-        } else {
-          columnComponent = 
-          <a
-            style={column.style}
-            href={text.href}
-            target={text.target}
-          >
-            {text.title}
-          </a>
-        }
-      } else {
-        if(column.isHtml) {
-          columnComponent =
-          <Link
-            to={text.href}
-            style={column.style}
-          >
-            <span dangerouslySetInnerHTML={{__html:text.title}}/>
-          </Link>
-        } else {
-          columnComponent =
-          <Link
-            to={text.href}
-            style={column.style}
-          >
-            {text.title}
-          </Link>
-        }
-      }
-    } else {
-      if(column.isHtml) {
-        columnComponent = <span style={column.style} dangerouslySetInnerHTML={{__html:text}} />;
-      } else {
+    switch (column.valueType) {
+      case 'option':
+        columnComponent = <Render body={column.actions} data={row} />;
+        break;
+
+      default:
         columnComponent = <span style={column.style}>{text}</span>;
-      }
-    }
-
-    if(column.image) {
-      columnComponent = <img src={text} width={column.image.width} height={column.image.height} />
-    }
-
-    if(column.qrcode) {
-      let img:any = <img src={text} width={column.qrcode.width} height={column.qrcode.height} />;
-      columnComponent =
-      <Popover placement="left" content={img}>
-        <QrcodeOutlined style={{cursor:'pointer',fontSize:'18px'}} />
-      </Popover>
-    }
-
-    if(column.actions) {
-      columnComponent = <RowAction key={column.key} actions={text} current={actionRef.current} />;
+        break;
     }
 
     return columnComponent;
@@ -110,7 +59,7 @@ const Table: React.FC<Table> = (props:any) => {
     columns.map((item:any,key:any) => {
       item.render = (text:any, row:any) => (
         <>
-          {columnRender(item, text)}
+          {columnRender(item, row, text)}
         </>
       );
       columns[key] = item;
@@ -155,7 +104,7 @@ const Table: React.FC<Table> = (props:any) => {
     return conmpontent
   }
 
-  const getTableDatasource:any = async (key:string,params:any) =>  {
+  const getTableDatasource:any = async (key:string,params:any) => {
     let result,table = null;
     const api = props.api ? props.api : params.api;
 
@@ -185,7 +134,12 @@ const Table: React.FC<Table> = (props:any) => {
   return (
     <ProTable
       {...props}
-      {...keep}
+      // {...keep}
+      // pagination = {{
+      //   ...keep.pagination,
+      //   current: props.pagination.current,
+      //   pageSize: props.pagination.pageSize
+      // }}
       actionRef={actionRef}
       columns={props.columns ? parseColumns(props.columns) : []}
       components={{
@@ -226,13 +180,17 @@ const Table: React.FC<Table> = (props:any) => {
 
         return Promise.resolve({
           data: table.datasource,
-          total: table.pagination.total,
+          total: table?.pagination?.total,
           success: true,
         });
       }}
       toolbar={{
         multipleLine: false,
         actions: props.toolbar?.actions?.length > 0 ? [<ToolBarAction key={props.toolbar.key} actions={props.toolbar.actions} current={actionRef.current} />] : undefined,
+      }}
+      form={{
+        syncToUrl:true,
+        syncToInitialValues:true
       }}
       rowClassName={(record, index)=> {
         if(props.striped) {
