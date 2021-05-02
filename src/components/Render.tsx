@@ -5,6 +5,7 @@ import PageContainer from '@/components/Layout/PageContainer';
 import Layout from '@/components/Layout';
 import Row from '@/components/Layout/Row';
 import Col from '@/components/Layout/Col';
+import Divider from '@/components/Layout/Divider';
 import ProCard from '@ant-design/pro-card';
 import Form from '@/components/Form/Form';
 import StatisticCard from '@/components/Display/StatisticCard';
@@ -12,6 +13,10 @@ import Descriptions from '@/components/Display/Descriptions';
 import Table from '@/components/Table/Table';
 import Action from '@/components/Action/Action';
 import Login from '@/components/Login';
+import Typography from '@/components/Typography';
+import Paragraph from '@/components/Typography/Paragraph';
+import Title from '@/components/Typography/Title';
+import Text from '@/components/Typography/Text';
 import { Space } from 'antd';
 import { parseTemplate } from '@/utils/template';
 
@@ -59,6 +64,26 @@ const Render: React.FC<any> = (props:any) => {
       {
         key: 'descriptions',
         component: <Descriptions {...body} data={data} />
+      },
+      {
+        key: 'typography',
+        component: <Typography {...body} data={data} />
+      },
+      {
+        key: 'paragraph',
+        component: <Paragraph {...body} data={data} />
+      },
+      {
+        key: 'title',
+        component: <Title {...body} data={data} />
+      },
+      {
+        key: 'text',
+        component: <Text {...body} data={data} />
+      },
+      {
+        key: 'divider',
+        component: <Divider {...body} data={data} />
       },
       {
         key: 'form',
