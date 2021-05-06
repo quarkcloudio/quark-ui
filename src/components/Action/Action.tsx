@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { history } from 'umi';
 import { get } from '@/services/action';
-import { parseTemplate } from '@/utils/template';
+import { dataMapping, tplEngine } from '@/utils/template';
 import {
   Button,
   message,
@@ -37,7 +37,7 @@ const Action: React.FC<any> = (props) => {
     switch (props.actionType) {
       case 'ajax':
         const result = await get({
-          actionUrl: parseTemplate(api,props.data)
+          actionUrl: dataMapping(api,props.data)
         });
 
         if(result.status === 'success') {
@@ -92,7 +92,7 @@ const Action: React.FC<any> = (props) => {
             type={props.showStyle}
             icon={props.icon ? <IconFont type={props.icon} /> : null}
           >
-            {props.label}
+            {tplEngine(props.label,props.data)}
           </Button>
         </Popconfirm>
       } else {
@@ -108,7 +108,7 @@ const Action: React.FC<any> = (props) => {
           icon={props.icon ? <IconFont type={props.icon} /> : null}
           onClick={()=>{ props.confirmTitle ? showConfirm(props.api) : executeAction(props.api)}}
         >
-          {props.label}
+          {tplEngine(props.label,props.data)}
         </Button>
       }
       break;
@@ -122,12 +122,12 @@ const Action: React.FC<any> = (props) => {
           ghost={props.ghost}
           shape={props.shape}
           size={props.size}
-          href={props.href}
+          href={dataMapping(props.href,props.data)}
           target={props.target}
           type={props.showStyle}
           icon={props.icon ? <IconFont type={props.icon} /> : null}
         >
-          {props.label}
+          {tplEngine(props.label,props.data)}
         </Button>
       break;
     default:
@@ -142,7 +142,7 @@ const Action: React.FC<any> = (props) => {
         type={props.showStyle}
         icon={props.icon ? <IconFont type={props.icon} /> : null}
       >
-        {props.label}
+        {tplEngine(props.label,props.data)}
       </Button>
       break;
   }

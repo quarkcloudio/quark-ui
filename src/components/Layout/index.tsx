@@ -7,6 +7,7 @@ import logo from '@/assets/logo.png';
 const Layout: React.FC<any> = (props:any) => {
 
   const body = props.body;
+  const data = props.data;
 
   if(props.cache) {
     const layout = sessionStorage.getItem('layout');
@@ -181,7 +182,7 @@ const Layout: React.FC<any> = (props:any) => {
           onClick: onMenuClick,
         }}
       >
-        <Render body={body} data={props.data} />
+        <Render body={body} data={data} />
       </ProLayout>
     </>
   );

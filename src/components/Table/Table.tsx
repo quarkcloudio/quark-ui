@@ -185,8 +185,8 @@ const Table: React.FC<Table> = (props:any) => {
         });
       }}
       toolbar={{
-        multipleLine: false,
-        actions: props.toolbar?.actions?.length > 0 ? [<ToolBarAction key={props.toolbar.key} actions={props.toolbar.actions} current={actionRef.current} />] : undefined,
+        ...props.toolBar,
+        actions: props.toolBar?.actions?.length > 0 ? [<Render body={props.toolBar?.actions} data={props.data} />] : undefined,
       }}
       form={{
         syncToUrl:true,

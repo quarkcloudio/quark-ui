@@ -6,6 +6,9 @@ export default {
         style: {
             height: '100vh',
         },
+        data: {
+            testId:1
+        },
         body: {
             type: "layout",
             cache: true,
@@ -137,6 +140,17 @@ export default {
                                                 reload: 'table',
                                                 confirmTitle:'确认要操作吗？',
                                                 confirmType: 'pop'
+                                            },
+                                            {
+                                                type: "action",
+                                                label: "Button Api With Tpl",
+                                                showStyle: 'default',
+                                                actionType: 'ajax',
+                                                api: 'http://www.baidu.com?actionId={testId}',
+                                                redirect: './index',
+                                                confirmTitle:'系统消息',
+                                                confirmText:'确认要操作吗？',
+                                                confirmType: 'modal'
                                             },
                                             {
                                                 type: "action",

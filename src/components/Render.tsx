@@ -18,12 +18,13 @@ import Paragraph from '@/components/Typography/Paragraph';
 import Title from '@/components/Typography/Title';
 import Text from '@/components/Typography/Text';
 import { Space } from 'antd';
-import { parseTemplate } from '@/utils/template';
+import { dataMapping, tplEngine } from '@/utils/template';
 
 const Render: React.FC<any> = (props:any) => {
 
   // 注册组件
   const registerComponent = (body:any, data:any) => {
+
     return [
       {
         key: 'page',
@@ -100,7 +101,11 @@ const Render: React.FC<any> = (props:any) => {
       {
         key: 'login',
         component: <Login {...body} data={data} />
-      }
+      },
+      {
+        key: 'tpl',
+        component: <>{ tplEngine(body.body,data) }</>
+      },
     ];
   }
 
@@ -114,7 +119,7 @@ const Render: React.FC<any> = (props:any) => {
     if(typeof body === 'string' || typeof body === 'number') {
       if(props.hasOwnProperty('data')) {
         // 解析数据
-        body = parseTemplate(body, data);
+        body = dataMapping(body, data);
       }
       return body;
     }
