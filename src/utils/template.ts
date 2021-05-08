@@ -11,13 +11,13 @@ export function dataMapping(template: any,data: any) {
             tplValues.map((item:any) => {
 
                 // 去除大括号
-                item = trim(item,'{','left');
-                item = trim(item,'}','right');
+                let tpl = trim(item,'{','left');
+                tpl = trim(tpl,'}','right');
 
                 // 替换数据
                 if(data) {
-                    let replaceData = data.hasOwnProperty(item) ? data[item] : null;
-                    result = result.replace('{'+item+'}', replaceData);
+                    let replaceData = data.hasOwnProperty(tpl) ? data[tpl] : null;
+                    result = result.replace(item, replaceData);
                 }
             });
         }
@@ -37,19 +37,21 @@ export function tplEngine(template: any,data: any) {
             tplValues.map((item:any) => {
                 
                 // 去除大括号
-                item = trim(item,'<%','left');
-                item = trim(item,'%>','right');
+                let tpl = trim(item,'<%','left');
+                tpl = trim(tpl,'%>','right');
 
                 if(data) {
                     const keys = Object.keys(data)
                     keys.map((key:any) => {
-                        if(item.indexOf('data.'+key)>-1) {
-                            item = item.replace('data.'+key, data[key]);
+                        if(tpl.indexOf('data.'+key)>-1) {
+                            tpl = tpl.replace('data.'+key, data[key]);
                         }
                     })
                 }
 
-                result = eval(item);
+                let replaceData = eval(tpl);
+
+                result = result.replace(item, replaceData);
             });
         }
     }

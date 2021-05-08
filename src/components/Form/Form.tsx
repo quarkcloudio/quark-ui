@@ -4,11 +4,11 @@ import Item from './Item';
 import { history } from 'umi';
 import { post } from '@/services/action';
 import moment from 'moment';
+import Action from '@/components/Action/Action';
 import {
-  Space,
   Form as AntForm,
   message,
-  Button
+  Space
 } from 'antd';
 
 export interface Form {
@@ -59,21 +59,12 @@ const Form: React.FC<Form> = (props:any) => {
           submitText: props.submitButtonText,
         },
         render: (proFormProps:any, doms:any) => {
-          if(props.disabledResetButton === true && props.disabledSubmitButton === true && props.disabledBackButton === true) {
-            return null;
-          }
           return (
             <AntForm.Item wrapperCol={props.buttonWrapperCol}>
               <Space>
-                {!props.disabledResetButton ? 
-                    doms[0]
-                  : null}
-                {!props.disabledSubmitButton ? 
-                    doms[1]
-                  : null}
-                {!props.disabledBackButton ? 
-                    <Button onClick={e => history.go(-1)}>{props.backButtonText}</Button>
-                  : null}
+                {props?.actions?.map((action:any) => {
+                  return <Action {...action} form={form} data={props.data}/>
+                })}
               </Space>
             </AntForm.Item>
           );
