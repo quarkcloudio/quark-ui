@@ -44,7 +44,7 @@ const Render: React.FC<any> = (props:any) => {
       },
       {
         key: 'card',
-        component: <ProCard {...body} data={data} >{ componentRender(body.body,data) }</ProCard>
+        component: <ProCard {...body} extra={ componentRender(body.extra,data) } data={data} >{ componentRender(body.body,data) }</ProCard>
       },
       {
         key: 'row',
