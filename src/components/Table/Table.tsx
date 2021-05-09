@@ -3,6 +3,7 @@ import ProTable from '@ant-design/pro-table';
 import { history, Link } from 'umi';
 import { get, post } from '@/services/action';
 import Render from '@/components/Render';
+import Action from '@/components/Action/Action';
 import {
   Popover,
   Space
@@ -158,8 +159,13 @@ const Table: React.FC<Table> = (props:any) => {
         </Space>
       )}
       tableAlertOptionRender={({ selectedRowKeys, onCleanSelected}) => {
+        const data = {
+          ids:selectedRowKeys
+        };
         return (
-          <BatchAction actions={props.batchActions} selectedRowKeys={selectedRowKeys} onCleanSelected={onCleanSelected} current={actionRef.current} />
+          props?.batchActions?.map((action:any) => {
+            return <Action {...action} data={data} callback={onCleanSelected} />
+          })
         );
       }}
       request={async (params:any, sorter:any, filter:any) => {

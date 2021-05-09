@@ -100,6 +100,10 @@ const Action: React.FC<any> = (props) => {
 
     if(result.status === 'success') {
 
+      if(props.callback) {
+        props.callback()
+      }
+
       if(result.msg) {
         message.success(result.msg);
       }
@@ -119,6 +123,7 @@ const Action: React.FC<any> = (props) => {
           window[props.reload]?.current?.reload();
         }
       }
+
     } else {
       message.error(result.msg);
     }
