@@ -56,7 +56,7 @@ const Render: React.FC<any> = (props:any) => {
       },
       {
         key: 'space',
-        component: <Space {...body} data={data} >{ componentRender(body.body,data) }</Space>
+        component: <Space {...body}>{ componentRender(body.body,data) }</Space>
       },
       {
         key: 'statisticCard',
