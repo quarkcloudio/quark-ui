@@ -34,17 +34,19 @@ const ToolBarAction: React.FC<Action> = (props) => {
     let query = {};
     var urls = url.split("?");
     if(urls) {
-      var vars = urls[1].split("&");
-      for (var i=0;i<vars.length;i++) {
-        var pair = vars[i].split("=");
-        if(history.location.query.search) {
-          if(pair[1] === '{search}'){
-            pair[1] = history.location.query.search;
+      if(urls.length>1) {
+        var vars = urls[1].split("&");
+        for (var i=0;i<vars.length;i++) {
+          var pair = vars[i].split("=");
+          if(history.location.query.search) {
+            if(pair[1] === '{search}'){
+              pair[1] = history.location.query.search;
+            }
           }
+          query[pair[0]] = pair[1];
         }
-        query[pair[0]] = pair[1];
+        return urls[0]+'?'+stringify(query)
       }
-      return urls[0]+'?'+stringify(query)
     }
     return url;
   }

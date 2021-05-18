@@ -51,15 +51,17 @@ const BatchAction: React.FC<Action> = (props) => {
     let query = {};
     var urls = url.split("?");
     if(urls) {
-      var vars = urls[1].split("&");
-      for (var i=0;i<vars.length;i++) {
-        var pair = vars[i].split("=");
-        if(pair[1] === '{ids}' || pair[1] === '{id}'){
-          pair[1] = props.selectedRowKeys;
+      if(urls.length>1) {
+        var vars = urls[1].split("&");
+        for (var i=0;i<vars.length;i++) {
+          var pair = vars[i].split("=");
+          if(pair[1] === '{ids}' || pair[1] === '{id}'){
+            pair[1] = props.selectedRowKeys;
+          }
+          query[pair[0]] = pair[1];
         }
-        query[pair[0]] = pair[1];
+        return urls[0]+'?'+stringify(query)
       }
-      return urls[0]+'?'+stringify(query)
     }
     return url;
   }
