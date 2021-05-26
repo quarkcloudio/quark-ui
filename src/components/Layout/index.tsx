@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { history, Helmet } from 'umi';
 import Render from '@/components/Render';
+import RightContent from '@/components/Layout/RightContent';
 import ProLayout from '@ant-design/pro-layout';
 import logo from '@/assets/logo.png';
 
@@ -42,19 +43,14 @@ const Layout: React.FC<any> = (props:any) => {
 
   useEffect(() => {
     if(props.menu) {
-
       // 获取当前选中菜单的名称
       const title = getMenuName(props.menu, decodeURIComponent(query.api));
-
       // 设置页面标题
       setTitle(title);
-
       // 获取当前选中的菜单
       const menuSelectedKey = getMenuKey(props.menu, decodeURIComponent(query.api));
-
       // 获取当前展开的菜单
       getMenuOpenKeys(menuSelectedKey);
-
       // 设置选中菜单
       setMenuSelectedKeys([menuSelectedKey]);
     }
@@ -175,6 +171,7 @@ const Layout: React.FC<any> = (props:any) => {
         logo={props.logo ? props.logo : logo}
         iconfontUrl={props.iconfontUrl ? props.iconfontUrl : '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js'}
         menuDataRender= {() => props.menu}
+        rightContentRender={() => <RightContent headerActions={props.headerActions} iconfontUrl={props.iconfontUrl ? props.iconfontUrl : '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js'} />}
         openKeys={menuOpenKeys}
         selectedKeys={menuSelectedKeys}
         menuProps={{

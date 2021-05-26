@@ -42,6 +42,8 @@ const Login: React.FC<any> = (props:any) => {
         message.success(result.msg);
         // 记录登录凭据
         sessionStorage.setItem('token', result.data.token);
+        // 记录用户信息
+        sessionStorage.setItem('accountInfo', JSON.stringify(result.data));
         replaceGoto(props.redirect);
         return;
       } else {
