@@ -91,7 +91,7 @@ const RightContent: React.FC<any> = (props) => {
   }
 
   return (
-    <Space>
+    <Space className={styles.right}>
       { props.headerActions ? parseHeaderActions(props.headerActions) : null}
       <Dropdown overlay={menuHeaderDropdown}>
         <span className={`${styles.action} ${styles.account}`}>
