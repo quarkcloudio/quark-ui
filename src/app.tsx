@@ -100,6 +100,10 @@ const errorHandler = (error: ResponseError) => {
       message: `请求错误 ${status}: ${url}`,
       description: errorText,
     });
+
+    if(response.status == 401){ //未登录跳转登录
+      history.push('/user/login');
+    }
   }
 
   if (!response) {
@@ -117,7 +121,9 @@ export const request: RequestConfig = {
   // 请求拦截器
   requestInterceptors: [
     (url: string, options) => {
-      options.headers = { Authorization: `Bearer ${sessionStorage.getItem('token') ?? ''}` };
+      options.headers = {
+        Accept: 'application/json',
+        Authorization: `Bearer ${sessionStorage.getItem('token') ?? ''}` };
       return { url, options };
     }
   ],
