@@ -31,7 +31,6 @@ const QueryFilter: React.FC<Action> = (props) => {
     let query = {};
 
     query['api'] = history.location.query.api;
-    query['page'] = history.location.query.page;
     query['pageSize'] = history.location.query.pageSize;
 
     query['search'] = values;
@@ -47,8 +46,11 @@ const QueryFilter: React.FC<Action> = (props) => {
     query['random'] = Math.random();
 
     history.push({ pathname: history.location.pathname, query: query });
-    
+
+
+
     if (props.current) {
+      props.current.pageInfo.current = 1;
       props.current.reload();
     }
   };
@@ -57,7 +59,6 @@ const QueryFilter: React.FC<Action> = (props) => {
     let query = {};
 
     query['api'] = history.location.query.api;
-    query['page'] = history.location.query.page;
     query['pageSize'] = history.location.query.pageSize;
 
     if(history.location.query.sorter) {
@@ -71,9 +72,12 @@ const QueryFilter: React.FC<Action> = (props) => {
     // hack random
     query['random'] = Math.random();
 
+    console.log(JSON.stringify(query));
+    console.log('on_reset');
     history.push({ pathname: history.location.pathname, query: query });
     
     if (props.current) {
+      props.current.pageInfo.current = 1;
       props.current.reload();
     }
   };
