@@ -26,27 +26,28 @@ const QueryFilter: React.FC<Action> = (props) => {
   //hack
   const [random, setRandom] = useState(0);
   const [items, setItems] = useState(props.search.items);
+  const query:any = history.location.query;
 
   const onFinish = (values: any) => {
-    let query = {};
+    let getQuery:any = {};
 
-    query['api'] = history.location.query.api;
-    query['page'] = history.location.query.page;
-    query['pageSize'] = history.location.query.pageSize;
+    getQuery['api'] = query.api;
+    getQuery['page'] = query.page;
+    getQuery['pageSize'] = query.pageSize;
 
-    query['search'] = values;
-    if(history.location.query.sorter) {
-      query['sorter'] = history.location.query.sorter;
+    getQuery['search'] = values;
+    if(query.sorter) {
+      getQuery['sorter'] = query.sorter;
     }
 
-    if(history.location.query.filter) {
-      query['filter'] = history.location.query.filter;
+    if(query.filter) {
+      getQuery['filter'] = query.filter;
     }
 
     // hack random
-    query['random'] = Math.random();
+    getQuery['random'] = Math.random();
 
-    history.push({ pathname: history.location.pathname, query: query });
+    history.push({ pathname: history.location.pathname, query: getQuery });
     
     if (props.current) {
       props.current.reload();
@@ -54,24 +55,24 @@ const QueryFilter: React.FC<Action> = (props) => {
   };
 
   const onReset = () => {
-    let query = {};
+    let getQuery:any = {};
 
-    query['api'] = history.location.query.api;
-    query['page'] = history.location.query.page;
-    query['pageSize'] = history.location.query.pageSize;
+    getQuery['api'] = query.api;
+    getQuery['page'] = query.page;
+    getQuery['pageSize'] = query.pageSize;
 
-    if(history.location.query.sorter) {
-      query['sorter'] = history.location.query.sorter;
+    if(query.sorter) {
+      getQuery['sorter'] = query.sorter;
     }
 
-    if(history.location.query.filter) {
-      query['filter'] = history.location.query.filter;
+    if(query.filter) {
+      getQuery['filter'] = query.filter;
     }
 
     // hack random
-    query['random'] = Math.random();
+    getQuery['random'] = Math.random();
 
-    history.push({ pathname: history.location.pathname, query: query });
+    history.push({ pathname: history.location.pathname, query: getQuery });
     
     if (props.current) {
       props.current.reload();
@@ -104,7 +105,7 @@ const QueryFilter: React.FC<Action> = (props) => {
 
   const searchComponent = (item:any) => {
     let component = null;
-    switch(item.component) {
+    switch(item.type) {
       case 'input':
         if(item.operator == 'between') {
           component = 
@@ -230,26 +231,32 @@ const QueryFilter: React.FC<Action> = (props) => {
   };
 
   return (
-    <ProQueryFilter
-      form={form}
-      onFinish = {async (values) => { onFinish(values) }}
-      onReset = {async () => { onReset() }}
-      labelAlign = {props.search.labelAlign}
-      size = {props.search.size}
-      defaultCollapsed = {props.search.defaultCollapsed}
-      hideRequiredMark = {props.search.hideRequiredMark}
-      defaultColsNumber = {props.search.defaultColsNumber}
-      labelWidth = {props.search.labelWidth}
-      span = {props.search.span}
-      split = {props.search.split}
-      style={{padding:'30px 30px 0px 0px'}}
+    <div style={{
+        marginBottom: '16px',
+        padding: '24px 24px 0',
+        background: '#fff'
+      }}
     >
-      {
-        items.length >0 ? items.map((item: any, key: any) => {
-          return searchComponent(item);
-        }) : null
-      }
-    </ProQueryFilter>
+      <ProQueryFilter
+        form={form}
+        onFinish = {async (values) => { onFinish(values) }}
+        onReset = {async () => { onReset() }}
+        labelAlign = {props.search.labelAlign}
+        size = {props.search.size}
+        defaultCollapsed = {props.search.defaultCollapsed}
+        hideRequiredMark = {props.search.hideRequiredMark}
+        defaultColsNumber = {props.search.defaultColsNumber}
+        labelWidth = {props.search.labelWidth}
+        span = {props.search.span}
+        split = {props.search.split}
+      >
+        {
+          items?.length >0 ? items.map((item: any, key: any) => {
+            return searchComponent(item);
+          }) : null
+        }
+      </ProQueryFilter>
+    </div>
   );
 }
 

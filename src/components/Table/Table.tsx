@@ -3,6 +3,7 @@ import ProTable from '@ant-design/pro-table';
 import { history, Link } from 'umi';
 import { get, post } from '@/services/action';
 import Render from '@/components/Render';
+import QueryFilter from '@/components/Table/QueryFilter';
 import Action from '@/components/Action/Action';
 import {
   Popover,
@@ -104,19 +105,19 @@ const Table: React.FC<Table> = (props:any) => {
     return conmpontent
   }
 
-  const getTableDatasource:any = async (key:string,params:any) => {
+  const getTableDatasource:any = async (key:string) => {
     let result,table = null;
-    const api = props.api ? props.api : params.api;
+    const api = props.api ? props.api : query.api;
 
     if(props.apiType === 'GET') {
       result = await get({
         actionUrl: api,
-        ...params
+        ...query
       });
     } else if(props.apiType === 'POST') {
       result = await post({
         actionUrl: api,
-        ...params
+        ...query
       });
     }
 
@@ -129,84 +130,80 @@ const Table: React.FC<Table> = (props:any) => {
     return table;
   }
 
-  const keep = useTableKeep<any>()
-
   return (
-    <ProTable
-      {...props}
-      // {...keep}
-      // pagination = {{
-      //   ...keep.pagination,
-      //   current: props.pagination.current,
-      //   pageSize: props.pagination.pageSize
-      // }}
-      actionRef={actionRef}
-      columns={props.columns ? parseColumns(props.columns) : []}
-      components={{
-        body: {
-          row: EditableRow,
-          cell: EditableCell,
-        },
-      }}
-      tableAlertRender={({ selectedRowKeys, onCleanSelected }) => (
-        <Space size={24}>
-          <span>
-            已选 {selectedRowKeys.length} 项
-            <a style={{ marginLeft: 8 }} onClick={onCleanSelected}>
-              取消选择
-            </a>
-          </span>
-        </Space>
-      )}
-      tableAlertOptionRender={({ selectedRowKeys, onCleanSelected}) => {
-        const data = {
-          ids:selectedRowKeys
-        };
-        return (
-          props?.batchActions?.map((action:any) => {
-            return <Action {...action} data={data} callback={onCleanSelected} />
-          })
-        );
-      }}
-      request={async (params:any, sorter:any, filter:any) => {
+    <>
+      {props.autoBuildSearchFrom === false ? <QueryFilter search={props.search} current={actionRef.current}/> : null}
+      <ProTable
+        {...props}
+        search={props.autoBuildSearchFrom}
+        actionRef={actionRef}
+        columns={props.columns ? parseColumns(props.columns) : []}
+        components={{
+          body: {
+            row: EditableRow,
+            cell: EditableCell,
+          },
+        }}
+        tableAlertRender={({ selectedRowKeys, onCleanSelected }) => (
+          <Space size={24}>
+            <span>
+              已选 {selectedRowKeys.length} 项
+              <a style={{ marginLeft: 8 }} onClick={onCleanSelected}>
+                取消选择
+              </a>
+            </span>
+          </Space>
+        )}
+        tableAlertOptionRender={({ selectedRowKeys, onCleanSelected}) => {
+          const data = {
+            ids:selectedRowKeys
+          };
+          return (
+            props?.batchActions?.map((action:any) => {
+              return <Action {...action} data={data} callback={onCleanSelected} />
+            })
+          );
+        }}
+        request={async (params:any, sorter:any, filter:any) => {
+          let getQuery:any = query;
 
-        params['api'] = query.api;
-        params['page'] = params.current;
+          getQuery['page'] = params.current;
+          getQuery['pageSize'] = params.pageSize;
+          getQuery['search'] = query.search;
 
-        if(JSON.stringify(sorter) != "{}") {
-          params['sorter'] = sorter;
-        }
+          if(JSON.stringify(sorter) != "{}") {
+            getQuery['sorter'] = sorter;
+          }
 
-        if(JSON.stringify(filter) != "{}") {
-          params['filter'] = filter;
-        }
+          if(JSON.stringify(filter) != "{}") {
+            getQuery['filter'] = filter;
+          }
 
-        const table = await getTableDatasource(props.tableKey, params);
+          history.push({ pathname: history.location.pathname, query: getQuery });
 
-        return Promise.resolve({
-          data: table.datasource,
-          total: table?.pagination?.total,
-          success: true,
-        });
-      }}
-      toolbar={{
-        ...props.toolBar,
-        actions: props.toolBar?.actions ? [<Render body={props.toolBar?.actions} data={props.data} />] : undefined,
-      }}
-      form={{
-        syncToUrl:true,
-        syncToInitialValues:true
-      }}
-      rowClassName={(record, index)=> {
-        if(props.striped) {
-          if(index%2 != 0) {
-            return styles.oddTr;
-          } 
-        } else {
-          return null;
-        }
-      }}
-    />
+          const table = await getTableDatasource(props.tableKey);
+
+          return Promise.resolve({
+            data: table.datasource,
+            total: table?.pagination?.total,
+            success: true,
+          });
+        }}
+        toolbar={{
+          ...props.toolBar,
+          actions: props.toolBar?.actions ? [<Render body={props.toolBar?.actions} data={props.data} />] : undefined,
+        }}
+        rowClassName={(record, index)=> {
+          if(props.striped) {
+            if(index%2 != 0) {
+              return styles.oddTr;
+            } 
+          } else {
+            return null;
+          }
+        }}
+      />
+    </>
   );
 }
 
