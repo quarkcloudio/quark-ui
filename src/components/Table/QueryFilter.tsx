@@ -169,6 +169,7 @@ const QueryFilter: React.FC<Action> = (props) => {
             key={item.name}
             label={item.label}
             name={item.name}
+            placeholder={item.placeholder}
             style={item.style ? item.style : []}
           />
         } else {
@@ -190,6 +191,7 @@ const QueryFilter: React.FC<Action> = (props) => {
             key={item.name}
             label={item.label}
             name={item.name}
+            placeholder={item.placeholder}
             style={item.style ? item.style : []}
           />
         } else {
