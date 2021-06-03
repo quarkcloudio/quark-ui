@@ -5,6 +5,7 @@ import { ResponseError } from 'umi-request';
 import { queryQuarkInfo, queryQuarkLayout, queryQuarkMenus, queryAccountInfo } from '@/services/quark';
 import defaultSettings from '../config/defaultSettings';
 import logo from './assets/logo.png';
+import {Response} from "express";
 
 export async function getInitialState(): Promise<{
   accountInfo?: API.AccountInfo;
@@ -118,6 +119,17 @@ const errorHandler = (error: ResponseError) => {
 
 export const request: RequestConfig = {
   errorHandler: errorHandler,
+  responseInterceptors: [
+    (response, options) => {
+      if(response.status == 208){ //跳转新的url
+        const locationUrl = response.headers.get('Location');
+        if(locationUrl){
+          window.open(locationUrl, response.headers.get('Target') || '_blank');
+        }
+      }
+      return response;
+    }
+  ],
   // 请求拦截器
   requestInterceptors: [
     (url: string, options) => {
