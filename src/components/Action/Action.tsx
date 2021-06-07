@@ -148,7 +148,7 @@ const Action: React.FC<any> = (props) => {
             shape={props.shape}
             size={props.size}
             type={props.showStyle}
-            icon={props.icon ? <IconFont type={props.icon} /> : null}
+            icon={props.icon ? <IconFont type={props.icon} /> : false}
           >
             {tplEngine(props.label,props.data)}
           </Button>
@@ -163,7 +163,7 @@ const Action: React.FC<any> = (props) => {
           shape={props.shape}
           size={props.size}
           type={props.showStyle}
-          icon={props.icon ? <IconFont type={props.icon} /> : null}
+          icon={props.icon ? <IconFont type={props.icon} /> : false}
           onClick={()=>{ props.confirmTitle ? showConfirm(props.api) : executeAction(props.api)}}
         >
           {tplEngine(props.label,props.data)}
@@ -187,7 +187,7 @@ const Action: React.FC<any> = (props) => {
               shape={props.shape}
               size={props.size}
               type={props.showStyle}
-              icon={props.icon ? <IconFont type={props.icon} /> : null}
+              icon={props.icon ? <IconFont type={props.icon} /> : false}
             >
               {tplEngine(props.label,props.data)}
             </Button>
@@ -202,7 +202,7 @@ const Action: React.FC<any> = (props) => {
             shape={props.shape}
             size={props.size}
             type={props.showStyle}
-            icon={props.icon ? <IconFont type={props.icon} /> : null}
+            icon={props.icon ? <IconFont type={props.icon} /> : false}
             onClick={()=>{ props.confirmTitle ? showConfirm(props.form, props.actionType) : props.form?.submit?.()}}
           >
             {tplEngine(props.label,props.data)}
@@ -226,7 +226,7 @@ const Action: React.FC<any> = (props) => {
               shape={props.shape}
               size={props.size}
               type={props.showStyle}
-              icon={props.icon ? <IconFont type={props.icon} /> : null}
+              icon={props.icon ? <IconFont type={props.icon} /> : false}
             >
               {tplEngine(props.label,props.data)}
             </Button>
@@ -241,7 +241,7 @@ const Action: React.FC<any> = (props) => {
             shape={props.shape}
             size={props.size}
             type={props.showStyle}
-            icon={props.icon ? <IconFont type={props.icon} /> : null}
+            icon={props.icon ? <IconFont type={props.icon} /> : false}
             onClick={()=>{ props.confirmTitle ? showConfirm(props.form, props.actionType) : props.form?.resetFields()}}
           >
             {tplEngine(props.label,props.data)}
@@ -265,7 +265,7 @@ const Action: React.FC<any> = (props) => {
               shape={props.shape}
               size={props.size}
               type={props.showStyle}
-              icon={props.icon ? <IconFont type={props.icon} /> : null}
+              icon={props.icon ? <IconFont type={props.icon} /> : false}
             >
               {tplEngine(props.label,props.data)}
             </Button>
@@ -280,7 +280,7 @@ const Action: React.FC<any> = (props) => {
             shape={props.shape}
             size={props.size}
             type={props.showStyle}
-            icon={props.icon ? <IconFont type={props.icon} /> : null}
+            icon={props.icon ? <IconFont type={props.icon} /> : false}
             onClick={()=>{ props.confirmTitle ? showConfirm(null, props.actionType) : history.go(-1)}}
           >
             {tplEngine(props.label,props.data)}
@@ -300,7 +300,7 @@ const Action: React.FC<any> = (props) => {
           href={dataMapping(props.href,props.data)}
           target={props.target}
           type={props.showStyle}
-          icon={props.icon ? <IconFont type={props.icon} /> : null}
+          icon={props.icon ? <IconFont type={props.icon} /> : false}
         >
           {tplEngine(props.label,props.data)}
         </Button>
@@ -315,7 +315,7 @@ const Action: React.FC<any> = (props) => {
         shape={props.shape}
         size={props.size}
         type={props.showStyle}
-        icon={props.icon ? <IconFont type={props.icon} /> : null}
+        icon={props.icon ? <IconFont type={props.icon} /> : false}
       >
         {tplEngine(props.label,props.data)}
       </Button>

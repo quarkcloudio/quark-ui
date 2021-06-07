@@ -9,9 +9,7 @@ import {
   Popover,
   Space
 } from 'antd';
-import BatchAction from './BatchAction';
 import { EditableRow, EditableCell } from './Editable';
-import { useTableKeep } from './useTableKeep';
 import styles from './Table.less'
 
 export interface Table {
@@ -156,7 +154,8 @@ const Table: React.FC<Table> = (props:any) => {
         )}
         tableAlertOptionRender={({ selectedRowKeys, onCleanSelected}) => {
           const data = {
-            ids:selectedRowKeys
+            ids:selectedRowKeys,
+            id:selectedRowKeys
           };
           return (
             props?.batchActions?.map((action:any) => {
