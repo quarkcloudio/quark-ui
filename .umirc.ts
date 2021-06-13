@@ -13,6 +13,7 @@ export default defineConfig({
   },
   publicPath: './',
   history: { type: 'hash' },
+  title: false,
   routes: [
     { path: '/', component: '@/pages/Index/index' },
     { path: '/index', component: '@/pages/Index/index' },

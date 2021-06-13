@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { history } from 'umi';
+import { history, Helmet } from 'umi';
 import { get } from '@/services/action';
 import Render from '@/components/Render';
 
@@ -25,6 +25,10 @@ const Page: React.FC<any> = (props:any) => {
 
   return (
     <div style={props?.style}>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>{props.title}</title>
+      </Helmet>
       <Render body={props.body} data={data ? data : props.data} />
     </div>
   );
