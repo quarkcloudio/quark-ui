@@ -34,7 +34,7 @@ const Table: React.FC<Table> = (props:any) => {
         break;
 
       default:
-        columnComponent = <span style={column.style}>{text}</span>;
+        columnComponent = <Render body={text} data={row} />;
         break;
     }
 
