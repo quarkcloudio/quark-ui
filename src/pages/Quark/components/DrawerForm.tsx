@@ -39,6 +39,7 @@ const DrawerForm: React.FC<any> = (props:any) => {
   });
 
   const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const getComponent = async () => {
     const result = await get({
@@ -55,7 +56,7 @@ const DrawerForm: React.FC<any> = (props:any) => {
         }
       }
     });
-    
+
     form.setFieldsValue(initialValues);
     setVisible(true);
   }
@@ -68,7 +69,7 @@ const DrawerForm: React.FC<any> = (props:any) => {
     if(data.hasOwnProperty('content')) {
       return findFormComponent(data.content);
     }
-  
+
     let conmpontent = [];
 
     if(data.hasOwnProperty(0)) {
@@ -120,16 +121,20 @@ const DrawerForm: React.FC<any> = (props:any) => {
     if(formComponent.disabledSubmitButton === true) {
       return null;
     }
-    
+
     return (
       <Space>
         <Button onClick={()=>setVisible(false)}>
           取消
         </Button>
         <Button
+          loading={loading}
           onClick={() => {
             form.validateFields().then((values:any) => {
-                onFinish(values);
+                setLoading(true);
+                onFinish(values).finally(() => {
+                  setLoading(false);
+                });
               }).catch((info:any) => {
                 console.log('Validate Failed:', info);
               });
