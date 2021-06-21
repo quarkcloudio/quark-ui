@@ -26,25 +26,21 @@ const Table: React.FC<Table> = (props:any) => {
 
   // 渲染column
   const columnRender = (column:any, row:any, text:any) => {
-    let columnComponent = null;
 
-    switch (column.valueType) {
-      case 'option':
-        columnComponent = <Render body={column.actions} data={row} />;
-        break;
-
-      default:
-        columnComponent = <Render body={text} data={row} />;
-        break;
+    if(column.valueType === 'option') {
+      text = <Render body={column.actions} data={row} />;
     }
 
-    return columnComponent;
+    if(column.valueType === 'text') {
+      text = <Render body={text} data={row} />;
+    }
+
+    return text;
   }
 
   const editableSave = async (data:any) => {
     const result = await get({
       actionUrl: data.editable.action,
-      key: 'editable',
       id: data.id,
       ...data.values
     });
@@ -57,9 +53,7 @@ const Table: React.FC<Table> = (props:any) => {
   const parseColumns = (columns:any) => {
     columns.map((item:any,key:any) => {
       item.render = (text:any, row:any) => (
-        <>
-          {columnRender(item, row, text)}
-        </>
+        columnRender(item, row, text)
       );
       columns[key] = item;
     })
@@ -84,7 +78,7 @@ const Table: React.FC<Table> = (props:any) => {
   }
 
   const findComponent:any = (data:any,key:string) => {
-    let conmpontent = [];
+    let component = [];
 
     if(data.key === key) {
       return data;
@@ -95,12 +89,12 @@ const Table: React.FC<Table> = (props:any) => {
     }
 
     if(data.hasOwnProperty(0)) {
-      conmpontent = (data.map((item:any) => {
+      component = (data.map((item:any) => {
         return findComponent(item,key);
       }));
     }
 
-    return conmpontent
+    return component
   }
 
   const getTableDatasource:any = async (key:string) => {

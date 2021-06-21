@@ -151,7 +151,7 @@ const Render: React.FC<any> = (props:any) => {
     return component;
   }
 
-  const component = componentRender(props.body,props.data);
+  const component = componentRender(props.body, props.data);
 
   return (typeof component === 'string') ? <span dangerouslySetInnerHTML={{__html: component}} /> : component
 }

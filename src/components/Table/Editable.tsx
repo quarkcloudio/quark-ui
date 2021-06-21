@@ -67,11 +67,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
           break;
       
         case 'switch':
-          if(values[dataIndex] == true) {
-            value = editable.options.on.value;
-          } else {
-            value = editable.options.off.value;
-          }
+          value = values[dataIndex];
           editableForm.setFieldsValue({ [dataIndex]: record[dataIndex]});
           break;
 
@@ -126,9 +122,9 @@ const EditableCell: React.FC<EditableCellProps> = ({
             <Switch
               ref={inputRef}
               onChange={save}
-              checkedChildren={editable.options.on.text}
-              unCheckedChildren={editable.options.off.text}
-              checked={(record[dataIndex] == editable.options.on.value) ? true : false}
+              checkedChildren={editable.options.on}
+              unCheckedChildren={editable.options.off}
+              checked={(record[dataIndex] == 1) ? true : false}
             />
           </Form.Item>
         );
@@ -155,23 +151,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
         );
         editableForm.setFieldsValue({ [dataIndex]: record[dataIndex].toString() });
         break;
-
-        case 'switch':
-          childNode = (
-            <Form.Item
-              style={{ margin: 0 }}
-              name={dataIndex}
-            >
-              <Switch
-                ref={inputRef}
-                onChange={save}
-                checkedChildren={editable.option.on.text}
-                unCheckedChildren={editable.option.off.text}
-                checked={(record[dataIndex] == editable.option.on.value) ? true : false}
-              />
-            </Form.Item>
-          );
-          break;
 
       default:
         childNode = editing ? (
