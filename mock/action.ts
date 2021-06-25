@@ -160,6 +160,11 @@ export default {
                                                 href: 'http://www.baidu.com',
                                                 target: '_blank'
                                             },
+                                            {
+                                                type: "action",
+                                                label: "Modal Form Button",
+                                                actionType: 'modal',
+                                            },
                                         ]
                                     }
                                 }

@@ -306,7 +306,7 @@ const Action: React.FC<any> = (props) => {
         </Button>
         break;
         
-      case 'dialog':
+      case 'modal':
         component =
         <Button
           block={props.block}
