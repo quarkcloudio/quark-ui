@@ -29,7 +29,8 @@ const Show: React.FC<any> = (props:any) => {
         }
 
         if(item.link) {
-          if(item.link.target === '_blank') {
+          //设置target时为浏览器跳转，未设置时为前端路由跳转
+          if (item.link.target) {
             component = <a href={item.link.href} target={item.link.target}>{component}</a>
           } else {
             component = <Link to={item.href}>{component}</Link>
@@ -55,7 +56,7 @@ const Show: React.FC<any> = (props:any) => {
         layout={props.show.layout}
         colon={props.show.colon}
         extra={
-          props.show.backButton ? 
+          props.show.backButton ?
             <Button type="link" onClick={e => {history.go(-1);}}>
               返回上一页
             </Button>
