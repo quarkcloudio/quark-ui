@@ -143,6 +143,21 @@ export default {
                             path: '/index?api=table/index',
                             name: '基础表格',
                         },
+                        {
+                            key: '6-2',
+                            path: '/index?api=table/search',
+                            name: '搜索栏',
+                        },
+                        {
+                            key: '6-3',
+                            path: '/index?api=table/tool',
+                            name: '工具栏',
+                        },
+                        {
+                            key: '6-4',
+                            path: '/index?api=table/batchAction',
+                            name: '批量操作',
+                        },
                     ],
                 },
                 {
@@ -152,7 +167,7 @@ export default {
                     icon: 'icon-plugin',
                     children: [
                         {
-                            key: '6-1',
+                            key: '7-1',
                             path: '/index?api=action/index',
                             name: '行为按钮',
                         },

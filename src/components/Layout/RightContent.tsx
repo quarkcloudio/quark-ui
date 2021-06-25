@@ -93,15 +93,19 @@ const RightContent: React.FC<any> = (props) => {
   return (
     <Space className={styles.right}>
       { props.headerActions ? parseHeaderActions(props.headerActions) : null}
-      <Dropdown overlay={menuHeaderDropdown}>
-        <span className={`${styles.action} ${styles.account}`}>
-          {accountInfo.avatar ? 
-            <Avatar size="small" className={styles.avatar} src={accountInfo.avatar} />
-          :
-          <Avatar size="small" className={styles.avatar} icon={<UserOutlined />} />}
-          <span className={`${styles.name} anticon`}>{accountInfo.nickname}</span>
-        </span>
-      </Dropdown>
+      {accountInfo ?
+        <Dropdown overlay={menuHeaderDropdown}>
+          <span className={`${styles.action} ${styles.account}`}>
+            {accountInfo.avatar ? 
+              <Avatar size="small" className={styles.avatar} src={accountInfo.avatar} />
+            :
+            <Avatar size="small" className={styles.avatar} icon={<UserOutlined />} />}
+            <span className={`${styles.name} anticon`}>{accountInfo.nickname}</span>
+          </span>
+        </Dropdown>
+      :
+        null
+      }
     </Space>
   );
 };

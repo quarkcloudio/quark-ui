@@ -124,7 +124,7 @@ const Table: React.FC<Table> = (props:any) => {
 
   return (
     <>
-      {props.autoBuildSearchFrom === false ? <QueryFilter search={props.search} current={actionRef.current}/> : null}
+      {(props.autoBuildSearchFrom === false && props.search) ? <QueryFilter search={props.search} current={actionRef.current}/> : null}
       <ProTable
         {...props}
         search={props.autoBuildSearchFrom}

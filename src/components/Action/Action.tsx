@@ -305,6 +305,7 @@ const Action: React.FC<any> = (props) => {
           {tplEngine(props.label,props.data)}
         </Button>
         break;
+        
       case 'dialog':
         component =
         <Button
