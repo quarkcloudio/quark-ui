@@ -304,6 +304,21 @@ const Action: React.FC<any> = (props) => {
         >
           {tplEngine(props.label,props.data)}
         </Button>
+        break;
+      case 'dialog':
+        component =
+        <Button
+          block={props.block}
+          danger={props.danger}
+          disabled={props.disabled}
+          ghost={props.ghost}
+          shape={props.shape}
+          size={props.size}
+          type={props.showStyle}
+          icon={props.icon ? <IconFont type={props.icon} /> : false}
+        >
+          {tplEngine(props.label,props.data)}
+        </Button>
       break;
     default:
       component =
