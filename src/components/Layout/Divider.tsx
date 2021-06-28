@@ -10,7 +10,7 @@ const Divider: React.FC<any> = (props:any) => {
       orientation={props.orientation}
       plain={props.plain}
       style={props.style}
-      type={props.showType ? props.showType : 'horizontal'}
+      type={props.type ? props.type : 'horizontal'}
     >
       <Render body={props.body} data={props.data} />
     </AntDivider>

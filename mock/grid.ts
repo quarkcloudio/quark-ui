@@ -2,23 +2,23 @@ export default {
 
     // 基础栅格实例
     'GET /api/grid/index': {
-        type: "page",
+        component: "page",
         style: {
             height: '100vh',
         },
         body: {
-            type: "layout",
+            component: "layout",
             cache: true,
             body: {
-                type: "pageContainer",
+                component: "pageContainer",
                 title: '基础栅格',
                 body: {
-                    type: "card",
+                    component: "card",
                     body: [
                         {
-                            type: "row",
+                            component: "row",
                             body: {
-                                type: "col",
+                                component: "col",
                                 span: 24,
                                 style: {
                                     padding:"16px 0",
@@ -30,13 +30,13 @@ export default {
                             }
                         },
                         {
-                            type: "row",
+                            component: "row",
                             style: {
                                 marginTop:"20px",
                             },
                             body: [
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 12,
                                     style: {
                                         padding:"16px 0",
@@ -47,7 +47,7 @@ export default {
                                     body: "col-12"
                                 },
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 12,
                                     style: {
                                         padding:"16px 0",
@@ -60,13 +60,13 @@ export default {
                             ]
                         },
                         {
-                            type: "row",
+                            component: "row",
                             style: {
                                 marginTop:"20px",
                             },
                             body: [
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 8,
                                     style: {
                                         padding:"16px 0",
@@ -77,7 +77,7 @@ export default {
                                     body: "col-8"
                                 },
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 8,
                                     style: {
                                         padding:"16px 0",
@@ -88,7 +88,7 @@ export default {
                                     body: "col-8"
                                 },
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 8,
                                     style: {
                                         padding:"16px 0",
@@ -101,13 +101,13 @@ export default {
                             ]
                         },
                         {
-                            type: "row",
+                            component: "row",
                             style: {
                                 marginTop:"20px",
                             },
                             body: [
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 6,
                                     style: {
                                         padding:"16px 0",
@@ -118,7 +118,7 @@ export default {
                                     body: "col-6"
                                 },
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 6,
                                     style: {
                                         padding:"16px 0",
@@ -129,7 +129,7 @@ export default {
                                     body: "col-6"
                                 },
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 6,
                                     style: {
                                         padding:"16px 0",
@@ -140,7 +140,7 @@ export default {
                                     body: "col-6"
                                 },
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 6,
                                     style: {
                                         padding:"16px 0",
@@ -160,28 +160,28 @@ export default {
 
     // 区块间隔
     'GET /api/grid/gutter': {
-        type: "page",
+        component: "page",
         style: {
             height: '100vh',
         },
         body: {
-            type: "layout",
+            component: "layout",
             cache: true,
             body: {
-                type: "pageContainer",
+                component: "pageContainer",
                 title: '区块间隔',
                 body: {
-                    type: "card",
+                    component: "card",
                     body: [
                         {
-                            type: "row",
+                            component: "row",
                             gutter: 16,
                             body: [
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 6,
                                     body: {
-                                        type: "container",
+                                        component: "container",
                                         style: {
                                             padding:"16px 0",
                                             background: "#0092ff",
@@ -192,10 +192,10 @@ export default {
                                     },
                                 },
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 6,
                                     body: {
-                                        type: "container",
+                                        component: "container",
                                         style: {
                                             padding:"16px 0",
                                             background: "#0092ff",
@@ -206,10 +206,10 @@ export default {
                                     },
                                 },
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 6,
                                     body: {
-                                        type: "container",
+                                        component: "container",
                                         style: {
                                             padding:"16px 0",
                                             background: "#0092ff",
@@ -220,10 +220,10 @@ export default {
                                     },
                                 },
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 6,
                                     body: {
-                                        type: "container",
+                                        component: "container",
                                         style: {
                                             padding:"16px 0",
                                             background: "#0092ff",
@@ -236,15 +236,15 @@ export default {
                             ]
                         },
                         {
-                            type: "row",
+                            component: "row",
                             style: {marginTop:'20px'},
                             gutter: { xs: 8, sm: 16, md: 24, lg: 32 },
                             body: [
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 6,
                                     body: {
-                                        type: "container",
+                                        component: "container",
                                         style: {
                                             padding:"16px 0",
                                             background: "#0092ff",
@@ -255,10 +255,10 @@ export default {
                                     },
                                 },
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 6,
                                     body: {
-                                        type: "container",
+                                        component: "container",
                                         style: {
                                             padding:"16px 0",
                                             background: "#0092ff",
@@ -269,10 +269,10 @@ export default {
                                     },
                                 },
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 6,
                                     body: {
-                                        type: "container",
+                                        component: "container",
                                         style: {
                                             padding:"16px 0",
                                             background: "#0092ff",
@@ -283,10 +283,10 @@ export default {
                                     },
                                 },
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 6,
                                     body: {
-                                        type: "container",
+                                        component: "container",
                                         style: {
                                             padding:"16px 0",
                                             background: "#0092ff",
@@ -299,15 +299,15 @@ export default {
                             ]
                         },
                         {
-                            type: "row",
+                            component: "row",
                             style: {marginTop:'20px'},
                             gutter: [16, 24],
                             body: [
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 6,
                                     body: {
-                                        type: "container",
+                                        component: "container",
                                         style: {
                                             padding:"16px 0",
                                             background: "#0092ff",
@@ -318,10 +318,10 @@ export default {
                                     },
                                 },
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 6,
                                     body: {
-                                        type: "container",
+                                        component: "container",
                                         style: {
                                             padding:"16px 0",
                                             background: "#0092ff",
@@ -332,10 +332,10 @@ export default {
                                     },
                                 },
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 6,
                                     body: {
-                                        type: "container",
+                                        component: "container",
                                         style: {
                                             padding:"16px 0",
                                             background: "#0092ff",
@@ -346,10 +346,10 @@ export default {
                                     },
                                 },
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 6,
                                     body: {
-                                        type: "container",
+                                        component: "container",
                                         style: {
                                             padding:"16px 0",
                                             background: "#0092ff",
@@ -369,27 +369,27 @@ export default {
 
     // 左右偏移
     'GET /api/grid/offset': {
-        type: "page",
+        component: "page",
         style: {
             height: '100vh',
         },
         body: {
-            type: "layout",
+            component: "layout",
             cache: true,
             body: {
-                type: "pageContainer",
+                component: "pageContainer",
                 title: '左右偏移',
                 body: {
-                    type: "card",
+                    component: "card",
                     body: [
                         {
-                            type: "row",
+                            component: "row",
                             body: [
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 8,
                                     body: {
-                                        type: "container",
+                                        component: "container",
                                         style: {
                                             padding:"16px 0",
                                             background: "#0092ff",
@@ -400,11 +400,11 @@ export default {
                                     },
                                 },
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 8,
                                     offset: 8,
                                     body: {
-                                        type: "container",
+                                        component: "container",
                                         style: {
                                             padding:"16px 0",
                                             background: "#0092ff",
@@ -417,15 +417,15 @@ export default {
                             ]
                         },
                         {
-                            type: "row",
+                            component: "row",
                             style: {marginTop:'20px'},
                             body: [
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 6,
                                     offset: 6,
                                     body: {
-                                        type: "container",
+                                        component: "container",
                                         style: {
                                             padding:"16px 0",
                                             background: "#0092ff",
@@ -436,11 +436,11 @@ export default {
                                     },
                                 },
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 6,
                                     offset: 6,
                                     body: {
-                                        type: "container",
+                                        component: "container",
                                         style: {
                                             padding:"16px 0",
                                             background: "#0092ff",
@@ -453,15 +453,15 @@ export default {
                             ]
                         },
                         {
-                            type: "row",
+                            component: "row",
                             style: {marginTop:'20px'},
                             body: [
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 12,
                                     offset: 6,
                                     body: {
-                                        type: "container",
+                                        component: "container",
                                         style: {
                                             padding:"16px 0",
                                             background: "#0092ff",

@@ -2,18 +2,18 @@ export default {
 
     // 基础卡片实例
     'GET /api/card/index': {
-        type: "page",
+        component: "page",
         style: {
             height: '100vh',
         },
         body: {
-            type: "layout",
+            component: "layout",
             cache: true,
             body: {
-                type: "pageContainer",
+                component: "pageContainer",
                 title: '基础卡片',
                 body: {
-                    type: "card",
+                    component: "card",
                     title: '基础卡片',
                     extra: 'extra',
                     tooltip: '这里是提示',
@@ -25,37 +25,37 @@ export default {
 
     // 栅格布局实例
     'GET /api/card/grid': {
-        type: "page",
+        component: "page",
         style: {
             height: '100vh',
         },
         body: {
-            type: "layout",
+            component: "layout",
             cache: true,
             body: {
-                type: "pageContainer",
+                component: "pageContainer",
                 title: '栅格布局',
                 body: [
                     {
-                        type: "card",
+                        component: "card",
                         ghost: true,
                         gutter: 8,
                         body: [
                             {
-                                type: "card",
+                                component: "card",
                                 layout: 'center',
                                 bordered: true,
                                 body: "colSpan - 24"
                             },
                             {
-                                type: "card",
+                                component: "card",
                                 colSpan: 12,
                                 layout: 'center',
                                 bordered: true,
                                 body: "colSpan - 12"
                             },
                             {
-                                type: "card",
+                                component: "card",
                                 colSpan: 8,
                                 layout: 'center',
                                 bordered: true,
@@ -64,7 +64,7 @@ export default {
                         ]
                     },
                     {
-                        type: "card",
+                        component: "card",
                         title: "24栅格",
                         style:{
                             marginTop:8
@@ -72,21 +72,21 @@ export default {
                         gutter: 8,
                         body: [
                             {
-                                type: "card",
+                                component: "card",
                                 colSpan: 12,
                                 layout: 'center',
                                 bordered: true,
                                 body: "colSpan - 12"
                             },
                             {
-                                type: "card",
+                                component: "card",
                                 colSpan: 6,
                                 layout: 'center',
                                 bordered: true,
                                 body: "colSpan - 6"
                             },
                             {
-                                type: "card",
+                                component: "card",
                                 colSpan: 6,
                                 layout: 'center',
                                 bordered: true,
@@ -95,7 +95,7 @@ export default {
                         ]
                     },
                     {
-                        type: "card",
+                        component: "card",
                         gutter: 8,
                         style:{
                             marginTop:8
@@ -103,14 +103,14 @@ export default {
                         ghost:true,
                         body: [
                             {
-                                type: "card",
+                                component: "card",
                                 colSpan: '200px',
                                 layout: 'center',
                                 bordered: true,
                                 body: "colSpan - 200px"
                             },
                             {
-                                type: "card",
+                                component: "card",
                                 layout: 'center',
                                 bordered: true,
                                 body: "Auto"

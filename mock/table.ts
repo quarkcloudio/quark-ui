@@ -2,22 +2,22 @@ export default {
 
     // 表单实例
     'GET /api/table/index': {
-        type: "page",
+        component: "page",
         style: {
             height: '100vh',
         },
         body: {
-            type: "layout",
+            component: "layout",
             cache: true,
             body: {
-                type: "pageContainer",
+                component: "pageContainer",
                 title: '基础表格',
                 body: {
-                    type: "card",
+                    component: "card",
                     title: '基础表格',
                     headerBordered: true,
                     body: {
-                        type: "table",
+                        component: "table",
                         key: 'table', // 组件唯一标识，必须填写
                         api: 'table/datasource',
                         apiType: 'GET',
@@ -39,22 +39,22 @@ export default {
 
     // 搜索栏
     'GET /api/table/search': {
-        type: "page",
+        component: "page",
         style: {
             height: '100vh',
         },
         body: {
-            type: "layout",
+            component: "layout",
             cache: true,
             body: {
-                type: "pageContainer",
+                component: "pageContainer",
                 title: '搜索栏',
                 body: {
-                    type: "card",
+                    component: "card",
                     title: '搜索栏',
                     headerBordered: true,
                     body: {
-                        type: "table",
+                        component: "table",
                         key: 'table', // 组件唯一标识，必须填写
                         api: 'table/datasource',
                         apiType: 'GET',
@@ -79,7 +79,7 @@ export default {
                                     label: "用户名",
                                     name: "username",
                                     placeholder: "请输入用户名",
-                                    type: "input",
+                                    component: "input",
                                 },
                                 {
                                     label: "状态",
@@ -89,14 +89,14 @@ export default {
                                         {label: "禁用", value: "off"}
                                     ],
                                     placeholder: "请选择状态",
-                                    type: "select"
+                                    component: "select"
                                 },
                                 {
                                     label: "登录时间",
                                     name: "last_login_time",
                                     operator: "between",
                                     placeholder: ["开始登录时间", "结束登录时间"],
-                                    type: "datetime"
+                                    component: "datetime"
                                 }
                             ],
                             labelAlign: "right",
@@ -112,22 +112,22 @@ export default {
 
     // 工具栏
     'GET /api/table/tool': {
-        type: "page",
+        component: "page",
         style: {
             height: '100vh',
         },
         body: {
-            type: "layout",
+            component: "layout",
             cache: true,
             body: {
-                type: "pageContainer",
+                component: "pageContainer",
                 title: '工具栏',
                 body: {
-                    type: "card",
+                    component: "card",
                     title: '工具栏',
                     headerBordered: true,
                     body: {
-                        type: "table",
+                        component: "table",
                         key: 'table', // 组件唯一标识，必须填写
                         api: 'table/datasource',
                         apiType: 'GET',
@@ -142,10 +142,10 @@ export default {
                             },
                         ],
                         toolBar: {
-                            type: "toolBar",
+                            component: "toolBar",
                             actions: [ // 可以渲染任何quark ui的组件
                                 {
-                                    type: "action",
+                                    component: "action",
                                     actionType: "link",
                                     api: "admin/admin/action/create-link?id={id}",
                                     href: "#/index?api=admin/admin/create",
@@ -171,22 +171,22 @@ export default {
 
     // 批量操作
     'GET /api/table/batchAction': {
-        type: "page",
+        component: "page",
         style: {
             height: '100vh',
         },
         body: {
-            type: "layout",
+            component: "layout",
             cache: true,
             body: {
-                type: "pageContainer",
+                component: "pageContainer",
                 title: '批量操作',
                 body: {
-                    type: "card",
+                    component: "card",
                     title: '批量操作',
                     headerBordered: true,
                     body: {
-                        type: "table",
+                        component: "table",
                         key: 'table', // 组件唯一标识，必须填写
                         api: 'table/datasource',
                         apiType: 'GET',
@@ -213,7 +213,7 @@ export default {
                                 reload: "table",
                                 showStyle: "link",
                                 size: "small",
-                                type: "action"
+                                component: "action"
                             }
                         ]
                     }

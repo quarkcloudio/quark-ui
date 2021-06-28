@@ -105,7 +105,7 @@ const QueryFilter: React.FC<Action> = (props) => {
 
   const searchComponent = (item:any) => {
     let component = null;
-    switch(item.type) {
+    switch(item.component) {
       case 'input':
         if(item.operator == 'between') {
           component = 

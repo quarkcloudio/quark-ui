@@ -2,7 +2,7 @@ export default {
 
     // 行为实例
     'GET /api/action/index': {
-        type: "page",
+        component: "page",
         style: {
             height: '100vh',
         },
@@ -10,73 +10,73 @@ export default {
             testId:1
         },
         body: {
-            type: "layout",
+            component: "layout",
             cache: true,
             body: {
-                type: "pageContainer",
+                component: "pageContainer",
                 title: '行为按钮',
                 body: {
-                    type: "card",
+                    component: "card",
                     title: '行为按钮',
                     headerBordered: true,
                     body: [
                         {
-                            type: "row",
+                            component: "row",
                             body: [
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 24,
                                     style: {
                                         padding:"16px 0",
                                     },
                                     body: [
                                         {
-                                            type: 'divider',
+                                            component: 'divider',
                                             orientation: 'left',
                                             body: '按钮类型'
                                         },
                                         {
-                                            type: 'paragraph',
+                                            component: 'paragraph',
                                             body: '按钮有五种类型：主按钮、次按钮、虚线按钮、文本按钮和链接按钮。主按钮在同一个操作区域最多出现一次。'
                                         }
                                     ]
                                 },
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 24,
                                     style: {
                                         padding:"16px 0",
                                     },
                                     body: {
-                                        type: "space",
+                                        component: "space",
                                         body: [
                                             {
-                                                type: "action",
+                                                component: "action",
                                                 label: "Default Button",
                                                 showStyle: 'default',
                                             },
                                             {
-                                                type: "action",
+                                                component: "action",
                                                 label: "Primary Button",
                                                 showStyle: 'primary'
                                             },
                                             {
-                                                type: "action",
+                                                component: "action",
                                                 label: "Dashed Button",
                                                 showStyle: 'dashed'
                                             },
                                             {
-                                                type: "action",
+                                                component: "action",
                                                 label: "Text Button",
                                                 showStyle: 'text'
                                             },
                                             {
-                                                type: "action",
+                                                component: "action",
                                                 label: "Link Button",
                                                 showStyle: 'link'
                                             },
                                             {
-                                                type: "action",
+                                                component: "action",
                                                 label: "Primary Button",
                                                 showStyle: 'primary',
                                                 danger: true,
@@ -88,40 +88,40 @@ export default {
                             ]
                         },
                         {
-                            type: "row",
+                            component: "row",
                             body: [
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 24,
                                     style: {
                                         padding:"16px 0",
                                     },
                                     body: [
                                         {
-                                            type: 'divider',
+                                            component: 'divider',
                                             orientation: 'left',
                                             body: '按钮事件'
                                         }
                                     ]
                                 },
                                 {
-                                    type: "col",
+                                    component: "col",
                                     span: 24,
                                     style: {
                                         padding:"16px 0",
                                     },
                                     body: {
-                                        type: "space",
+                                        component: "space",
                                         body: [
                                             {
-                                                type: "action",
+                                                component: "action",
                                                 label: "Ajax Button",
                                                 showStyle: 'default',
                                                 actionType: 'ajax',
                                                 api: 'http://www.baidu.com'
                                             },
                                             {
-                                                type: "action",
+                                                component: "action",
                                                 label: "Button With Confirm",
                                                 showStyle: 'default',
                                                 actionType: 'ajax',
@@ -132,7 +132,7 @@ export default {
                                                 confirmType: 'modal'
                                             },
                                             {
-                                                type: "action",
+                                                component: "action",
                                                 label: "Button With popConfirm",
                                                 showStyle: 'default',
                                                 actionType: 'ajax',
@@ -142,7 +142,7 @@ export default {
                                                 confirmType: 'pop'
                                             },
                                             {
-                                                type: "action",
+                                                component: "action",
                                                 label: "Button Api With Tpl",
                                                 showStyle: 'default',
                                                 actionType: 'ajax',
@@ -153,7 +153,7 @@ export default {
                                                 confirmType: 'modal'
                                             },
                                             {
-                                                type: "action",
+                                                component: "action",
                                                 label: "Link Button",
                                                 showStyle: 'link',
                                                 actionType: 'link',
@@ -161,9 +161,32 @@ export default {
                                                 target: '_blank'
                                             },
                                             {
-                                                type: "action",
+                                                component: "action",
                                                 label: "Modal Form Button",
                                                 actionType: 'modal',
+                                                modal: {
+                                                    title: "一个弹框",
+                                                    body: [
+                                                        {
+                                                            component: "form",
+                                                            api: "https://3xsw4ap8wah59.cfc-execute.bj.baidubce.com/api/amis-mock/sample/$id",
+                                                            items: [
+                                                                {
+                                                                    component: "text",
+                                                                    label: "用户名",
+                                                                    name: "username",
+                                                                    style: {width: 200}
+                                                                },
+                                                                {
+                                                                    component: "password",
+                                                                    label: "密码",
+                                                                    name: "password",
+                                                                    style: {width: 200}
+                                                                },
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
                                             },
                                         ]
                                     }

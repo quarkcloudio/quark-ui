@@ -130,9 +130,9 @@ const Render: React.FC<any> = (props:any) => {
     }
 
     let component:any = null;
-    if(body.hasOwnProperty('type')) {
+    if(body.hasOwnProperty('component')) {
       registerComponent(body,data).map((item:any) => {
-        if(item.key === body.type) {
+        if(item.key === body.component) {
           component = item.component;
         }
       });
@@ -140,7 +140,7 @@ const Render: React.FC<any> = (props:any) => {
       component = (
         body.map((item:any) => {
           return registerComponent(item,data).map((componentItem:any) => {
-            if(componentItem.key === item.type) {
+            if(componentItem.key === item.component) {
               return componentItem.component;
             }
           });

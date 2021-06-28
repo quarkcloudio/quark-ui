@@ -13,7 +13,7 @@ const Descriptions: React.FC<any> = (props:any) => {
     const itemComponent = (
       items.map((item:any) => {
         let component = item.value;
-        switch (item.type) {
+        switch (item.component) {
           case "image":
             if(typeof component === 'object') {
               component = (component.map((componentItem:any) => {

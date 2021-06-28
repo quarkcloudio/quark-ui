@@ -2,35 +2,35 @@ export default {
 
     // 表单实例
     'GET /api/form/index': {
-        type: "page",
+        component: "page",
         style: {
             height: '100vh',
         },
         body: {
-            type: "layout",
+            component: "layout",
             cache: true,
             body: {
-                type: "pageContainer",
+                component: "pageContainer",
                 title: '基础表单',
                 body: {
-                    type: "card",
+                    component: "card",
                     title: '基础表单',
                     headerBordered: true,
                     body: {
-                        type: "form",
+                        component: "form",
                         api: 'https://www.baidu.com',
                         layout: "horizontal",
                         labelCol:{ span: 2 },
                         wrapperCol: { span: 22 },
-                        items: [
+                        body: [
                             {
-                                type: "text",
+                                component: "text",
                                 label: "用户名",
                                 name: "username",
                                 style: {width: 200}
                             },
                             {
-                                type: "password",
+                                component: "password",
                                 label: "密码",
                                 name: "password",
                                 style: {width: 200}

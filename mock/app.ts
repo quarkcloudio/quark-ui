@@ -2,9 +2,9 @@ export default {
 
     // APP默认初始化接口
     'GET /api/app/initData': {
-        type: "page",
+        component: "page",
         body: {
-            type: "login",
+            component: "login",
             api: 'login',
             redirect: '/index?api=app/dashboard/index',
             title: "QuarkCMS",
@@ -31,12 +31,12 @@ export default {
 
     // 仪表盘实例
     'GET /api/app/dashboard/index': {
-        type: "page",
+        component: "page",
         style: {
             height: '100vh',
         },
         body: {
-            type: "layout",
+            component: "layout",
             cache: true,
             title: 'QuarkCMS',
             iconfontUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js',
@@ -175,18 +175,18 @@ export default {
                 },
             ],
             body: {
-                type: "pageContainer",
+                component: "pageContainer",
                 title: '仪表盘',
                 body:[
                     {
-                        type: "row",
+                        component: "row",
                         gutter: 8,
                         body: [
                             {
-                                type: "col",
+                                component: "col",
                                 span: 6,
                                 body: {
-                                    type: "statisticCard",
+                                    component: "statisticCard",
                                     statistic: {
                                         title:'管理员数',
                                         valueStyle:{
@@ -197,10 +197,10 @@ export default {
                                 }
                             },
                             {
-                                type: "col",
+                                component: "col",
                                 span: 6,
                                 body: {
-                                    type: "statisticCard",
+                                    component: "statisticCard",
                                     statistic: {
                                         title:'日志数量',
                                         valueStyle:{
@@ -211,10 +211,10 @@ export default {
                                 }
                             },
                             {
-                                type: "col",
+                                component: "col",
                                 span: 6,
                                 body: {
-                                    type: "statisticCard",
+                                    component: "statisticCard",
                                     statistic: {
                                         title:'图片数量',
                                         valueStyle:{
@@ -225,10 +225,10 @@ export default {
                                 }
                             },
                             {
-                                type: "col",
+                                component: "col",
                                 span: 6,
                                 body: {
-                                    type: "statisticCard",
+                                    component: "statisticCard",
                                     statistic: {
                                         title:'文件数量',
                                         valueStyle:{
@@ -241,49 +241,49 @@ export default {
                         ]
                     },
                     {
-                        type: "row",
+                        component: "row",
                         style: {
                             marginTop: '8px'
                         },
                         gutter: 8,
                         body: [
                             {
-                                type: "col",
+                                component: "col",
                                 span: 12,
                                 body: {
-                                    type: "card",
+                                    component: "card",
                                     body: {
-                                        type: "descriptions",
+                                        component: "descriptions",
                                         title: "系统信息",
                                         column: 1,
                                         items: [
                                             {
-                                                type: "text",
+                                                component: "text",
                                                 label: "系统版本",
                                                 value: "v1.1.7"
                                             },
                                             {
-                                                type: "text",
+                                                component: "text",
                                                 label: "服务器操作系统",
                                                 value: "windows"
                                             },
                                             {
-                                                type: "text",
+                                                component: "text",
                                                 label: "Laravel版本",
                                                 value: "7.30.3"
                                             },
                                             {
-                                                type: "text",
+                                                component: "text",
                                                 label: "运行环境",
                                                 value: "Apache/2.4.39 (Win64) OpenSSL/1.1.1b mod_fcgid/2.3"
                                             },
                                             {
-                                                type: "text",
+                                                component: "text",
                                                 label: "MYSQL版本",
                                                 value: "5.5.62"
                                             },
                                             {
-                                                type: "text",
+                                                component: "text",
                                                 label: "上传限制",
                                                 value: "100M"
                                             },
@@ -292,48 +292,48 @@ export default {
                                 }
                             },
                             {
-                                type: "col",
+                                component: "col",
                                 span: 12,
                                 body: {
-                                    type: "card",
+                                    component: "card",
                                     body: {
-                                        type: "descriptions",
+                                        component: "descriptions",
                                         title: "团队信息",
                                         column: 1,
                                         items: [
                                             {
-                                                type: "text",
+                                                component: "text",
                                                 label: "作者",
                                                 value: "tangtanglove"
                                             },
                                             {
-                                                type: "text",
+                                                component: "text",
                                                 label: "联系方式",
                                                 value: "dai_hang_love@126.com"
                                             },
                                             {
-                                                type: "link",
+                                                component: "link",
                                                 label: "官方网址",
                                                 value: "www.quarkcms.com",
                                                 target: '_blank',
                                                 href: 'https://www.quarkcms.com'
                                             },
                                             {
-                                                type: "link",
+                                                component: "link",
                                                 label: "文档地址",
                                                 value: "查看文档",
                                                 target: '_blank',
                                                 href: 'https://www.quarkcms.com'
                                             },
                                             {
-                                                type: "link",
+                                                component: "link",
                                                 label: "BUG反馈",
                                                 value: "提交漏洞",
                                                 target: '_blank',
                                                 href: 'https://github.com/quarkcms/quark-admin/issues'
                                             },
                                             {
-                                                type: "link",
+                                                component: "link",
                                                 label: "Github",
                                                 value: "Github",
                                                 target: '_blank',

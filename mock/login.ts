@@ -2,9 +2,9 @@ export default {
     
     // 登录页面
     'GET /api/login/index': {
-        type: "page",
+        component: "page",
         body: {
-            type: "login",
+            component: "login",
             api: 'login',
             redirect: '/index?api=layout/container',
             title: "QuarkCMS",
