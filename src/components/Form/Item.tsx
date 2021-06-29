@@ -91,7 +91,7 @@ const Item: React.FC<Item> = (props:any) => {
       items.map((item:any,key:any) => {
         let component:any = null;
         switch (item.component) {
-          case 'input':
+          case 'text':
               component = 
               <Form.Item
                 key={item.name}
