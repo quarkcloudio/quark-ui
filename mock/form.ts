@@ -24,13 +24,13 @@ export default {
                         wrapperCol: { span: 22 },
                         body: [
                             {
-                                component: "text",
+                                component: "textField",
                                 label: "用户名",
                                 name: "username",
                                 style: {width: 200}
                             },
                             {
-                                component: "password",
+                                component: "passwordField",
                                 label: "密码",
                                 name: "password",
                                 style: {width: 200}

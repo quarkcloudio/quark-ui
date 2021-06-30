@@ -1,10 +1,10 @@
 import React, {  useEffect } from 'react';
 import ProForm from '@ant-design/pro-form';
+import Item from './Item';
 import { history } from 'umi';
 import { post } from '@/services/action';
 import moment from 'moment';
 import Action from '@/components/Action/Action';
-import Render from '@/components/Render';
 import {
   Form as AntForm,
   message,
@@ -71,7 +71,7 @@ const Form: React.FC<Form> = (props:any) => {
         },
       }}
     >
-      <Render body={props.body} data={props.data} />
+      <Item form={form} items={props.items} />
     </ProForm>
   );
 }

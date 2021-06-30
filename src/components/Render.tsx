@@ -8,6 +8,7 @@ import Col from '@/components/Layout/Col';
 import Divider from '@/components/Layout/Divider';
 import ProCard from '@ant-design/pro-card';
 import Form from '@/components/Form/Form';
+import Field from '@/components/Form/Field';
 import StatisticCard from '@/components/Display/StatisticCard';
 import Statistic from '@/components/Display/Statistic';
 import Descriptions from '@/components/Display/Descriptions';
@@ -95,6 +96,16 @@ const Render: React.FC<any> = (props:any) => {
         key: 'form',
         component: <Form {...body} data={data} />
       },
+      // 注册表单项组件
+      {
+        key: "textField|passwordField|textAreaField|inputNumberField|\
+        iconField|hiddenField|checkboxField|radioField|imageField|\
+        fileField|switchField|selectField|treeField|cascaderField|\
+        dateField|datetimeField|dateRangeField|datetimeRangeField|\
+        timeField|timeRangeField|displayField|editorField|searchField\
+        |mapField|geofenceField",
+        component: <Field {...body} data={data} />
+      },
       {
         key: 'table',
         component: <Table {...body} tableKey={body.key} data={data} />
@@ -132,16 +143,30 @@ const Render: React.FC<any> = (props:any) => {
     let component:any = null;
     if(body.hasOwnProperty('component')) {
       registerComponent(body,data).map((item:any) => {
-        if(item.key === body.component) {
-          component = item.component;
+
+        if(item.key.indexOf('|') != -1) {
+          if(item.key.indexOf(body.component) != -1) {
+            component = item.component;
+          }
+        } else {
+          if(item.key === body.component) {
+            component = item.component;
+          }
         }
       });
     } else {
       component = (
         body.map((item:any) => {
           return registerComponent(item,data).map((componentItem:any) => {
-            if(componentItem.key === item.component) {
-              return componentItem.component;
+
+            if(componentItem.key.indexOf('|') != -1) {
+              if(componentItem.key.indexOf(item.component) != -1) {
+                return componentItem.component;
+              }
+            } else {
+              if(componentItem.key === item.component) {
+                return componentItem.component;
+              }
             }
           });
         })
