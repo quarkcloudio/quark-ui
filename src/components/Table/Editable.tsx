@@ -94,7 +94,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
 
   if (editable) {
     switch (editable.name) {
-      case 'text':
+      case 'textField':
         childNode = editing ? (
           <Form.Item
             style={{ margin: 0 }}
@@ -113,7 +113,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
         );
         break;
     
-      case 'switch':
+      case 'switchField':
         childNode = (
           <Form.Item
             style={{ margin: 0 }}
@@ -130,7 +130,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
         );
         break;
 
-      case 'select':
+      case 'selectField':
         childNode = (
           <Form.Item
             style={{ margin: 0 }}

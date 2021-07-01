@@ -94,7 +94,7 @@ const Render: React.FC<any> = (props:any) => {
       },
       {
         key: 'form',
-        component: <Form {...body} data={data} />
+        component: <Form formKey={body.key} {...body} data={data} />
       },
       // 注册表单项组件
       {

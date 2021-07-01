@@ -18,17 +18,20 @@ export interface Form {
 const Form: React.FC<Form> = (props:any) => {
 
   const [form] = AntForm.useForm();
+  const formKey = props.formKey ? props.formKey : 'form';
+  // 注册全局变量
+  window[formKey] = form;
 
   useEffect(() => {
     let initialValues = props.initialValues;
-    props?.items?.map((item:any) => {
+    props?.body?.map((item:any) => {
       if(item.component === 'time') {
         if(initialValues.hasOwnProperty(item.name)) {
           initialValues[item.name] = moment(initialValues[item.name],item.format);
         }
       }
     })
-    form.setFieldsValue(initialValues);
+    window[formKey].setFieldsValue(initialValues);
   }, []);
 
   const onFinish = async (values: any) => {
@@ -51,7 +54,7 @@ const Form: React.FC<Form> = (props:any) => {
   return (
     <ProForm
       {...props}
-      form={form}
+      form={window[formKey]}
       onFinish={async (values:any) => { onFinish(values) }}
       submitter={{
         searchConfig: {
@@ -63,7 +66,7 @@ const Form: React.FC<Form> = (props:any) => {
             <AntForm.Item wrapperCol={props.buttonWrapperCol}>
               <Space>
                 {props?.actions?.map((action:any) => {
-                  return <Action {...action} form={form} data={props.data}/>
+                  return <Action {...action} submitForm={ action.submitForm ?? formKey } data={props.data}/>
                 })}
               </Space>
             </AntForm.Item>

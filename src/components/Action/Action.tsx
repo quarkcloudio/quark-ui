@@ -6,16 +6,19 @@ import {
   Button,
   message,
   Popconfirm,
-  Modal
+  Modal as AntModal
 } from 'antd';
 import {ExclamationCircleOutlined, createFromIconfontCN } from '@ant-design/icons';
+import Modal from './Modal';
 
 const Action: React.FC<any> = (props) => {
   const IconFont = createFromIconfontCN({
     scriptUrl:'//at.alicdn.com/t/font_1615691_3pgkh5uyob.js'
   });
 
-  const { confirm } = Modal;
+  const formKey = props.submitForm ? props.submitForm : 'form';
+
+  const { confirm } = AntModal;
 
   // 显示确认弹框
   const showConfirm = async (api:any, actionType='ajax') => {
@@ -40,7 +43,7 @@ const Action: React.FC<any> = (props) => {
           icon: <ExclamationCircleOutlined />,
           content: tplEngine(props.confirmText, props.data),
           onOk() {
-            api?.submit?.();
+            window[formKey]?.submit?.();
           },
           onCancel() {
             console.log('Cancel');
@@ -54,7 +57,21 @@ const Action: React.FC<any> = (props) => {
           icon: <ExclamationCircleOutlined />,
           content: tplEngine(props.confirmText, props.data),
           onOk() {
-            api?.resetFields();
+            window[formKey]?.resetFields?.();
+          },
+          onCancel() {
+            console.log('Cancel');
+          },
+        });
+        break;
+
+      case 'cancel':
+        confirm({
+          title: tplEngine(props.confirmTitle, props.data),
+          icon: <ExclamationCircleOutlined />,
+          content: tplEngine(props.confirmText, props.data),
+          onOk() {
+            props.callback();
           },
           onCancel() {
             console.log('Cancel');
@@ -147,7 +164,7 @@ const Action: React.FC<any> = (props) => {
             ghost={props.ghost}
             shape={props.shape}
             size={props.size}
-            type={props.showStyle}
+            type={props.type}
             icon={props.icon ? <IconFont type={props.icon} /> : false}
           >
             {tplEngine(props.label,props.data)}
@@ -162,7 +179,7 @@ const Action: React.FC<any> = (props) => {
           ghost={props.ghost}
           shape={props.shape}
           size={props.size}
-          type={props.showStyle}
+          type={props.type}
           icon={props.icon ? <IconFont type={props.icon} /> : false}
           onClick={()=>{ props.confirmTitle ? showConfirm(props.api) : executeAction(props.api)}}
         >
@@ -177,7 +194,7 @@ const Action: React.FC<any> = (props) => {
           <Popconfirm
             placement="topRight"
             title={tplEngine(props.confirmTitle,props.data)}
-            onConfirm={()=>{props.form?.submit?.()}}
+            onConfirm={()=>{window[formKey]?.submit?.()}}
           >
             <Button
               block={props.block}
@@ -186,7 +203,7 @@ const Action: React.FC<any> = (props) => {
               ghost={props.ghost}
               shape={props.shape}
               size={props.size}
-              type={props.showStyle}
+              type={props.type}
               icon={props.icon ? <IconFont type={props.icon} /> : false}
             >
               {tplEngine(props.label,props.data)}
@@ -201,9 +218,9 @@ const Action: React.FC<any> = (props) => {
             ghost={props.ghost}
             shape={props.shape}
             size={props.size}
-            type={props.showStyle}
+            type={props.type}
             icon={props.icon ? <IconFont type={props.icon} /> : false}
-            onClick={()=>{ props.confirmTitle ? showConfirm(props.form, props.actionType) : props.form?.submit?.()}}
+            onClick={()=>{ props.confirmTitle ? showConfirm(null, props.actionType) : window[formKey]?.submit?.()}}
           >
             {tplEngine(props.label,props.data)}
           </Button>
@@ -216,7 +233,7 @@ const Action: React.FC<any> = (props) => {
           <Popconfirm
             placement="topRight"
             title={tplEngine(props.confirmTitle,props.data)}
-            onConfirm={()=>{props.form?.resetFields()}}
+            onConfirm={()=>{window[formKey]?.resetFields?.()}}
           >
             <Button
               block={props.block}
@@ -225,7 +242,7 @@ const Action: React.FC<any> = (props) => {
               ghost={props.ghost}
               shape={props.shape}
               size={props.size}
-              type={props.showStyle}
+              type={props.type}
               icon={props.icon ? <IconFont type={props.icon} /> : false}
             >
               {tplEngine(props.label,props.data)}
@@ -240,14 +257,53 @@ const Action: React.FC<any> = (props) => {
             ghost={props.ghost}
             shape={props.shape}
             size={props.size}
-            type={props.showStyle}
+            type={props.type}
             icon={props.icon ? <IconFont type={props.icon} /> : false}
-            onClick={()=>{ props.confirmTitle ? showConfirm(props.form, props.actionType) : props.form?.resetFields()}}
+            onClick={()=>{ props.confirmTitle ? showConfirm(null, props.actionType) : window[formKey]?.resetFields?.()}}
           >
             {tplEngine(props.label,props.data)}
           </Button>
         }
         break;
+
+        case 'cancel':
+          if(props.confirmType === 'pop') {
+            component =
+            <Popconfirm
+              placement="topRight"
+              title={tplEngine(props.confirmTitle,props.data)}
+              onConfirm={()=>{props.callback()}}
+            >
+              <Button
+                block={props.block}
+                danger={props.danger}
+                disabled={props.disabled}
+                ghost={props.ghost}
+                shape={props.shape}
+                size={props.size}
+                type={props.type}
+                icon={props.icon ? <IconFont type={props.icon} /> : false}
+              >
+                {tplEngine(props.label,props.data)}
+              </Button>
+            </Popconfirm>
+          } else {
+            component =
+            <Button
+              block={props.block}
+              danger={props.danger}
+              disabled={props.disabled}
+              ghost={props.ghost}
+              shape={props.shape}
+              size={props.size}
+              type={props.type}
+              icon={props.icon ? <IconFont type={props.icon} /> : false}
+              onClick={()=>{ props.confirmTitle ? showConfirm(null, props.actionType) : props.callback()}}
+            >
+              {tplEngine(props.label,props.data)}
+            </Button>
+          }
+          break;
 
       case 'back':
         if(props.confirmType === 'pop') {
@@ -264,7 +320,7 @@ const Action: React.FC<any> = (props) => {
               ghost={props.ghost}
               shape={props.shape}
               size={props.size}
-              type={props.showStyle}
+              type={props.type}
               icon={props.icon ? <IconFont type={props.icon} /> : false}
             >
               {tplEngine(props.label,props.data)}
@@ -279,7 +335,7 @@ const Action: React.FC<any> = (props) => {
             ghost={props.ghost}
             shape={props.shape}
             size={props.size}
-            type={props.showStyle}
+            type={props.type}
             icon={props.icon ? <IconFont type={props.icon} /> : false}
             onClick={()=>{ props.confirmTitle ? showConfirm(null, props.actionType) : history.go(-1)}}
           >
@@ -299,7 +355,7 @@ const Action: React.FC<any> = (props) => {
           size={props.size}
           href={dataMapping(props.href,props.data)}
           target={props.target}
-          type={props.showStyle}
+          type={props.type}
           icon={props.icon ? <IconFont type={props.icon} /> : false}
         >
           {tplEngine(props.label,props.data)}
@@ -308,18 +364,7 @@ const Action: React.FC<any> = (props) => {
         
       case 'modal':
         component =
-        <Button
-          block={props.block}
-          danger={props.danger}
-          disabled={props.disabled}
-          ghost={props.ghost}
-          shape={props.shape}
-          size={props.size}
-          type={props.showStyle}
-          icon={props.icon ? <IconFont type={props.icon} /> : false}
-        >
-          {tplEngine(props.label,props.data)}
-        </Button>
+        <Modal {...props} data={props.data} />
       break;
     default:
       component =
@@ -330,7 +375,7 @@ const Action: React.FC<any> = (props) => {
         ghost={props.ghost}
         shape={props.shape}
         size={props.size}
-        type={props.showStyle}
+        type={props.type}
         icon={props.icon ? <IconFont type={props.icon} /> : false}
       >
         {tplEngine(props.label,props.data)}
