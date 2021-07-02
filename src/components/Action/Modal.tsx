@@ -26,7 +26,7 @@ const Modal: React.FC<any> = (props:any) => {
         ghost={props.ghost}
         shape={props.shape}
         size={props.size}
-        type={props.showStyle}
+        type={props.type}
         icon={props.icon ? <IconFont type={props.icon} /> : false}
         onClick={()=>{setVisible(true)}}
       >
