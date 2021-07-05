@@ -39,7 +39,7 @@ const Modal: React.FC<any> = (props:any) => {
         onCancel={()=>setVisible(false)}
         footer={
           props?.modal?.actions?.map((action:any) => {
-            return <Action {...action} callback={()=>setVisible(false)} data={props.data}/>
+            return <Action {...action} closeModal={()=>setVisible(false)} data={props.data}/>
           })
         }
       >

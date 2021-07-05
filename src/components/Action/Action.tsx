@@ -44,6 +44,17 @@ const Action: React.FC<any> = (props) => {
           content: tplEngine(props.confirmText, props.data),
           onOk() {
             window[formKey]?.submit?.();
+            if(props.close) {
+              props?.closeModal?.();
+            }
+
+            if(props.reload) {
+              if(props.reload === 'window') {
+                location.reload();
+              } else {
+                window[props.reload]?.current?.reload();
+              }
+            }
           },
           onCancel() {
             console.log('Cancel');
@@ -71,7 +82,7 @@ const Action: React.FC<any> = (props) => {
           icon: <ExclamationCircleOutlined />,
           content: tplEngine(props.confirmText, props.data),
           onOk() {
-            props.callback();
+            props?.closeModal?.();
           },
           onCancel() {
             console.log('Cancel');
@@ -116,6 +127,10 @@ const Action: React.FC<any> = (props) => {
     });
 
     if(result.status === 'success') {
+
+      if(props.close) {
+        props?.closeModal?.();
+      }
 
       if(props.callback) {
         props.callback()
@@ -194,7 +209,19 @@ const Action: React.FC<any> = (props) => {
           <Popconfirm
             placement="topRight"
             title={tplEngine(props.confirmTitle,props.data)}
-            onConfirm={()=>{window[formKey]?.submit?.()}}
+            onConfirm={()=>{
+              window[formKey]?.submit?.();
+              if(props.close) {
+                props?.closeModal?.();
+              }
+              if(props.reload) {
+                if(props.reload === 'window') {
+                  location.reload();
+                } else {
+                  window[props.reload]?.current?.reload();
+                }
+              }
+            }}
           >
             <Button
               block={props.block}
@@ -220,7 +247,23 @@ const Action: React.FC<any> = (props) => {
             size={props.size}
             type={props.type}
             icon={props.icon ? <IconFont type={props.icon} /> : false}
-            onClick={()=>{ props.confirmTitle ? showConfirm(null, props.actionType) : window[formKey]?.submit?.()}}
+            onClick={()=>{
+              if(props.confirmTitle) {
+                showConfirm(null, props.actionType)
+              } else {
+                window[formKey]?.submit?.();
+                if(props.close) {
+                  props?.closeModal?.();
+                }
+                if(props.reload) {
+                  if(props.reload === 'window') {
+                    location.reload();
+                  } else {
+                    window[props.reload]?.current?.reload();
+                  }
+                }
+              }
+            }}
           >
             {tplEngine(props.label,props.data)}
           </Button>
@@ -272,7 +315,7 @@ const Action: React.FC<any> = (props) => {
             <Popconfirm
               placement="topRight"
               title={tplEngine(props.confirmTitle,props.data)}
-              onConfirm={()=>{props.callback()}}
+              onConfirm={()=>{props.closeModal()}}
             >
               <Button
                 block={props.block}
@@ -298,7 +341,7 @@ const Action: React.FC<any> = (props) => {
               size={props.size}
               type={props.type}
               icon={props.icon ? <IconFont type={props.icon} /> : false}
-              onClick={()=>{ props.confirmTitle ? showConfirm(null, props.actionType) : props.callback()}}
+              onClick={()=>{ props.confirmTitle ? showConfirm(null, props.actionType) : props.closeModal()}}
             >
               {tplEngine(props.label,props.data)}
             </Button>

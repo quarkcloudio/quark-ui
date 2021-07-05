@@ -62,15 +62,17 @@ const Form: React.FC<Form> = (props:any) => {
           submitText: props.submitButtonText,
         },
         render: (proFormProps:any, doms:any) => {
-          return (
-            <AntForm.Item wrapperCol={props.buttonWrapperCol}>
-              <Space>
-                {props?.actions?.map((action:any) => {
-                  return <Action {...action} submitForm={ action.submitForm ?? formKey } data={props.data}/>
-                })}
-              </Space>
-            </AntForm.Item>
-          );
+          if(props?.actions) {
+            return (
+              <AntForm.Item wrapperCol={props.buttonWrapperCol}>
+                <Space>
+                  {props?.actions?.map((action:any) => {
+                    return <Action {...action} submitForm={ action.submitForm ?? formKey } data={props.data}/>
+                  })}
+                </Space>
+              </AntForm.Item>
+            )
+          }
         },
       }}
     >
