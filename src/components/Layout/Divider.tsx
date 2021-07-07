@@ -12,7 +12,7 @@ const Divider: React.FC<any> = (props:any) => {
       style={props.style}
       type={props.type ? props.type : 'horizontal'}
     >
-      <Render body={props.body} data={props.data} />
+      <Render body={props.body} data={props.data} callback={props.callback}/>
     </AntDivider>
   );
 }

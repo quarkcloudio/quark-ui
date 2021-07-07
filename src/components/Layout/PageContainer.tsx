@@ -6,7 +6,7 @@ const PageContainer: React.FC<any> = (props:any) => {
 
   return (
     <AntPageContainer {...props}>
-      <Render body={props.body} data={props.data} />
+      <Render body={props.body} data={props.data} callback={props.callback} />
     </AntPageContainer>
   );
 }

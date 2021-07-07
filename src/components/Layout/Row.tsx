@@ -6,7 +6,7 @@ const Row: React.FC<any> = (props:any) => {
 
   return (
     <AntRow {...props}>
-      <Render body={props.body} data={props.data} />
+      <Render body={props.body} data={props.data} callback={props.callback} />
     </AntRow>
   );
 }

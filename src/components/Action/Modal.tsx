@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useModel, history } from 'umi';
-import { dataMapping, tplEngine } from '@/utils/template';
+import React, { useState } from 'react';
+import { tplEngine } from '@/utils/template';
 import {
   Modal as AntModal,
   Button
 } from 'antd';
 import Render from '@/components/Render';
-import Action from '@/components/Action/Action';
 import {createFromIconfontCN } from '@ant-design/icons';
 
 const Modal: React.FC<any> = (props:any) => {
@@ -15,7 +13,7 @@ const Modal: React.FC<any> = (props:any) => {
     scriptUrl:'//at.alicdn.com/t/font_1615691_3pgkh5uyob.js'
   });
 
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(props.modal.visible);
 
   return (
     <>
@@ -33,17 +31,14 @@ const Modal: React.FC<any> = (props:any) => {
         {tplEngine(props.label,props.data)}
       </Button>
       <AntModal
-        title={props.modal.title}
-        width={props.modal.width}
+        {...props.modal}
         visible={visible}
         onCancel={()=>setVisible(false)}
         footer={
-          props?.modal?.actions?.map((action:any) => {
-            return <Action {...action} closeModal={()=>setVisible(false)} data={props.data}/>
-          })
+          props?.modal?.actions ? <Render body={props?.modal?.actions} data={props.data} callback={()=>setVisible(false)} /> : null
         }
       >
-        <Render body={props.modal.body} data={props.data} />
+        <Render body={props.modal.body} data={props.data} callback={()=>setVisible(false)}/>
       </AntModal>
     </>
   );

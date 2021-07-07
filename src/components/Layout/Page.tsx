@@ -29,7 +29,7 @@ const Page: React.FC<any> = (props:any) => {
         <meta charSet="utf-8" />
         <title>{props.title}</title>
       </Helmet>
-      <Render body={props.body} data={data ? data : props.data} />
+      <Render body={props.body} data={data ? data : props.data} callback={null} />
     </div>
   );
 }

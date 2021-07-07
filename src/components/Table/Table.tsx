@@ -28,11 +28,11 @@ const Table: React.FC<Table> = (props:any) => {
   const columnRender = (column:any, row:any, text:any) => {
 
     if(column.valueType === 'option') {
-      text = <Render body={column.actions} data={row} />;
+      text = <Render body={column.actions} data={row} callback={props.callback} />;
     }
 
     if(column.valueType === 'text') {
-      text = <Render body={text} data={row} />;
+      text = <Render body={text} data={row} callback={props.callback} />;
     }
 
     return text;
@@ -152,9 +152,7 @@ const Table: React.FC<Table> = (props:any) => {
             id:selectedRowKeys
           };
           return (
-            props?.batchActions?.map((action:any) => {
-              return <Action {...action} data={data} callback={onCleanSelected} />
-            })
+            props.batchActions ? <Render body={props.batchActions} data={props.data} callback={onCleanSelected} /> : null
           );
         }}
         request={async (params:any, sorter:any, filter:any) => {
@@ -184,7 +182,7 @@ const Table: React.FC<Table> = (props:any) => {
         }}
         toolbar={{
           ...props.toolBar,
-          actions: props.toolBar?.actions ? [<Render body={props.toolBar?.actions} data={props.data} />] : undefined,
+          actions: props.toolBar?.actions ? [<Render body={props.toolBar?.actions} data={props.data} callback={props.callback} />] : undefined,
         }}
         rowClassName={(record, index)=> {
           if(props.striped) {

@@ -19,6 +19,7 @@ export default {
                     body: {
                         component: "form",
                         api: 'https://www.baidu.com',
+                        initApi: 'form/initData',
                         layout: "horizontal",
                         labelCol:{ span: 2 },
                         wrapperCol: { span: 22 },
@@ -40,6 +41,15 @@ export default {
                 }
             }
         }
+    },
+    // 表单数据接口
+    'GET /api/form/initData': {
+        data: {
+            username: 'test',
+            password: "123456"
+        },
+        msg: "获取成功！",
+        status: "success"
     },
 }
   

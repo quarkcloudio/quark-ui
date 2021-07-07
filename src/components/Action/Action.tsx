@@ -10,15 +10,21 @@ import {
 } from 'antd';
 import {ExclamationCircleOutlined, createFromIconfontCN } from '@ant-design/icons';
 import Modal from './Modal';
+import Drawer from './Drawer';
 
 const Action: React.FC<any> = (props) => {
   const IconFont = createFromIconfontCN({
     scriptUrl:'//at.alicdn.com/t/font_1615691_3pgkh5uyob.js'
   });
-
   const formKey = props.submitForm ? props.submitForm : 'form';
-
   const { confirm } = AntModal;
+  const waitTime = (time: number = 100) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(true);
+      }, time);
+    });
+  };
 
   // 显示确认弹框
   const showConfirm = async (api:any, actionType='ajax') => {
@@ -43,18 +49,7 @@ const Action: React.FC<any> = (props) => {
           icon: <ExclamationCircleOutlined />,
           content: tplEngine(props.confirmText, props.data),
           onOk() {
-            window[formKey]?.submit?.();
-            if(props.close) {
-              props?.closeModal?.();
-            }
-
-            if(props.reload) {
-              if(props.reload === 'window') {
-                location.reload();
-              } else {
-                window[props.reload]?.current?.reload();
-              }
-            }
+            submit();
           },
           onCancel() {
             console.log('Cancel');
@@ -82,7 +77,7 @@ const Action: React.FC<any> = (props) => {
           icon: <ExclamationCircleOutlined />,
           content: tplEngine(props.confirmText, props.data),
           onOk() {
-            props?.closeModal?.();
+            props?.callback?.();
           },
           onCancel() {
             console.log('Cancel');
@@ -120,17 +115,29 @@ const Action: React.FC<any> = (props) => {
     }
   }
 
-  // 执行行为
+  // 提交表单
+  const submit = async () => {
+    window[formKey]?.submit?.();
+
+    // hack
+    await waitTime(100);
+
+    if(props.reload) {
+      if(props.reload === 'window') {
+        location.reload();
+      } else {
+        window[props.reload]?.current?.reload();
+      }
+    }
+  }
+
+  // 执行ajax行为
   const executeAction = async (api:string) => {
     const result = await get({
       actionUrl: dataMapping(api,props.data)
     });
 
     if(result.status === 'success') {
-
-      if(props.close) {
-        props?.closeModal?.();
-      }
 
       if(props.callback) {
         props.callback()
@@ -210,17 +217,7 @@ const Action: React.FC<any> = (props) => {
             placement="topRight"
             title={tplEngine(props.confirmTitle,props.data)}
             onConfirm={()=>{
-              window[formKey]?.submit?.();
-              if(props.close) {
-                props?.closeModal?.();
-              }
-              if(props.reload) {
-                if(props.reload === 'window') {
-                  location.reload();
-                } else {
-                  window[props.reload]?.current?.reload();
-                }
-              }
+              submit();
             }}
           >
             <Button
@@ -251,17 +248,7 @@ const Action: React.FC<any> = (props) => {
               if(props.confirmTitle) {
                 showConfirm(null, props.actionType)
               } else {
-                window[formKey]?.submit?.();
-                if(props.close) {
-                  props?.closeModal?.();
-                }
-                if(props.reload) {
-                  if(props.reload === 'window') {
-                    location.reload();
-                  } else {
-                    window[props.reload]?.current?.reload();
-                  }
-                }
+                submit();
               }
             }}
           >
@@ -315,7 +302,7 @@ const Action: React.FC<any> = (props) => {
             <Popconfirm
               placement="topRight"
               title={tplEngine(props.confirmTitle,props.data)}
-              onConfirm={()=>{props.closeModal()}}
+              onConfirm={()=>{props?.callback?.()}}
             >
               <Button
                 block={props.block}
@@ -341,7 +328,7 @@ const Action: React.FC<any> = (props) => {
               size={props.size}
               type={props.type}
               icon={props.icon ? <IconFont type={props.icon} /> : false}
-              onClick={()=>{ props.confirmTitle ? showConfirm(null, props.actionType) : props.closeModal()}}
+              onClick={()=>{ props.confirmTitle ? showConfirm(null, props.actionType) : props?.callback?.()}}
             >
               {tplEngine(props.label,props.data)}
             </Button>
@@ -406,9 +393,11 @@ const Action: React.FC<any> = (props) => {
         break;
         
       case 'modal':
-        component =
-        <Modal {...props} data={props.data} />
-      break;
+        component = <Modal {...props} data={props.data} callback={props.callback}/>
+        break;
+      case 'drawer':
+        component = <Drawer {...props} data={props.data} callback={props.callback} />
+        break;
     default:
       component =
       <Button

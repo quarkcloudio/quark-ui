@@ -25,7 +25,7 @@ import { dataMapping, tplEngine } from '@/utils/template';
 const Render: React.FC<any> = (props:any) => {
 
   // 注册组件
-  const registerComponent = (body:any, data:any) => {
+  const registerComponent = (body:any, data:any, callback:any) => {
 
     return [
       {
@@ -34,67 +34,67 @@ const Render: React.FC<any> = (props:any) => {
       },
       {
         key: 'layout',
-        component: <Layout {...body} data={data} />
+        component: <Layout {...body} callback={callback} data={data} />
       },
       {
         key: 'container',
-        component: <Container {...body} data={data} />
+        component: <Container {...body} callback={callback} data={data} />
       },
       {
         key: 'pageContainer',
-        component: <PageContainer {...body} data={data} />
+        component: <PageContainer {...body} callback={callback} data={data} />
       },
       {
         key: 'card',
-        component: <ProCard {...body} extra={ componentRender(body.extra,data) } data={data} >{ componentRender(body.body,data) }</ProCard>
+        component: <ProCard {...body} extra={ componentRender(body.extra, data, callback) } callback={callback} data={data} >{ componentRender(body.body, data, callback) }</ProCard>
       },
       {
         key: 'row',
-        component: <Row {...body} data={data} />
+        component: <Row {...body} callback={callback} data={data} />
       },
       {
         key: 'col',
-        component: <Col {...body} data={data} />
+        component: <Col {...body} callback={callback} data={data} />
       },
       {
         key: 'space',
-        component: <Space {...body}>{ componentRender(body.body,data) }</Space>
+        component: <Space {...body}>{ componentRender(body.body, data, callback) }</Space>
       },
       {
         key: 'statisticCard',
-        component: <StatisticCard {...body} data={data} />
+        component: <StatisticCard {...body} callback={callback} data={data} />
       },
       {
         key: 'statistic',
-        component: <Statistic {...body} data={data} />
+        component: <Statistic {...body} callback={callback} data={data} />
       },
       {
         key: 'descriptions',
-        component: <Descriptions {...body} data={data} />
+        component: <Descriptions {...body} callback={callback} data={data} />
       },
       {
         key: 'typography',
-        component: <Typography {...body} data={data} />
+        component: <Typography {...body} callback={callback} data={data} />
       },
       {
         key: 'paragraph',
-        component: <Paragraph {...body} data={data} />
+        component: <Paragraph {...body} callback={callback} data={data} />
       },
       {
         key: 'title',
-        component: <Title {...body} data={data} />
+        component: <Title {...body} callback={callback} data={data} />
       },
       {
         key: 'text',
-        component: <Text {...body} data={data} />
+        component: <Text {...body} callback={callback} data={data} />
       },
       {
         key: 'divider',
-        component: <Divider {...body} data={data} />
+        component: <Divider {...body} callback={callback} data={data} />
       },
       {
         key: 'form',
-        component: <Form formKey={body.key} {...body} data={data} />
+        component: <Form formKey={body.key} callback={callback} {...body} data={data} />
       },
       // 注册表单项组件
       {
@@ -104,19 +104,19 @@ const Render: React.FC<any> = (props:any) => {
         dateField|datetimeField|dateRangeField|datetimeRangeField|\
         timeField|timeRangeField|displayField|editorField|searchField\
         |mapField|geofenceField",
-        component: <Field {...body} data={data} />
+        component: <Field {...body} callback={callback} data={data} />
       },
       {
         key: 'table',
-        component: <Table {...body} tableKey={body.key} data={data} />
+        component: <Table {...body} callback={callback} tableKey={body.key} data={data} />
       },
       {
         key: 'action',
-        component: <Action {...body} data={data} />
+        component: <Action {...body} callback={callback} data={data} />
       },
       {
         key: 'login',
-        component: <Login {...body} data={data} />
+        component: <Login {...body} callback={callback} data={data} />
       },
       {
         key: 'tpl',
@@ -126,7 +126,7 @@ const Render: React.FC<any> = (props:any) => {
   }
 
   // 渲染组件
-  const componentRender = (body:any,data:any) => {
+  const componentRender = (body:any, data:any, callback:any) => {
 
     if(body === null || body === undefined) {
       return null;
@@ -142,7 +142,7 @@ const Render: React.FC<any> = (props:any) => {
 
     let component:any = null;
     if(body.hasOwnProperty('component')) {
-      registerComponent(body,data).map((item:any) => {
+      registerComponent(body, data, callback).map((item:any) => {
 
         if(item.key.indexOf('|') != -1) {
           if(item.key.indexOf(body.component) != -1) {
@@ -157,7 +157,7 @@ const Render: React.FC<any> = (props:any) => {
     } else {
       component = (
         body.map((item:any) => {
-          return registerComponent(item,data).map((componentItem:any) => {
+          return registerComponent(item, data, callback).map((componentItem:any) => {
 
             if(componentItem.key.indexOf('|') != -1) {
               if(componentItem.key.indexOf(item.component) != -1) {
@@ -176,7 +176,7 @@ const Render: React.FC<any> = (props:any) => {
     return component;
   }
 
-  const component = componentRender(props.body, props.data);
+  const component = componentRender(props.body, props.data, props.callback);
 
   return (typeof component === 'string') ? <span dangerouslySetInnerHTML={{__html: component}} /> : component
 }

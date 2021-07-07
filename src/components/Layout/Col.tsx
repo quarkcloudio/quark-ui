@@ -6,7 +6,7 @@ const Col: React.FC<any> = (props:any) => {
 
   return (
     <AntCol {...props}>
-      <Render body={props.body} data={props.data} />
+      <Render body={props.body} data={props.data} callback={props.callback}/>
     </AntCol>
   );
 }
