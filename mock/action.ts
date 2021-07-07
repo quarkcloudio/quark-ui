@@ -204,6 +204,50 @@ export default {
                                                     ]
                                                 }
                                             },
+                                            {
+                                                component: "action",
+                                                label: "Drawer Form Button",
+                                                actionType: 'drawer',
+                                                drawer: {
+                                                    title: "一个抽屉",
+                                                    body: [
+                                                        {
+                                                            key:'form1',
+                                                            component: "form",
+                                                            api: "https://3xsw4ap8wah59.cfc-execute.bj.baidubce.com/api/amis-mock/sample/$id",
+                                                            body: [
+                                                                {
+                                                                    component: "textField",
+                                                                    label: "用户名",
+                                                                    name: "username",
+                                                                    style: {width: 200}
+                                                                },
+                                                                {
+                                                                    component: "passwordField",
+                                                                    label: "密码",
+                                                                    name: "password",
+                                                                    style: {width: 200}
+                                                                },
+                                                            ]
+                                                        }
+                                                    ],
+                                                    actions: [
+                                                        {
+                                                            component: "action",
+                                                            label: "取消",
+                                                            type: 'default',
+                                                            actionType: 'cancel'
+                                                        },
+                                                        {
+                                                            component: "action",
+                                                            label: "提交",
+                                                            type: 'primary',
+                                                            actionType: 'submit',
+                                                            submitForm: 'form1',
+                                                        },
+                                                    ]
+                                                }
+                                            },
                                         ]
                                     }
                                 }
