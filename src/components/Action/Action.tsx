@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { history } from 'umi';
 import { get } from '@/services/action';
 import { dataMapping, tplEngine } from '@/utils/template';
+import { reload } from '@/utils/reload';
 import {
   Button,
   message,
@@ -120,11 +121,11 @@ const Action: React.FC<any> = (props) => {
     window[formKey]?.submit?.();
 
     // hack
-    await waitTime(100);
+    await waitTime(1000);
 
     if(props.reload) {
       if(props.reload === 'window') {
-        location.reload();
+        reload();
       } else {
         window[props.reload]?.current?.reload();
       }
@@ -157,7 +158,7 @@ const Action: React.FC<any> = (props) => {
 
       if(props.reload) {
         if(props.reload === 'window') {
-          location.reload();
+          reload();
         } else {
           window[props.reload]?.current?.reload();
         }

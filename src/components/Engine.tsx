@@ -11,7 +11,7 @@ const Engine: React.FC<any> = (props:any) => {
 
   useEffect(() => {
     onSetComponentsState()
-  }, [api]);
+  }, [api,query._timestamp]);
 
   const onSetComponentsState = async () => {
     if(api) {

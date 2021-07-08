@@ -1,6 +1,7 @@
 import React, {  useEffect, useState } from 'react';
 import ProForm from '@ant-design/pro-form';
 import { dataMapping, tplEngine } from '@/utils/template';
+import { reload } from '@/utils/reload';
 import { history } from 'umi';
 import { post, get } from '@/services/action';
 import moment from 'moment';
@@ -37,7 +38,7 @@ const Form: React.FC<Form> = (props:any) => {
 
     props.initApi ? getInitialValues() : window[formKey].setFieldsValue(initialValues);
     
-  }, [props]);
+  }, []);
 
   const getInitialValues = async () => {
     if(props.initApi) {
@@ -59,9 +60,7 @@ const Form: React.FC<Form> = (props:any) => {
     });
 
     if(result.status === 'success') {
-      // 弹窗、抽屉等表单，提交完成后重置表单
-      window[formKey]?.resetFields?.();
-
+      
       if(props.callback) {
         props.callback()
       }
@@ -72,7 +71,11 @@ const Form: React.FC<Form> = (props:any) => {
     }
 
     if(result.url) {
-      history.push(result.url);
+      if(result.url === 'reload') {
+        reload()
+      } else {
+        history.push(result.url);
+      }
     }
   };
 
