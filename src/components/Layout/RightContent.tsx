@@ -16,6 +16,12 @@ const RightContent: React.FC<any> = (props) => {
       loginOut();
       return;
     }
+
+    if (event.key === 'setting') {
+      history.push({ pathname: '/index', query: { api:'admin/account/setting' } });
+      return;
+    }
+
     history.push(`/account/${event.key}`);
   }
 
@@ -33,7 +39,7 @@ const RightContent: React.FC<any> = (props) => {
 
   const menuHeaderDropdown = (
     <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
-      <Menu.Item key="settings">
+      <Menu.Item key="setting">
         <SettingOutlined />
         个人设置
       </Menu.Item>

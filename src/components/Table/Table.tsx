@@ -148,11 +148,12 @@ const Table: React.FC<Table> = (props:any) => {
         )}
         tableAlertOptionRender={({ selectedRowKeys, onCleanSelected}) => {
           const data = {
+            ...props.data,
             ids:selectedRowKeys,
             id:selectedRowKeys
           };
           return (
-            props.batchActions ? <Render body={props.batchActions} data={props.data} callback={onCleanSelected} /> : null
+            props.batchActions ? <Render body={props.batchActions} data={data} callback={onCleanSelected} /> : null
           );
         }}
         request={async (params:any, sorter:any, filter:any) => {
