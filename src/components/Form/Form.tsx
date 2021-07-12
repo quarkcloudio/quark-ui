@@ -27,17 +27,9 @@ const Form: React.FC<Form> = (props:any) => {
   window[formKey] = form;
 
   useEffect(() => {
-    let initialValues = props.initialValues;
-    props?.body?.map((item:any) => {
-      if(item.component === 'time') {
-        if(initialValues.hasOwnProperty(item.name)) {
-          initialValues[item.name] = moment(initialValues[item.name],item.format);
-        }
-      }
-    })
-
-    props.initApi ? getInitialValues() : window[formKey].setFieldsValue(initialValues);
-    
+    if(props.initApi) {
+      getInitialValues();
+    }
   }, []);
 
   const getInitialValues = async () => {

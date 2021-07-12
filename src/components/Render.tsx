@@ -9,6 +9,7 @@ import Divider from '@/components/Layout/Divider';
 import ProCard from '@ant-design/pro-card';
 import Form from '@/components/Form/Form';
 import Field from '@/components/Form/Field';
+import Tabs from '@/components/Display/Tabs';
 import StatisticCard from '@/components/Display/StatisticCard';
 import Statistic from '@/components/Display/Statistic';
 import Descriptions from '@/components/Display/Descriptions';
@@ -59,6 +60,10 @@ const Render: React.FC<any> = (props:any) => {
       {
         key: 'space',
         component: <Space {...body}>{ componentRender(body.body, data, callback) }</Space>
+      },
+      {
+        key: 'tabs',
+        component: <Tabs {...body} callback={callback} data={data} />
       },
       {
         key: 'statisticCard',

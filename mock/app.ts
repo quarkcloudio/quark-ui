@@ -173,6 +173,19 @@ export default {
                         },
                     ],
                 },
+                {
+                    key: '8',
+                    path: '/tabs',
+                    name: '标签页',
+                    icon: 'icon-plugin',
+                    children: [
+                        {
+                            key: '8-1',
+                            path: '/index?api=tabs/index',
+                            name: '基础标签页',
+                        },
+                    ],
+                },
             ],
             body: {
                 component: "pageContainer",
