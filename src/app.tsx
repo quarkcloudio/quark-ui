@@ -1,5 +1,5 @@
 import { notification } from 'antd';
-import { RequestConfig } from 'umi';
+import { RequestConfig, history } from 'umi';
 import { ResponseError } from 'umi-request';
 
 const codeMessage = {
@@ -35,6 +35,12 @@ const errorHandler = (error: ResponseError) => {
       message: `请求错误 ${status}: ${url}`,
       description: errorText,
     });
+
+    if(response.status === 401) {
+      history.replace({
+          pathname: history.location.pathname
+      })
+    }
   }
 
   if (!response) {
@@ -42,6 +48,10 @@ const errorHandler = (error: ResponseError) => {
       description: '您的网络发生异常，无法连接服务器',
       message: '网络异常',
     });
+
+    history.replace({
+        pathname: history.location.pathname
+    })
   }
 
   throw error;
