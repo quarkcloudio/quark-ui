@@ -67,3 +67,10 @@ export const request: RequestConfig = {
     }
   ],
 };
+
+// 从接口中获取子应用配置，export 出的 qiankun 变量是一个 promise
+export const qiankun = fetch('./config.json')
+.then(response => response.json())
+.then(response => ({
+  apps: response.apps
+}))

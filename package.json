@@ -34,6 +34,7 @@
   "devDependencies": {
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "@umijs/plugin-qiankun": "^2.26.0",
     "@umijs/test": "^3.4.7",
     "husky": "^4.3.0",
     "lint-staged": "^10.0.7",

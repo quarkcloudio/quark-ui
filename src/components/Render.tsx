@@ -21,6 +21,7 @@ import Paragraph from '@/components/Typography/Paragraph';
 import Title from '@/components/Typography/Title';
 import Text from '@/components/Typography/Text';
 import { Space } from 'antd';
+import { MicroApp } from 'umi';
 import { dataMapping, tplEngine } from '@/utils/template';
 
 const Render: React.FC<any> = (props:any) => {
@@ -123,6 +124,10 @@ const Render: React.FC<any> = (props:any) => {
         key: 'login',
         component: <Login {...body} callback={callback} data={data} />
       },
+      // {
+      //   key: 'microApp',
+      //   component: <MicroApp {...body} callback={callback} data={data} />
+      // },
       {
         key: 'tpl',
         component: <>{ tplEngine(body.body,data) }</>
