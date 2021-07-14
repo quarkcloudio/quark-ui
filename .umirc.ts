@@ -19,9 +19,9 @@ export default defineConfig({
     { path: '/index', component: '@/pages/Index/index' },
   ],
   fastRefresh: {},
-  // qiankun: {
-  //   master: {
-  //     apps:[]
-  //   }
-  // }
+  qiankun: {
+    master: {
+      apps:[]
+    }
+  }
 });

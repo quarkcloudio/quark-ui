@@ -124,10 +124,10 @@ const Render: React.FC<any> = (props:any) => {
         key: 'login',
         component: <Login {...body} callback={callback} data={data} />
       },
-      // {
-      //   key: 'microApp',
-      //   component: <MicroApp {...body} callback={callback} data={data} />
-      // },
+      {
+        key: 'microApp',
+        component: <MicroApp {...body} callback={callback} data={data} />
+      },
       {
         key: 'tpl',
         component: <>{ tplEngine(body.body,data) }</>
