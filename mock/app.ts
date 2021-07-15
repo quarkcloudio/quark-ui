@@ -186,6 +186,19 @@ export default {
                         },
                     ],
                 },
+                {
+                    key: '9',
+                    path: '/microApp',
+                    name: '微前端',
+                    icon: 'icon-plugin',
+                    children: [
+                        {
+                            key: '9-1',
+                            path: '/index?api=microApp/index',
+                            name: '微前端示例',
+                        },
+                    ],
+                },
             ],
             body: {
                 component: "pageContainer",
