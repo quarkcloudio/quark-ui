@@ -1,39 +1,28 @@
 ## 介绍
-QuarkUI 是基于 [Ant Design Pro](https://pro.ant.design) 的前端引擎，配合 QuarkAdmin，你可以快速创建一个功能完善的管理后台。
+QuarkUI 是一个可以通过json配置组合前端页面的低代码引擎；它提供丰富的组件，能帮助您通过很少的配置就能输出各式各样的页面。
 
-## 环境准备
+## 开始
 
-安装依赖:
-
-```bash
-npm install
-```
-
-or
+安装依赖
 
 ```bash
-yarn
+$ yarn
 ```
 
-## 脚本命令
-
-QuarkUI 提供了一些有用的脚本来帮助您快速启动和构建项目
-
-
-### 运行项目
+启动服务
 
 ```bash
-npm start
+$ yarn start
 ```
 
-### 构建项目
+## 演示站点
 
-```bash
-npm run build
-```
+网址：暂无
 
 ## 技术支持
-[提交 Issues](https://github.com/quarkcms/quark-ui/issues) 、 [在线文档](http://www.quarkcms.com/quark-ui/) 、 [Ant Design Pro 官网](https://pro.ant.design)
+为了避免打扰作者日常工作，你可以在Github上提交 [Issues](https://github.com/quarkcms/quark-ui/issues)
+
+相关教程，你可以查看 [在线文档](http://www.quarkcms.com/quark-ui/)
 
 ## License
 QuarkUI is licensed under The MIT License (MIT).

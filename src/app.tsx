@@ -1,72 +1,6 @@
-import { BasicLayoutProps, Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { notification } from 'antd';
-import { history, RequestConfig } from 'umi';
+import { RequestConfig, history } from 'umi';
 import { ResponseError } from 'umi-request';
-import { queryQuarkInfo, queryQuarkLayout, queryQuarkMenus, queryAccountInfo } from '@/services/quark';
-import defaultSettings from '../config/defaultSettings';
-import logo from './assets/logo.png';
-import {Response} from "express";
-
-export async function getInitialState(): Promise<{
-  accountInfo?: API.AccountInfo;
-  settings?: LayoutSettings;
-  quarkInfo?: any;
-  quarkMenus?: any;
-  fetchUserInfo: () => Promise<API.AccountInfo | undefined>;
-  fetchLayoutInfo: () => Promise<undefined>;
-  fetchMenusInfo: () => Promise<undefined>;
-}> {
-  const fetchUserInfo = async () => {
-    try {
-      const currentUser = await queryAccountInfo();
-      return currentUser;
-    } catch (error) {
-      history.push('/user/login');
-    }
-    return undefined;
-  };
-
-  const fetchLayoutInfo = async () => {
-    return await queryQuarkLayout();
-  };
-
-  const fetchMenusInfo = async () => {
-    return await queryQuarkMenus();
-  };
-
-  const quarkInfo = await queryQuarkInfo();
-
-  // 如果是登录页面，不执行
-  if (history.location.pathname !== '/user/login' && history.location.pathname !== '/' && sessionStorage.getItem('token') !== null) {
-    try {
-      const accountInfo = await fetchUserInfo();
-      const quarkLayout = await fetchLayoutInfo();
-      const quarkMenus = await fetchMenusInfo();
-      if(!quarkLayout.data.logo) {
-        quarkLayout.data.logo = logo;
-      }
-      return {
-        fetchUserInfo,
-        fetchLayoutInfo,
-        fetchMenusInfo,
-        accountInfo: accountInfo.data,
-        settings: quarkLayout.data,
-        quarkInfo: quarkInfo.data,
-        quarkMenus: quarkMenus.data
-      };
-    } catch (error) {
-      history.push('/user/login');
-    }
-  }
-
-  return {
-    fetchUserInfo,
-    fetchLayoutInfo,
-    fetchMenusInfo,
-    settings: defaultSettings,
-    quarkInfo: quarkInfo.data,
-  };
-}
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -102,8 +36,10 @@ const errorHandler = (error: ResponseError) => {
       description: errorText,
     });
 
-    if(response.status == 401){ //未登录跳转登录
-      history.push('/user/login');
+    if(response.status === 401) {
+      history.replace({
+          pathname: history.location.pathname
+      })
     }
   }
 
@@ -112,6 +48,10 @@ const errorHandler = (error: ResponseError) => {
       description: '您的网络发生异常，无法连接服务器',
       message: '网络异常',
     });
+
+    history.replace({
+        pathname: history.location.pathname
+    })
   }
 
   throw error;
@@ -140,3 +80,10 @@ export const request: RequestConfig = {
     }
   ],
 };
+
+// 从接口中获取子应用配置，export 出的 qiankun 变量是一个 promise
+export const qiankun = fetch('./config.json')
+.then(response => response.json())
+.then(response => ({
+  apps: response.apps
+}))
