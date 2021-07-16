@@ -19,6 +19,9 @@ export default defineConfig({
     { path: '/index', component: '@/pages/Index/index' },
   ],
   fastRefresh: {},
+  dynamicImport: {
+    loading: '@ant-design/pro-layout/es/PageLoading',
+  },
   qiankun: {
     master: {
       apps:[]
