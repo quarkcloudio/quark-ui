@@ -109,7 +109,7 @@ const Render: React.FC<any> = (props:any) => {
         fileField|switchField|selectField|treeField|cascaderField|\
         dateField|datetimeField|dateRangeField|datetimeRangeField|\
         timeField|timeRangeField|displayField|editorField|searchField\
-        |mapField|geofenceField",
+        |mapField|geofenceField|",
         component: <Field {...body} callback={callback} data={data} />
       },
       {
@@ -147,17 +147,15 @@ const Render: React.FC<any> = (props:any) => {
         // 解析数据
         body = tplEngine(body, data);
       }
+
       return body;
     }
 
     let component:any = null;
     if(body.hasOwnProperty('component')) {
       registerComponent(body, data, callback).map((item:any) => {
-
-        if(item.key.indexOf('|') != -1) {
-          if(item.key.indexOf(body.component) != -1) {
-            component = item.component;
-          }
+        if(item.key.indexOf(body.component + '|') != -1) {
+          component = item.component;
         } else {
           if(item.key === body.component) {
             component = item.component;
@@ -168,11 +166,8 @@ const Render: React.FC<any> = (props:any) => {
       component = (
         body.map((item:any) => {
           return registerComponent(item, data, callback).map((componentItem:any) => {
-
-            if(componentItem.key.indexOf('|') != -1) {
-              if(componentItem.key.indexOf(item.component) != -1) {
-                return componentItem.component;
-              }
+            if(componentItem.key.indexOf(item.component + '|') != -1) {
+              return componentItem.component;
             } else {
               if(componentItem.key === item.component) {
                 return componentItem.component;

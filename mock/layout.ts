@@ -12,6 +12,7 @@ export default {
         },
         body: {
             component: "layout",
+            // 模板用法，参考https://lodash.com/docs/4.17.15#template
             body: "这里是容器内容区${love} 确定要<%= (status==1 ? '禁用' : '启用') %>数据吗？"
         }
     },
