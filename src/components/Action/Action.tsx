@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { history } from 'umi';
 import { get } from '@/services/action';
-import { dataMapping, tplEngine } from '@/utils/template';
+import { tplEngine } from '@/utils/template';
 import { reload } from '@/utils/reload';
 import {
   Button,
@@ -135,7 +135,7 @@ const Action: React.FC<any> = (props) => {
   // 执行ajax行为
   const executeAction = async (api:string) => {
     const result = await get({
-      actionUrl: dataMapping(api,props.data)
+      actionUrl: tplEngine(api,props.data)
     });
 
     if(result.status === 'success') {
@@ -384,7 +384,7 @@ const Action: React.FC<any> = (props) => {
           ghost={props.ghost}
           shape={props.shape}
           size={props.size}
-          href={dataMapping(props.href,props.data)}
+          href={tplEngine(props.href,props.data)}
           target={props.target}
           type={props.type}
           icon={props.icon ? <IconFont type={props.icon} /> : false}

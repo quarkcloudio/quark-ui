@@ -1,6 +1,6 @@
 import React, {  useEffect, useState } from 'react';
 import ProForm from '@ant-design/pro-form';
-import { dataMapping, tplEngine } from '@/utils/template';
+import { tplEngine } from '@/utils/template';
 import { reload } from '@/utils/reload';
 import { history } from 'umi';
 import { post, get } from '@/services/action';
@@ -37,7 +37,7 @@ const Form: React.FC<Form> = (props:any) => {
       setLoading(true);
 
       let result = await get({
-        actionUrl: dataMapping(props.initApi,props.data)
+        actionUrl: tplEngine(props.initApi,props.data)
       });
 
       window[formKey].setFieldsValue(result.data);

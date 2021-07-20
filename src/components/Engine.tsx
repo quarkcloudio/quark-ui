@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { history } from 'umi';
+import { history, useModel } from 'umi';
 import { get } from '@/services/action';
 import Render from '@/components/Render';
 
@@ -9,7 +9,10 @@ const Engine: React.FC<any> = (props:any) => {
   const query:any = history.location.query;
   const api = query.api ? query.api : props.initApi;
 
+  const { pageLoading, changePageLoading } = useModel('global', model => ({ pageLoading: model.pageLoading, changePageLoading: model.changePageLoading }));
+
   useEffect(() => {
+    changePageLoading(true);
     onSetComponentsState()
   }, [api,query.timestamp]);
 
@@ -19,7 +22,11 @@ const Engine: React.FC<any> = (props:any) => {
         actionUrl: api,
         ...history.location.query
       });
-      setComponentsState(result);
+
+      if(result) {
+        setComponentsState(result);
+        changePageLoading(false);
+      }
     } else {
       setComponentsState('请配置初始接口！');
     }

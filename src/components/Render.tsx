@@ -22,7 +22,7 @@ import Title from '@/components/Typography/Title';
 import Text from '@/components/Typography/Text';
 import { Space } from 'antd';
 import { MicroApp } from 'umi';
-import { dataMapping, tplEngine } from '@/utils/template';
+import { tplEngine } from '@/utils/template';
 
 const Render: React.FC<any> = (props:any) => {
 
@@ -109,7 +109,7 @@ const Render: React.FC<any> = (props:any) => {
         fileField|switchField|selectField|treeField|cascaderField|\
         dateField|datetimeField|dateRangeField|datetimeRangeField|\
         timeField|timeRangeField|displayField|editorField|searchField\
-        |mapField|geofenceField",
+        |mapField|geofenceField|",
         component: <Field {...body} callback={callback} data={data} />
       },
       {
@@ -145,19 +145,17 @@ const Render: React.FC<any> = (props:any) => {
     if(typeof body === 'string' || typeof body === 'number') {
       if(props.hasOwnProperty('data')) {
         // 解析数据
-        body = dataMapping(body, data);
+        body = tplEngine(body, data);
       }
+
       return body;
     }
 
     let component:any = null;
     if(body.hasOwnProperty('component')) {
       registerComponent(body, data, callback).map((item:any) => {
-
-        if(item.key.indexOf('|') != -1) {
-          if(item.key.indexOf(body.component) != -1) {
-            component = item.component;
-          }
+        if(item.key.indexOf(body.component + '|') != -1) {
+          component = item.component;
         } else {
           if(item.key === body.component) {
             component = item.component;
@@ -168,11 +166,8 @@ const Render: React.FC<any> = (props:any) => {
       component = (
         body.map((item:any) => {
           return registerComponent(item, data, callback).map((componentItem:any) => {
-
-            if(componentItem.key.indexOf('|') != -1) {
-              if(componentItem.key.indexOf(item.component) != -1) {
-                return componentItem.component;
-              }
+            if(componentItem.key.indexOf(item.component + '|') != -1) {
+              return componentItem.component;
             } else {
               if(componentItem.key === item.component) {
                 return componentItem.component;
