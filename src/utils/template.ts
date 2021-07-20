@@ -1,59 +1,12 @@
-import { trim } from '@/utils/trim';
-
-// 数据映射
-export function dataMapping(template: any,data: any) {
-
-    let result = template;
-
-    if(typeof template === 'string') {
-        let tplValues = template.match(/{.*?(?:>|})/g);
-        if(tplValues !== null) {
-            tplValues.map((item:any) => {
-
-                // 去除大括号
-                let tpl = trim(item,'{','left');
-                tpl = trim(tpl,'}','right');
-
-                // 替换数据
-                if(data) {
-                    let replaceData = data.hasOwnProperty(tpl) ? data[tpl] : null;
-                    result = result.replace(item, replaceData);
-                }
-            });
-        }
-    }
-
-    return result;
-}
+import template from 'lodash.template';
 
 // 模板引擎
-export function tplEngine(template: any,data: any) {
+export function tplEngine(tpl: any,data: any) {
+    let result = tpl;
 
-    let result = template;
-
-    if(typeof template === 'string') {
-        let tplValues = template.match(/<%.*?(?:>|%>)/g);
-        if(tplValues !== null) {
-            tplValues.map((item:any) => {
-                
-                // 去除大括号
-                let tpl = trim(item,'<%','left');
-                tpl = trim(tpl,'%>','right');
-
-                if(data) {
-                    const keys = Object.keys(data)
-                    keys.map((key:any) => {
-                        if(tpl.indexOf('data.'+key)>-1) {
-                            tpl = tpl.replace('data.'+key, data[key]);
-                        }
-                    })
-                }
-
-                let replaceData = eval(tpl);
-
-                result = result.replace(item, replaceData);
-            });
-        }
+    if(tpl && data) {
+        const compiled = template(tpl);
+        result = compiled(data);
     }
 
     return result;

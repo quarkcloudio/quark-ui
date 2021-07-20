@@ -26,7 +26,9 @@
     "@ant-design/pro-layout": "^6.5.0",
     "@ant-design/pro-table": "^2.34.5",
     "@tinymce/tinymce-react": "^3.12.2",
+    "@types/lodash.template": "^4.5.0",
     "@umijs/preset-react": "^1.x",
+    "lodash.template": "^4.5.0",
     "react-amap": "^1.2.8",
     "react-amap-plugin-autocomplete": "^0.0.4",
     "umi": "^3.4.7"

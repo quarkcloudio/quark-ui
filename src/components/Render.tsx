@@ -22,7 +22,7 @@ import Title from '@/components/Typography/Title';
 import Text from '@/components/Typography/Text';
 import { Space } from 'antd';
 import { MicroApp } from 'umi';
-import { dataMapping, tplEngine } from '@/utils/template';
+import { tplEngine } from '@/utils/template';
 
 const Render: React.FC<any> = (props:any) => {
 
@@ -145,7 +145,7 @@ const Render: React.FC<any> = (props:any) => {
     if(typeof body === 'string' || typeof body === 'number') {
       if(props.hasOwnProperty('data')) {
         // 解析数据
-        body = dataMapping(body, data);
+        body = tplEngine(body, data);
       }
       return body;
     }

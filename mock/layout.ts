@@ -7,11 +7,12 @@ export default {
             height: '100vh',
         },
         data: {
-            love: 'haha'
+            love: 'haha',
+            status: 0
         },
         body: {
             component: "layout",
-            body: "这里是容器内容区{love}"
+            body: "这里是容器内容区${love} 确定要<%= (status==1 ? '禁用' : '启用') %>数据吗？"
         }
     },
 
