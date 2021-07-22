@@ -28,12 +28,38 @@ export default {
                                 component: "textField",
                                 label: "用户名",
                                 name: "username",
-                                style: {width: 200}
+                                style: { width: 200 },
+                                when: {
+                                    component: "when",
+                                    items: [
+                                        {
+                                            condition: "<%=username == 'abc' %>",
+                                            body: [
+                                                {
+                                                    component: "text",
+                                                    body: "您输入的用户名超过100个字符了",
+                                                },
+                                            ]
+                                        },
+                                        {
+                                            condition: "<%=username === 'abcd' %>",
+                                            body: [
+                                                {
+                                                    component: "textField",
+                                                    label: "ABCD",
+                                                    name: "abcd",
+                                                    style: { width: 200 }
+                                                },
+                                            ]
+                                        }
+                                    ]
+                                }
                             },
                             {
                                 component: "passwordField",
                                 label: "密码",
                                 name: "password",
+                                displayWhen: "username === 'abcd'",
                                 style: {width: 200}
                             },
                         ]

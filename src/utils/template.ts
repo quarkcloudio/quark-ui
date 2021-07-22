@@ -4,7 +4,13 @@ import template from 'lodash.template';
 export function tplEngine(tpl: any,data: any) {
     let result = tpl;
 
-    if(tpl && data) {
+    if(!tpl || !data) {
+        return result;
+    }
+
+    let keys = Object.keys(data);
+
+    if(keys.length != 0) {
         const compiled = template(tpl);
         result = compiled(data);
     }

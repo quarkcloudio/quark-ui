@@ -97,7 +97,7 @@ const Form: React.FC<Form> = (props:any) => {
           },
         }}
       >
-        <Render body={props.body} data={props.data} callback={props.callback}/>
+        <Render body={props.body} data={{...props.data, formKey: formKey}} callback={props.callback}/>
       </ProForm>
     </Spin>
   );

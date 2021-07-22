@@ -6,6 +6,7 @@ import Layout from '@/components/Layout';
 import Row from '@/components/Layout/Row';
 import Col from '@/components/Layout/Col';
 import Divider from '@/components/Layout/Divider';
+import When from '@/components/Layout/When';
 import ProCard from '@ant-design/pro-card';
 import Form from '@/components/Form/Form';
 import Field from '@/components/Form/Field';
@@ -127,6 +128,10 @@ const Render: React.FC<any> = (props:any) => {
       {
         key: 'microApp',
         component: <MicroApp {...body} callback={callback} data={data} />
+      },
+      {
+        key: 'when',
+        component: <When {...body} callback={callback} data={data} />
       },
       {
         key: 'tpl',

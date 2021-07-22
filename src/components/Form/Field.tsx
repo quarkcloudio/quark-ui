@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {  useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import { get } from '@/services/action';
 import {
@@ -28,12 +28,23 @@ import Map from './Map';
 import Geofence from './Geofence';
 import Editor from './Editor';
 import Cascader from './Cascader';
+import Render from '@/components/Render';
 
 const Field : React.FC<any> = (props:any) => {
 
   const IconFont = createFromIconfontCN({
     scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js',
   });
+
+  //hack
+  const [random, setRandom] = useState(0);
+
+  const onChange = (value:any, name:string) => {
+    let item:any = [];
+    item[name] = value;
+    window[props.data.formKey]?.setFieldsValue(item);
+    setRandom(Math.random);
+  };
 
   // 渲染组件
   const fieldRender = () => {
@@ -60,6 +71,7 @@ const Field : React.FC<any> = (props:any) => {
               addonAfter={props.addonAfter}
               addonBefore={props.addonBefore}
               size={props.size}
+              onChange={(e)=>{onChange(e.target.value, props.name)}}
             />
           </Form.Item>;
         break;
@@ -502,7 +514,12 @@ const Field : React.FC<any> = (props:any) => {
         break;
     }
 
-    return component;
+    // 解析when
+    if(props.when) {
+      return <>{component}<Render body={props.when} data={window[props.data.formKey]?.getFieldsValue()} callback={props.callback} /></>;
+    } else {
+      return component;
+    }
   }
 
   return fieldRender();
