@@ -113,6 +113,25 @@ const EditableCell: React.FC<EditableCellProps> = ({
         );
         break;
     
+      case 'inputNumberField':
+        childNode = editing ? (
+          <Form.Item
+            style={{ margin: 0 }}
+            name={dataIndex}
+          >
+            <Input
+              ref={inputRef}
+              onPressEnter={save}
+              onBlur={save}
+            />
+          </Form.Item>
+        ) : (
+          <div className={styles.editableCellValueWrap} style={{ paddingRight: 24 }} onClick={toggleEdit}>
+            {children}
+          </div>
+        );
+        break;
+
       case 'switchField':
         childNode = (
           <Form.Item
