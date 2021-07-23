@@ -33,11 +33,11 @@ export default {
                                     component: "when",
                                     items: [
                                         {
-                                            condition: "<%=username == 'abc' %>",
+                                            condition: "<%=(['love','tt'].indexOf(username) !=-1) %>",
                                             body: [
                                                 {
                                                     component: "text",
-                                                    body: "您输入的用户名超过100个字符了",
+                                                    body: "您输入的用户名中包含了${username}字符串",
                                                 },
                                             ]
                                         },
@@ -54,14 +54,7 @@ export default {
                                         }
                                     ]
                                 }
-                            },
-                            {
-                                component: "passwordField",
-                                label: "密码",
-                                name: "password",
-                                displayWhen: "username === 'abcd'",
-                                style: {width: 200}
-                            },
+                            }
                         ]
                     }
                 }

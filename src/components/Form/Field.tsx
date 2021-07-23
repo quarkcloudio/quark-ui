@@ -29,6 +29,7 @@ import Geofence from './Geofence';
 import Editor from './Editor';
 import Cascader from './Cascader';
 import Render from '@/components/Render';
+import { tplEngine } from '@/utils/template';
 
 const Field : React.FC<any> = (props:any) => {
 
@@ -95,6 +96,7 @@ const Field : React.FC<any> = (props:any) => {
             addonAfter={props.addonAfter}
             addonBefore={props.addonBefore}
             size={props.size}
+            onChange={(e)=>{onChange(e.target.value, props.name)}}
           />
         </Form.Item>;
         break;
@@ -118,6 +120,7 @@ const Field : React.FC<any> = (props:any) => {
             onKeyPress={(e) => {
               e.stopPropagation();
             }}
+            onChange={(e)=>{onChange(e.target.value, props.name)}}
           />
         </Form.Item>;
         break;
@@ -141,6 +144,7 @@ const Field : React.FC<any> = (props:any) => {
             max={props.max}
             step={props.step}
             precision={props.precision}
+            onChange={(value)=>{onChange(value,props.name)}}
           />
         </Form.Item>;
         break;
@@ -191,6 +195,7 @@ const Field : React.FC<any> = (props:any) => {
             style={props.style ? props.style : []}
             options={props.options}
             disabled={props.disabled}
+            onChange={(value)=>{onChange(value,props.name)}}
           />
         </Form.Item>;
         break;
@@ -208,6 +213,7 @@ const Field : React.FC<any> = (props:any) => {
             style={props.style ? props.style : []}
             options={props.options}
             disabled={props.disabled}
+            onChange={(e)=>{onChange(e.target.value,props.name)}}
           />
         </Form.Item>;
         break;
@@ -271,6 +277,7 @@ const Field : React.FC<any> = (props:any) => {
             disabled={props.disabled}
             checkedChildren={props.options.on}
             unCheckedChildren={props.options.off}
+            onChange={(value)=>{onChange(value,props.name)}}
           />
         </Form.Item>;
         break;
@@ -516,7 +523,9 @@ const Field : React.FC<any> = (props:any) => {
 
     // 解析when
     if(props.when) {
-      return <>{component}<Render body={props.when} data={window[props.data.formKey]?.getFieldsValue()} callback={props.callback} /></>;
+      let fieldData:any = {};
+      fieldData[props.name] = window[props.data.formKey]?.getFieldValue(props.name);
+      return <>{component}<Render body={props.when} data={fieldData} callback={props.callback} /></>;
     } else {
       return component;
     }

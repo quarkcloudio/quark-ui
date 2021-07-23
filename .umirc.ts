@@ -6,7 +6,7 @@ export default defineConfig({
   },
   proxy: {
     '/api/': {
-      target: 'http://quark-admin.test',
+      target: 'http://www.web.com',
       changeOrigin: true,
       pathRewrite: { '^/api': '/api' },
     },
