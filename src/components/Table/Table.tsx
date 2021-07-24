@@ -4,9 +4,8 @@ import { history, Link } from 'umi';
 import { get, post } from '@/services/action';
 import Render from '@/components/Render';
 import QueryFilter from '@/components/Table/QueryFilter';
-import Action from '@/components/Action/Action';
 import {
-  Popover,
+  Image,
   Space
 } from 'antd';
 import { EditableRow, EditableCell } from './Editable';

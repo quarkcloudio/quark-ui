@@ -4,7 +4,6 @@ import { tplEngine } from '@/utils/template';
 import { reload } from '@/utils/reload';
 import { history } from 'umi';
 import { post, get } from '@/services/action';
-import moment from 'moment';
 import Action from '@/components/Action/Action';
 import Render from '@/components/Render';
 import {
@@ -47,7 +46,7 @@ const Form: React.FC<Form> = (props:any) => {
 
   const onFinish = async (values: any) => {
     const result = await post({
-      actionUrl: props.api,
+      actionUrl: tplEngine(props.api, props.data),
       ...values
     });
 

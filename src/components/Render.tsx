@@ -135,7 +135,7 @@ const Render: React.FC<any> = (props:any) => {
       },
       {
         key: 'tpl',
-        component: <>{ tplEngine(body.body,data) }</>
+        component: <span {...body}>{ tplEngine(body.body, data) }</span>
       },
     ];
   }
