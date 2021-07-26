@@ -11,6 +11,7 @@ const Layout: React.FC<any> = (props:any) => {
 
   const body = props.body;
   const data = props.data;
+  const children = props.children;
 
   if(props.cache) {
     const layout = sessionStorage.getItem('layout');
@@ -44,7 +45,7 @@ const Layout: React.FC<any> = (props:any) => {
   }
 
   useEffect(() => {
-    if(props.menu) {
+    if(props.menu && query.api) {
       // 获取当前选中菜单的名称
       const title = getMenuName(props.menu, decodeURIComponent(query.api));
       // 设置页面标题
@@ -182,7 +183,7 @@ const Layout: React.FC<any> = (props:any) => {
           onClick: onMenuClick,
         }}
       >
-        <Render body={body} data={data} />
+        {children ?? <Render body={body} data={data} />}
       </ProLayout>
     </>
   );

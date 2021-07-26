@@ -17,6 +17,10 @@ export default defineConfig({
   routes: [
     { path: '/', component: '@/pages/Index/index' },
     { path: '/index', component: '@/pages/Index/index' },
+    { 
+      path: '/sms/send',
+      component: '@/pages/Sms/Send'
+    }
   ],
   fastRefresh: {},
   qiankun: {
