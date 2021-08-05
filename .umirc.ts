@@ -6,7 +6,7 @@ export default defineConfig({
   },
   proxy: {
     '/api/': {
-      target: 'http://www.web.com',
+      target: 'http://www.project.com',
       changeOrigin: true,
       pathRewrite: { '^/api': '/api' },
     },

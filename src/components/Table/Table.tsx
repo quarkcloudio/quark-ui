@@ -19,6 +19,7 @@ export interface Table {
 const Table: React.FC<Table> = (props:any) => {
   const actionRef = useRef<any>(undefined);
   const query:any = history.location.query;
+  const [tableProps, setTable] = useState(props);
 
   // 注册全局变量
   window[props.tableKey] = actionRef;
@@ -27,11 +28,11 @@ const Table: React.FC<Table> = (props:any) => {
   const columnRender = (column:any, row:any, text:any) => {
 
     if(column.valueType === 'option') {
-      text = <Render body={column.actions} data={row} callback={props.callback} />;
+      text = <Render body={column.actions} data={row} callback={tableProps.callback} />;
     }
 
     if(column.valueType === 'text') {
-      text = <Render body={text} data={row} callback={props.callback} />;
+      text = <Render body={text} data={row} callback={tableProps.callback} />;
     }
 
     return text;
@@ -98,24 +99,25 @@ const Table: React.FC<Table> = (props:any) => {
 
   const getTableDatasource:any = async (key:string) => {
     let result,table = null;
-    const api = props.api ? props.api : query.api;
+    const api = tableProps.api ? tableProps.api : query.api;
 
-    if(props.apiType === 'GET') {
+    if(tableProps.apiType === 'GET') {
       result = await get({
         actionUrl: api,
         ...query
       });
-    } else if(props.apiType === 'POST') {
+    } else if(tableProps.apiType === 'POST') {
       result = await post({
         actionUrl: api,
         ...query
       });
     }
 
-    if(props.api) {
+    if(tableProps.api) {
       table = result.data;
     } else {
       table = findComponent(result,key);
+      setTable(table);
     }
 
     return table;
@@ -123,12 +125,12 @@ const Table: React.FC<Table> = (props:any) => {
 
   return (
     <>
-      {(props.autoBuildSearchFrom === false && props.search) ? <QueryFilter search={props.search} current={actionRef.current}/> : null}
+      {(tableProps.autoBuildSearchFrom === false && tableProps.search) ? <QueryFilter search={tableProps.search} current={actionRef.current}/> : null}
       <ProTable
-        {...props}
-        search={props.autoBuildSearchFrom}
+        {...tableProps}
+        search={tableProps.autoBuildSearchFrom}
         actionRef={actionRef}
-        columns={props.columns ? parseColumns(props.columns) : []}
+        columns={tableProps.columns ? parseColumns(tableProps.columns) : []}
         components={{
           body: {
             row: EditableRow,
@@ -147,12 +149,12 @@ const Table: React.FC<Table> = (props:any) => {
         )}
         tableAlertOptionRender={({ selectedRowKeys, onCleanSelected}) => {
           const data = {
-            ...props.data,
+            ...tableProps.data,
             ids:selectedRowKeys,
             id:selectedRowKeys
           };
           return (
-            props.batchActions ? <Render body={props.batchActions} data={data} callback={onCleanSelected} /> : null
+            tableProps.batchActions ? <Render body={tableProps.batchActions} data={data} callback={onCleanSelected} /> : null
           );
         }}
         request={async (params:any, sorter:any, filter:any) => {
@@ -181,11 +183,11 @@ const Table: React.FC<Table> = (props:any) => {
           });
         }}
         toolbar={{
-          ...props.toolBar,
-          actions: props.toolBar?.actions ? [<Render body={props.toolBar?.actions} data={props.data} callback={props.callback} />] : undefined,
+          ...tableProps.toolBar,
+          actions: tableProps.toolBar?.actions ? [<Render body={tableProps.toolBar?.actions} data={tableProps.data} callback={tableProps.callback} />] : undefined,
         }}
         rowClassName={(record, index)=> {
-          if(props.striped) {
+          if(tableProps.striped) {
             if(index%2 != 0) {
               return styles.oddTr;
             } 
