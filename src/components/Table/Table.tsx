@@ -19,7 +19,7 @@ export interface Table {
 const Table: React.FC<Table> = (props:any) => {
   const actionRef = useRef<any>(undefined);
   const query:any = history.location.query;
-  const [tableProps, setTable] = useState(props);
+  const [tableProps, setTable] = useState<any>(props);
 
   // 注册全局变量
   window[props.tableKey] = actionRef;
@@ -100,7 +100,7 @@ const Table: React.FC<Table> = (props:any) => {
   const getTableDatasource:any = async (key:string) => {
     let result,table = null;
     const api = tableProps.api ? tableProps.api : query.api;
-
+    
     if(tableProps.apiType === 'GET') {
       result = await get({
         actionUrl: api,
@@ -117,7 +117,6 @@ const Table: React.FC<Table> = (props:any) => {
       table = result.data;
     } else {
       table = findComponent(result,key);
-      setTable(table);
     }
 
     return table;
@@ -173,12 +172,14 @@ const Table: React.FC<Table> = (props:any) => {
           }
 
           history.push({ pathname: history.location.pathname, query: getQuery });
+          
+          const getTable = await getTableDatasource(props.tableKey);
 
-          const table = await getTableDatasource(props.tableKey);
+          setTable(getTable);
 
           return Promise.resolve({
-            data: table.datasource,
-            total: table?.pagination?.total,
+            data: getTable.datasource,
+            total: getTable?.pagination?.total,
             success: true,
           });
         }}
