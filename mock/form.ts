@@ -51,6 +51,17 @@ export default {
                                                     style: { width: 200 }
                                                 },
                                             ]
+                                        },
+                                        {
+                                            condition: "<%=String(username) === 'qq' %>",
+                                            body: [
+                                                {
+                                                    component: "textField",
+                                                    label: "QQ",
+                                                    name: "qq",
+                                                    style: { width: 200 }
+                                                },
+                                            ]
                                         }
                                     ]
                                 }
