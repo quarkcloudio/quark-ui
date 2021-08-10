@@ -14,6 +14,7 @@ import Tabs from '@/components/Display/Tabs';
 import StatisticCard from '@/components/Display/StatisticCard';
 import Statistic from '@/components/Display/Statistic';
 import Descriptions from '@/components/Display/Descriptions';
+import List from '@/components/Display/List';
 import Table from '@/components/Table/Table';
 import Action from '@/components/Action/Action';
 import Login from '@/components/Login';
@@ -136,6 +137,10 @@ const Render: React.FC<any> = (props:any) => {
       {
         key: 'tpl',
         component: <span {...body}>{ tplEngine(body.body, data) }</span>
+      },
+      {
+        key: 'list',
+        component: <List {...body} callback={callback} data={data} />
       },
     ];
   }
