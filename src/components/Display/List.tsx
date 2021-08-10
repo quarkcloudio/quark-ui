@@ -12,17 +12,6 @@ const List: React.FC<any> = (props:any) => {
           </a>,
         ];
       }}
-      onRow={(record: any) => {
-        return {
-          onMouseEnter: () => {
-            console.log(record);
-          },
-          onClick: () => {
-            console.log(record);
-          },
-        };
-      }}
-      rowKey="name"
       headerTitle="基础列表"
       tooltip="基础列表的配置"
       dataSource={[]}
