@@ -140,7 +140,7 @@ const Render: React.FC<any> = (props:any) => {
       },
       {
         key: 'list',
-        component: <List {...body} callback={callback} data={data} />
+        component: <List {...body} callback={callback} listKey={body.key} data={data} />
       },
     ];
   }

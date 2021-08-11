@@ -40,22 +40,5 @@ export default {
             body: "这里是容器内容区{love}"
         }
     },
-
-    // list
-    'GET /api/layout/list': {
-        component: "page",
-        style: {
-            "margin": "0px"
-        },
-        data: {
-            love: 'haha'
-        },
-        body: {
-            component: "list",
-            style: {
-                "backgroundColor": "#C4C4C4"
-            }
-        }
-    },
 }
   

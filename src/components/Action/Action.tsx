@@ -181,6 +181,7 @@ const Action: React.FC<any> = (props) => {
           onConfirm={()=>{executeAction(props.api)}}
         >
           <Button
+            style={props.style}
             block={props.block}
             danger={props.danger}
             disabled={props.disabled}
@@ -196,6 +197,7 @@ const Action: React.FC<any> = (props) => {
       } else {
         component =
         <Button
+          style={props.style}
           block={props.block}
           danger={props.danger}
           disabled={props.disabled}
@@ -222,6 +224,7 @@ const Action: React.FC<any> = (props) => {
             }}
           >
             <Button
+              style={props.style}
               block={props.block}
               danger={props.danger}
               disabled={props.disabled}
@@ -237,6 +240,7 @@ const Action: React.FC<any> = (props) => {
         } else {
           component =
           <Button
+            style={props.style}
             block={props.block}
             danger={props.danger}
             disabled={props.disabled}
@@ -267,6 +271,7 @@ const Action: React.FC<any> = (props) => {
             onConfirm={()=>{window[formKey]?.resetFields?.()}}
           >
             <Button
+              style={props.style}
               block={props.block}
               danger={props.danger}
               disabled={props.disabled}
@@ -282,6 +287,7 @@ const Action: React.FC<any> = (props) => {
         } else {
           component =
           <Button
+            style={props.style}
             block={props.block}
             danger={props.danger}
             disabled={props.disabled}
@@ -306,6 +312,7 @@ const Action: React.FC<any> = (props) => {
               onConfirm={()=>{props?.callback?.()}}
             >
               <Button
+                style={props.style}
                 block={props.block}
                 danger={props.danger}
                 disabled={props.disabled}
@@ -321,6 +328,7 @@ const Action: React.FC<any> = (props) => {
           } else {
             component =
             <Button
+              style={props.style}
               block={props.block}
               danger={props.danger}
               disabled={props.disabled}
@@ -345,6 +353,7 @@ const Action: React.FC<any> = (props) => {
             onConfirm={()=>{ history.go(-1) }}
           >
             <Button
+              style={props.style}
               block={props.block}
               danger={props.danger}
               disabled={props.disabled}
@@ -360,6 +369,7 @@ const Action: React.FC<any> = (props) => {
         } else {
           component =
           <Button
+            style={props.style}
             block={props.block}
             danger={props.danger}
             disabled={props.disabled}
@@ -378,6 +388,7 @@ const Action: React.FC<any> = (props) => {
       case 'link':
         component =
         <Button
+          style={props.style}
           block={props.block}
           danger={props.danger}
           disabled={props.disabled}
@@ -402,6 +413,7 @@ const Action: React.FC<any> = (props) => {
     default:
       component =
       <Button
+        style={props.style}
         block={props.block}
         danger={props.danger}
         disabled={props.disabled}
