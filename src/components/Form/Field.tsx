@@ -299,6 +299,7 @@ const Field : React.FC<any> = (props:any) => {
             mode={props.mode}
             allowClear={props.allowClear}
             size={props.size}
+            onChange={(value)=>{onChange(value,props.name)}}
           />
         </Form.Item>;
         break;
