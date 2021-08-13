@@ -20,6 +20,11 @@ const Table: React.FC<Table> = (props:any) => {
   const actionRef = useRef<any>(undefined);
   const query:any = history.location.query;
   const [tableProps, setTable] = useState<any>(props);
+  const [page, setPage] = useState<any>(props.pagination.page);
+
+  useEffect(() => {
+    setPage(query.page)
+  }, [query.page]);
 
   // 注册全局变量
   window[props.tableKey] = actionRef;
@@ -186,6 +191,10 @@ const Table: React.FC<Table> = (props:any) => {
         toolbar={{
           ...tableProps.toolBar,
           actions: tableProps.toolBar?.actions ? [<Render body={tableProps.toolBar?.actions} data={tableProps.data} callback={tableProps.callback} />] : undefined,
+        }}
+        pagination={{
+          ...tableProps.pagination,
+          current:page
         }}
         rowClassName={(record, index)=> {
           if(tableProps.striped) {

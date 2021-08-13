@@ -25,6 +25,7 @@ import Text from '@/components/Typography/Text';
 import { Space } from 'antd';
 import { MicroApp } from 'umi';
 import { tplEngine } from '@/utils/template';
+import Line from '@/components/Chart/Line';
 
 const Render: React.FC<any> = (props:any) => {
 
@@ -141,6 +142,10 @@ const Render: React.FC<any> = (props:any) => {
       {
         key: 'list',
         component: <List {...body} callback={callback} listKey={body.key} data={data} />
+      },
+      {
+        key: 'line',
+        component: <Line {...body} callback={callback} />
       },
     ];
   }

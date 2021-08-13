@@ -32,7 +32,7 @@ const QueryFilter: React.FC<Action> = (props) => {
     let getQuery:any = {};
 
     getQuery['api'] = query.api;
-    getQuery['page'] = query.page;
+    getQuery['page'] = 1;
     getQuery['pageSize'] = query.pageSize;
 
     getQuery['search'] = values;
