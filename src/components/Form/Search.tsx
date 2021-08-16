@@ -20,7 +20,6 @@ export interface Search {
 const Search: React.FC<Search> = ({ api=null, mode=undefined, size=undefined, value=null, placeholder=null, style=[], options=[],allowClear=false, onChange }) => {
   const [selectOptions, setSelectOptions] = useState(undefined);
   const [loading, setLoading] = useState(false);
-
   let  getSelectOptions = selectOptions||options;
 
   useEffect(() => {
@@ -71,6 +70,7 @@ const Search: React.FC<Search> = ({ api=null, mode=undefined, size=undefined, va
       <Select
         showSearch
         defaultActiveFirstOption={false}
+        showArrow={false}
         mode={mode}
         size={size}
         filterOption={false}
@@ -79,12 +79,13 @@ const Search: React.FC<Search> = ({ api=null, mode=undefined, size=undefined, va
         style={style}
         allowClear={allowClear}
         onChange={onSelectChange}
-        value={value}
+        value={value ? String(value) : undefined}
+        notFoundContent={null}
       >
         {!!getSelectOptions &&
           getSelectOptions.map((option: any) => {
             return (
-              <Select.Option key={option.value} value={option.value}>
+              <Select.Option key={String(option.value)} value={String(option.value)}>
                 {option.label}
               </Select.Option>
             );

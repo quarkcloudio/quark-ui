@@ -111,8 +111,8 @@ const Render: React.FC<any> = (props:any) => {
         iconField|hiddenField|checkboxField|radioField|imageField|\
         fileField|switchField|selectField|treeField|cascaderField|\
         dateField|datetimeField|dateRangeField|datetimeRangeField|\
-        timeField|timeRangeField|displayField|editorField|searchField\
-        |mapField|geofenceField|",
+        timeField|timeRangeField|displayField|editorField|searchField|\
+        mapField|geofenceField|",
         component: <Field {...body} callback={callback} data={data} />
       },
       {
