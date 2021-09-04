@@ -190,7 +190,7 @@ const Table: React.FC<Table> = (props:any) => {
         }}
         toolbar={{
           ...tableProps.toolBar,
-          actions: tableProps.toolBar?.actions ? [<Render body={tableProps.toolBar?.actions} data={tableProps.data} callback={tableProps.callback} />] : undefined,
+          actions: tableProps.toolBar?.actions ? [<Render body={tableProps.toolBar?.actions} data={{...tableProps.data,...query}} callback={tableProps.callback} />] : undefined,
         }}
         pagination={{
           ...tableProps.pagination,
