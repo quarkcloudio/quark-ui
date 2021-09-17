@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { useModel } from 'umi';
 import { get } from '@/services/action';
 import {
@@ -13,6 +13,7 @@ import {
   ProFormDateTimePicker,
   ProFormDateRangePicker,
   ProFormDateTimeRangePicker,
+  ProFormGroup,
   ProFormTimePicker
 } from '@ant-design/pro-form';
 import { createFromIconfontCN,PlusOutlined } from '@ant-design/icons';
@@ -50,10 +51,13 @@ const FormItem: React.FC<FormItem> = (props:any) => {
   const IconFont = createFromIconfontCN({
     scriptUrl: initialState.settings.iconfontUrl,
   });
-  
+
   //hack
   const [random, setRandom] = useState(0);
   const [items, setItems] = useState(props.items);
+  useEffect(() => {
+    setItems(props.items);
+  },  [props.items])
 
   const onChange = (value:any,name:string) => {
     let item = {};
@@ -75,7 +79,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
         }
         return item;
       });
-      
+
       const getItems = await Promise.all(promises);
       setItems(getItems);
     }
@@ -94,7 +98,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
         switch (item.component) {
           case 'text':
             if(item.type === 'text') {
-              component = 
+              component =
               <Form.Item
                 key={item.key}
                 name={field ? [field.name, item.name] : item.name}
@@ -121,7 +125,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             }
 
             if(item.type === 'password') {
-              component = 
+              component =
               <Form.Item
                 key={item.key}
                 name={field ? [field.name, item.name] : item.name}
@@ -148,7 +152,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             }
             break;
           case 'textArea':
-            component = 
+            component =
             <Form.Item
               key={item.key}
               name={field ? [field.name, item.name] : item.name}
@@ -174,7 +178,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             </Form.Item>;
             break;
           case 'inputNumber':
-            component = 
+            component =
             <Form.Item
               key={item.key}
               name={field ? [field.name, item.name] : item.name}
@@ -200,7 +204,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             </Form.Item>;
             break;
           case 'icon':
-            component = 
+            component =
             <Form.Item
               key={item.name}
               label={item.label}
@@ -226,7 +230,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             </Form.Item>
             break;
           case 'hidden':
-            component = 
+            component =
             <span key={item.key} style={{display:'none'}}>
               <ProFormText
                 key={item.key}
@@ -236,7 +240,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             </span>;
             break;
           case 'checkbox':
-            component = 
+            component =
             <Form.Item
               key={item.key}
               name={field ? [field.name, item.name] : item.name}
@@ -256,7 +260,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             </Form.Item>;
             break;
           case 'radio':
-            component = 
+            component =
             <Form.Item
               key={item.key}
               name={field ? [field.name, item.name] : item.name}
@@ -276,7 +280,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             </Form.Item>;
             break;
           case 'image':
-            component = 
+            component =
             <Form.Item
               key={item.key}
               label={item.label}
@@ -324,7 +328,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             </Form.Item>;
             break;
           case 'switch':
-            component = 
+            component =
             <Form.Item
               key={item.key}
               name={field ? [field.name, item.name] : item.name}
@@ -346,7 +350,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             </Form.Item>;
             break;
           case 'select':
-            component = 
+            component =
             <Form.Item
               key={item.key}
               name={field ? [field.name, item.name] : item.name}
@@ -370,7 +374,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             </Form.Item>;
             break;
           case 'tree':
-            component = 
+            component =
             <Form.Item
               key={item.key}
               label={item.label}
@@ -390,7 +394,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             </Form.Item>;
             break;
           case 'cascader':
-            component = 
+            component =
             <Form.Item
               key={item.key}
               label={item.label}
@@ -410,7 +414,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             </Form.Item>;
             break;
           case 'date':
-            component = 
+            component =
             <ProFormDatePicker
               key={item.key}
               label={item.label}
@@ -427,7 +431,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             />;
             break;
           case 'datetime':
-            component = 
+            component =
             <ProFormDateTimePicker
               key={item.key}
               label={item.label}
@@ -444,7 +448,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             />;
             break;
           case 'dateRange':
-            component = 
+            component =
             <ProFormDateRangePicker
               key={item.key}
               label={item.label}
@@ -461,7 +465,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             />;
             break;
           case 'datetimeRange':
-            component = 
+            component =
             <ProFormDateTimeRangePicker
               key={item.key}
               label={item.label}
@@ -478,7 +482,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             />;
             break;
           case 'time':
-            component = 
+            component =
             <Form.Item
               key={item.key}
               label={item.label}
@@ -496,7 +500,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             </Form.Item>;
             break;
           case 'timeRange':
-            component = 
+            component =
             <Form.Item
               key={item.key}
               label={item.label}
@@ -514,7 +518,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             </Form.Item>;
             break;
           case 'display':
-            component = 
+            component =
             <Form.Item label={item.label}>
               <span style={item.style ? item.style : []}>
                 {item.value}
@@ -522,7 +526,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             </Form.Item>
             break;
           case 'editor':
-            component = 
+            component =
             <Form.Item
               key={item.key}
               label={item.label}
@@ -540,7 +544,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             </Form.Item>;
             break;
           case 'list':
-            component = 
+            component =
             <Form.Item
               key={item.name}
               label={item.label}
@@ -583,7 +587,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             </Form.Item>;
             break;
           case 'search':
-            component = 
+            component =
             <Form.Item
               key={item.key}
               label={item.label}
@@ -605,7 +609,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             </Form.Item>;
             break;
           case 'map':
-            component = 
+            component =
             <Form.Item
               key={item.key}
               label={item.label}
@@ -623,7 +627,7 @@ const FormItem: React.FC<FormItem> = (props:any) => {
             </Form.Item>;
             break;
           case 'geofence':
-            component = 
+            component =
             <Form.Item
               key={item.key}
               label={item.label}
@@ -640,8 +644,11 @@ const FormItem: React.FC<FormItem> = (props:any) => {
               />
             </Form.Item>;
             break;
+          case 'group':
+            component = <ProFormGroup title={item.title} children={formItemRender(item.children)}/>
+            break;
           default:
-            component = 
+            component =
             <Form.Item
               key={item.name}
               label={item.label}
