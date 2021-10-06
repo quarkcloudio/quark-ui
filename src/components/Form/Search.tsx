@@ -23,10 +23,10 @@ const Search: React.FC<Search> = ({ api=null, mode=undefined, size=undefined, va
   let  getSelectOptions = selectOptions||options;
 
   useEffect(() => {
-    if(value && getSelectOptions.length == 0) {
+    if(value && (getSelectOptions?.length == 0 || getSelectOptions === null)) {
       setLoading(true);
       onInputSearch(value,'value');
-    } else if(value && getSelectOptions.length > 0) {
+    } else if(value && getSelectOptions?.length > 0) {
       if(getSelectOptions.indexOf(value) == -1) {
         setLoading(true);
         onInputSearch(value,'value');
