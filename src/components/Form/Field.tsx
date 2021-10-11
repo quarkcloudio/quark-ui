@@ -350,7 +350,8 @@ const Field : React.FC<any> = (props:any) => {
           placeholder={props.placeholder}
           fieldProps={{
             allowClear:props.allowClear,
-            size:props.size
+            size:props.size,
+            picker:props.picker ?? 'date'
           }}
         />;
         break;
@@ -380,7 +381,8 @@ const Field : React.FC<any> = (props:any) => {
           placeholder={props.placeholder}
           fieldProps={{
             allowClear:props.allowClear,
-            size:props.size
+            size:props.size,
+            picker:props.picker ?? 'date'
           }}
         />;
         break;
