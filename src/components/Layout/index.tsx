@@ -13,15 +13,15 @@ const Layout: React.FC<any> = (props:any) => {
   const data = props.data;
   const children = props.children;
 
-  // if(props.cache) {
-  //   const layout = sessionStorage.getItem('layout');
-  //   if(!layout) {
-  //     // 记录布局
-  //     sessionStorage.setItem('layout', JSON.stringify(props));
-  //   } else {
-  //     props = JSON.parse(layout);
-  //   }
-  // }
+  if(props.cache) {
+    const layout = sessionStorage.getItem('layout');
+    if(!layout) {
+      // 记录布局
+      sessionStorage.setItem('layout', JSON.stringify(props));
+    } else {
+      props = JSON.parse(layout);
+    }
+  }
 
   const query:any = history.location.query;
   const [title, setTitle] = useState<string>(props.title);
