@@ -18,7 +18,8 @@ import {
   InputNumber,
   Checkbox,
   Radio,
-  Switch
+  Switch,
+  DatePicker
 } from 'antd';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 import ImageUploader from './ImageUploader';
@@ -30,6 +31,8 @@ import Editor from './Editor';
 import Cascader from './Cascader';
 import Render from '@/components/Render';
 import { tplEngine } from '@/utils/template';
+
+const { RangePicker } = DatePicker;
 
 const Field : React.FC<any> = (props:any) => {
 
@@ -341,19 +344,22 @@ const Field : React.FC<any> = (props:any) => {
         break;
       case 'dateField':
         component = 
-        <ProFormDatePicker
+        <Form.Item
           label={props.label}
           name={props.name}
           rules={props.frontendRules}
           help={props.help ? props.help : undefined}
           extra={props.extra}
-          placeholder={props.placeholder}
-          fieldProps={{
-            allowClear:props.allowClear,
-            size:props.size,
-            picker:props.picker ?? 'date'
-          }}
-        />;
+        >
+          <DatePicker
+            size={props.size}
+            locale={locale}
+            format={props.format}
+            placeholder={props.placeholder}
+            allowClear={props.allowClear}
+            picker={props.picker ?? 'date'}
+          />
+        </Form.Item>;
         break;
       case 'datetimeField':
         component = 
@@ -372,19 +378,22 @@ const Field : React.FC<any> = (props:any) => {
         break;
       case 'dateRangeField':
         component = 
-        <ProFormDateRangePicker
+        <Form.Item
           label={props.label}
           name={props.name}
           rules={props.frontendRules}
           help={props.help ? props.help : undefined}
           extra={props.extra}
-          placeholder={props.placeholder}
-          fieldProps={{
-            allowClear:props.allowClear,
-            size:props.size,
-            picker:props.picker ?? 'date'
-          }}
-        />;
+        >
+          <RangePicker
+            size={props.size}
+            locale={locale}
+            format={props.format}
+            placeholder={props.placeholder}
+            allowClear={props.allowClear}
+            picker={props.picker ?? 'date'}
+          />
+        </Form.Item>;
         break;
       case 'datetimeRangeField':
         component = 
