@@ -344,22 +344,80 @@ const Field : React.FC<any> = (props:any) => {
         break;
       case 'dateField':
         component = 
-        <Form.Item
+        <ProFormDatePicker
           label={props.label}
           name={props.name}
           rules={props.frontendRules}
           help={props.help ? props.help : undefined}
           extra={props.extra}
-        >
-          <DatePicker
-            size={props.size}
-            locale={locale}
-            format={props.format}
-            placeholder={props.placeholder}
-            allowClear={props.allowClear}
-            picker={props.picker ?? 'date'}
-          />
-        </Form.Item>;
+          placeholder={props.placeholder}
+          fieldProps={{
+            allowClear:props.allowClear,
+            size:props.size,
+            picker:props.picker,
+            format:props.format
+          }}
+        />
+        break;
+      case 'weekField':
+        component = 
+        <ProFormDatePicker.Week
+          label={props.label}
+          name={props.name}
+          rules={props.frontendRules}
+          help={props.help ? props.help : undefined}
+          extra={props.extra}
+          placeholder={props.placeholder}
+          fieldProps={{
+            allowClear:props.allowClear,
+            size:props.size
+          }}
+        />
+        break;
+      case 'monthField':
+        component = 
+        <ProFormDatePicker.Month
+          label={props.label}
+          name={props.name}
+          rules={props.frontendRules}
+          help={props.help ? props.help : undefined}
+          extra={props.extra}
+          placeholder={props.placeholder}
+          fieldProps={{
+            allowClear:props.allowClear,
+            size:props.size
+          }}
+        />
+        break;
+      case 'quarterField':
+        component = 
+        <ProFormDatePicker.Quarter
+          label={props.label}
+          name={props.name}
+          rules={props.frontendRules}
+          help={props.help ? props.help : undefined}
+          extra={props.extra}
+          placeholder={props.placeholder}
+          fieldProps={{
+            allowClear:props.allowClear,
+            size:props.size
+          }}
+        />
+        break;
+      case 'yearField':
+        component = 
+        <ProFormDatePicker.Year
+          label={props.label}
+          name={props.name}
+          rules={props.frontendRules}
+          help={props.help ? props.help : undefined}
+          extra={props.extra}
+          placeholder={props.placeholder}
+          fieldProps={{
+            allowClear:props.allowClear,
+            size:props.size
+          }}
+        />
         break;
       case 'datetimeField':
         component = 
@@ -378,22 +436,20 @@ const Field : React.FC<any> = (props:any) => {
         break;
       case 'dateRangeField':
         component = 
-        <Form.Item
+        <ProFormDateRangePicker
           label={props.label}
           name={props.name}
           rules={props.frontendRules}
           help={props.help ? props.help : undefined}
           extra={props.extra}
-        >
-          <RangePicker
-            size={props.size}
-            locale={locale}
-            format={props.format}
-            placeholder={props.placeholder}
-            allowClear={props.allowClear}
-            picker={props.picker ?? 'date'}
-          />
-        </Form.Item>;
+          placeholder={props.placeholder}
+          fieldProps={{
+            allowClear:props.allowClear,
+            size:props.size,
+            picker:props.picker,
+            format:props.format
+          }}
+        />;
         break;
       case 'datetimeRangeField':
         component = 
