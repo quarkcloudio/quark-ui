@@ -32,6 +32,7 @@ const Modal: React.FC<any> = (props:any) => {
       </Button>
       <AntModal
         {...props.modal}
+        title={tplEngine(props.modal.title,props.data)}
         visible={visible}
         onCancel={()=>setVisible(false)}
         footer={

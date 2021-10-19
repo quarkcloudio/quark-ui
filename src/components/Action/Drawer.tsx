@@ -34,6 +34,7 @@ const Drawer: React.FC<any> = (props:any) => {
       </Button>
       <AntDrawer
         {...props.drawer}
+        title={tplEngine(props.drawer.title,props.data)}
         visible={visible}
         onClose={()=>setVisible(false)}
         footer={
