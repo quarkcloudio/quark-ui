@@ -6,7 +6,7 @@ const Descriptions: React.FC<any> = (props:any) => {
   const componentRender = (items:any) => {
     return items.map((item:any) => {
         return <ProDescriptions.Item key={item.key} label={item.label}>
-                <Render body={{...item, body:item.value}} />
+                <Render body={{...item, body:item.value}} data={props.data}/>
               </ProDescriptions.Item>;
       })
   }
