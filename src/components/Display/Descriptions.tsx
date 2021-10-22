@@ -11,7 +11,15 @@ const Descriptions: React.FC<any> = (props: any) => {
   const componentRender = (items: any) => {
     return items?.map((item: any) => {
       return (
-        <ProDescriptions.Item key={item.key} label={item.label}>
+        <ProDescriptions.Item
+          key={item.key}
+          label={item.label}
+          tooltip={item.tooltip}
+          span={item.span}
+          valueType={item.valueType}
+          valueEnum={item.valueEnum}
+          dataIndex={item.dataIndex}
+        >
           <Render body={{ ...item, body: item.value }} data={props.data} />
         </ProDescriptions.Item>
       );
@@ -22,7 +30,7 @@ const Descriptions: React.FC<any> = (props: any) => {
     <span>
       <ProDescriptions {...props}>{componentRender(props.items)}</ProDescriptions>
       {
-        props?.actions?
+        props?.actions?.length>0?
           <div>
             <Divider style={{marginTop:0}}/>
             <div style={{marginBottom:24,textAlign:'center'}}>
