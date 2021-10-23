@@ -21,10 +21,8 @@ const Line: React.FC<any> = (props:any) => {
     }
   };
 
-  console.log(data);
-
   return (
-    <AntLine {...props} data={data??props.data} />
+    <AntLine {...props} data={data} />
   );
 }
 
