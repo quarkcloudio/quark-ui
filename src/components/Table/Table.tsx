@@ -83,10 +83,15 @@ const Table: React.FC<Table> = (props:any) => {
   }
 
   const findComponent:any = (data:any,key:string) => {
-    let component = [];
+    let component:any = [];
 
     if(data.key === key) {
       return data;
+    }
+
+    // tab做特殊处理
+    if(data.hasOwnProperty('tabPanes')) {
+      return findComponent(data.tabPanes,key);
     }
 
     if(data.hasOwnProperty('body')) {
@@ -94,9 +99,13 @@ const Table: React.FC<Table> = (props:any) => {
     }
 
     if(data.hasOwnProperty(0)) {
-      component = (data.map((item:any) => {
-        return findComponent(item,key);
-      }));
+      data.map((item:any) => {
+        let getComponent = findComponent(item,key);
+        let getComponentKeys = Object.keys(getComponent);
+        if(getComponentKeys.length>0) {
+          component = getComponent;
+        }
+      });
     }
 
     return component
@@ -192,10 +201,10 @@ const Table: React.FC<Table> = (props:any) => {
           ...tableProps.toolBar,
           actions: tableProps.toolBar?.actions ? [<Render body={tableProps.toolBar?.actions} data={{...tableProps.data,...query}} callback={tableProps.callback} />] : undefined,
         }}
-        pagination={{
+        pagination={tableProps.pagination ? {
           ...tableProps.pagination,
           current:page
-        }}
+        }:false}
         rowClassName={(record, index)=> {
           if(tableProps.striped) {
             if(index%2 != 0) {
