@@ -79,13 +79,13 @@ const Search: React.FC<Search> = ({ api=null, mode=undefined, size=undefined, va
         style={style}
         allowClear={allowClear}
         onChange={onSelectChange}
-        value={value ? String(value) : undefined}
+        value={value ? value : undefined}
         notFoundContent={null}
       >
         {!!getSelectOptions &&
           getSelectOptions.map((option: any) => {
             return (
-              <Select.Option key={String(option.value)} value={String(option.value)}>
+              <Select.Option key={option.value} value={option.value}>
                 {option.label}
               </Select.Option>
             );
