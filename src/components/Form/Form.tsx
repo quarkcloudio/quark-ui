@@ -12,6 +12,7 @@ import {
   Space,
   Spin
 } from 'antd';
+import { stringify } from 'qs';
 
 export interface Form {
   form: any;
@@ -45,10 +46,33 @@ const Form: React.FC<Form> = (props:any) => {
   };
 
   const onFinish = async (values: any) => {
-    const result = await post({
-      actionUrl: tplEngine(props.api, props.data),
-      ...values
-    });
+    let result = null;
+
+    if(props.apiType === 'GET') {
+      if(props.targetBlank) {
+
+        let actionUrl = tplEngine(props.api, props.data)
+        values['token'] = sessionStorage.getItem('token');
+
+        if(props.api.indexOf("http") == -1) {
+          actionUrl = `../../api/${actionUrl}`;
+        }
+
+        window.open(`${actionUrl}?${stringify(values)}`);
+
+        return false;
+      } else {
+        result = await get({
+          actionUrl: tplEngine(props.api, props.data),
+          ...values
+        });
+      }
+    } else {
+      result = await post({
+        actionUrl: tplEngine(props.api, props.data),
+        ...values
+      });
+    }
 
     if(result.status === 'success') {
       
