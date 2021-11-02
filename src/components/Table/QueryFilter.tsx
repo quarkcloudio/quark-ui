@@ -288,7 +288,7 @@ const QueryFilter: React.FC<Action> = (props) => {
             if(props.search.showResetButton) {
               const restButton = (
                 <Button key="rest" onClick={() => {submitterProps.form?.resetFields(); onReset();}}>
-                  重置
+                  {props.search.resetButton}
                 </Button>
               );
               buttons.push(restButton);
@@ -297,7 +297,7 @@ const QueryFilter: React.FC<Action> = (props) => {
             if(props.search.showSubmitButton) {
               const submitButton = (
                 <Button key="submit" type="primary" onClick={() => submitterProps.form?.submit?.()}>
-                  查询
+                  {props.search.submitButton}
                 </Button>
               );
               buttons.push(submitButton);
@@ -306,7 +306,7 @@ const QueryFilter: React.FC<Action> = (props) => {
             if(props.search.showExportButton) {
               const exportButton = (
                 <Button key="export" type="primary" onClick={() => onExport()}>
-                  导出数据
+                  {props.search.exportButton}
                 </Button>
               );
               buttons.push(exportButton);
