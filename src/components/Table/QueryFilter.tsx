@@ -12,8 +12,11 @@ import ProForm, {
   ProFormSelect
 } from '@ant-design/pro-form';
 import { 
-  Input,Form
+  Input,
+  Form,
+  Button
 } from 'antd';
+import { stringify } from 'qs';
 
 export interface Action {
   search: any;
@@ -77,6 +80,31 @@ const QueryFilter: React.FC<Action> = (props) => {
     if (props.current) {
       props.current.reload();
     }
+  };
+
+  const onExport = () => {
+
+    let getQuery:any = {};
+    let actionUrl = props.search.exportApi;
+
+    getQuery['search'] = form.getFieldsValue();
+    if(query.sorter) {
+      getQuery['sorter'] = query.sorter;
+    }
+
+    if(query.filter) {
+      getQuery['filter'] = query.filter;
+    }
+
+    // hack random
+    getQuery['random'] = Math.random();
+    getQuery['token'] = sessionStorage.getItem('token');
+
+    if (actionUrl.indexOf('http') == -1) {
+      actionUrl = `../../api/${actionUrl}`;
+    }
+
+    window.open(`${actionUrl}?${stringify(getQuery)}`);
   };
 
   const onSelectChange = async (value:any, name:string, load:any = null) => {
@@ -251,6 +279,42 @@ const QueryFilter: React.FC<Action> = (props) => {
         labelWidth = {props.search.labelWidth}
         span = {props.search.span}
         split = {props.search.split}
+        submitter={{      
+          // 完全自定义整个区域
+          render: (submitterProps, doms) => {
+
+            let buttons = [];
+
+            if(props.search.showResetButton) {
+              const restButton = (
+                <Button key="rest" onClick={() => {submitterProps.form?.resetFields(); onReset();}}>
+                  重置
+                </Button>
+              );
+              buttons.push(restButton);
+            }
+
+            if(props.search.showSubmitButton) {
+              const submitButton = (
+                <Button key="submit" type="primary" onClick={() => submitterProps.form?.submit?.()}>
+                  查询
+                </Button>
+              );
+              buttons.push(submitButton);
+            }
+
+            if(props.search.showExportButton) {
+              const exportButton = (
+                <Button key="export" type="primary" onClick={() => onExport()}>
+                  导出数据
+                </Button>
+              );
+              buttons.push(exportButton);
+            }
+
+            return buttons;
+          },
+        }}
       >
         {
           items?.length >0 ? items.map((item: any, key: any) => {
