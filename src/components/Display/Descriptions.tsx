@@ -2,10 +2,7 @@ import React from 'react';
 import ProDescriptions from '@ant-design/pro-descriptions';
 import Render from '@/components/Render';
 import Action from '@/components/Action/Action';
-import {
-  Space,
-  Divider
-} from 'antd';
+import { Space, Divider } from 'antd';
 
 const Descriptions: React.FC<any> = (props: any) => {
   const componentRender = (items: any) => {
@@ -19,6 +16,7 @@ const Descriptions: React.FC<any> = (props: any) => {
           valueType={item.valueType}
           valueEnum={item.valueEnum}
           dataIndex={item.dataIndex}
+          style={item.style}
         >
           <Render body={{ ...item, body: item.value }} data={props.data} />
         </ProDescriptions.Item>
@@ -28,21 +26,27 @@ const Descriptions: React.FC<any> = (props: any) => {
 
   return (
     <span>
-      <ProDescriptions {...props}>{componentRender(props.items)}</ProDescriptions>
-      {
-        props?.actions?.length>0?
-          <div>
-            <Divider style={{marginTop:0}}/>
-            <div style={{marginBottom:24,textAlign:'center'}}>
-              <Space>
-                {props?.actions?.map((action:any) => {
-                  return <Action {...action} data={{...props.data, ...props.dataSource}} callback={props.callback}/>
-                })}
-              </Space>
-            </div>
+      <ProDescriptions {...props}>
+        {componentRender(props.items)}
+      </ProDescriptions>
+      {props?.actions?.length > 0 ? (
+        <div>
+          <Divider style={{ marginTop: 0 }} />
+          <div style={{ marginBottom: 24, textAlign: 'center' }}>
+            <Space>
+              {props?.actions?.map((action: any) => {
+                return (
+                  <Action
+                    {...action}
+                    data={{ ...props.data, ...props.dataSource }}
+                    callback={props.callback}
+                  />
+                );
+              })}
+            </Space>
           </div>
-        : null
-      }
+        </div>
+      ) : null}
     </span>
   );
 };
