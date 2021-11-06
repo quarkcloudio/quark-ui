@@ -237,7 +237,7 @@ const Table: React.FC<Table> = (props: any) => {
               }
             : undefined,
         }}
-        tableExtraRender={(_, data) => {
+        tableExtraRender={tableProps.tableExtraRender ? (_, data) => {
           if(tableProps.tableExtraRender) {
             return (
             <Card>
@@ -248,7 +248,7 @@ const Table: React.FC<Table> = (props: any) => {
               />
             </Card>);
           }
-        }}
+        } : undefined}
         pagination={
           tableProps.pagination
             ? {
