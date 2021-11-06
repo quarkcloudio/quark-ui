@@ -1,4 +1,4 @@
-import React, {  useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ProForm from '@ant-design/pro-form';
 import { tplEngine } from '@/utils/template';
 import { reload } from '@/utils/reload';
@@ -18,26 +18,26 @@ export interface Form {
   form: any;
 }
 
-const Form: React.FC<Form> = (props:any) => {
-
+const Form: React.FC<Form> = (props: any) => {
   const [form] = AntForm.useForm();
   const formKey = props.formKey ? props.formKey : 'form';
   const [spinning, setLoading] = useState(false);
+  const [submitResult, setSubmitResult] = useState(null);
   // 注册全局变量
   window[formKey] = form;
 
   useEffect(() => {
-    if(props.initApi) {
+    if (props.initApi) {
       getInitialValues();
     }
   }, []);
 
   const getInitialValues = async () => {
-    if(props.initApi) {
+    if (props.initApi) {
       setLoading(true);
 
       let result = await get({
-        actionUrl: tplEngine(props.initApi,props.data)
+        actionUrl: tplEngine(props.initApi, props.data),
       });
 
       window[formKey].setFieldsValue(result.data);
@@ -48,13 +48,12 @@ const Form: React.FC<Form> = (props:any) => {
   const onFinish = async (values: any) => {
     let result = null;
 
-    if(props.apiType === 'GET') {
-      if(props.targetBlank) {
-
-        let actionUrl = tplEngine(props.api, props.data)
+    if (props.apiType === 'GET') {
+      if (props.targetBlank) {
+        let actionUrl = tplEngine(props.api, props.data);
         values['token'] = sessionStorage.getItem('token');
 
-        if(props.api.indexOf("http") == -1) {
+        if (props.api.indexOf('http') == -1) {
           actionUrl = `../../api/${actionUrl}`;
         }
 
@@ -64,33 +63,36 @@ const Form: React.FC<Form> = (props:any) => {
       } else {
         result = await get({
           actionUrl: tplEngine(props.api, props.data),
-          ...values
+          ...values,
         });
       }
     } else {
       result = await post({
         actionUrl: tplEngine(props.api, props.data),
-        ...values
+        ...values,
       });
     }
 
-    if(result.status === 'success') {
-      
-      if(props.callback) {
-        props.callback()
-      }
-
-      message.success(result.msg);
-    } else {
-      message.error(result.msg);
-    }
-
-    if(result.url) {
-      if(result.url === 'reload') {
-        reload()
+    if(result.component === 'message') {
+      if (result.status === 'success') {
+        if (props.callback) {
+          props.callback();
+        }
+  
+        message.success(result.msg);
       } else {
-        history.push(result.url);
+        message.error(result.msg);
       }
+  
+      if (result.url) {
+        if (result.url === 'reload') {
+          reload();
+        } else {
+          history.push(result.url);
+        }
+      }
+    } else {
+      setSubmitResult(result);
     }
   };
 
@@ -99,31 +101,52 @@ const Form: React.FC<Form> = (props:any) => {
       <ProForm
         {...props}
         form={window[formKey]}
-        onFinish={async (values:any) => { onFinish(values) }}
+        onFinish={async (values: any) => {
+          onFinish(values);
+        }}
         submitter={{
           searchConfig: {
             resetText: props.resetButtonText,
             submitText: props.submitButtonText,
           },
-          render: (proFormProps:any, doms:any) => {
-            if(props?.actions) {
+          render: (proFormProps: any, doms: any) => {
+            if (props?.actions) {
               return (
                 <AntForm.Item wrapperCol={props.buttonWrapperCol}>
                   <Space>
-                    {props?.actions?.map((action:any) => {
-                      return <Action {...action} submitForm={ action.submitForm ?? formKey } data={props.data} callback={props.callback}/>
+                    {props?.actions?.map((action: any) => {
+                      return (
+                        <Action
+                          {...action}
+                          submitForm={action.submitForm ?? formKey}
+                          data={props.data}
+                          callback={props.callback}
+                        />
+                      );
                     })}
                   </Space>
                 </AntForm.Item>
-              )
+              );
             }
           },
         }}
       >
-        <Render body={props.body} data={{...props.data, formKey: formKey}} callback={props.callback}/>
+        <Render
+          body={props.body}
+          data={{ ...props.data, formKey: formKey }}
+          callback={props.callback}
+        />
+        {submitResult ?
+          <Render
+            body={submitResult}
+            data={{ ...props.data }}
+            callback={props.callback}
+          />
+          : null
+        }
       </ProForm>
     </Spin>
   );
-}
+};
 
 export default Form;

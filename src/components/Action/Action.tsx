@@ -12,8 +12,10 @@ import {
 import {ExclamationCircleOutlined, createFromIconfontCN } from '@ant-design/icons';
 import Modal from './Modal';
 import Drawer from './Drawer';
+import Render from '@/components/Render';
 
 const Action: React.FC<any> = (props) => {
+  const [submitResult, setSubmitResult] = useState(null);
   const IconFont = createFromIconfontCN({
     scriptUrl:'//at.alicdn.com/t/font_1615691_3pgkh5uyob.js'
   });
@@ -138,34 +140,38 @@ const Action: React.FC<any> = (props) => {
       actionUrl: tplEngine(api,props.data)
     });
 
-    if(result.status === 'success') {
+    if(result.component === 'message') {
+      if(result.status === 'success') {
 
-      if(props.callback) {
-        props.callback()
-      }
-
-      if(result.msg) {
-        message.success(result.msg);
-      }
-
-      if(result.url) {
-        history.push(result.url);
-      }
-
-      if(props.redirect) {
-        history.push(props.redirect);
-      }
-
-      if(props.reload) {
-        if(props.reload === 'window') {
-          reload();
-        } else {
-          window[props.reload]?.current?.reload();
+        if(props.callback) {
+          props.callback()
         }
+  
+        if(result.msg) {
+          message.success(result.msg);
+        }
+  
+        if(result.url) {
+          history.push(result.url);
+        }
+  
+        if(props.redirect) {
+          history.push(props.redirect);
+        }
+  
+        if(props.reload) {
+          if(props.reload === 'window') {
+            reload();
+          } else {
+            window[props.reload]?.current?.reload();
+          }
+        }
+  
+      } else {
+        message.error(result.msg);
       }
-
     } else {
-      message.error(result.msg);
+      setSubmitResult(result);
     }
   }
 
@@ -428,7 +434,21 @@ const Action: React.FC<any> = (props) => {
       break;
   }
 
-  return component;
+  if(submitResult) {
+    return (<>
+      {component}
+      {submitResult ?
+        <Render
+          body={submitResult}
+          data={{ ...props.data }}
+          callback={props.callback}
+        />
+        : null
+      }
+    </>);
+  } else {
+    return component;
+  }
 }
 
 export default Action;

@@ -137,7 +137,7 @@ const Render: React.FC<any> = (props:any) => {
       },
       {
         key: 'tpl',
-        component: <span {...body}>{ tplEngine(body.body, data) }</span>
+        component: <span {...body} dangerouslySetInnerHTML={{__html: tplEngine(body.body, data) }} />
       },
       {
         key: 'list',
