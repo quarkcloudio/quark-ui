@@ -218,12 +218,12 @@ const Table: React.FC<Table> = (props: any) => {
         }}
         toolbar={{
           ...props.toolBar,
-          actions: tableProps.toolBar?.actions
+          actions: props.toolBar?.actions
             ? [
                 <Render
-                  body={tableProps.toolBar?.actions}
-                  data={{ ...tableProps.data, ...query }}
-                  callback={tableProps.callback}
+                  body={props.toolBar?.actions}
+                  data={{ ...props.data, ...query }}
+                  callback={props.callback}
                 />
               ]
             : undefined,
