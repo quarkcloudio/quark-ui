@@ -2,16 +2,11 @@ import React, { useEffect, useState } from 'react';
 import ProForm from '@ant-design/pro-form';
 import { tplEngine } from '@/utils/template';
 import { reload } from '@/utils/reload';
-import { history } from 'umi';
+import { history, useModel } from 'umi';
 import { post, get } from '@/services/action';
 import Action from '@/components/Action/Action';
 import Render from '@/components/Render';
-import {
-  Form as AntForm,
-  message,
-  Space,
-  Spin
-} from 'antd';
+import { Form as AntForm, message, Space, Spin } from 'antd';
 import { stringify } from 'qs';
 
 export interface Form {
@@ -23,6 +18,7 @@ const Form: React.FC<Form> = (props: any) => {
   const formKey = props.formKey ? props.formKey : 'form';
   const [spinning, setLoading] = useState(false);
   const [submitResult, setSubmitResult] = useState(null);
+  const { buttonLoadings, changeButtonLoadings } = useModel('global', model => ({ buttonLoadings: model.buttonLoadings, changeButtonLoadings: model.changeButtonLoadings }));
   // 注册全局变量
   window[formKey] = form;
 
@@ -73,17 +69,20 @@ const Form: React.FC<Form> = (props: any) => {
       });
     }
 
-    if(result.component === 'message') {
+    buttonLoadings[formKey] = false;
+    changeButtonLoadings(buttonLoadings);
+
+    if (result.component === 'message') {
       if (result.status === 'success') {
         if (props.callback) {
           props.callback();
         }
-  
+
         message.success(result.msg);
       } else {
         message.error(result.msg);
       }
-  
+
       if (result.url) {
         if (result.url === 'reload') {
           reload();
@@ -136,14 +135,13 @@ const Form: React.FC<Form> = (props: any) => {
           data={{ ...props.data, formKey: formKey }}
           callback={props.callback}
         />
-        {submitResult ?
+        {submitResult ? (
           <Render
             body={submitResult}
             data={{ ...props.data }}
             callback={props.callback}
           />
-          : null
-        }
+        ) : null}
       </ProForm>
     </Spin>
   );

@@ -1,23 +1,24 @@
 import React, { useState } from 'react';
-import { history } from 'umi';
+import { history, useModel } from 'umi';
 import { get } from '@/services/action';
 import { tplEngine } from '@/utils/template';
 import { reload } from '@/utils/reload';
+import { Button, message, Popconfirm, Modal as AntModal } from 'antd';
 import {
-  Button,
-  message,
-  Popconfirm,
-  Modal as AntModal
-} from 'antd';
-import {ExclamationCircleOutlined, createFromIconfontCN } from '@ant-design/icons';
+  ExclamationCircleOutlined,
+  createFromIconfontCN,
+} from '@ant-design/icons';
 import Modal from './Modal';
 import Drawer from './Drawer';
 import Render from '@/components/Render';
 
 const Action: React.FC<any> = (props) => {
+  const { buttonLoadings, changeButtonLoadings } = useModel('global', model => ({ buttonLoadings: model.buttonLoadings, changeButtonLoadings: model.changeButtonLoadings }));
+  //hack
+  const [random, setRandom] = useState(0);
   const [submitResult, setSubmitResult] = useState(null);
   const IconFont = createFromIconfontCN({
-    scriptUrl:'//at.alicdn.com/t/font_1615691_3pgkh5uyob.js'
+    scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js',
   });
   const formKey = props.submitForm ? props.submitForm : 'form';
   const { confirm } = AntModal;
@@ -30,7 +31,7 @@ const Action: React.FC<any> = (props) => {
   };
 
   // 显示确认弹框
-  const showConfirm = async (api:any, actionType='ajax') => {
+  const showConfirm = async (api: any, actionType = 'ajax') => {
     switch (actionType) {
       case 'ajax':
         confirm({
@@ -116,120 +117,89 @@ const Action: React.FC<any> = (props) => {
         });
         break;
     }
-  }
+  };
 
   // 提交表单
   const submit = async () => {
+    buttonLoadings[formKey] = true;
+    changeButtonLoadings(buttonLoadings);
+    setRandom(Math.random);
+
     window[formKey]?.submit?.();
 
     // hack
     await waitTime(1000);
 
-    if(props.reload) {
-      if(props.reload === 'window') {
+    if (props.reload) {
+      if (props.reload === 'window') {
         reload();
       } else {
         window[props.reload]?.current?.reload();
       }
     }
-  }
+  };
 
   // 执行ajax行为
-  const executeAction = async (api:string) => {
+  const executeAction = async (api: string) => {
+    buttonLoadings[props.actionKey] = true;
+    changeButtonLoadings(buttonLoadings);
+    setRandom(Math.random);
+
     const result = await get({
-      actionUrl: tplEngine(api,props.data)
+      actionUrl: tplEngine(api, props.data),
     });
 
-    if(result.component === 'message') {
-      if(result.status === 'success') {
+    buttonLoadings[props.actionKey] = false;
+    changeButtonLoadings(buttonLoadings);
 
-        if(props.callback) {
-          props.callback()
+    if (result.component === 'message') {
+      if (result.status === 'success') {
+        if (props.callback) {
+          props.callback();
         }
-  
-        if(result.msg) {
+
+        if (result.msg) {
           message.success(result.msg);
         }
-  
-        if(result.url) {
+
+        if (result.url) {
           history.push(result.url);
         }
-  
-        if(props.redirect) {
+
+        if (props.redirect) {
           history.push(props.redirect);
         }
-  
-        if(props.reload) {
-          if(props.reload === 'window') {
+
+        if (props.reload) {
+          if (props.reload === 'window') {
             reload();
           } else {
             window[props.reload]?.current?.reload();
           }
         }
-  
       } else {
         message.error(result.msg);
       }
     } else {
       setSubmitResult(result);
     }
-  }
+  };
 
   let component = null;
 
   switch (props.actionType) {
     case 'ajax':
-      if(props.confirmType === 'pop') {
-        component =
-        <Popconfirm
-          placement="topRight"
-          title={tplEngine(props.confirmTitle,props.data)}
-          onConfirm={()=>{executeAction(props.api)}}
-        >
-          <Button
-            style={props.style}
-            block={props.block}
-            danger={props.danger}
-            disabled={props.disabled}
-            ghost={props.ghost}
-            shape={props.shape}
-            size={props.size}
-            type={props.type}
-            icon={props.icon ? <IconFont type={props.icon} /> : false}
-          >
-            {tplEngine(props.label,props.data)}
-          </Button>
-        </Popconfirm>
-      } else {
-        component =
-        <Button
-          style={props.style}
-          block={props.block}
-          danger={props.danger}
-          disabled={props.disabled}
-          ghost={props.ghost}
-          shape={props.shape}
-          size={props.size}
-          type={props.type}
-          icon={props.icon ? <IconFont type={props.icon} /> : false}
-          onClick={()=>{ props.confirmTitle ? showConfirm(props.api) : executeAction(props.api)}}
-        >
-          {tplEngine(props.label,props.data)}
-        </Button>
-      }
-      break;
-
-      case 'submit':
-        if(props.confirmType === 'pop') {
-          component =
+      if (props.confirmType === 'pop') {
+        component = (
           <Popconfirm
             placement="topRight"
-            title={tplEngine(props.confirmTitle,props.data)}
-            onConfirm={()=>{
-              submit();
+            title={tplEngine(props.confirmTitle, props.data)}
+            onConfirm={() => {
+              executeAction(props.api);
             }}
           >
             <Button
+              loading={buttonLoadings[props.actionKey]}
               style={props.style}
               block={props.block}
               danger={props.danger}
@@ -240,12 +210,14 @@ const Action: React.FC<any> = (props) => {
               type={props.type}
               icon={props.icon ? <IconFont type={props.icon} /> : false}
             >
-              {tplEngine(props.label,props.data)}
+              {tplEngine(props.label, props.data)}
             </Button>
           </Popconfirm>
-        } else {
-          component =
+        );
+      } else {
+        component = (
           <Button
+            loading={buttonLoadings[props.actionKey]}
             style={props.style}
             block={props.block}
             danger={props.danger}
@@ -255,26 +227,80 @@ const Action: React.FC<any> = (props) => {
             size={props.size}
             type={props.type}
             icon={props.icon ? <IconFont type={props.icon} /> : false}
-            onClick={()=>{
-              if(props.confirmTitle) {
-                showConfirm(null, props.actionType)
+            onClick={() => {
+              props.confirmTitle
+                ? showConfirm(props.api)
+                : executeAction(props.api);
+            }}
+          >
+            {tplEngine(props.label, props.data)}
+          </Button>
+        );
+      }
+      break;
+
+    case 'submit':
+      if (props.confirmType === 'pop') {
+        component = (
+          <Popconfirm
+            placement="topRight"
+            title={tplEngine(props.confirmTitle, props.data)}
+            onConfirm={() => {
+              submit();
+            }}
+          >
+            <Button
+              loading={buttonLoadings[formKey]}
+              style={props.style}
+              block={props.block}
+              danger={props.danger}
+              disabled={props.disabled}
+              ghost={props.ghost}
+              shape={props.shape}
+              size={props.size}
+              type={props.type}
+              icon={props.icon ? <IconFont type={props.icon} /> : false}
+            >
+              {tplEngine(props.label, props.data)}
+            </Button>
+          </Popconfirm>
+        );
+      } else {
+        component = (
+          <Button
+            loading={buttonLoadings[formKey]}
+            style={props.style}
+            block={props.block}
+            danger={props.danger}
+            disabled={props.disabled}
+            ghost={props.ghost}
+            shape={props.shape}
+            size={props.size}
+            type={props.type}
+            icon={props.icon ? <IconFont type={props.icon} /> : false}
+            onClick={() => {
+              if (props.confirmTitle) {
+                showConfirm(null, props.actionType);
               } else {
                 submit();
               }
             }}
           >
-            {tplEngine(props.label,props.data)}
+            {tplEngine(props.label, props.data)}
           </Button>
-        }
-        break;
+        );
+      }
+      break;
 
-      case 'reset':
-        if(props.confirmType === 'pop') {
-          component =
+    case 'reset':
+      if (props.confirmType === 'pop') {
+        component = (
           <Popconfirm
             placement="topRight"
-            title={tplEngine(props.confirmTitle,props.data)}
-            onConfirm={()=>{window[formKey]?.resetFields?.()}}
+            title={tplEngine(props.confirmTitle, props.data)}
+            onConfirm={() => {
+              window[formKey]?.resetFields?.();
+            }}
           >
             <Button
               style={props.style}
@@ -287,11 +313,12 @@ const Action: React.FC<any> = (props) => {
               type={props.type}
               icon={props.icon ? <IconFont type={props.icon} /> : false}
             >
-              {tplEngine(props.label,props.data)}
+              {tplEngine(props.label, props.data)}
             </Button>
           </Popconfirm>
-        } else {
-          component =
+        );
+      } else {
+        component = (
           <Button
             style={props.style}
             block={props.block}
@@ -302,61 +329,27 @@ const Action: React.FC<any> = (props) => {
             size={props.size}
             type={props.type}
             icon={props.icon ? <IconFont type={props.icon} /> : false}
-            onClick={()=>{ props.confirmTitle ? showConfirm(null, props.actionType) : window[formKey]?.resetFields?.()}}
+            onClick={() => {
+              props.confirmTitle
+                ? showConfirm(null, props.actionType)
+                : window[formKey]?.resetFields?.();
+            }}
           >
-            {tplEngine(props.label,props.data)}
+            {tplEngine(props.label, props.data)}
           </Button>
-        }
-        break;
+        );
+      }
+      break;
 
-        case 'cancel':
-          if(props.confirmType === 'pop') {
-            component =
-            <Popconfirm
-              placement="topRight"
-              title={tplEngine(props.confirmTitle,props.data)}
-              onConfirm={()=>{props?.callback?.()}}
-            >
-              <Button
-                style={props.style}
-                block={props.block}
-                danger={props.danger}
-                disabled={props.disabled}
-                ghost={props.ghost}
-                shape={props.shape}
-                size={props.size}
-                type={props.type}
-                icon={props.icon ? <IconFont type={props.icon} /> : false}
-              >
-                {tplEngine(props.label,props.data)}
-              </Button>
-            </Popconfirm>
-          } else {
-            component =
-            <Button
-              style={props.style}
-              block={props.block}
-              danger={props.danger}
-              disabled={props.disabled}
-              ghost={props.ghost}
-              shape={props.shape}
-              size={props.size}
-              type={props.type}
-              icon={props.icon ? <IconFont type={props.icon} /> : false}
-              onClick={()=>{ props.confirmTitle ? showConfirm(null, props.actionType) : props?.callback?.()}}
-            >
-              {tplEngine(props.label,props.data)}
-            </Button>
-          }
-          break;
-
-      case 'back':
-        if(props.confirmType === 'pop') {
-          component =
+    case 'cancel':
+      if (props.confirmType === 'pop') {
+        component = (
           <Popconfirm
             placement="topRight"
-            title={tplEngine(props.confirmTitle,props.data)}
-            onConfirm={()=>{ history.go(-1) }}
+            title={tplEngine(props.confirmTitle, props.data)}
+            onConfirm={() => {
+              props?.callback?.();
+            }}
           >
             <Button
               style={props.style}
@@ -369,11 +362,12 @@ const Action: React.FC<any> = (props) => {
               type={props.type}
               icon={props.icon ? <IconFont type={props.icon} /> : false}
             >
-              {tplEngine(props.label,props.data)}
+              {tplEngine(props.label, props.data)}
             </Button>
           </Popconfirm>
-        } else {
-          component =
+        );
+      } else {
+        component = (
           <Button
             style={props.style}
             block={props.block}
@@ -384,15 +378,69 @@ const Action: React.FC<any> = (props) => {
             size={props.size}
             type={props.type}
             icon={props.icon ? <IconFont type={props.icon} /> : false}
-            onClick={()=>{ props.confirmTitle ? showConfirm(null, props.actionType) : history.go(-1)}}
+            onClick={() => {
+              props.confirmTitle
+                ? showConfirm(null, props.actionType)
+                : props?.callback?.();
+            }}
           >
-            {tplEngine(props.label,props.data)}
+            {tplEngine(props.label, props.data)}
           </Button>
-        }
-        break;
+        );
+      }
+      break;
 
-      case 'link':
-        component =
+    case 'back':
+      if (props.confirmType === 'pop') {
+        component = (
+          <Popconfirm
+            placement="topRight"
+            title={tplEngine(props.confirmTitle, props.data)}
+            onConfirm={() => {
+              history.go(-1);
+            }}
+          >
+            <Button
+              style={props.style}
+              block={props.block}
+              danger={props.danger}
+              disabled={props.disabled}
+              ghost={props.ghost}
+              shape={props.shape}
+              size={props.size}
+              type={props.type}
+              icon={props.icon ? <IconFont type={props.icon} /> : false}
+            >
+              {tplEngine(props.label, props.data)}
+            </Button>
+          </Popconfirm>
+        );
+      } else {
+        component = (
+          <Button
+            style={props.style}
+            block={props.block}
+            danger={props.danger}
+            disabled={props.disabled}
+            ghost={props.ghost}
+            shape={props.shape}
+            size={props.size}
+            type={props.type}
+            icon={props.icon ? <IconFont type={props.icon} /> : false}
+            onClick={() => {
+              props.confirmTitle
+                ? showConfirm(null, props.actionType)
+                : history.go(-1);
+            }}
+          >
+            {tplEngine(props.label, props.data)}
+          </Button>
+        );
+      }
+      break;
+
+    case 'link':
+      component = (
         <Button
           style={props.style}
           block={props.block}
@@ -401,54 +449,61 @@ const Action: React.FC<any> = (props) => {
           ghost={props.ghost}
           shape={props.shape}
           size={props.size}
-          href={tplEngine(props.href,props.data)}
+          href={tplEngine(props.href, props.data)}
           target={props.target}
           type={props.type}
           icon={props.icon ? <IconFont type={props.icon} /> : false}
         >
-          {tplEngine(props.label,props.data)}
+          {tplEngine(props.label, props.data)}
         </Button>
-        break;
-        
-      case 'modal':
-        component = <Modal {...props} data={props.data} callback={props.callback}/>
-        break;
-      case 'drawer':
-        component = <Drawer {...props} data={props.data} callback={props.callback} />
-        break;
+      );
+      break;
+
+    case 'modal':
+      component = (
+        <Modal {...props} data={props.data} callback={props.callback} />
+      );
+      break;
+    case 'drawer':
+      component = (
+        <Drawer {...props} data={props.data} callback={props.callback} />
+      );
+      break;
     default:
-      component =
-      <Button
-        style={props.style}
-        block={props.block}
-        danger={props.danger}
-        disabled={props.disabled}
-        ghost={props.ghost}
-        shape={props.shape}
-        size={props.size}
-        type={props.type}
-        icon={props.icon ? <IconFont type={props.icon} /> : false}
-      >
-        {tplEngine(props.label,props.data)}
-      </Button>
+      component = (
+        <Button
+          style={props.style}
+          block={props.block}
+          danger={props.danger}
+          disabled={props.disabled}
+          ghost={props.ghost}
+          shape={props.shape}
+          size={props.size}
+          type={props.type}
+          icon={props.icon ? <IconFont type={props.icon} /> : false}
+        >
+          {tplEngine(props.label, props.data)}
+        </Button>
+      );
       break;
   }
 
-  if(submitResult) {
-    return (<>
-      {component}
-      {submitResult ?
-        <Render
-          body={submitResult}
-          data={{ ...props.data }}
-          callback={props.callback}
-        />
-        : null
-      }
-    </>);
+  if (submitResult) {
+    return (
+      <>
+        {component}
+        {submitResult ? (
+          <Render
+            body={submitResult}
+            data={{ ...props.data }}
+            callback={props.callback}
+          />
+        ) : null}
+      </>
+    );
   } else {
     return component;
   }
-}
+};
 
 export default Action;

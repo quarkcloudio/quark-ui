@@ -27,11 +27,9 @@ import { MicroApp } from 'umi';
 import { tplEngine } from '@/utils/template';
 import Line from '@/components/Chart/Line';
 
-const Render: React.FC<any> = (props:any) => {
-
+const Render: React.FC<any> = (props: any) => {
   // 注册组件
-  const registerComponent = (body:any, data:any, callback:any) => {
-
+  const registerComponent = (body: any, data: any, callback: any) => {
     return [
       {
         key: 'page',
@@ -51,7 +49,16 @@ const Render: React.FC<any> = (props:any) => {
       },
       {
         key: 'card',
-        component: <ProCard {...body} extra={ componentRender(body.extra, data, callback) } callback={callback} data={data} >{ componentRender(body.body, data, callback) }</ProCard>
+        component: (
+          <ProCard
+            {...body}
+            extra={componentRender(body.extra, data, callback)}
+            callback={callback}
+            data={data}
+          >
+            {componentRender(body.body, data, callback)}
+          </ProCard>
+        ),
       },
       {
         key: 'row',
@@ -63,7 +70,9 @@ const Render: React.FC<any> = (props:any) => {
       },
       {
         key: 'space',
-        component: <Space {...body}>{ componentRender(body.body, data, callback) }</Space>
+        component: (
+          <Space {...body}>{componentRender(body.body, data, callback)}</Space>
+        )
       },
       {
         key: 'tabs',
@@ -103,7 +112,9 @@ const Render: React.FC<any> = (props:any) => {
       },
       {
         key: 'form',
-        component: <Form formKey={body.key} callback={callback} {...body} data={data} />
+        component: (
+          <Form formKey={body.key} callback={callback} {...body} data={data} />
+        ),
       },
       // 注册表单项组件
       {
@@ -117,11 +128,18 @@ const Render: React.FC<any> = (props:any) => {
       },
       {
         key: 'table',
-        component: <Table {...body} callback={callback} tableKey={body.key} data={data} />
+        component: (
+          <Table
+            {...body}
+            callback={callback}
+            tableKey={body.key}
+            data={data}
+          />
+        )
       },
       {
         key: 'action',
-        component: <Action {...body} callback={callback} data={data} />
+        component: <Action actionKey={body.key} {...body} callback={callback} data={data} />
       },
       {
         key: 'login',
@@ -137,28 +155,34 @@ const Render: React.FC<any> = (props:any) => {
       },
       {
         key: 'tpl',
-        component: <span {...body} dangerouslySetInnerHTML={{__html: tplEngine(body.body, data) }} />
+        component: (
+          <span
+            {...body}
+            dangerouslySetInnerHTML={{ __html: tplEngine(body.body, data) }}
+          />
+        ),
       },
       {
         key: 'list',
-        component: <List {...body} callback={callback} listKey={body.key} data={data} />
+        component: (
+          <List {...body} callback={callback} listKey={body.key} data={data} />
+        )
       },
       {
         key: 'line',
         component: <Line {...body} callback={callback} />
       },
     ];
-  }
+  };
 
   // 渲染组件
-  const componentRender = (body:any, data:any, callback:any) => {
-
-    if(body === null || body === undefined) {
+  const componentRender = (body: any, data: any, callback: any) => {
+    if (body === null || body === undefined) {
       return null;
     }
 
-    if(typeof body === 'string' || typeof body === 'number') {
-      if(props.hasOwnProperty('data')) {
+    if (typeof body === 'string' || typeof body === 'number') {
+      if (props.hasOwnProperty('data')) {
         // 解析数据
         body = tplEngine(body, data);
       }
@@ -166,39 +190,43 @@ const Render: React.FC<any> = (props:any) => {
       return body;
     }
 
-    let component:any = null;
-    if(body.hasOwnProperty('component')) {
-      registerComponent(body, data, callback).map((item:any) => {
-        if(item.key.indexOf(body.component + '|') != -1) {
+    let component: any = null;
+    if (body.hasOwnProperty('component')) {
+      registerComponent(body, data, callback).map((item: any) => {
+        if (item.key.indexOf(body.component + '|') != -1) {
           component = item.component;
         } else {
-          if(item.key === body.component) {
+          if (item.key === body.component) {
             component = item.component;
           }
         }
       });
     } else {
-      component = (
-        body.map((item:any) => {
-          return registerComponent(item, data, callback).map((componentItem:any) => {
-            if(componentItem.key.indexOf(item.component + '|') != -1) {
+      component = body.map((item: any) => {
+        return registerComponent(item, data, callback).map(
+          (componentItem: any) => {
+            if (componentItem.key.indexOf(item.component + '|') != -1) {
               return componentItem.component;
             } else {
-              if(componentItem.key === item.component) {
+              if (componentItem.key === item.component) {
                 return componentItem.component;
               }
             }
-          });
-        })
-      );
+          },
+        );
+      });
     }
 
     return component;
-  }
+  };
 
   const component = componentRender(props.body, props.data, props.callback);
 
-  return (typeof component === 'string') ? <span dangerouslySetInnerHTML={{__html: component}} /> : component
-}
+  return typeof component === 'string' ? (
+    <span dangerouslySetInnerHTML={{ __html: component }} />
+  ) : (
+    component
+  );
+};
 
 export default Render;
