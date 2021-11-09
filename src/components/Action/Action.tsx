@@ -13,7 +13,13 @@ import Drawer from './Drawer';
 import Render from '@/components/Render';
 
 const Action: React.FC<any> = (props) => {
-  const { buttonLoadings, changeButtonLoadings } = useModel('global', model => ({ buttonLoadings: model.buttonLoadings, changeButtonLoadings: model.changeButtonLoadings }));
+  const { buttonLoadings, changeButtonLoadings } = useModel(
+    'global',
+    (model) => ({
+      buttonLoadings: model.buttonLoadings,
+      changeButtonLoadings: model.changeButtonLoadings,
+    }),
+  );
   //hack
   const [random, setRandom] = useState(0);
   const [submitResult, setSubmitResult] = useState(null);
@@ -141,7 +147,7 @@ const Action: React.FC<any> = (props) => {
 
   // 执行ajax行为
   const executeAction = async (api: string) => {
-    buttonLoadings[props.actionKey] = true;
+    buttonLoadings[props.componentKey] = true;
     changeButtonLoadings(buttonLoadings);
     setRandom(Math.random);
 
@@ -149,7 +155,7 @@ const Action: React.FC<any> = (props) => {
       actionUrl: tplEngine(api, props.data),
     });
 
-    buttonLoadings[props.actionKey] = false;
+    buttonLoadings[props.componentKey] = false;
     changeButtonLoadings(buttonLoadings);
 
     if (result.component === 'message') {
@@ -199,7 +205,7 @@ const Action: React.FC<any> = (props) => {
             }}
           >
             <Button
-              loading={buttonLoadings[props.actionKey]}
+              loading={props.withLoading ? buttonLoadings[props.componentKey] : undefined}
               style={props.style}
               block={props.block}
               danger={props.danger}
@@ -217,7 +223,7 @@ const Action: React.FC<any> = (props) => {
       } else {
         component = (
           <Button
-            loading={buttonLoadings[props.actionKey]}
+            loading={props.withLoading ? buttonLoadings[props.componentKey] : undefined}
             style={props.style}
             block={props.block}
             danger={props.danger}

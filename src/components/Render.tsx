@@ -139,7 +139,7 @@ const Render: React.FC<any> = (props: any) => {
       },
       {
         key: 'action',
-        component: <Action actionKey={body.key} {...body} callback={callback} data={data} />
+        component: <Action {...body} callback={callback} data={data} />
       },
       {
         key: 'login',
