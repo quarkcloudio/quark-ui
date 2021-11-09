@@ -127,10 +127,7 @@ const Action: React.FC<any> = (props) => {
 
   // 提交表单
   const submit = async () => {
-    buttonLoadings[formKey] = true;
-    changeButtonLoadings(buttonLoadings);
-    setRandom(Math.random);
-
+    
     window[formKey]?.submit?.();
 
     // hack
@@ -205,7 +202,11 @@ const Action: React.FC<any> = (props) => {
             }}
           >
             <Button
-              loading={props.withLoading ? buttonLoadings[props.componentKey] : undefined}
+              loading={
+                props.withLoading
+                  ? buttonLoadings[props.componentKey]
+                  : undefined
+              }
               style={props.style}
               block={props.block}
               danger={props.danger}
@@ -223,7 +224,9 @@ const Action: React.FC<any> = (props) => {
       } else {
         component = (
           <Button
-            loading={props.withLoading ? buttonLoadings[props.componentKey] : undefined}
+            loading={
+              props.withLoading ? buttonLoadings[props.componentKey] : undefined
+            }
             style={props.style}
             block={props.block}
             danger={props.danger}

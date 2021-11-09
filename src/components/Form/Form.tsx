@@ -18,7 +18,15 @@ const Form: React.FC<Form> = (props: any) => {
   const formKey = props.formKey ? props.formKey : 'form';
   const [spinning, setLoading] = useState(false);
   const [submitResult, setSubmitResult] = useState(null);
-  const { buttonLoadings, changeButtonLoadings } = useModel('global', model => ({ buttonLoadings: model.buttonLoadings, changeButtonLoadings: model.changeButtonLoadings }));
+  const { buttonLoadings, changeButtonLoadings } = useModel(
+    'global',
+    (model) => ({
+      buttonLoadings: model.buttonLoadings,
+      changeButtonLoadings: model.changeButtonLoadings,
+    }),
+  );
+  //hack
+  const [random, setRandom] = useState(0);
   // 注册全局变量
   window[formKey] = form;
 
@@ -43,6 +51,10 @@ const Form: React.FC<Form> = (props: any) => {
 
   const onFinish = async (values: any) => {
     let result = null;
+
+    buttonLoadings[formKey] = true;
+    changeButtonLoadings(buttonLoadings);
+    setRandom(Math.random);
 
     if (props.apiType === 'GET') {
       if (props.targetBlank) {
