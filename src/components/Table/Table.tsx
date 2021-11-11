@@ -19,6 +19,10 @@ const Table: React.FC<Table> = (props: any) => {
   const query: any = history.location.query;
   const [tableProps, setTable] = useState<any>(props);
 
+  useEffect(() => {
+    actionRef.current.reload();
+  }, [props.columns,props.search,props.toolBar,props.menu,props.tableExtraRender]);
+
   // 注册全局变量
   window[props.tableKey] = actionRef;
 
@@ -28,7 +32,7 @@ const Table: React.FC<Table> = (props: any) => {
       text = (
         <Render
           body={column.actions}
-          data={{...query,...row}}
+          data={{ ...query, ...row }}
           callback={tableProps.callback}
         />
       );
@@ -108,7 +112,8 @@ const Table: React.FC<Table> = (props: any) => {
   };
 
   const getTableDatasource: any = async (key: string) => {
-    let result, table = null;
+    let result,
+      table = null;
     const api = tableProps.api ? tableProps.api : query.api;
 
     if (tableProps.apiType === 'GET') {
@@ -149,7 +154,11 @@ const Table: React.FC<Table> = (props: any) => {
   return (
     <>
       {tableProps.autoBuildSearchFrom === false && tableProps.search ? (
-        <QueryFilter formRef={formRef} search={tableProps.search} current={actionRef.current} />
+        <QueryFilter
+          formRef={formRef}
+          search={tableProps.search}
+          current={actionRef.current}
+        />
       ) : null}
       <ProTable
         {...props}
@@ -224,31 +233,36 @@ const Table: React.FC<Table> = (props: any) => {
                   body={props.toolBar?.actions}
                   data={{ ...props.data, ...query }}
                   callback={props.callback}
-                />
+                />,
               ]
             : undefined,
           menu: props.toolBar?.menu
             ? {
                 ...props.toolBar?.menu,
-                activeKey:query?.menuKey ?? props.toolBar?.menu.activeKey,
+                activeKey: query?.menuKey ?? props.toolBar?.menu.activeKey,
                 onChange: (key) => {
                   onMenuChange(key);
-                }
+                },
               }
             : undefined,
         }}
-        tableExtraRender={tableProps.tableExtraRender ? (_, data) => {
-          if(tableProps.tableExtraRender) {
-            return (
-            <Card>
-              <Render
-                body={tableProps.tableExtraRender}
-                data={{ ...tableProps.data, ...query }}
-                callback={tableProps.callback}
-              />
-            </Card>);
-          }
-        } : undefined}
+        tableExtraRender={
+          tableProps.tableExtraRender
+            ? (_, data) => {
+                if (tableProps.tableExtraRender) {
+                  return (
+                    <Card>
+                      <Render
+                        body={tableProps.tableExtraRender}
+                        data={{ ...tableProps.data, ...query }}
+                        callback={tableProps.callback}
+                      />
+                    </Card>
+                  );
+                }
+              }
+            : undefined
+        }
         pagination={
           tableProps.pagination
             ? {

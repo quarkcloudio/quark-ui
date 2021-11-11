@@ -1,4 +1,4 @@
-import React, { useState,useImperativeHandle } from 'react';
+import React, { useState, useImperativeHandle } from 'react';
 import { ActionType } from '@ant-design/pro-table';
 import { history } from 'umi';
 import { get } from '@/services/action';
@@ -27,28 +27,15 @@ const QueryFilter: React.FC<Action> = (props) => {
   const [items, setItems] = useState(props.search.items);
   const query: any = history.location.query;
 
-  useImperativeHandle(props.formRef, () => { return form});
+  useImperativeHandle(props.formRef, () => {
+    return form;
+  });
 
   const onFinish = (values: any) => {
-    let getQuery: any = {};
+    let getQuery: any = {...query};
 
-    getQuery['api'] = query.api;
     getQuery['page'] = 1;
-    getQuery['pageSize'] = query.pageSize;
-
     getQuery['search'] = values;
-    if (query.sorter) {
-      getQuery['sorter'] = query.sorter;
-    }
-
-    if (query.filter) {
-      getQuery['filter'] = query.filter;
-    }
-
-    if (query.menuKey) {
-      getQuery['menuKey'] = query.menuKey;
-    }
-
     // hack random
     getQuery['random'] = Math.random();
 
@@ -60,24 +47,9 @@ const QueryFilter: React.FC<Action> = (props) => {
   };
 
   const onReset = () => {
-    let getQuery: any = {};
+    let getQuery: any = {...query};
 
-    getQuery['api'] = query.api;
-    getQuery['page'] = query.page;
-    getQuery['pageSize'] = query.pageSize;
-
-    if (query.sorter) {
-      getQuery['sorter'] = query.sorter;
-    }
-
-    if (query.filter) {
-      getQuery['filter'] = query.filter;
-    }
-
-    if (query.menuKey) {
-      getQuery['menuKey'] = query.menuKey;
-    }
-
+    delete getQuery['search'];
     // hack random
     getQuery['random'] = Math.random();
 
@@ -92,21 +64,10 @@ const QueryFilter: React.FC<Action> = (props) => {
   };
 
   const onExport = () => {
-    let getQuery: any = {};
+    let getQuery: any = {...query};
     let actionUrl = props.search.exportApi;
 
     getQuery['search'] = form.getFieldsValue();
-    if (query.sorter) {
-      getQuery['sorter'] = query.sorter;
-    }
-
-    if (query.filter) {
-      getQuery['filter'] = query.filter;
-    }
-
-    if (query.menuKey) {
-      getQuery['menuKey'] = query.menuKey;
-    }
 
     // hack random
     getQuery['random'] = Math.random();
@@ -147,7 +108,7 @@ const QueryFilter: React.FC<Action> = (props) => {
     let component = null;
     switch (item.component) {
       case 'input':
-        if(item.operator == 'between') {
+        if (item.operator == 'between') {
           component = (
             <ProForm.Group title={item.label}>
               <ProFormText
@@ -311,7 +272,7 @@ const QueryFilter: React.FC<Action> = (props) => {
           render: (submitterProps, doms) => {
             let buttons = [];
 
-            if(props.search.showResetButton) {
+            if (props.search.showResetButton) {
               const restButton = (
                 <Button
                   key="rest"
@@ -325,7 +286,7 @@ const QueryFilter: React.FC<Action> = (props) => {
               buttons.push(restButton);
             }
 
-            if(props.search.showSubmitButton) {
+            if (props.search.showSubmitButton) {
               const submitButton = (
                 <Button
                   key="submit"
@@ -338,7 +299,7 @@ const QueryFilter: React.FC<Action> = (props) => {
               buttons.push(submitButton);
             }
 
-            if(props.search.showExportButton) {
+            if (props.search.showExportButton) {
               const exportButton = (
                 <Button key="export" type="primary" onClick={() => onExport()}>
                   {props.search.exportButton}
