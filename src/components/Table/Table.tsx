@@ -138,11 +138,10 @@ const Table: React.FC<Table> = (props: any) => {
   };
 
   const onMenuChange = (key: any) => {
-    let getQuery: any = {};
+    let getQuery: any = {...query};
 
-    getQuery['api'] = query.api;
+    delete getQuery['search'];
     getQuery['page'] = 1;
-    getQuery['pageSize'] = query.pageSize;
     getQuery['menuKey'] = key;
 
     history.push({ pathname: history.location.pathname, query: getQuery });
@@ -161,7 +160,7 @@ const Table: React.FC<Table> = (props: any) => {
         />
       ) : null}
       <ProTable
-        {...props}
+        {...tableProps}
         search={tableProps.autoBuildSearchFrom}
         actionRef={actionRef}
         columns={tableProps.columns ? parseColumns(tableProps.columns) : []}
@@ -226,20 +225,20 @@ const Table: React.FC<Table> = (props: any) => {
           });
         }}
         toolbar={{
-          ...props.toolBar,
-          actions: props.toolBar?.actions
+          ...tableProps.toolBar,
+          actions: tableProps.toolBar?.actions
             ? [
                 <Render
-                  body={props.toolBar?.actions}
-                  data={{ ...props.data, ...query }}
-                  callback={props.callback}
+                  body={tableProps.toolBar?.actions}
+                  data={{ ...tableProps.data, ...query }}
+                  callback={tableProps.callback}
                 />,
               ]
             : undefined,
-          menu: props.toolBar?.menu
+          menu: tableProps.toolBar?.menu
             ? {
-                ...props.toolBar?.menu,
-                activeKey: query?.menuKey ?? props.toolBar?.menu.activeKey,
+                ...tableProps.toolBar?.menu,
+                activeKey: query?.menuKey ?? tableProps.toolBar?.menu.activeKey,
                 onChange: (key) => {
                   onMenuChange(key);
                 },
