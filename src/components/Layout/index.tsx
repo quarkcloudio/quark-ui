@@ -182,6 +182,7 @@ const Layout: React.FC<any> = (props:any) => {
           onOpenChange: onMenuOpenChange,
           onClick: onMenuClick,
         }}
+        footerRender={() => <Render body={props.footer} data={data} />}
       >
         {children ?? <Render body={body} data={data} />}
       </ProLayout>

@@ -3,6 +3,7 @@ import Page from '@/components/Layout/Page';
 import Container from '@/components/Layout/Container';
 import PageContainer from '@/components/Layout/PageContainer';
 import Layout from '@/components/Layout';
+import { DefaultFooter } from '@ant-design/pro-layout';
 import Row from '@/components/Layout/Row';
 import Col from '@/components/Layout/Col';
 import Divider from '@/components/Layout/Divider';
@@ -38,6 +39,10 @@ const Render: React.FC<any> = (props: any) => {
       {
         key: 'layout',
         component: <Layout {...body} callback={callback} data={data} />
+      },
+      {
+        key: 'footer',
+        component: <DefaultFooter {...body} callback={callback} data={data} />
       },
       {
         key: 'container',
