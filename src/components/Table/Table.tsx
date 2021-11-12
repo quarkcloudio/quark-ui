@@ -21,7 +21,13 @@ const Table: React.FC<Table> = (props: any) => {
 
   useEffect(() => {
     actionRef.current.reload();
-  }, [props.columns,props.search,props.toolBar,props.menu,props.tableExtraRender]);
+  }, [
+    props.columns,
+    props.search,
+    props.toolBar,
+    props.menu,
+    props.tableExtraRender,
+  ]);
 
   // 注册全局变量
   window[props.tableKey] = actionRef;
@@ -138,9 +144,12 @@ const Table: React.FC<Table> = (props: any) => {
   };
 
   const onMenuChange = (key: any) => {
-    let getQuery: any = {...query};
+    let getQuery: any = { ...query };
 
     delete getQuery['search'];
+    delete getQuery['sorter'];
+    delete getQuery['filter'];
+    
     getQuery['page'] = 1;
     getQuery['menuKey'] = key;
 
