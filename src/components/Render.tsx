@@ -27,6 +27,8 @@ import { Space } from 'antd';
 import { MicroApp } from 'umi';
 import { tplEngine } from '@/utils/template';
 import Line from '@/components/Chart/Line';
+import Dropdown from '@/components/Dropdown';
+import Menu from '@/components/Menu';
 
 const Render: React.FC<any> = (props: any) => {
   // 注册组件
@@ -119,16 +121,16 @@ const Render: React.FC<any> = (props: any) => {
         key: 'form',
         component: (
           <Form formKey={body.key} callback={callback} {...body} data={data} />
-        ),
+        )
       },
       // 注册表单项组件
       {
-        key: "textField|passwordField|textAreaField|inputNumberField|\
+        key: 'textField|passwordField|textAreaField|inputNumberField|\
         iconField|hiddenField|checkboxField|radioField|imageField|\
         fileField|switchField|selectField|treeField|cascaderField|\
         dateField|weekField|monthField|quarterField|yearField|datetimeField|\
         dateRangeField|datetimeRangeField|timeField|timeRangeField|displayField|\
-        editorField|searchField|mapField|geofenceField|",
+        editorField|searchField|mapField|geofenceField|',
         component: <Field {...body} callback={callback} data={data} />
       },
       {
@@ -165,7 +167,7 @@ const Render: React.FC<any> = (props: any) => {
             {...body}
             dangerouslySetInnerHTML={{ __html: tplEngine(body.body, data) }}
           />
-        ),
+        )
       },
       {
         key: 'list',
@@ -176,6 +178,14 @@ const Render: React.FC<any> = (props: any) => {
       {
         key: 'line',
         component: <Line {...body} callback={callback} />
+      },
+      {
+        key: 'dropdown',
+        component: <Dropdown {...body} callback={callback} data={data} />
+      },
+      {
+        key: 'menu',
+        component: <Menu {...body} callback={callback} data={data} />
       },
     ];
   };
