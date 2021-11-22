@@ -67,6 +67,10 @@ const Form: React.FC<Form> = (props: any) => {
 
         window.open(`${actionUrl}?${stringify(values)}`);
 
+        buttonLoadings[formKey] = false;
+        changeButtonLoadings(buttonLoadings);
+        setRandom(Math.random);
+
         return false;
       } else {
         result = await get({
