@@ -87,6 +87,7 @@ const Form: React.FC<Form> = (props: any) => {
 
     buttonLoadings[formKey] = false;
     changeButtonLoadings(buttonLoadings);
+    setRandom(Math.random);
 
     if (result.component === 'message') {
       if (result.status === 'success') {
