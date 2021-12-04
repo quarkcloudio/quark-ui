@@ -36,23 +36,23 @@ const Render: React.FC<any> = (props: any) => {
     return [
       {
         key: 'page',
-        component: <Page {...body} />
+        component: <Page {...body} />,
       },
       {
         key: 'layout',
-        component: <Layout {...body} callback={callback} data={data} />
+        component: <Layout {...body} callback={callback} data={data} />,
       },
       {
         key: 'footer',
-        component: <DefaultFooter {...body} callback={callback} data={data} />
+        component: <DefaultFooter {...body} callback={callback} data={data} />,
       },
       {
         key: 'container',
-        component: <Container {...body} callback={callback} data={data} />
+        component: <Container {...body} callback={callback} data={data} />,
       },
       {
         key: 'pageContainer',
-        component: <PageContainer {...body} callback={callback} data={data} />
+        component: <PageContainer {...body} callback={callback} data={data} />,
       },
       {
         key: 'card',
@@ -69,59 +69,59 @@ const Render: React.FC<any> = (props: any) => {
       },
       {
         key: 'row',
-        component: <Row {...body} callback={callback} data={data} />
+        component: <Row {...body} callback={callback} data={data} />,
       },
       {
         key: 'col',
-        component: <Col {...body} callback={callback} data={data} />
+        component: <Col {...body} callback={callback} data={data} />,
       },
       {
         key: 'space',
         component: (
           <Space {...body}>{componentRender(body.body, data, callback)}</Space>
-        )
+        ),
       },
       {
         key: 'tabs',
-        component: <Tabs {...body} callback={callback} data={data} />
+        component: <Tabs {...body} callback={callback} data={data} />,
       },
       {
         key: 'statisticCard',
-        component: <StatisticCard {...body} callback={callback} data={data} />
+        component: <StatisticCard {...body} callback={callback} data={data} />,
       },
       {
         key: 'statistic',
-        component: <Statistic {...body} callback={callback} data={data} />
+        component: <Statistic {...body} callback={callback} data={data} />,
       },
       {
         key: 'descriptions',
-        component: <Descriptions {...body} callback={callback} data={data} />
+        component: <Descriptions {...body} callback={callback} data={data} />,
       },
       {
         key: 'typography',
-        component: <Typography {...body} callback={callback} data={data} />
+        component: <Typography {...body} callback={callback} data={data} />,
       },
       {
         key: 'paragraph',
-        component: <Paragraph {...body} callback={callback} data={data} />
+        component: <Paragraph {...body} callback={callback} data={data} />,
       },
       {
         key: 'title',
-        component: <Title {...body} callback={callback} data={data} />
+        component: <Title {...body} callback={callback} data={data} />,
       },
       {
         key: 'text',
-        component: <Text {...body} callback={callback} data={data} />
+        component: <Text {...body} callback={callback} data={data} />,
       },
       {
         key: 'divider',
-        component: <Divider {...body} callback={callback} data={data} />
+        component: <Divider {...body} callback={callback} data={data} />,
       },
       {
         key: 'form',
         component: (
           <Form formKey={body.key} callback={callback} {...body} data={data} />
-        )
+        ),
       },
       // 注册表单项组件
       {
@@ -130,8 +130,8 @@ const Render: React.FC<any> = (props: any) => {
         fileField|switchField|selectField|treeField|cascaderField|\
         dateField|weekField|monthField|quarterField|yearField|datetimeField|\
         dateRangeField|datetimeRangeField|timeField|timeRangeField|displayField|\
-        editorField|searchField|mapField|geofenceField|',
-        component: <Field {...body} callback={callback} data={data} />
+        editorField|searchField|mapField|geofenceField|listField|groupField|',
+        component: <Field {...body} callback={callback} data={data} />,
       },
       {
         key: 'table',
@@ -142,23 +142,23 @@ const Render: React.FC<any> = (props: any) => {
             tableKey={body.key}
             data={data}
           />
-        )
+        ),
       },
       {
         key: 'action',
-        component: <Action {...body} callback={callback} data={data} />
+        component: <Action {...body} callback={callback} data={data} />,
       },
       {
         key: 'login',
-        component: <Login {...body} callback={callback} data={data} />
+        component: <Login {...body} callback={callback} data={data} />,
       },
       {
         key: 'microApp',
-        component: <MicroApp {...body} callback={callback} data={data} />
+        component: <MicroApp {...body} callback={callback} data={data} />,
       },
       {
         key: 'when',
-        component: <When {...body} callback={callback} data={data} />
+        component: <When {...body} callback={callback} data={data} />,
       },
       {
         key: 'tpl',
@@ -167,25 +167,25 @@ const Render: React.FC<any> = (props: any) => {
             {...body}
             dangerouslySetInnerHTML={{ __html: tplEngine(body.body, data) }}
           />
-        )
+        ),
       },
       {
         key: 'list',
         component: (
           <List {...body} callback={callback} listKey={body.key} data={data} />
-        )
+        ),
       },
       {
         key: 'line',
-        component: <Line {...body} callback={callback} />
+        component: <Line {...body} callback={callback} />,
       },
       {
         key: 'dropdown',
-        component: <Dropdown {...body} callback={callback} data={data} />
+        component: <Dropdown {...body} callback={callback} data={data} />,
       },
       {
         key: 'menu',
-        component: <Menu {...body} callback={callback} data={data} />
+        component: <Menu {...body} callback={callback} data={data} />,
       },
     ];
   };
