@@ -5,17 +5,19 @@ import RightContent from '@/components/Layout/RightContent';
 import ProLayout from '@ant-design/pro-layout';
 import logo from '@/assets/logo.png';
 
-const Layout: React.FC<any> = (props:any) => {
-
-  const { pageLoading, changePageLoading } = useModel('global', model => ({ pageLoading: model.pageLoading, changePageLoading: model.changePageLoading }));
+const Layout: React.FC<any> = (props: any) => {
+  const { pageLoading, changePageLoading } = useModel('global', (model) => ({
+    pageLoading: model.pageLoading,
+    changePageLoading: model.changePageLoading,
+  }));
 
   const body = props.body;
   const data = props.data;
   const children = props.children;
 
-  if(props.cache) {
+  if (props.cache) {
     const layout = sessionStorage.getItem('layout');
-    if(!layout) {
+    if (!layout) {
       // 记录布局
       sessionStorage.setItem('layout', JSON.stringify(props));
     } else {
@@ -23,35 +25,38 @@ const Layout: React.FC<any> = (props:any) => {
     }
   }
 
-  const query:any = history.location.query;
+  const query: any = history.location.query;
   const [title, setTitle] = useState<string>(props.title);
   const [menuOpenKeys, setMenuOpenKeys] = useState<any>([]);
   const [menuSelectedKeys, setMenuSelectedKeys] = useState([null]);
 
-  var menuTreeList:any = [];
+  var menuTreeList: any = [];
 
-  const menuTreeToList = (menus: any,pkey: any = 0) => {
+  const menuTreeToList = (menus: any, pkey: any = 0) => {
     menus.map((item: any) => {
-      item['pkey'] = pkey
+      item['pkey'] = pkey;
       menuTreeList.push(item);
-      if (item.hasOwnProperty('children')) {
-        menuTreeToList(item.children,item.key);
+      if (item.hasOwnProperty('routes')) {
+        menuTreeToList(item.routes, item.key);
       }
     });
   };
 
-  if(props.menu) {
+  if (props.menu) {
     menuTreeToList(props.menu);
   }
 
   useEffect(() => {
-    if(props.menu && query.api) {
+    if (props.menu && query.api) {
       // 获取当前选中菜单的名称
       const title = getMenuName(props.menu, decodeURIComponent(query.api));
       // 设置页面标题
       setTitle(title);
       // 获取当前选中的菜单
-      const menuSelectedKey = getMenuKey(props.menu, decodeURIComponent(query.api));
+      const menuSelectedKey = getMenuKey(
+        props.menu,
+        decodeURIComponent(query.api),
+      );
       // 获取当前展开的菜单
       getMenuOpenKeys(menuSelectedKey);
       // 设置选中菜单
@@ -65,9 +70,9 @@ const Layout: React.FC<any> = (props:any) => {
       if (item.path.indexOf(path) != -1) {
         menuName = item.name;
       } else {
-        if (item.hasOwnProperty('children')) {
-          if (getMenuName(item.children, path)) {
-            menuName = getMenuName(item.children, path);
+        if (item.hasOwnProperty('routes')) {
+          if (getMenuName(item.routes, path)) {
+            menuName = getMenuName(item.routes, path);
           }
         }
       }
@@ -76,14 +81,14 @@ const Layout: React.FC<any> = (props:any) => {
   };
 
   const getMenuKey = (menus: any, path: string) => {
-    let menuKey:any = '';
+    let menuKey: any = '';
     menus.map((item: any) => {
       if (item.path.indexOf(path) != -1) {
-        menuKey = item.key
+        menuKey = item.key;
       } else {
-        if (item.hasOwnProperty('children')) {
-          if (getMenuKey(item.children, path)) {
-            menuKey = getMenuKey(item.children, path);
+        if (item.hasOwnProperty('routes')) {
+          if (getMenuKey(item.routes, path)) {
+            menuKey = getMenuKey(item.routes, path);
           }
         }
       }
@@ -95,8 +100,8 @@ const Layout: React.FC<any> = (props:any) => {
   const getMenuOpenKeys = (key: string) => {
     let menuRow = getMenuWithKey(key);
     let menuKey = getParentMenuKey(menuRow['pkey']);
-    if(menuKey) {
-      if(!hasOpenKey(menuKey)) {
+    if (menuKey) {
+      if (!hasOpenKey(menuKey)) {
         menuOpenKeys.push(menuKey);
         setMenuOpenKeys(menuOpenKeys);
       }
@@ -106,10 +111,10 @@ const Layout: React.FC<any> = (props:any) => {
 
   // 根据key获取菜单行
   const getMenuWithKey = (key: string) => {
-    let row:any = '';
+    let row: any = '';
     menuTreeList.map((item: any) => {
       if (item.key == key) {
-        row = item
+        row = item;
       }
     });
     return row;
@@ -117,10 +122,10 @@ const Layout: React.FC<any> = (props:any) => {
 
   // 根据pkey获取父亲菜单的key
   const getParentMenuKey = (pkey: string) => {
-    let menuKey:string = '';
+    let menuKey: string = '';
     menuTreeList.map((item: any) => {
       if (item.key == pkey) {
-        menuKey = item.key
+        menuKey = item.key;
       }
     });
     return menuKey;
@@ -129,7 +134,7 @@ const Layout: React.FC<any> = (props:any) => {
   const hasOpenKey = (key: any) => {
     let isHas = false;
     menuOpenKeys.map((item: any) => {
-      if(item == key) {
+      if (item == key) {
         isHas = true;
       }
     });
@@ -142,9 +147,9 @@ const Layout: React.FC<any> = (props:any) => {
       if (key == item.key) {
         menuPath = item.path;
       } else {
-        if (item.hasOwnProperty('children')) {
-          if (getMenuPath(item.children, key)) {
-            menuPath = getMenuPath(item.children, key);
+        if (item.hasOwnProperty('routes')) {
+          if (getMenuPath(item.routes, key)) {
+            menuPath = getMenuPath(item.routes, key);
           }
         }
       }
@@ -173,9 +178,22 @@ const Layout: React.FC<any> = (props:any) => {
         {...props}
         loading={pageLoading}
         logo={props.logo ? props.logo : logo}
-        iconfontUrl={props.iconfontUrl ? props.iconfontUrl : '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js'}
-        menuDataRender= {() => props.menu}
-        rightContentRender={() => <RightContent headerActions={props.headerActions} iconfontUrl={props.iconfontUrl ? props.iconfontUrl : '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js'} />}
+        iconfontUrl={
+          props.iconfontUrl
+            ? props.iconfontUrl
+            : '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js'
+        }
+        menuDataRender={() => props.menu}
+        rightContentRender={() => (
+          <RightContent
+            headerActions={props.headerActions}
+            iconfontUrl={
+              props.iconfontUrl
+                ? props.iconfontUrl
+                : '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js'
+            }
+          />
+        )}
         openKeys={menuOpenKeys}
         selectedKeys={menuSelectedKeys}
         menuProps={{
@@ -188,6 +206,6 @@ const Layout: React.FC<any> = (props:any) => {
       </ProLayout>
     </>
   );
-}
+};
 
 export default Layout;

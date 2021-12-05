@@ -616,25 +616,6 @@ const Field: React.FC<any> = (props: any) => {
         );
         break;
       case 'listField':
-        component = (
-          <ProFormList
-            label={props.label}
-            name={props.name}
-            creatorButtonProps={{
-              position: props.buttonPosition,
-              creatorButtonText: props.buttonText,
-            }}
-            alwaysShowItemLabel={props.alwaysShowItemLabel}
-          >
-            <ProForm.Group>
-              {props.items.map((item: any) => {
-                return fieldRender(item);
-              })}
-            </ProForm.Group>
-          </ProFormList>
-        );
-        break;
-      case 'listField':
         if (props.items.hasOwnProperty('component')) {
           component = (
             <ProFormList
@@ -668,16 +649,24 @@ const Field: React.FC<any> = (props: any) => {
         }
         break;
       case 'groupField':
-        if (props.items.hasOwnProperty('component')) {
+        if (props.body.hasOwnProperty('component')) {
           component = (
-            <ProForm.Group label={props.label}>
-              {fieldRender(props.items)}
+            <ProForm.Group
+              label={props.label}
+              style={props.style}
+              size={props.size}
+            >
+              {fieldRender(props.body)}
             </ProForm.Group>
           );
         } else {
           component = (
-            <ProForm.Group label={props.label}>
-              {props.items.map((item: any) => {
+            <ProForm.Group
+              label={props.label}
+              style={props.style}
+              size={props.size}
+            >
+              {props.body.map((item: any) => {
                 return fieldRender(item);
               })}
             </ProForm.Group>
