@@ -154,6 +154,7 @@ const Action: React.FC<any> = (props) => {
 
     buttonLoadings[props.componentKey] = false;
     changeButtonLoadings(buttonLoadings);
+    setRandom(Math.random);
 
     if (result.component === 'message') {
       if (result.status === 'success') {
