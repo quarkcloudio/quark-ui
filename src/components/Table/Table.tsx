@@ -45,7 +45,9 @@ const Table: React.FC<Table> = (props: any) => {
     }
 
     if (column.valueType === 'text') {
-      text = <Render body={text} data={row} callback={tableProps.callback} />;
+      if (typeof text === 'string' || typeof text === 'number') {
+        text = <Render body={text} data={row} callback={tableProps.callback} />;
+      }
     }
 
     return text;
@@ -149,7 +151,7 @@ const Table: React.FC<Table> = (props: any) => {
     delete getQuery['search'];
     delete getQuery['sorter'];
     delete getQuery['filter'];
-    
+
     getQuery['page'] = 1;
     getQuery['menuKey'] = key;
 
