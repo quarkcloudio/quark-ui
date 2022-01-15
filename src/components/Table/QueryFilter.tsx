@@ -11,6 +11,7 @@ import ProForm, {
   ProFormDateTimeRangePicker,
   ProFormSelect,
 } from '@ant-design/pro-form';
+import Cascader from '../Form/Cascader';
 import { Input, Form, Button } from 'antd';
 import { stringify } from 'qs';
 
@@ -32,7 +33,7 @@ const QueryFilter: React.FC<Action> = (props) => {
   });
 
   const onFinish = (values: any) => {
-    let getQuery: any = {...query};
+    let getQuery: any = { ...query };
 
     getQuery['page'] = 1;
     getQuery['search'] = values;
@@ -47,7 +48,7 @@ const QueryFilter: React.FC<Action> = (props) => {
   };
 
   const onReset = () => {
-    let getQuery: any = {...query};
+    let getQuery: any = { ...query };
 
     delete getQuery['search'];
     // hack random
@@ -64,7 +65,7 @@ const QueryFilter: React.FC<Action> = (props) => {
   };
 
   const onExport = () => {
-    let getQuery: any = {...query};
+    let getQuery: any = { ...query };
     let actionUrl = props.search.exportApi;
 
     getQuery['search'] = form.getFieldsValue();
@@ -232,6 +233,18 @@ const QueryFilter: React.FC<Action> = (props) => {
                 placeholder={item.placeholder}
               />
             </Input.Group>
+          </Form.Item>
+        );
+        break;
+
+      case 'cascader':
+        component = (
+          <Form.Item label={item.label} name={item.name}>
+            <Cascader
+              api={item.api}
+              options={item.options}
+              placeholder={item.placeholder}
+            />
           </Form.Item>
         );
         break;
