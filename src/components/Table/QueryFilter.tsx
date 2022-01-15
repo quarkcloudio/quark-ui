@@ -220,7 +220,7 @@ const QueryFilter: React.FC<Action> = (props) => {
 
       case 'inputGroup':
         component = (
-          <Form.Item label={item.label} labelAlign={props.search.labelAlign}>
+          <ProForm.Item label={item.label} labelAlign={props.search.labelAlign}>
             <Input.Group compact>
               <ProFormSelect
                 key={item.name + '_start'}
@@ -233,19 +233,19 @@ const QueryFilter: React.FC<Action> = (props) => {
                 placeholder={item.placeholder}
               />
             </Input.Group>
-          </Form.Item>
+          </ProForm.Item>
         );
         break;
 
       case 'cascader':
         component = (
-          <Form.Item label={item.label} name={item.name}>
+          <ProForm.Item label={item.label} name={item.name}>
             <Cascader
               api={item.api}
               options={item.options}
               placeholder={item.placeholder}
             />
-          </Form.Item>
+          </ProForm.Item>
         );
         break;
 
