@@ -208,7 +208,14 @@ const Table: React.FC<Table> = (props: any) => {
         request={async (params: any, sorter: any, filter: any) => {
           let getQuery: any = query;
 
-          getQuery['page'] = params.current;
+          // hack
+          if (query.random != sessionStorage.getItem('random')) {
+            getQuery['page'] = query.page;
+            sessionStorage.setItem('random', query.random);
+          } else {
+            getQuery['page'] = params.current;
+          }
+
           getQuery['pageSize'] = params.pageSize;
           getQuery['search'] = query.search;
 
@@ -277,7 +284,7 @@ const Table: React.FC<Table> = (props: any) => {
           tableProps.pagination
             ? {
                 ...tableProps.pagination,
-                current: query.page ?? 1,
+                // current: query.page ?? 1,
               }
             : false
         }
