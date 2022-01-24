@@ -226,7 +226,7 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
           plugins: [
             'advlist autolink lists link charmap print preview anchor image',
             'searchreplace visualblocks code fullscreen',
-            'insertdatetime media table paste code help wordcount multipleimage',
+            'insertdatetime media table paste code help wordcount multipleimage formatpainter',
           ],
           menu: {
             insert: {
@@ -238,8 +238,10 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
           toolbar:
             'undo redo | formatselect | bold italic backcolor | \
               alignleft aligncenter alignright alignjustify | \
-              bullist numlist outdent indent | removeformat | help',
+              bullist numlist outdent indent | removeformat formatpainter | help',
           fontsize_formats: '8pt 10pt 12pt 14pt 18pt 24pt 36pt',
+          font_formats:
+            "微软雅黑='微软雅黑';宋体='宋体';楷体='楷体';黑体='黑体';隶书='隶书';Andale Mono=andale mono,times;Arial=arial,helvetica,sans-serif;Arial Black=arial black,avant garde;Book Antiqua=book antiqua,palatino;Comic Sans MS=comic sans ms,sans-serif;Courier New=courier new,courier;Georgia=georgia,palatino;Helvetica=helvetica;Impact=impact,chicago;Symbol=symbol;Tahoma=tahoma,arial,helvetica,sans-serif;Terminal=terminal,monaco;Times New Roman=times new roman,times;Trebuchet MS=trebuchet ms,geneva;Verdana=verdana,geneva;Webdings=webdings;Wingdings=wingdings",
           relative_urls: false,
           remove_script_host: true,
           file_picker_callback: function (callback, value, meta) {
