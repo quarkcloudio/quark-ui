@@ -126,7 +126,7 @@ const Render: React.FC<any> = (props: any) => {
       // 注册表单项组件
       {
         key: 'textField|passwordField|textAreaField|inputNumberField|\
-        iconField|hiddenField|checkboxField|radioField|imageField|\
+        iconField|idField|hiddenField|checkboxField|radioField|imageField|\
         fileField|switchField|selectField|treeField|cascaderField|\
         dateField|weekField|monthField|quarterField|yearField|datetimeField|\
         dateRangeField|datetimeRangeField|timeField|timeRangeField|displayField|\

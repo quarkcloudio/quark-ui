@@ -200,6 +200,24 @@ const Field: React.FC<any> = (props: any) => {
           </span>
         );
         break;
+      case 'idField':
+        if (props.onFormDisplayed) {
+          component = (
+            <Form.Item label={props.label}>
+              <span style={props.style ? props.style : []}>{props.value}</span>
+              <span key={props.name} style={{ display: 'none' }}>
+                <ProFormText name={props.name} />
+              </span>
+            </Form.Item>
+          );
+        } else {
+          component = (
+            <span key={props.name} style={{ display: 'none' }}>
+              <ProFormText name={props.name} />
+            </span>
+          );
+        }
+        break;
       case 'checkboxField':
         component = (
           <Form.Item
