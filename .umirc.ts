@@ -6,7 +6,7 @@ export default defineConfig({
   },
   proxy: {
     '/api/': {
-      target: 'http://www.web.com',
+      target: 'http://127.0.0.1:3000',
       changeOrigin: true,
       pathRewrite: { '^/api': '/api' },
     },
@@ -17,15 +17,15 @@ export default defineConfig({
   routes: [
     { path: '/', component: '@/pages/Index/index' },
     { path: '/index', component: '@/pages/Index/index' },
-    { 
+    {
       path: '/sms/send',
-      component: '@/pages/Sms/Send'
-    }
+      component: '@/pages/Sms/Send',
+    },
   ],
   fastRefresh: {},
   qiankun: {
     master: {
-      apps:[]
-    }
-  }
+      apps: [],
+    },
+  },
 });

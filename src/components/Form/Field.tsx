@@ -179,7 +179,7 @@ const Field: React.FC<any> = (props: any) => {
               disabled={props.disabled}
               placeholder={props.placeholder}
             >
-              <Select.Option key={0} value={0}>
+              <Select.Option key={undefined} value={''}>
                 无图标
               </Select.Option>
               {props.options.map((item: any) => {
