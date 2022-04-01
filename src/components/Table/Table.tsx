@@ -209,7 +209,10 @@ const Table: React.FC<Table> = (props: any) => {
           let getQuery: any = query;
 
           // hack
-          if (query.random != sessionStorage.getItem('random')) {
+          if (
+            query.random != undefined &&
+            query.random != sessionStorage.getItem('random')
+          ) {
             getQuery['page'] = query.page;
             sessionStorage.setItem('random', query.random);
           } else {
