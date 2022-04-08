@@ -29,6 +29,7 @@ import { tplEngine } from '@/utils/template';
 import Line from '@/components/Chart/Line';
 import Dropdown from '@/components/Dropdown';
 import Menu from '@/components/Menu';
+import SmsSend from '@/pages/Sms/Send';
 
 const Render: React.FC<any> = (props: any) => {
   // 注册组件
@@ -130,7 +131,7 @@ const Render: React.FC<any> = (props: any) => {
         fileField|switchField|selectField|treeField|cascaderField|\
         dateField|weekField|monthField|quarterField|yearField|datetimeField|\
         dateRangeField|datetimeRangeField|timeField|timeRangeField|displayField|\
-        editorField|searchField|mapField|geofenceField|listField|groupField|',
+        editorField|searchField|mapField|geofenceField|listField|groupField|selects|',
         component: <Field {...body} callback={callback} data={data} />,
       },
       {
@@ -186,6 +187,10 @@ const Render: React.FC<any> = (props: any) => {
       {
         key: 'menu',
         component: <Menu {...body} callback={callback} data={data} />,
+      },
+      {
+        key: 'smsSend',
+        component: <SmsSend {...body} callback={callback} data={data} />,
       },
     ];
   };

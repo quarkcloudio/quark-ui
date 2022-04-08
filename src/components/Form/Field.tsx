@@ -31,7 +31,7 @@ import Geofence from './Geofence';
 import Editor from './Editor';
 import Cascader from './Cascader';
 import Render from '@/components/Render';
-import { tplEngine } from '@/utils/template';
+import Selects from './Selects';
 
 const { RangePicker } = DatePicker;
 
@@ -691,6 +691,15 @@ const Field: React.FC<any> = (props: any) => {
           );
         }
         break;
+      case 'selects':
+        component = (
+          <Selects
+            body={props.body}
+            callback={props.callback}
+            data={props.data}
+          />
+        );
+        break;
       default:
         component = (
           <Form.Item
@@ -708,6 +717,7 @@ const Field: React.FC<any> = (props: any) => {
     // 解析when
     if (props.when) {
       let fieldData: any = {};
+      fieldData['formKey'] = props.data.formKey;
       fieldData[props.name] = window[props.data.formKey]?.getFieldValue(
         props.name,
       );
