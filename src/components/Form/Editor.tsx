@@ -226,7 +226,7 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
           plugins: [
             'advlist autolink lists link charmap print preview anchor image',
             'searchreplace visualblocks code fullscreen',
-            'insertdatetime media table paste code help wordcount multipleimage formatpainter',
+            'insertdatetime media table paste code help wordcount multipleimage formatpainter indent2em',
           ],
           menu: {
             insert: {
