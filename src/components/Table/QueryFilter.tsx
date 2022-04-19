@@ -1,4 +1,4 @@
-import React, { useState, useImperativeHandle } from 'react';
+import React, { useState, useImperativeHandle, useRef } from 'react';
 import { ActionType } from '@ant-design/pro-table';
 import { history } from 'umi';
 import { get } from '@/services/action';
@@ -10,6 +10,7 @@ import ProForm, {
   ProFormDateTimePicker,
   ProFormDateTimeRangePicker,
   ProFormSelect,
+  ProFormInstance,
 } from '@ant-design/pro-form';
 import Cascader from '../Form/Cascader';
 import { Input, Form, Button } from 'antd';
@@ -31,6 +32,13 @@ const QueryFilter: React.FC<Action> = (props) => {
   useImperativeHandle(props.formRef, () => {
     return form;
   });
+
+  // 绑定一个 ProFormInstance 实例
+  const formRef = useRef<
+    ProFormInstance<{
+      date: string;
+    }>
+  >();
 
   const onFinish = (values: any) => {
     let getQuery: any = { ...query };
@@ -68,7 +76,7 @@ const QueryFilter: React.FC<Action> = (props) => {
     let getQuery: any = { ...query };
     let actionUrl = props.search.exportApi;
 
-    getQuery['search'] = form.getFieldsValue();
+    getQuery['search'] = formRef.current?.getFieldsFormatValue?.();
 
     // hack random
     getQuery['random'] = Math.random();
@@ -266,6 +274,7 @@ const QueryFilter: React.FC<Action> = (props) => {
     >
       <ProQueryFilter
         form={form}
+        formRef={formRef}
         onFinish={async (values) => {
           onFinish(values);
         }}
