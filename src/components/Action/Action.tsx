@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { history, useModel } from 'umi';
-import { get } from '@/services/action';
+import { get, post } from '@/services/action';
 import { tplEngine } from '@/utils/template';
 import { reload } from '@/utils/reload';
 import { Button, message, Popconfirm, Modal as AntModal } from 'antd';
@@ -39,6 +39,20 @@ const Action: React.FC<any> = (props) => {
   // 显示确认弹框
   const showConfirm = async (api: any, actionType = 'ajax') => {
     switch (actionType) {
+      case 'js':
+        confirm({
+          title: tplEngine(props.confirmTitle, props.data),
+          icon: <ExclamationCircleOutlined />,
+          content: tplEngine(props.confirmText, props.data),
+          onOk() {
+            eval(props.js);
+          },
+          onCancel() {
+            console.log('Cancel');
+          },
+        });
+        break;
+
       case 'ajax':
         confirm({
           title: tplEngine(props.confirmTitle, props.data),
@@ -127,7 +141,6 @@ const Action: React.FC<any> = (props) => {
 
   // 提交表单
   const submit = async () => {
-    
     window[formKey]?.submit?.();
 
     // hack
@@ -192,6 +205,61 @@ const Action: React.FC<any> = (props) => {
   let component = null;
 
   switch (props.actionType) {
+    case 'js':
+      if (props.confirmType === 'pop') {
+        component = (
+          <Popconfirm
+            placement="topRight"
+            title={tplEngine(props.confirmTitle, props.data)}
+            onConfirm={() => {
+              eval(props.js);
+            }}
+          >
+            <Button
+              loading={
+                props.withLoading
+                  ? buttonLoadings[props.componentKey]
+                  : undefined
+              }
+              style={props.style}
+              block={props.block}
+              danger={props.danger}
+              disabled={props.disabled}
+              ghost={props.ghost}
+              shape={props.shape}
+              size={props.size}
+              type={props.type}
+              icon={props.icon ? <IconFont type={props.icon} /> : false}
+            >
+              {tplEngine(props.label, props.data)}
+            </Button>
+          </Popconfirm>
+        );
+      } else {
+        component = (
+          <Button
+            loading={
+              props.withLoading ? buttonLoadings[props.componentKey] : undefined
+            }
+            style={props.style}
+            block={props.block}
+            danger={props.danger}
+            disabled={props.disabled}
+            ghost={props.ghost}
+            shape={props.shape}
+            size={props.size}
+            type={props.type}
+            icon={props.icon ? <IconFont type={props.icon} /> : false}
+            onClick={() => {
+              props.confirmTitle ? showConfirm(props.api) : eval(props.js);
+            }}
+          >
+            {tplEngine(props.label, props.data)}
+          </Button>
+        );
+      }
+      break;
+
     case 'ajax':
       if (props.confirmType === 'pop') {
         component = (
