@@ -1,7 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { get, post } from '@/services/action';
 import { Editor } from '@tinymce/tinymce-react';
-import { UploadOutlined, createFromIconfontCN } from '@ant-design/icons';
+import {
+  UploadOutlined,
+  createFromIconfontCN,
+  PlusCircleOutlined,
+  MinusCircleOutlined,
+  RotateLeftOutlined,
+  RotateRightOutlined,
+  ArrowLeftOutlined,
+  ArrowRightOutlined,
+  ArrowUpOutlined,
+  ArrowDownOutlined,
+  SelectOutlined,
+  DragOutlined,
+  ColumnWidthOutlined,
+  ColumnHeightOutlined,
+} from '@ant-design/icons';
 import {
   Card,
   DatePicker,
@@ -18,8 +33,10 @@ import {
   Menu,
   Pagination,
   Popconfirm,
+  Space,
 } from 'antd';
-
+import Cropper from 'react-cropper';
+import 'cropperjs/dist/cropper.css';
 const { Meta } = Card;
 const { RangePicker } = DatePicker;
 
@@ -30,11 +47,25 @@ const Iconfont = createFromIconfontCN({
 const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
   // 上传图片文件
   const [pictureBoxVisible, changePictureBoxVisible] = useState(false);
+  const [cropBoxVisible, changeCropBoxVisible] = useState(false);
+  const [imgSrc, setImgSrc] = useState('');
+  const [imgId, setImgId] = useState('');
+
+  const cropperRef = useRef<HTMLImageElement>(null);
+  const [cropper, setCropper] = useState<any>(undefined);
+  const [scaleX, setScaleX] = useState<any>(1);
+  const [scaleY, setScaleY] = useState<any>(1);
+  const onCrop = () => {
+    const imageElement: any = cropperRef?.current;
+    const cropper: any = imageElement?.cropper;
+  };
+
   const [tinymceEditor, setTinymceEditor] = useState({
     insertContent(value: any) {
       return value;
     },
   });
+
   const [picture, setPictureState] = useState({
     lists: [],
     categorys: [],
@@ -164,7 +195,6 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
     let data: any = [];
     checkPictures.map(function (item: any) {
       data.push(item);
-      console.log(item);
     });
 
     checkPictureForm.setFieldsValue({ checkPictures: data });
@@ -212,6 +242,27 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
 
     getPictures(1);
     return true;
+  };
+
+  const onSubmitCrop = async () => {
+    const result = await post({
+      actionUrl: 'admin/picture/crop',
+      id: imgId,
+      file: cropper.getCroppedCanvas().toDataURL(),
+    });
+
+    if (result.status === 'success') {
+      message.success(result.msg);
+      changeCropBoxVisible(false);
+    } else {
+      message.error(result.msg, 3);
+    }
+
+    getPictures(1);
+  };
+
+  const closeCropBox = (e: any) => {
+    changeCropBoxVisible(false);
   };
 
   return (
@@ -388,7 +439,7 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
                     {!!picture &&
                       picture.lists.map((item: any) => {
                         return (
-                          <Col span={4}>
+                          <Col span={6}>
                             <Card
                               hoverable={true}
                               size={'small'}
@@ -405,6 +456,21 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
                               }
                               actions={[
                                 <Checkbox value={item.id}>选择</Checkbox>,
+                                <span
+                                  onClick={() => {
+                                    changeCropBoxVisible(true);
+                                    setImgSrc(
+                                      item.path +
+                                        '?timestamp' +
+                                        new Date().getTime(),
+                                    );
+                                    setImgId(item.id);
+                                    setScaleX(1);
+                                    setScaleY(1);
+                                  }}
+                                >
+                                  <Iconfont type={'icon-edit'} /> 裁剪
+                                </span>,
                                 <Popconfirm
                                   title="确认要删除吗？"
                                   onConfirm={() => onDeletePicture(item.id)}
@@ -439,6 +505,162 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
                 ) : null}
               </Col>
             </Row>
+          </Col>
+        </Row>
+      </Modal>
+
+      <Modal
+        title="图片裁剪"
+        visible={cropBoxVisible}
+        onOk={onSubmitCrop}
+        onCancel={closeCropBox}
+        width={980}
+        footer={null}
+      >
+        <Cropper
+          src={imgSrc}
+          style={{ height: 400, width: '100%' }}
+          onInitialized={setCropper}
+          initialAspectRatio={16 / 9}
+          crop={onCrop}
+          ref={cropperRef}
+        />
+        <Row gutter={20} style={{ marginTop: 20 }}>
+          <Col span={24}>
+            <Space>
+              <Input.Group compact>
+                <Button
+                  icon={<DragOutlined />}
+                  size={'small'}
+                  onClick={() => cropper?.setDragMode('move')}
+                >
+                  画布
+                </Button>
+                <Button
+                  icon={<SelectOutlined />}
+                  size={'small'}
+                  onClick={() => cropper?.setDragMode('crop')}
+                >
+                  裁剪框
+                </Button>
+              </Input.Group>
+              <Input.Group compact>
+                <Button
+                  icon={<PlusCircleOutlined />}
+                  size={'small'}
+                  onClick={() => cropper?.zoom(0.1)}
+                >
+                  放大
+                </Button>
+                <Button
+                  icon={<MinusCircleOutlined />}
+                  size={'small'}
+                  onClick={() => cropper?.zoom(-0.1)}
+                >
+                  缩小
+                </Button>
+              </Input.Group>
+              <Input.Group compact>
+                <Button
+                  icon={<RotateLeftOutlined />}
+                  size={'small'}
+                  onClick={() => cropper?.rotate(45)}
+                >
+                  左旋
+                </Button>
+                <Button
+                  icon={<RotateRightOutlined />}
+                  size={'small'}
+                  onClick={() => cropper?.rotate(-45)}
+                >
+                  右旋
+                </Button>
+              </Input.Group>
+              <Input.Group compact>
+                <Button size={'small'}>
+                  <ArrowLeftOutlined onClick={() => cropper.move(-10, 0)} />
+                </Button>
+                <Button size={'small'}>
+                  <ArrowRightOutlined onClick={() => cropper.move(10, 0)} />
+                </Button>
+                <Button size={'small'}>
+                  <ArrowUpOutlined onClick={() => cropper.move(0, -10)} />
+                </Button>
+                <Button size={'small'}>
+                  <ArrowDownOutlined onClick={() => cropper.move(0, 10)} />
+                </Button>
+              </Input.Group>
+              <Input.Group compact>
+                <Button size={'small'}>
+                  <ColumnWidthOutlined
+                    onClick={() => {
+                      if (scaleX == 1) {
+                        cropper.scaleX(-1);
+                        setScaleX(-1);
+                      } else {
+                        cropper.scaleX(1);
+                        setScaleX(1);
+                      }
+                    }}
+                  />
+                </Button>
+                <Button size={'small'}>
+                  <ColumnHeightOutlined
+                    onClick={() => {
+                      if (scaleY == 1) {
+                        cropper?.scaleY(-1);
+                        setScaleY(-1);
+                      } else {
+                        cropper?.scaleY(1);
+                        setScaleY(1);
+                      }
+                    }}
+                  />
+                </Button>
+              </Input.Group>
+              <Input.Group compact>
+                <Button
+                  size={'small'}
+                  onClick={() => cropper?.setAspectRatio(16 / 9)}
+                >
+                  16:9
+                </Button>
+                <Button
+                  size={'small'}
+                  onClick={() => cropper?.setAspectRatio(4 / 3)}
+                >
+                  4:3
+                </Button>
+                <Button
+                  size={'small'}
+                  onClick={() => cropper?.setAspectRatio(1 / 1)}
+                >
+                  1:1
+                </Button>
+                <Button
+                  size={'small'}
+                  onClick={() => cropper?.setAspectRatio(2 / 3)}
+                >
+                  2:3
+                </Button>
+                <Button
+                  size={'small'}
+                  onClick={() => cropper?.setAspectRatio(NaN)}
+                >
+                  自由
+                </Button>
+              </Input.Group>
+              <Button size={'small'} onClick={() => cropper?.reset()}>
+                重置
+              </Button>
+              <Button
+                size={'small'}
+                onClick={() => onSubmitCrop()}
+                type="primary"
+              >
+                裁剪
+              </Button>
+            </Space>
           </Col>
         </Row>
       </Modal>

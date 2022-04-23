@@ -33,6 +33,7 @@
     "lodash.template": "^4.5.0",
     "react-amap": "^1.2.8",
     "react-amap-plugin-autocomplete": "^0.0.4",
+    "react-cropper": "^2.1.8",
     "umi": "^3.4.7"
   },
   "devDependencies": {
