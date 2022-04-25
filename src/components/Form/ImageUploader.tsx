@@ -71,11 +71,11 @@ const ImageUploader: React.FC<ImageUploader> = ({
 
   const triggerChange = (changedValue: any) => {
     if (onChange) {
-      onChange({ ...changedValue });
+      onChange(changedValue);
     }
   };
   const onFileInfoChange = (value: any) => {
-    triggerChange({ ...value });
+    triggerChange(value);
   };
   const onFileListChange = (value: any) => {
     setGetFileList(value);
@@ -99,7 +99,7 @@ const ImageUploader: React.FC<ImageUploader> = ({
 
       fileList[key] = fileInfo;
     });
-    triggerChange({ ...fileList });
+    triggerChange(fileList);
   };
 
   const uploadButton = (title: string) => {
