@@ -180,7 +180,6 @@ const ImageUploader: React.FC<ImageUploader> = ({
           beforeUpload={(file: any) => {
             return checkUpload(file);
           }}
-          onPreview={handlePreview}
           onChange={(info: any) => {
             if (info.file.status === 'done') {
               if (info.file.response.status === 'success') {
