@@ -9,6 +9,45 @@ const Selects: React.FC<any> = (props: any) => {
   const [random, setRandom] = useState(0);
   const [items, setItems] = useState(props.body);
 
+  useEffect(() => {
+    init();
+  }, []);
+
+  const init = async () => {
+    let allItems = items.map(async (item: any) => {
+      let value = window[props.data.formKey]?.getFieldValue(item.name);
+
+      if (value && item.load) {
+        const promises = items.map(async (subItem: any, key: any) => {
+          if (item.load.field === subItem.name && item.load.api) {
+            const result = await get({
+              actionUrl: item.load.api,
+              search: value,
+            });
+
+            subItem.options = result.data;
+          }
+          return subItem;
+        });
+
+        return await Promise.all(promises);
+      }
+    });
+
+    let results = await Promise.all(allItems);
+    let selectItems: any = [];
+    results.map((item: any) => {
+      if (item) {
+        selectItems.push(...item);
+      }
+    });
+
+    if (selectItems.length > 0) {
+      setItems(selectItems);
+      setRandom(Math.random);
+    }
+  };
+
   const onSelectChange = async (value: any, name: string, load: any = null) => {
     let fieldsValue: any = {};
     if (load) {
