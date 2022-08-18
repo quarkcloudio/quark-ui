@@ -58,6 +58,12 @@ const QueryFilter: React.FC<Action> = (props) => {
   const onReset = () => {
     let getQuery: any = { ...query };
 
+    Object.keys(getQuery).forEach((key) => {
+      if (key.indexOf('search[') != -1) {
+        delete getQuery[key];
+      }
+    });
+
     delete getQuery['search'];
     // hack random
     getQuery['random'] = Math.random();
