@@ -46,7 +46,7 @@ const Field: React.FC<any> = (props: any) => {
   const onChange = (value: any, name: string) => {
     let item: any = [];
     item[name] = value;
-    window[props.data.formKey]?.setFieldsValue(item);
+    window[props.data?.formKey]?.setFieldsValue(item);
     setRandom(Math.random);
   };
 
@@ -57,7 +57,7 @@ const Field: React.FC<any> = (props: any) => {
     switch (props.component) {
       case 'textField':
         component = (
-          <Form.Item
+          <ProForm.Item
             name={props.name}
             label={props.label}
             tooltip={props.tooltip}
@@ -79,12 +79,12 @@ const Field: React.FC<any> = (props: any) => {
                 onChange(e.target.value, props.name);
               }}
             />
-          </Form.Item>
+          </ProForm.Item>
         );
         break;
       case 'passwordField':
         component = (
-          <Form.Item
+          <ProForm.Item
             name={props.name}
             label={props.label}
             tooltip={props.tooltip}
@@ -106,12 +106,12 @@ const Field: React.FC<any> = (props: any) => {
                 onChange(e.target.value, props.name);
               }}
             />
-          </Form.Item>
+          </ProForm.Item>
         );
         break;
       case 'textAreaField':
         component = (
-          <Form.Item
+          <ProForm.Item
             name={props.name}
             label={props.label}
             tooltip={props.tooltip}
@@ -133,12 +133,12 @@ const Field: React.FC<any> = (props: any) => {
                 onChange(e.target.value, props.name);
               }}
             />
-          </Form.Item>
+          </ProForm.Item>
         );
         break;
       case 'inputNumberField':
         component = (
-          <Form.Item
+          <ProForm.Item
             name={props.name}
             label={props.label}
             tooltip={props.tooltip}
@@ -160,12 +160,12 @@ const Field: React.FC<any> = (props: any) => {
                 onChange(value, props.name);
               }}
             />
-          </Form.Item>
+          </ProForm.Item>
         );
         break;
       case 'iconField':
         component = (
-          <Form.Item
+          <ProForm.Item
             key={props.name}
             label={props.label}
             name={props.name}
@@ -190,7 +190,7 @@ const Field: React.FC<any> = (props: any) => {
                 );
               })}
             </Select>
-          </Form.Item>
+          </ProForm.Item>
         );
         break;
       case 'hiddenField':
@@ -203,12 +203,12 @@ const Field: React.FC<any> = (props: any) => {
       case 'idField':
         if (props.onFormDisplayed) {
           component = (
-            <Form.Item label={props.label}>
+            <ProForm.Item label={props.label}>
               <span style={props.style ? props.style : []}>{props.value}</span>
               <span key={props.name} style={{ display: 'none' }}>
                 <ProFormText name={props.name} />
               </span>
-            </Form.Item>
+            </ProForm.Item>
           );
         } else {
           component = (
@@ -220,7 +220,7 @@ const Field: React.FC<any> = (props: any) => {
         break;
       case 'checkboxField':
         component = (
-          <Form.Item
+          <ProForm.Item
             name={props.name}
             label={props.label}
             tooltip={props.tooltip}
@@ -236,12 +236,12 @@ const Field: React.FC<any> = (props: any) => {
                 onChange(value, props.name);
               }}
             />
-          </Form.Item>
+          </ProForm.Item>
         );
         break;
       case 'radioField':
         component = (
-          <Form.Item
+          <ProForm.Item
             name={props.name}
             label={props.label}
             tooltip={props.tooltip}
@@ -257,12 +257,12 @@ const Field: React.FC<any> = (props: any) => {
                 onChange(e.target.value, props.name);
               }}
             />
-          </Form.Item>
+          </ProForm.Item>
         );
         break;
       case 'imageField':
         component = (
-          <Form.Item
+          <ProForm.Item
             label={props.label}
             name={props.name}
             style={props.style}
@@ -281,12 +281,12 @@ const Field: React.FC<any> = (props: any) => {
               limitWH={props.limitWH}
               action={props.api}
             />
-          </Form.Item>
+          </ProForm.Item>
         );
         break;
       case 'fileField':
         component = (
-          <Form.Item
+          <ProForm.Item
             label={props.label}
             name={props.name}
             style={props.style}
@@ -303,12 +303,12 @@ const Field: React.FC<any> = (props: any) => {
               limitNum={props.limitNum}
               action={props.api}
             />
-          </Form.Item>
+          </ProForm.Item>
         );
         break;
       case 'switchField':
         component = (
-          <Form.Item
+          <ProForm.Item
             name={props.name}
             label={props.label}
             tooltip={props.tooltip}
@@ -326,12 +326,12 @@ const Field: React.FC<any> = (props: any) => {
                 onChange(value, props.name);
               }}
             />
-          </Form.Item>
+          </ProForm.Item>
         );
         break;
       case 'selectField':
         component = (
-          <Form.Item
+          <ProForm.Item
             name={props.name}
             label={props.label}
             tooltip={props.tooltip}
@@ -351,12 +351,12 @@ const Field: React.FC<any> = (props: any) => {
                 onChange(value, props.name);
               }}
             />
-          </Form.Item>
+          </ProForm.Item>
         );
         break;
       case 'treeField':
         component = (
-          <Form.Item
+          <ProForm.Item
             label={props.label}
             name={props.name}
             valuePropName={'checkedKeys'}
@@ -370,12 +370,12 @@ const Field: React.FC<any> = (props: any) => {
               style={props.style ? props.style : []}
               treeData={props.treeData}
             />
-          </Form.Item>
+          </ProForm.Item>
         );
         break;
       case 'cascaderField':
         component = (
-          <Form.Item
+          <ProForm.Item
             label={props.label}
             name={props.name}
             rules={props.frontendRules}
@@ -389,7 +389,7 @@ const Field: React.FC<any> = (props: any) => {
               style={props.style}
               placeholder={props.placeholder}
             />
-          </Form.Item>
+          </ProForm.Item>
         );
         break;
       case 'dateField':
@@ -526,7 +526,7 @@ const Field: React.FC<any> = (props: any) => {
         break;
       case 'timeField':
         component = (
-          <Form.Item
+          <ProForm.Item
             label={props.label}
             name={props.name}
             rules={props.frontendRules}
@@ -538,12 +538,12 @@ const Field: React.FC<any> = (props: any) => {
               locale={locale}
               format={props.format}
             />
-          </Form.Item>
+          </ProForm.Item>
         );
         break;
       case 'timeRangeField':
         component = (
-          <Form.Item
+          <ProForm.Item
             label={props.label}
             name={props.name}
             rules={props.frontendRules}
@@ -555,19 +555,19 @@ const Field: React.FC<any> = (props: any) => {
               locale={locale}
               format={props.format}
             />
-          </Form.Item>
+          </ProForm.Item>
         );
         break;
       case 'displayField':
         component = (
-          <Form.Item label={props.label}>
+          <ProForm.Item label={props.label}>
             <span style={props.style ? props.style : []}>{props.value}</span>
-          </Form.Item>
+          </ProForm.Item>
         );
         break;
       case 'editorField':
         component = (
-          <Form.Item
+          <ProForm.Item
             label={props.label}
             name={props.name}
             rules={props.frontendRules}
@@ -579,12 +579,12 @@ const Field: React.FC<any> = (props: any) => {
               height={props?.style?.height}
               width={props?.style?.width}
             />
-          </Form.Item>
+          </ProForm.Item>
         );
         break;
       case 'searchField':
         component = (
-          <Form.Item
+          <ProForm.Item
             label={props.label}
             name={props.name}
             rules={props.frontendRules}
@@ -600,12 +600,12 @@ const Field: React.FC<any> = (props: any) => {
               api={props.api}
               allowClear={props.allowClear}
             />
-          </Form.Item>
+          </ProForm.Item>
         );
         break;
       case 'mapField':
         component = (
-          <Form.Item
+          <ProForm.Item
             label={props.label}
             name={props.name}
             rules={props.frontendRules}
@@ -613,12 +613,12 @@ const Field: React.FC<any> = (props: any) => {
             extra={props.extra}
           >
             <Map zoom={props.zoom} mapKey={props.mapKey} style={props.style} />
-          </Form.Item>
+          </ProForm.Item>
         );
         break;
       case 'geofenceField':
         component = (
-          <Form.Item
+          <ProForm.Item
             label={props.label}
             name={props.name}
             rules={props.frontendRules}
@@ -630,7 +630,7 @@ const Field: React.FC<any> = (props: any) => {
               mapKey={props.mapKey}
               style={props.style}
             />
-          </Form.Item>
+          </ProForm.Item>
         );
         break;
       case 'listField':
@@ -702,14 +702,14 @@ const Field: React.FC<any> = (props: any) => {
         break;
       default:
         component = (
-          <Form.Item
+          <ProForm.Item
             label={props.label}
             name={props.name}
             help={props.help ? props.help : undefined}
             extra={props.extra}
           >
             <span key={props.name}>无{props.component}组件</span>
-          </Form.Item>
+          </ProForm.Item>
         );
         break;
     }
