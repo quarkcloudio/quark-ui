@@ -93,6 +93,14 @@ const Table: React.FC<Table> = (props: any) => {
   const findComponent: any = (data: any, key: string) => {
     let component: any = [];
 
+    if (data === undefined || data === null) {
+      return component;
+    }
+
+    if (typeof data === 'string' || typeof data === 'number') {
+      return component;
+    }
+
     if (data.key === key) {
       return data;
     }
