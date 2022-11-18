@@ -1,57 +1,63 @@
 import React, { useState } from 'react';
 import { Map as AMap, Marker } from 'react-amap';
 import Autocomplete from 'react-amap-plugin-autocomplete';
-import {
-  Input
-} from 'antd';
+import { Input } from 'antd';
 
 export interface Map {
-  zoom?:any;
+  zoom?: any;
   mapKey?: any;
   value?: any;
-  style?:any;
-  onChange?:(value: any) => void;
+  style?: any;
+  onChange?: (value: any) => void;
 }
 
-const Map: React.FC<Map> = ({ zoom=null, mapKey=undefined, value={ longitude: undefined, latitude: undefined}, style=[], onChange }) => {
-
-  const [position, setMapPosition] = useState({ longitude: undefined, latitude: undefined});
+const Map: React.FC<Map> = ({
+  zoom = null,
+  mapKey = undefined,
+  value = { longitude: undefined, latitude: undefined },
+  style = [],
+  onChange,
+}) => {
+  const [position, setMapPosition] = useState({
+    longitude: undefined,
+    latitude: undefined,
+  });
 
   const markerEvents = {
     dragend: (instance: any) => {
       let position = {
-        longitude:undefined,
-        latitude:undefined
-      }
+        longitude: undefined,
+        latitude: undefined,
+      };
       position.longitude = instance.lnglat.lng;
       position.latitude = instance.lnglat.lat;
       setMapPosition(position);
       triggerChange({ ...position });
     },
   };
-  
-  const triggerChange = (changedValue:any) => {
+
+  const triggerChange = (changedValue: any) => {
     if (onChange) {
-      onChange({...value, ...changedValue });
+      onChange({ ...value, ...changedValue });
     }
   };
 
   const onMapSelect = (e: any) => {
     if (e.poi.location) {
       let position = {
-        longitude:undefined,
-        latitude:undefined
-      }
+        longitude: undefined,
+        latitude: undefined,
+      };
       position.longitude = e.poi.location.lng;
       position.latitude = e.poi.location.lat;
-      setMapPosition(position)
+      setMapPosition(position);
       triggerChange({ ...position });
     }
   };
 
-  let getPosition:any = { longitude: undefined, latitude: undefined};
+  let getPosition: any = { longitude: undefined, latitude: undefined };
 
-  if(position.latitude && position.longitude) {
+  if (position.latitude && position.longitude) {
     getPosition = position;
   } else {
     getPosition = value;
@@ -65,7 +71,7 @@ const Map: React.FC<Map> = ({ zoom=null, mapKey=undefined, value={ longitude: un
         style={{
           display: 'inline-block',
           width: '188px',
-          lineHeight: '32px'
+          lineHeight: '32px',
         }}
       />
       <span
@@ -84,15 +90,19 @@ const Map: React.FC<Map> = ({ zoom=null, mapKey=undefined, value={ longitude: un
         style={{
           display: 'inline-block',
           width: '188px',
-          lineHeight: '32px'
+          lineHeight: '32px',
         }}
       />
       <div style={style}>
         <AMap
-          center={{
-            longitude: getPosition.longitude,
-            latitude: getPosition.latitude
-          }}
+          center={
+            getPosition.longitude && getPosition.latitude
+              ? {
+                  longitude: getPosition.longitude,
+                  latitude: getPosition.latitude,
+                }
+              : undefined
+          }
           plugins={['ToolBar']}
           amapkey={mapKey}
           zoom={zoom}
@@ -115,10 +125,14 @@ const Map: React.FC<Map> = ({ zoom=null, mapKey=undefined, value={ longitude: un
           />
           <Marker
             events={markerEvents}
-            position={{
-              longitude: getPosition.longitude,
-              latitude: getPosition.latitude
-            }}
+            position={
+              getPosition.longitude && getPosition.latitude
+                ? {
+                    longitude: getPosition.longitude,
+                    latitude: getPosition.latitude,
+                  }
+                : undefined
+            }
             visible={true}
             clickable={true}
             draggable={true}
@@ -127,6 +141,6 @@ const Map: React.FC<Map> = ({ zoom=null, mapKey=undefined, value={ longitude: un
       </div>
     </>
   );
-}
+};
 
 export default Map;

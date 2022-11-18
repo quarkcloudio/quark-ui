@@ -171,6 +171,12 @@ const Render: React.FC<any> = (props: any) => {
         ),
       },
       {
+        key: 'view',
+        component: (
+          <div {...body}>{componentRender(body.body, data, callback)}</div>
+        ),
+      },
+      {
         key: 'list',
         component: (
           <List {...body} callback={callback} listKey={body.key} data={data} />
