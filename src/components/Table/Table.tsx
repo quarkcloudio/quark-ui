@@ -238,10 +238,18 @@ const Table: React.FC<Table> = (props: any) => {
             getQuery['filter'] = filter;
           }
 
-          history.push({
-            pathname: history.location.pathname,
-            query: getQuery,
-          });
+          // 临时方案：防止table在详情页时，重新跳转
+          if (
+            query.search != undefined ||
+            params.pageSize ||
+            JSON.stringify(sorter) != '{}' ||
+            JSON.stringify(filter) != '{}'
+          ) {
+            history.push({
+              pathname: history.location.pathname,
+              query: getQuery,
+            });
+          }
 
           const getTable = await getTableDatasource(props.tableKey);
 
