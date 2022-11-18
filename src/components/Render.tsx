@@ -223,6 +223,10 @@ const Render: React.FC<any> = (props: any) => {
       });
     } else {
       component = body.map((item: any) => {
+        if (item.hasOwnProperty(0)) {
+          return componentRender(item, data, callback);
+        }
+
         return registerComponent(item, data, callback).map(
           (componentItem: any) => {
             if (componentItem.key.indexOf(item.component + '|') != -1) {
