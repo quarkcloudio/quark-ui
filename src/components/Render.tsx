@@ -23,6 +23,7 @@ import Typography from '@/components/Typography';
 import Paragraph from '@/components/Typography/Paragraph';
 import Title from '@/components/Typography/Title';
 import Text from '@/components/Typography/Text';
+import View from '@/components/Typography/View';
 import { Space } from 'antd';
 import { MicroApp } from 'umi';
 import { tplEngine } from '@/utils/template';
@@ -172,9 +173,7 @@ const Render: React.FC<any> = (props: any) => {
       },
       {
         key: 'view',
-        component: (
-          <div {...body}>{componentRender(body.body, data, callback)}</div>
-        ),
+        component: <View {...body} callback={callback} data={data} />,
       },
       {
         key: 'list',
