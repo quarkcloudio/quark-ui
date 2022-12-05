@@ -161,7 +161,14 @@ const Layout: React.FC<any> = (props: any) => {
     let menuSelectedKeys = [];
     menuSelectedKeys.push(event.key);
     setMenuSelectedKeys(menuSelectedKeys);
-    history.push(getMenuPath(props.menu, event.key));
+
+    let menuPath = getMenuPath(props.menu, event.key);
+    if (menuPath.indexOf('http') == 0) {
+      window.open(menuPath, '_blank');
+      return false;
+    }
+
+    history.push(menuPath);
   };
 
   const onMenuOpenChange = (openKeys: any) => {
