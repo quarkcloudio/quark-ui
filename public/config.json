@@ -1,5 +1,5 @@
 {
-  "initApi": "admin/login",
+  "initApi": "/api/admin/login/index/index",
   "apps": [
     {
       "name": "app1",

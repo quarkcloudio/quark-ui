@@ -3,27 +3,28 @@ import { history, useModel } from 'umi';
 import { get } from '@/services/action';
 import Render from '@/components/Render';
 
-const Engine: React.FC<any> = (props:any) => {
-
+const Engine: React.FC<any> = (props: any) => {
   const [components, setComponentsState] = useState('');
-  const query:any = history.location.query;
+  const query: any = history.location.query;
   const api = query.api ? query.api : props.initApi;
-
-  const { pageLoading, changePageLoading } = useModel('global', model => ({ pageLoading: model.pageLoading, changePageLoading: model.changePageLoading }));
+  const { pageLoading, changePageLoading } = useModel('global', (model) => ({
+    pageLoading: model.pageLoading,
+    changePageLoading: model.changePageLoading,
+  }));
 
   useEffect(() => {
     changePageLoading(true);
-    onSetComponentsState()
-  }, [api,query.timestamp]);
+    onSetComponentsState();
+  }, [api, query.timestamp]);
 
   const onSetComponentsState = async () => {
-    if(api) {
+    if (api) {
       const result = await get({
-        actionUrl: api,
-        ...history.location.query
+        url: api,
+        data: history.location.query,
       });
 
-      if(result) {
+      if (result) {
         setComponentsState(result);
         changePageLoading(false);
       }
@@ -32,9 +33,7 @@ const Engine: React.FC<any> = (props:any) => {
     }
   };
 
-  return (
-    <Render body={components} />
-  );
-}
+  return <Render body={components} />;
+};
 
 export default Engine;

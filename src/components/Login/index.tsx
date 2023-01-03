@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, Input, Row, Form, message } from 'antd';
 import {
   LockTwoTone,
@@ -7,7 +7,7 @@ import {
 } from '@ant-design/icons';
 import { Link, history, History, Helmet } from 'umi';
 import { DefaultFooter } from '@ant-design/pro-layout';
-import { post } from '@/services/action';
+import { post, get } from '@/services/action';
 import logo from '@/assets/logo.png';
 import styles from './style.less';
 
@@ -28,38 +28,64 @@ const replaceGoto = (redirectUrl: string = '') => {
 
 const Login: React.FC<any> = (props: any) => {
   const [submitting, setSubmitting] = useState(false);
-  const [imageCaptcha, getImageCaptcha] = useState(props.captchaUrl);
+  const [captchaUrl, setCaptchaUrl] = useState('');
 
-  /**
-   * 用户登录
-   */
+  useEffect(() => {
+    refreshCaptchaUrl();
+  }, []);
+
+  // 登录
   const handleSubmit = async (values: any) => {
     setSubmitting(true);
     try {
       const result = await post({
-        actionUrl: props.api,
-        ...values,
+        url: props.api,
+        data: values,
       });
 
       if (result.status == 'success') {
-        message.success(result.msg);
-        // 记录登录凭据
-        sessionStorage.setItem('token', result.data.token);
-        // 记录用户信息
-        sessionStorage.setItem('accountInfo', JSON.stringify(result.data));
-        // 清空layout
-        sessionStorage.removeItem('layout');
+        sessionStorage.setItem('token', result.data.token); // 记录登录凭据
+        sessionStorage.setItem('accountInfo', JSON.stringify(result.data)); // 记录用户信息
+        sessionStorage.removeItem('layout'); // 清空layout
 
+        // 弹出消息
+        message.success(result.msg);
+
+        // 跳转页面
         replaceGoto(props.redirect);
         return;
       } else {
+        refreshCaptchaUrl();
         message.error(result.msg);
-        getImageCaptcha(props.captchaUrl + '?random=' + Math.random());
       }
     } catch (error) {
       message.error('登录失败，请重试！');
     }
     setSubmitting(false);
+  };
+
+  // 刷新图形验证码url
+  const refreshCaptchaUrl = async () => {
+    let captchaUrl = props.captchaUrl;
+    let captchaIdUrl = props.captchaIdUrl;
+    let captchaId = '';
+
+    if (captchaIdUrl) {
+      const result = await get({
+        url: captchaIdUrl,
+      });
+
+      if (result.status == 'error') {
+        message.error(result.msg);
+      } else {
+        captchaId = result.data['captchaId'];
+      }
+    }
+
+    captchaUrl = captchaUrl.replace(/:id/g, captchaId);
+    captchaUrl = captchaUrl.replace('${id}', captchaId);
+
+    setCaptchaUrl(captchaUrl + '?random=' + Math.random());
   };
 
   return (
@@ -133,7 +159,7 @@ const Login: React.FC<any> = (props: any) => {
                   placeholder="密码"
                 />
               </Form.Item>
-              {imageCaptcha ? (
+              {captchaUrl ? (
                 <Form.Item
                   name="captcha"
                   rules={[
@@ -160,11 +186,9 @@ const Login: React.FC<any> = (props: any) => {
                         <img
                           style={{ cursor: 'pointer' }}
                           onClick={() => {
-                            getImageCaptcha(
-                              props.captchaUrl + '?random=' + Math.random(),
-                            );
+                            refreshCaptchaUrl();
                           }}
-                          src={imageCaptcha}
+                          src={captchaUrl}
                           alt="验证码"
                         />
                       }

@@ -2,36 +2,24 @@ import { request } from 'umi';
 import { stringify } from 'qs';
 
 export async function get(params: any) {
-  let actionUrl = '',url = '';
-  url = params.actionUrl;
-  delete params['actionUrl'];
+  let url = params.url;
+  let data = params.data;
 
-  if(url.indexOf("?") != -1) {
-    actionUrl = `${url}&${stringify(params)}`;
+  if (url.indexOf('?') != -1) {
+    url = `${url}&${stringify(data)}`;
   } else {
-    actionUrl = `${url}?${stringify(params)}`;
-  }
-  
-  if(url.indexOf("http") == -1) {
-    actionUrl = `../../api/${actionUrl}`;
+    url = `${url}?${stringify(data)}`;
   }
 
-  return request(actionUrl);
+  return request(url);
 }
 
 export async function post(params: any) {
-  let actionUrl = '',url = '';
-  url = params.actionUrl;
-  delete params['actionUrl'];
+  let url = params.url;
+  let data = params.data;
 
-  if(url.indexOf("http") == -1) {
-    actionUrl = `../../api/${url}`;
-  } else {
-    actionUrl = url;
-  }
-
-  return request(actionUrl, {
+  return request(url, {
     method: 'post',
-    data: params,
+    data: data,
   });
 }
