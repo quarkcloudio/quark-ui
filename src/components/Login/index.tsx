@@ -29,6 +29,7 @@ const replaceGoto = (redirectUrl: string = '') => {
 const Login: React.FC<any> = (props: any) => {
   const [submitting, setSubmitting] = useState(false);
   const [captchaUrl, setCaptchaUrl] = useState('');
+  const [captchaId, setCaptchaId] = useState('');
 
   useEffect(() => {
     refreshCaptchaUrl();
@@ -38,6 +39,9 @@ const Login: React.FC<any> = (props: any) => {
   const handleSubmit = async (values: any) => {
     setSubmitting(true);
     try {
+      if (props.captchaIdUrl) {
+        values['captchaId'] = captchaId;
+      }
       const result = await post({
         url: props.api,
         data: values,
@@ -80,6 +84,8 @@ const Login: React.FC<any> = (props: any) => {
       } else {
         captchaId = result.data['captchaId'];
       }
+
+      setCaptchaId(captchaId);
     }
 
     captchaUrl = captchaUrl.replace(/:id/g, captchaId);
