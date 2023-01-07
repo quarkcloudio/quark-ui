@@ -1,9 +1,9 @@
 {
-  "initApi": "/api/admin/login/index/index",
+  "api": "/api/admin/login/index/index",
   "apps": [
     {
-      "name": "app1",
-      "entry": "/apps/app1.html"
+      "name": "app",
+      "entry": "/apps/app.html"
     }
   ]
 }

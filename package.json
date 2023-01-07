@@ -30,6 +30,7 @@
     "@tinymce/tinymce-react": "^3.13.0",
     "@types/lodash.template": "^4.5.0",
     "@umijs/preset-react": "^1.x",
+    "js-base64": "^3.7.3",
     "lodash.template": "^4.5.0",
     "react-amap": "^1.2.8",
     "react-amap-plugin-autocomplete": "^0.0.4",

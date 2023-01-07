@@ -3,34 +3,45 @@ import { history, useModel } from 'umi';
 import { get } from '@/services/action';
 import Render from '@/components/Render';
 
-const Engine: React.FC<any> = (props: any) => {
-  const [components, setComponentsState] = useState('');
+export interface EngineProps {
+  api: string;
+}
+
+const defaultProps = {
+  api: '',
+} as EngineProps;
+
+const Engine: React.FC<EngineProps> = (props) => {
+  const { api } = { ...defaultProps, ...props };
   const query: any = history.location.query;
-  const api = query.api ? query.api : props.initApi;
+
+  const [components, setComponents] = useState('');
   const { pageLoading, changePageLoading } = useModel('global', (model) => ({
     pageLoading: model.pageLoading,
     changePageLoading: model.changePageLoading,
   }));
 
   useEffect(() => {
-    changePageLoading(true);
-    onSetComponentsState();
+    getComponents();
   }, [api, query.timestamp]);
 
-  const onSetComponentsState = async () => {
-    if (api) {
-      const result = await get({
-        url: api,
-        data: history.location.query,
-      });
-
-      if (result) {
-        setComponentsState(result);
-        changePageLoading(false);
-      }
-    } else {
-      setComponentsState('请配置初始接口！');
+  const getComponents = async () => {
+    if (!api) {
+      setComponents('请设置接口！');
+      return;
     }
+
+    // 设置页面loading状态
+    changePageLoading(true);
+    const result = await get({
+      url: api,
+    });
+
+    // 设置组件
+    setComponents(result);
+
+    // 取消页面loading状态
+    changePageLoading(false);
   };
 
   return <Render body={components} />;

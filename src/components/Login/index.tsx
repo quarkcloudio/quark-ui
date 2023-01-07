@@ -6,6 +6,7 @@ import {
   SafetyCertificateTwoTone,
 } from '@ant-design/icons';
 import { Link, history, History, Helmet } from 'umi';
+import { Base64 } from 'js-base64';
 import { DefaultFooter } from '@ant-design/pro-layout';
 import { post, get } from '@/services/action';
 import logo from '@/assets/logo.png';
@@ -49,7 +50,10 @@ const Login: React.FC<any> = (props: any) => {
 
       if (result.status == 'success') {
         sessionStorage.setItem('token', result.data.token); // 记录登录凭据
-        sessionStorage.setItem('accountInfo', JSON.stringify(result.data)); // 记录用户信息
+        sessionStorage.setItem(
+          'accountInfo',
+          Base64.decode(result.data.token.split('.')[1]),
+        ); // 记录用户信息
         sessionStorage.removeItem('layout'); // 清空layout
 
         // 弹出消息
