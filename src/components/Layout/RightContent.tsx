@@ -35,7 +35,7 @@ const RightContent: React.FC<any> = (props) => {
   // 退出登录
   const loginOut = async () => {
     const result = await get({
-      url: '/api/admin/login/index/logout',
+      url: '/api/admin/logout/index/handle',
     });
     if (result['status'] === 'success') {
       sessionStorage.removeItem('token');
