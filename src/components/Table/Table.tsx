@@ -55,9 +55,11 @@ const Table: React.FC<Table> = (props: any) => {
 
   const editableSave = async (data: any) => {
     const result = await get({
-      actionUrl: data.editable.action,
-      id: data.id,
-      ...data.values,
+      url: data.editable.action,
+      data: {
+        id: data.id,
+        ...data.values,
+      },
     });
     if (result.status === 'success') {
       actionRef.current.reload();
@@ -134,13 +136,13 @@ const Table: React.FC<Table> = (props: any) => {
 
     if (tableProps.apiType === 'GET') {
       result = await get({
-        actionUrl: api,
-        ...query,
+        url: api,
+        data: query,
       });
     } else if (tableProps.apiType === 'POST') {
       result = await post({
-        actionUrl: api,
-        ...query,
+        url: api,
+        data: query,
       });
     }
 
