@@ -11,7 +11,7 @@ const Index: React.FC<{}> = () => {
 
   useEffect(() => {
     getApi();
-  }, [api]);
+  }, [query?.api]);
 
   const getApi = async () => {
     const config = await request('./config.json');
