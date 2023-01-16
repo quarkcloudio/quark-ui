@@ -4,7 +4,7 @@ import { history, Link } from 'umi';
 import { get, post } from '@/services/action';
 import Render from '@/components/Render';
 import QueryFilter from '@/components/Table/QueryFilter';
-import { Image, Space, Card } from 'antd';
+import { Image, Space, Card, message } from 'antd';
 import { EditableRow, EditableCell } from './Editable';
 import styles from './Table.less';
 
@@ -63,6 +63,8 @@ const Table: React.FC<Table> = (props: any) => {
     });
     if (result.status === 'success') {
       actionRef.current.reload();
+    } else {
+      message.error(result.msg);
     }
   };
 
@@ -98,24 +100,19 @@ const Table: React.FC<Table> = (props: any) => {
     if (data === undefined || data === null) {
       return component;
     }
-
     if (typeof data === 'string' || typeof data === 'number') {
       return component;
     }
-
     if (data.key === key) {
       return data;
     }
-
-    // tab做特殊处理
     if (data.hasOwnProperty('tabPanes')) {
+      // tab做特殊处理
       return findComponent(data.tabPanes, key);
     }
-
     if (data.hasOwnProperty('body')) {
       return findComponent(data.body, key);
     }
-
     if (data.hasOwnProperty(0)) {
       data.map((item: any) => {
         let getComponent = findComponent(item, key);

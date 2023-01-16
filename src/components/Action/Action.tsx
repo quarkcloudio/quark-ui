@@ -203,7 +203,6 @@ const Action: React.FC<any> = (props) => {
   };
 
   let component = null;
-
   switch (props.actionType) {
     case 'js':
       if (props.confirmType === 'pop') {
