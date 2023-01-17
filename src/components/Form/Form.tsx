@@ -41,7 +41,7 @@ const Form: React.FC<Form> = (props: any) => {
       setLoading(true);
 
       let result = await get({
-        actionUrl: tplEngine(props.initApi, props.data),
+        url: tplEngine(props.initApi, props.data),
       });
 
       window[formKey].setFieldsValue(result.data);
@@ -58,14 +58,14 @@ const Form: React.FC<Form> = (props: any) => {
 
     if (props.apiType === 'GET') {
       if (props.targetBlank) {
-        let actionUrl = tplEngine(props.api, props.data);
+        let url = tplEngine(props.api, props.data);
         values['token'] = sessionStorage.getItem('token');
 
         if (props.api.indexOf('http') == -1) {
-          actionUrl = `../../api/${actionUrl}`;
+          url = `../../api/${url}`;
         }
 
-        window.open(`${actionUrl}?${stringify(values)}`);
+        window.open(`${url}?${stringify(values)}`);
 
         buttonLoadings[formKey] = false;
         changeButtonLoadings(buttonLoadings);
@@ -74,14 +74,14 @@ const Form: React.FC<Form> = (props: any) => {
         return false;
       } else {
         result = await get({
-          actionUrl: tplEngine(props.api, props.data),
-          ...values,
+          url: tplEngine(props.api, props.data),
+          data: values,
         });
       }
     } else {
       result = await post({
-        actionUrl: tplEngine(props.api, props.data),
-        ...values,
+        url: tplEngine(props.api, props.data),
+        data: values,
       });
     }
 

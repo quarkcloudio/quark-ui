@@ -31,10 +31,18 @@ const Engine: React.FC<EngineProps> = (props) => {
       return;
     }
 
+    var data: any = {};
+    Object.keys(query).forEach((key) => {
+      if (key != 'api') {
+        data[key] = query[key];
+      }
+    });
+
     // 设置页面loading状态
     changePageLoading(true);
     const result = await get({
       url: api,
+      data: data,
     });
 
     // 设置组件
