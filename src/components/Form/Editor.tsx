@@ -92,9 +92,11 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
 
   const getPictures = async (page: any = 1, search: any = null) => {
     const result = await get({
-      actionUrl: 'admin/picture/getLists',
-      page: page,
-      ...search,
+      url: '/api/admin/picture/getLists',
+      data: {
+        page: page,
+        ...search,
+      },
     });
     setPictureState(result.data);
   };
@@ -207,8 +209,10 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
     }
 
     const result = await post({
-      actionUrl: 'admin/picture/delete',
-      id: id,
+      url: '/api/admin/picture/delete',
+      data: {
+        id: id,
+      },
     });
 
     if (result.status === 'error') {
@@ -232,8 +236,10 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
     }
 
     const result = await post({
-      actionUrl: 'admin/picture/delete',
-      id: ids,
+      url: 'admin/picture/delete',
+      data: {
+        id: ids,
+      },
     });
 
     if (result.status === 'error') {
@@ -246,9 +252,11 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
 
   const onSubmitCrop = async () => {
     const result = await post({
-      actionUrl: 'admin/picture/crop',
-      id: imgId,
-      file: cropper.getCroppedCanvas().toDataURL(),
+      url: 'admin/picture/crop',
+      data: {
+        id: imgId,
+        file: cropper.getCroppedCanvas().toDataURL(),
+      },
     });
 
     if (result.status === 'success') {

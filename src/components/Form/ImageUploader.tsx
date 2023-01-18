@@ -143,9 +143,11 @@ const ImageUploader: React.FC<ImageUploader> = ({
 
   const onSubmitCrop = async () => {
     const result = await post({
-      actionUrl: 'admin/picture/crop',
-      id: imgId,
-      file: cropper.getCroppedCanvas().toDataURL(),
+      url: '/api/admin/picture/crop',
+      data: {
+        id: imgId,
+        file: cropper.getCroppedCanvas().toDataURL(),
+      },
     });
 
     if (result.status === 'success') {
