@@ -24,7 +24,7 @@ const RightContent: React.FC<any> = (props) => {
     if (event.key === 'setting') {
       history.push({
         pathname: '/index',
-        query: { api: 'admin/account/setting-form' },
+        query: { api: '/api/admin/account/setting/form' },
       });
       return;
     }
