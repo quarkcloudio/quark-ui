@@ -162,7 +162,7 @@ const Action: React.FC<any> = (props) => {
     setRandom(Math.random);
 
     const result = await get({
-      actionUrl: tplEngine(api, props.data),
+      url: tplEngine(api, props.data),
     });
 
     buttonLoadings[props.componentKey] = false;
