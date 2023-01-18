@@ -62,7 +62,7 @@ const Form: React.FC<Form> = (props: any) => {
         values['token'] = sessionStorage.getItem('token');
 
         if (props.api.indexOf('http') == -1) {
-          url = `../../api/${url}`;
+          url = `${url}`;
         }
 
         window.open(`${url}?${stringify(values)}`);
