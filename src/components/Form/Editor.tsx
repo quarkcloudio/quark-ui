@@ -92,7 +92,7 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
 
   const getPictures = async (page: any = 1, search: any = null) => {
     const result = await get({
-      url: '/api/admin/picture/getLists',
+      url: '/api/admin/upload/image/getList',
       data: {
         page: page,
         ...search,
@@ -110,7 +110,7 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
         checkPictures.map((item: any) => {
           picture.lists.map((pictureItem: any) => {
             if (pictureItem.id == item) {
-              html = html + '<img src="' + pictureItem.path + '" />';
+              html = html + '<img src="' + pictureItem.url + '" />';
             }
           });
         });
@@ -209,7 +209,7 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
     }
 
     const result = await post({
-      url: '/api/admin/picture/delete',
+      url: '/api/admin/upload/image/delete',
       data: {
         id: id,
       },
@@ -236,7 +236,7 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
     }
 
     const result = await post({
-      url: 'admin/picture/delete',
+      url: '/api/admin/upload/image/delete',
       data: {
         id: ids,
       },
@@ -252,7 +252,7 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
 
   const onSubmitCrop = async () => {
     const result = await post({
-      url: 'admin/picture/crop',
+      url: '/api/admin/upload/image/crop',
       data: {
         id: imgId,
         file: cropper.getCroppedCanvas().toDataURL(),
@@ -308,16 +308,16 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
             var filetype =
               '.pdf, .txt, .zip, .rar, .7z, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .mp3, .mp4';
             //后端接收上传文件的地址
-            var upurl = '/api/admin/file/upload';
+            var upurl = '/api/admin/upload/file/handle';
             //为不同插件指定文件类型及后端地址
             switch (meta.filetype) {
               case 'image':
                 filetype = '.jpg, .jpeg, .png, .gif';
-                upurl = '/api/admin/picture/upload';
+                upurl = '/api/admin/upload/image/handle';
                 break;
               case 'media':
                 filetype = '.mp3, .mp4';
-                upurl = '/api/admin/file/upload';
+                upurl = '/api/admin/upload/file/handle';
                 break;
               case 'file':
               default:
@@ -424,7 +424,7 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
                     showUploadList={false}
                     name={'file'}
                     multiple={true}
-                    action={'/api/admin/picture/upload'}
+                    action={'/api/admin/upload/image/handle'}
                     headers={{
                       authorization: 'Bearer ' + sessionStorage['token'],
                     }}
@@ -457,7 +457,7 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
                                   onClick={() => toggleChecked(item.id)}
                                   style={{ objectFit: 'cover' }}
                                   alt={item.name}
-                                  src={item.path}
+                                  src={item.url}
                                   width={'100%'}
                                   height={120}
                                 />
@@ -468,7 +468,7 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
                                   onClick={() => {
                                     changeCropBoxVisible(true);
                                     setImgSrc(
-                                      item.path +
+                                      item.url +
                                         '?timestamp' +
                                         new Date().getTime(),
                                     );
