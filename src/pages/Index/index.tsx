@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import Engine from '@/components/Engine';
-import styles from './index.less';
-import { history, request } from 'umi';
-import zhCN from 'antd/es/locale/zh_CN';
+import { useLocation, request } from '@umijs/max';
 import { ConfigProvider, Spin } from 'antd';
+import Engine from '@/components/Engine';
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
+import locale from 'antd/locale/zh_CN';
+import qs from 'query-string';
+import styles from './index.less';
 
-const Index: React.FC<{}> = () => {
-  const query = history.location.query;
+const Index: React.FC = () => {
+  const location = useLocation();
+  const query = qs.parse(location.search);
   const [api, setApi] = useState(String);
-
-  useEffect(() => {
-    getApi();
-  }, [query?.api]);
 
   const getApi = async () => {
     const config = await request('./config.json');
@@ -23,8 +23,12 @@ const Index: React.FC<{}> = () => {
     setApi(api);
   };
 
+  useEffect(() => {
+    getApi();
+  }, [location.search]);
+
   return (
-    <ConfigProvider locale={zhCN}>
+    <ConfigProvider locale={locale}>
       {api ? (
         <Engine api={api} />
       ) : (

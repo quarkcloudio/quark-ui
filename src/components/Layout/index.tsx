@@ -1,169 +1,92 @@
 import React, { useState, useEffect } from 'react';
-import { history, Helmet, useModel } from 'umi';
+import { useLocation, history, Helmet, useModel } from '@umijs/max';
+import type { MenuProps } from 'antd';
+import { ProLayout, ProLayoutProps } from '@ant-design/pro-components';
+import qs from 'query-string';
 import Render from '@/components/Render';
-import RightContent from '@/components/Layout/RightContent';
-import ProLayout from '@ant-design/pro-layout';
-import logo from '@/assets/logo.png';
+import RightContent from '@/components/RightContent';
+import defaultLogo from '@/assets/logo.png';
+import {
+  getMenuName,
+  getMenuSelectedKey,
+  getMenuOpenKeys,
+  getMenuPath,
+} from '@/components/Layout/menu';
+import { get } from '@/services/action';
+import {
+  LogoutOutlined,
+  SettingOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 
-const Layout: React.FC<any> = (props: any) => {
-  const { pageLoading, changePageLoading } = useModel('global', (model) => ({
-    pageLoading: model.pageLoading,
-    changePageLoading: model.changePageLoading,
-  }));
+export interface LayoutProps {
+  logo?: React.ReactNode;
+  title?: string;
+  cache?: boolean;
+  menu?: any;
+  actions?: any;
+  body?: any;
+  footer?: any;
+  data?: any;
+  callback?: any;
+  children?: React.ReactNode;
+}
 
-  const body = props.body;
-  const data = props.data;
-  const children = props.children;
+const defaultProps = {
+  logo: '',
+  title: 'QuarkCMS',
+  cache: false,
+  iconfontUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js',
+} as LayoutProps;
 
-  if (props.cache) {
-    const layout = sessionStorage.getItem('layout');
-    if (!layout) {
+const Layout: React.FC<ProLayoutProps & LayoutProps> = (props) => {
+  const { pageLoading } = useModel('pageLoading');
+  let innerProps = { ...defaultProps, ...props };
+  if (innerProps.cache) {
+    const layoutCache = sessionStorage.getItem('layout');
+    if (!layoutCache) {
       // 记录布局
-      sessionStorage.setItem('layout', JSON.stringify(props));
+      sessionStorage.setItem('layout', JSON.stringify(innerProps));
     } else {
-      props = JSON.parse(layout);
+      innerProps = JSON.parse(layoutCache);
     }
   }
-
-  const query: any = history.location.query;
-  const [title, setTitle] = useState<string>(props.title);
+  const { logo, title, menu, iconfontUrl, actions, footer } = { ...innerProps };
+  const { initialState } = useModel('@@initialState');
+  const accountInfo = initialState?.accountInfo;
+  const location = useLocation();
+  const query = qs.parse(location.search);
+  const [innerTitle, setInnerTitle] = useState<string>(title ? title : '');
   const [menuOpenKeys, setMenuOpenKeys] = useState<any>([]);
-  const [menuSelectedKeys, setMenuSelectedKeys] = useState([null]);
-
-  var menuTreeList: any = [];
-
-  const menuTreeToList = (menus: any, pkey: any = 0) => {
-    menus.map((item: any) => {
-      item['pkey'] = pkey;
-      menuTreeList.push(item);
-      if (item.hasOwnProperty('routes')) {
-        menuTreeToList(item.routes, item.key);
-      }
-    });
-  };
-
-  if (props.menu) {
-    menuTreeToList(props.menu);
+  const [menuSelectedKeys, setMenuSelectedKeys] = useState(['']);
+  const [collapsed, setCollapsed] = useState<boolean>(false);
+  let api: any = '';
+  if (query?.api) {
+    api = query.api;
   }
 
   useEffect(() => {
-    if (props.menu && query.api) {
+    if (menu && query.api) {
       // 获取当前选中菜单的名称
-      const title = getMenuName(props.menu, decodeURIComponent(query.api));
+      const title = getMenuName(menu, decodeURIComponent(api));
       // 设置页面标题
-      setTitle(title);
+      setInnerTitle(title);
       // 获取当前选中的菜单
-      const menuSelectedKey = getMenuKey(
-        props.menu,
-        decodeURIComponent(query.api),
-      );
+      const menuSelectedKey = getMenuSelectedKey(menu, decodeURIComponent(api));
       // 获取当前展开的菜单
-      getMenuOpenKeys(menuSelectedKey);
+      const currentMenuOpenKeys = getMenuOpenKeys(menu, menuSelectedKey);
+      // 设置菜单展开
+      menuOpenKeys.push(...currentMenuOpenKeys);
+      setMenuOpenKeys(menuOpenKeys);
       // 设置选中菜单
       setMenuSelectedKeys([menuSelectedKey]);
     }
   }, [query.api]);
 
-  const getMenuName = (menus: any, path: string) => {
-    let menuName = '';
-    menus.map((item: any) => {
-      if (item.path.indexOf(path) != -1) {
-        menuName = item.name;
-      } else {
-        if (item.hasOwnProperty('routes')) {
-          if (getMenuName(item.routes, path)) {
-            menuName = getMenuName(item.routes, path);
-          }
-        }
-      }
-    });
-    return menuName;
-  };
-
-  const getMenuKey = (menus: any, path: string) => {
-    let menuKey: any = '';
-    menus.map((item: any) => {
-      if (item.path.indexOf(path) != -1) {
-        menuKey = item.key;
-      } else {
-        if (item.hasOwnProperty('routes')) {
-          if (getMenuKey(item.routes, path)) {
-            menuKey = getMenuKey(item.routes, path);
-          }
-        }
-      }
-    });
-    return menuKey;
-  };
-
-  // 获取当前展开的菜单
-  const getMenuOpenKeys = (key: string) => {
-    let menuRow = getMenuWithKey(key);
-    let menuKey = getParentMenuKey(menuRow['pkey']);
-    if (menuKey) {
-      if (!hasOpenKey(menuKey)) {
-        menuOpenKeys.push(menuKey);
-        setMenuOpenKeys(menuOpenKeys);
-      }
-      getMenuOpenKeys(menuKey);
-    }
-  };
-
-  // 根据key获取菜单行
-  const getMenuWithKey = (key: string) => {
-    let row: any = '';
-    menuTreeList.map((item: any) => {
-      if (item.key == key) {
-        row = item;
-      }
-    });
-    return row;
-  };
-
-  // 根据pkey获取父亲菜单的key
-  const getParentMenuKey = (pkey: string) => {
-    let menuKey: string = '';
-    menuTreeList.map((item: any) => {
-      if (item.key == pkey) {
-        menuKey = item.key;
-      }
-    });
-    return menuKey;
-  };
-
-  const hasOpenKey = (key: any) => {
-    let isHas = false;
-    menuOpenKeys.map((item: any) => {
-      if (item == key) {
-        isHas = true;
-      }
-    });
-    return isHas;
-  };
-
-  const getMenuPath = (menus: any, key: string) => {
-    let menuPath = '';
-    menus.map((item: any) => {
-      if (key == item.key) {
-        menuPath = item.path;
-      } else {
-        if (item.hasOwnProperty('routes')) {
-          if (getMenuPath(item.routes, key)) {
-            menuPath = getMenuPath(item.routes, key);
-          }
-        }
-      }
-    });
-    return menuPath;
-  };
-
   const onMenuClick = (event: any) => {
-    let menuSelectedKeys = [];
-    menuSelectedKeys.push(event.key);
-    setMenuSelectedKeys(menuSelectedKeys);
-
-    let menuPath = getMenuPath(props.menu, event.key);
-    if (menuPath.indexOf('http') == 0) {
+    setMenuSelectedKeys([event.key]);
+    const menuPath = getMenuPath(menu, event.key);
+    if (menuPath.indexOf('http') === 0) {
       window.open(menuPath, '_blank');
       return false;
     }
@@ -175,41 +98,89 @@ const Layout: React.FC<any> = (props: any) => {
     setMenuOpenKeys(openKeys);
   };
 
+  const onRightContentMenuClick = (event: any) => {
+    switch (event.key) {
+      case 'logout':
+        loginOut();
+        break;
+      case 'setting':
+        history.push({
+          pathname: '/index',
+          search: 'api=/api/admin/account/setting/form',
+        });
+        break;
+    }
+  };
+
+  // 退出登录
+  const loginOut = async () => {
+    const result = await get({
+      url: '/api/admin/logout/index/handle',
+    });
+    if (result['status'] === 'success') {
+      sessionStorage.removeItem('token');
+    }
+    history.push('/');
+  };
+
+  const items: MenuProps['items'] = [
+    {
+      key: 'setting',
+      icon: <SettingOutlined />,
+      label: '个人设置',
+    },
+    {
+      key: 'logout',
+      icon: <LogoutOutlined />,
+      label: '退出登录',
+    },
+  ];
+
   return (
     <>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>{title}</title>
+        <title>{innerTitle}</title>
       </Helmet>
       <ProLayout
         {...props}
         loading={pageLoading}
-        logo={props.logo ? props.logo : logo}
-        iconfontUrl={
-          props.iconfontUrl
-            ? props.iconfontUrl
-            : '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js'
-        }
-        menuDataRender={() => props.menu}
-        rightContentRender={() => (
-          <RightContent
-            headerActions={props.headerActions}
-            iconfontUrl={
-              props.iconfontUrl
-                ? props.iconfontUrl
-                : '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js'
-            }
-          />
-        )}
+        logo={logo ? logo : defaultLogo}
+        iconfontUrl={iconfontUrl}
         openKeys={menuOpenKeys}
         selectedKeys={menuSelectedKeys}
         menuProps={{
           onOpenChange: onMenuOpenChange,
           onClick: onMenuClick,
         }}
-        footerRender={() => <Render body={props.footer} data={data} />}
+        onCollapse={(collapsed: boolean) => {
+          setCollapsed(collapsed);
+        }}
+        menuDataRender={() => menu}
+        actionsRender={() => [
+          <Render key="action" body={actions} data={props.data} />,
+        ]}
+        rightContentRender={() => (
+          <RightContent
+            menu={{
+              items: items,
+              onClick: onRightContentMenuClick,
+            }}
+            avatar={
+              accountInfo?.avatar ? accountInfo?.avatar : <UserOutlined />
+            }
+            name={
+              props.layout === 'side'
+                ? !collapsed
+                  ? accountInfo?.nickname
+                  : undefined
+                : accountInfo?.nickname
+            }
+          />
+        )}
+        footerRender={() => <Render body={footer} data={props.data} />}
       >
-        {children ?? <Render body={body} data={data} />}
+        {props.children ?? <Render body={props.body} data={props.data} />}
       </ProLayout>
     </>
   );

@@ -1,100 +1,141 @@
 import React, { useEffect, useState } from 'react';
-import ProForm from '@ant-design/pro-form';
-import { tplEngine } from '@/utils/template';
-import { reload } from '@/utils/reload';
-import { history, useModel } from 'umi';
+import type { CSSProperties } from 'react';
+import { history, useModel } from '@umijs/max';
+import { message, Space, Spin } from 'antd';
+import { ProForm, ProFormProps } from '@ant-design/pro-components';
+import qs from 'query-string';
 import { post, get } from '@/services/action';
-import Action from '@/components/Action/Action';
+import Action from '@/components/Action';
 import Render from '@/components/Render';
-import { Form as AntForm, message, Space, Spin } from 'antd';
-import { stringify } from 'qs';
+import tplEngine from '@/utils/template';
+import reload from '@/utils/reload';
 
-export interface Form {
-  form: any;
+export interface FormExtendProps {
+  component?: string;
+  componentkey: string;
+  api?: string;
+  apiType?: string;
+  initApi?: string;
+  targetBlank?: string;
+  actions?: any;
+  resetButtonText?: string;
+  submitButtonText?: string;
+  buttonWrapperCol?: any;
+  body?: any;
+  data?: any;
+  callback?: any;
+  style?: CSSProperties | undefined;
 }
 
-const Form: React.FC<Form> = (props: any) => {
-  const [form] = AntForm.useForm();
-  const formKey = props.formKey ? props.formKey : 'form';
+const defaultProps = {
+  componentkey: 'form',
+  apiType: 'POST',
+} as FormExtendProps;
+
+const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
+  const [form] = ProForm.useForm();
   const [spinning, setLoading] = useState(false);
   const [submitResult, setSubmitResult] = useState(null);
-  const { buttonLoadings, changeButtonLoadings } = useModel(
-    'global',
-    (model) => ({
-      buttonLoadings: model.buttonLoadings,
-      changeButtonLoadings: model.changeButtonLoadings,
-    }),
-  );
-  //hack
-  const [random, setRandom] = useState(0);
-  // 注册全局变量
-  window[formKey] = form;
+  const { buttonLoadings, setButtonLoadings } = useModel('buttonLoading');
+  const { object, setObject } = useModel('object');
+  const [random, setRandom] = useState(0); // hack
+  const getObject: any = object;
+  const {
+    componentkey,
+    title,
+    colon,
+    initialValues,
+    labelAlign,
+    name,
+    preserve,
+    requiredMark,
+    scrollToFirstError,
+    size,
+    dateFormatter,
+    layout,
+    labelCol,
+    wrapperCol,
+    style,
+    api,
+    apiType,
+    initApi,
+    targetBlank,
+    actions,
+    data,
+    body,
+    resetButtonText,
+    submitButtonText,
+    buttonWrapperCol,
+    callback,
+  } = { ...defaultProps, ...props };
+
+  if (componentkey) {
+    getObject[componentkey] = form;
+    setObject(getObject);
+  }
 
   useEffect(() => {
-    if (props.initApi) {
+    if (initApi) {
       getInitialValues();
     }
   }, []);
 
   const getInitialValues = async () => {
-    if (props.initApi) {
+    if (initApi) {
       setLoading(true);
 
       let result = await get({
-        url: tplEngine(props.initApi, props.data),
+        url: tplEngine(initApi, data),
       });
 
-      window[formKey].setFieldsValue(result.data);
+      const getObject: any = object;
+      getObject[componentkey].setFieldsValue(result.data);
       setLoading(false);
     }
   };
 
   const onFinish = async (values: any) => {
     let result = null;
-
-    buttonLoadings[formKey] = true;
-    changeButtonLoadings(buttonLoadings);
+    let getbuttonLoadings: any = buttonLoadings;
+    getbuttonLoadings[componentkey] = true;
+    setButtonLoadings(getbuttonLoadings);
     setRandom(Math.random);
 
-    if (props.apiType === 'GET') {
-      if (props.targetBlank) {
-        let url = tplEngine(props.api, props.data);
+    if (apiType === 'GET') {
+      if (targetBlank) {
+        let url = tplEngine(api, data);
         values['token'] = sessionStorage.getItem('token');
-
-        if (props.api.indexOf('http') == -1) {
+        if (api?.indexOf('http') === -1) {
           url = `${url}`;
         }
 
-        window.open(`${url}?${stringify(values)}`);
-
-        buttonLoadings[formKey] = false;
-        changeButtonLoadings(buttonLoadings);
+        window.open(`${url}?${qs.stringify(values)}`);
+        getbuttonLoadings[componentkey] = false;
+        setButtonLoadings(getbuttonLoadings);
         setRandom(Math.random);
-
         return false;
       } else {
         result = await get({
-          url: tplEngine(props.api, props.data),
+          url: tplEngine(api, data),
           data: values,
         });
       }
     } else {
       result = await post({
-        url: tplEngine(props.api, props.data),
+        url: tplEngine(api, data),
         data: values,
       });
     }
 
-    buttonLoadings[formKey] = false;
-    changeButtonLoadings(buttonLoadings);
+    getbuttonLoadings[componentkey] = false;
+    setButtonLoadings(getbuttonLoadings);
     setRandom(Math.random);
 
     if (result.component === 'message') {
       if (result.status === 'success') {
-        if (props.callback) {
-          props.callback();
+        if (callback) {
+          callback();
         }
-
         message.success(result.msg);
       } else {
         message.error(result.msg);
@@ -115,50 +156,60 @@ const Form: React.FC<Form> = (props: any) => {
   return (
     <Spin spinning={spinning}>
       <ProForm
-        {...props}
-        form={window[formKey]}
+        form={getObject[componentkey]}
+        title={title}
+        colon={colon}
+        initialValues={initialValues}
+        labelAlign={labelAlign}
+        name={name}
+        preserve={preserve}
+        requiredMark={requiredMark}
+        scrollToFirstError={scrollToFirstError}
+        size={size}
+        dateFormatter={dateFormatter}
+        layout={layout}
+        labelCol={labelCol}
+        wrapperCol={wrapperCol}
+        style={style}
         onFinish={async (values: any) => {
           onFinish(values);
         }}
         submitter={{
           searchConfig: {
-            resetText: props.resetButtonText,
-            submitText: props.submitButtonText,
+            resetText: resetButtonText,
+            submitText: submitButtonText,
           },
           render: (proFormProps: any, doms: any) => {
-            if (props?.actions) {
+            if (actions) {
               return (
-                <AntForm.Item wrapperCol={props.buttonWrapperCol}>
+                <ProForm.Item wrapperCol={buttonWrapperCol}>
                   <Space>
-                    {props?.actions?.map((action: any) => {
+                    {actions?.map((action: any, index: number) => {
                       return (
                         <Action
+                          key={index}
                           {...action}
-                          submitForm={action.submitForm ?? formKey}
-                          data={props.data}
-                          callback={props.callback}
+                          submitForm={action.submitForm ?? componentkey}
+                          data={data}
+                          callback={callback}
                         />
                       );
                     })}
                   </Space>
-                </AntForm.Item>
+                </ProForm.Item>
               );
             }
           },
         }}
       >
         <Render
-          body={props.body}
-          data={{ ...props.data, formKey: formKey }}
-          callback={props.callback}
+          body={body}
+          data={{ ...data, componentkey: componentkey }}
+          callback={callback}
         />
-        {submitResult ? (
-          <Render
-            body={submitResult}
-            data={{ ...props.data }}
-            callback={props.callback}
-          />
-        ) : null}
+        {submitResult && (
+          <Render body={submitResult} data={{ ...data }} callback={callback} />
+        )}
       </ProForm>
     </Spin>
   );

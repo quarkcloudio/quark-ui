@@ -1,52 +1,59 @@
-import React, { useEffect, useState } from 'react';
-import { useModel } from 'umi';
-import { get } from '@/services/action';
-import ProForm, {
+import React, { useState } from 'react';
+import { useModel } from '@umijs/max';
+import {
+  ProForm,
   ProFormText,
+  ProFormTextArea,
+  ProFormDigit,
+  ProFormSelect,
+  ProFormCheckbox,
+  ProFormRadio,
+  ProFormSwitch,
+  ProFormTreeSelect,
   ProFormDatePicker,
   ProFormDateTimePicker,
+  ProFormTimePicker,
   ProFormDateRangePicker,
   ProFormDateTimeRangePicker,
   ProFormList,
-} from '@ant-design/pro-form';
-import { createFromIconfontCN, PlusOutlined } from '@ant-design/icons';
-import {
-  Tree,
-  Form,
-  Select,
-  TimePicker,
-  Input,
-  InputNumber,
-  Checkbox,
-  Radio,
-  Switch,
-  DatePicker,
-} from 'antd';
-import locale from 'antd/es/date-picker/locale/zh_CN';
-import ImageUploader from './ImageUploader';
-import FileUploader from './FileUploader';
-import Search from './Search';
-import Map from './Map';
-import Geofence from './Geofence';
-import Editor from './Editor';
-import Cascader from './Cascader';
+} from '@ant-design/pro-components';
+import { Select, Tree } from 'antd';
+import { createFromIconfontCN } from '@ant-design/icons';
 import Render from '@/components/Render';
-import Selects from './Selects';
-
-const { RangePicker } = DatePicker;
+import ImageUploader from './Field/ImageUploader';
+import FileUploader from './Field/FileUploader';
+import Search from './Field/Search';
+import Map from './Field/Map';
+import Geofence from './Field/Geofence';
+import Editor from './Field/Editor';
+import Cascader from './Field/Cascader';
+import Selects from './Field/Selects';
 
 const Field: React.FC<any> = (props: any) => {
   const IconFont = createFromIconfontCN({
     scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js',
   });
-
-  //hack
-  const [random, setRandom] = useState(0);
+  const [random, setRandom] = useState(0); //hack
+  let { object } = useModel('object');
+  let getObject: any = object;
+  const baseProps = {
+    name: props.name,
+    label: props.label,
+    tooltip: props.tooltip,
+    rules: props.frontendRules,
+    extra: props.extra,
+    help: props.help && props.help,
+    placeholder: props.placeholder,
+    disabled: props.disabled,
+    addonAfter: props.addonAfter,
+    addonBefore: props.addonBefore,
+    wrapperCol: props.wrapperCol,
+  };
 
   const onChange = (value: any, name: string) => {
     let item: any = [];
     item[name] = value;
-    window[props.data?.formKey]?.setFieldsValue(item);
+    getObject[props.data?.formKey]?.setFieldsValue(item);
     setRandom(Math.random);
   };
 
@@ -57,110 +64,71 @@ const Field: React.FC<any> = (props: any) => {
     switch (props.component) {
       case 'textField':
         component = (
-          <ProForm.Item
-            name={props.name}
-            label={props.label}
-            tooltip={props.tooltip}
-            rules={props.frontendRules}
-            extra={props.extra}
-            help={props.help ? props.help : undefined}
-          >
-            <Input
-              placeholder={props.placeholder}
-              style={props.style ? props.style : []}
-              width={props.width}
-              disabled={props.disabled}
-              allowClear={props.allowClear}
-              maxLength={props.maxLength}
-              addonAfter={props.addonAfter}
-              addonBefore={props.addonBefore}
-              size={props.size}
-              onChange={(e) => {
-                onChange(e.target.value, props.name);
-              }}
-            />
-          </ProForm.Item>
+          <ProFormText
+            {...baseProps}
+            fieldProps={{
+              style: props.style && props.style,
+              width: props.width,
+              size: props.size,
+              maxLength: props.maxLength,
+            }}
+          />
         );
         break;
       case 'passwordField':
         component = (
-          <ProForm.Item
-            name={props.name}
-            label={props.label}
-            tooltip={props.tooltip}
-            rules={props.frontendRules}
-            extra={props.extra}
-            help={props.help ? props.help : undefined}
-          >
-            <Input.Password
-              placeholder={props.placeholder}
-              style={props.style ? props.style : []}
-              width={props.width}
-              disabled={props.disabled}
-              allowClear={props.allowClear}
-              maxLength={props.maxLength}
-              addonAfter={props.addonAfter}
-              addonBefore={props.addonBefore}
-              size={props.size}
-              onChange={(e) => {
+          <ProFormText.Password
+            {...baseProps}
+            fieldProps={{
+              style: props.style && props.style,
+              width: props.width,
+              size: props.size,
+              maxLength: props.maxLength,
+              onChange: (e) => {
                 onChange(e.target.value, props.name);
-              }}
-            />
-          </ProForm.Item>
+              },
+            }}
+          />
         );
         break;
       case 'textAreaField':
         component = (
-          <ProForm.Item
-            name={props.name}
-            label={props.label}
-            tooltip={props.tooltip}
-            rules={props.frontendRules}
-            extra={props.extra}
-            help={props.help ? props.help : undefined}
-          >
-            <Input.TextArea
-              placeholder={props.placeholder}
-              style={props.style ? props.style : []}
-              disabled={props.disabled}
-              allowClear={props.allowClear}
-              maxLength={props.maxLength}
-              autoSize={props.autoSize}
-              onKeyPress={(e) => {
+          <ProFormTextArea
+            {...baseProps}
+            fieldProps={{
+              style: props.style && props.style,
+              width: props.width,
+              size: props.size,
+              maxLength: props.maxLength,
+              autoSize: props.autoSize,
+              onKeyPress: (e) => {
                 e.stopPropagation();
-              }}
-              onChange={(e) => {
+              },
+              onChange: (e) => {
                 onChange(e.target.value, props.name);
-              }}
-            />
-          </ProForm.Item>
+              },
+            }}
+          />
         );
         break;
       case 'inputNumberField':
         component = (
-          <ProForm.Item
-            name={props.name}
-            label={props.label}
-            tooltip={props.tooltip}
-            rules={props.frontendRules}
-            extra={props.extra}
-            help={props.help ? props.help : undefined}
-          >
-            <InputNumber
-              placeholder={props.placeholder}
-              style={props.style ? props.style : []}
-              width={props.width}
-              disabled={props.disabled}
-              maxLength={props.maxLength}
-              min={props.min}
-              max={props.max}
-              step={props.step}
-              precision={props.precision}
-              onChange={(value) => {
+          <ProFormDigit
+            {...baseProps}
+            min={props.min}
+            max={props.max}
+            fieldProps={{
+              style: props.style && props.style,
+              width: props.width,
+              size: props.size,
+              maxLength: props.maxLength,
+              step: props.step,
+              precision: props.precision,
+              onChange: (value) => {
                 onChange(value, props.name);
-              }}
-            />
-          </ProForm.Item>
+              },
+            }}
+          />
         );
         break;
       case 'iconField':
@@ -171,11 +139,11 @@ const Field: React.FC<any> = (props: any) => {
             name={props.name}
             tooltip={props.tooltip}
             rules={props.frontendRules}
-            help={props.help ? props.help : undefined}
+            help={props.help && props.help}
             extra={props.extra}
           >
             <Select
-              style={props.style ? props.style : []}
+              style={props.style && props.style}
               disabled={props.disabled}
               placeholder={props.placeholder}
             >
@@ -195,82 +163,60 @@ const Field: React.FC<any> = (props: any) => {
         break;
       case 'hiddenField':
         component = (
-          <span key={props.name} style={{ display: 'none' }}>
+          <div style={{ display: 'none' }}>
             <ProFormText name={props.name} />
-          </span>
+          </div>
         );
         break;
       case 'idField':
         if (props.onFormDisplayed) {
           component = (
-            <ProForm.Item label={props.label}>
+            <div style={{ display: 'none' }}>
               <span style={props.style ? props.style : []}>{props.value}</span>
-              <span key={props.name} style={{ display: 'none' }}>
-                <ProFormText name={props.name} />
-              </span>
-            </ProForm.Item>
+              <ProFormText label={props.label} name={props.name} />
+            </div>
           );
         } else {
           component = (
-            <span key={props.name} style={{ display: 'none' }}>
+            <div style={{ display: 'none' }}>
               <ProFormText name={props.name} />
-            </span>
+            </div>
           );
         }
         break;
       case 'checkboxField':
         component = (
-          <ProForm.Item
-            name={props.name}
-            label={props.label}
-            tooltip={props.tooltip}
-            rules={props.frontendRules}
-            extra={props.extra}
-            help={props.help ? props.help : undefined}
-          >
-            <Checkbox.Group
-              style={props.style ? props.style : []}
-              options={props.options}
-              disabled={props.disabled}
-              onChange={(value) => {
+          <ProFormCheckbox.Group
+            {...baseProps}
+            options={props.options}
+            fieldProps={{
+              style: props.style && props.style,
+              width: props.width,
+              onChange: (value) => {
                 onChange(value, props.name);
-              }}
-            />
-          </ProForm.Item>
+              },
+            }}
+          />
         );
         break;
       case 'radioField':
         component = (
-          <ProForm.Item
-            name={props.name}
-            label={props.label}
-            tooltip={props.tooltip}
-            rules={props.frontendRules}
-            extra={props.extra}
-            help={props.help ? props.help : undefined}
-          >
-            <Radio.Group
-              style={props.style ? props.style : []}
-              options={props.options}
-              disabled={props.disabled}
-              onChange={(e) => {
+          <ProFormRadio.Group
+            {...baseProps}
+            options={props.options}
+            fieldProps={{
+              style: props.style && props.style,
+              width: props.width,
+              onChange: (e) => {
                 onChange(e.target.value, props.name);
-              }}
-            />
-          </ProForm.Item>
+              },
+            }}
+          />
         );
         break;
       case 'imageField':
         component = (
-          <ProForm.Item
-            label={props.label}
-            name={props.name}
-            style={props.style}
-            tooltip={props.tooltip}
-            rules={props.frontendRules}
-            help={props.help ? props.help : undefined}
-            extra={props.extra}
-          >
+          <ProForm.Item {...baseProps}>
             <ImageUploader
               key={props.name}
               mode={props.mode}
@@ -286,15 +232,7 @@ const Field: React.FC<any> = (props: any) => {
         break;
       case 'fileField':
         component = (
-          <ProForm.Item
-            label={props.label}
-            name={props.name}
-            style={props.style}
-            tooltip={props.tooltip}
-            rules={props.frontendRules}
-            help={props.help ? props.help : undefined}
-            extra={props.extra}
-          >
+          <ProForm.Item {...baseProps}>
             <FileUploader
               key={props.name}
               title={props.button}
@@ -308,66 +246,69 @@ const Field: React.FC<any> = (props: any) => {
         break;
       case 'switchField':
         component = (
-          <ProForm.Item
-            name={props.name}
-            label={props.label}
-            tooltip={props.tooltip}
-            rules={props.frontendRules}
-            extra={props.extra}
-            help={props.help ? props.help : undefined}
-            valuePropName={'checked'}
-          >
-            <Switch
-              style={props.style ? props.style : []}
-              disabled={props.disabled}
-              checkedChildren={props.options.on}
-              unCheckedChildren={props.options.off}
-              onChange={(value) => {
+          <ProFormSwitch
+            {...baseProps}
+            checkedChildren={props.options.on}
+            unCheckedChildren={props.options.off}
+            fieldProps={{
+              style: props.style && props.style,
+              width: props.width,
+              onChange: (value) => {
                 onChange(value, props.name);
-              }}
-            />
-          </ProForm.Item>
+              },
+            }}
+          />
         );
         break;
       case 'selectField':
         component = (
-          <ProForm.Item
-            name={props.name}
-            label={props.label}
-            tooltip={props.tooltip}
-            rules={props.frontendRules}
-            extra={props.extra}
-            help={props.help ? props.help : undefined}
-          >
-            <Select
-              placeholder={props.placeholder}
-              style={props.style ? props.style : []}
-              options={props.options}
-              disabled={props.disabled}
-              mode={props.mode}
-              allowClear={props.allowClear}
-              size={props.size}
-              onChange={(value) => {
+          <ProFormSelect
+            {...baseProps}
+            mode={props.mode}
+            options={props.options}
+            fieldProps={{
+              style: props.style && props.style,
+              width: props.width,
+              size: props.size,
+              maxLength: props.maxLength,
+              onChange: (value) => {
                 onChange(value, props.name);
-              }}
-            />
-          </ProForm.Item>
+              },
+            }}
+          />
+        );
+        break;
+      case 'treeSelectField':
+        component = (
+          <ProFormTreeSelect
+            {...baseProps}
+            style={props.style && props.style} 
+            width={props.width}
+            valuePropName={'checkedKeys'}
+            trigger={'onCheck'}
+            fieldProps={{
+              style: props.style && props.style,
+              width: props.width,
+              size: props.size,
+              maxLength: props.maxLength,
+              treeData: props.treeData,
+              onChange: (value) => {
+                onChange(value, props.name);
+              },
+            }}
+          />
         );
         break;
       case 'treeField':
         component = (
           <ProForm.Item
-            label={props.label}
-            name={props.name}
+            {...baseProps}
             valuePropName={'checkedKeys'}
             trigger={'onCheck'}
-            rules={props.frontendRules}
-            help={props.help ? props.help : undefined}
-            extra={props.extra}
           >
             <Tree
               checkable
-              style={props.style ? props.style : []}
+              style= {props.style && props.style}
               treeData={props.treeData}
             />
           </ProForm.Item>
@@ -395,17 +336,17 @@ const Field: React.FC<any> = (props: any) => {
       case 'dateField':
         component = (
           <ProFormDatePicker
-            label={props.label}
-            name={props.name}
-            rules={props.frontendRules}
-            help={props.help ? props.help : undefined}
-            extra={props.extra}
-            placeholder={props.placeholder}
+            {...baseProps}
             fieldProps={{
+              style: props.style && props.style,
+              width: props.width,
               allowClear: props.allowClear,
               size: props.size,
               picker: props.picker,
               format: props.format,
+              onChange: (value) => {
+                onChange(value, props.name);
+              },
             }}
           />
         );
@@ -413,15 +354,15 @@ const Field: React.FC<any> = (props: any) => {
       case 'weekField':
         component = (
           <ProFormDatePicker.Week
-            label={props.label}
-            name={props.name}
-            rules={props.frontendRules}
-            help={props.help ? props.help : undefined}
-            extra={props.extra}
-            placeholder={props.placeholder}
+            {...baseProps}
             fieldProps={{
+              style: props.style && props.style,
+              width: props.width,
               allowClear: props.allowClear,
               size: props.size,
+              onChange: (value) => {
+                onChange(value, props.name);
+              },
             }}
           />
         );
@@ -429,15 +370,15 @@ const Field: React.FC<any> = (props: any) => {
       case 'monthField':
         component = (
           <ProFormDatePicker.Month
-            label={props.label}
-            name={props.name}
-            rules={props.frontendRules}
-            help={props.help ? props.help : undefined}
-            extra={props.extra}
-            placeholder={props.placeholder}
+            {...baseProps}
             fieldProps={{
+              style: props.style && props.style,
+              width: props.width,
               allowClear: props.allowClear,
               size: props.size,
+              onChange: (value) => {
+                onChange(value, props.name);
+              },
             }}
           />
         );
@@ -445,15 +386,15 @@ const Field: React.FC<any> = (props: any) => {
       case 'quarterField':
         component = (
           <ProFormDatePicker.Quarter
-            label={props.label}
-            name={props.name}
-            rules={props.frontendRules}
-            help={props.help ? props.help : undefined}
-            extra={props.extra}
-            placeholder={props.placeholder}
+            {...baseProps}
             fieldProps={{
+              style: props.style && props.style,
+              width: props.width,
               allowClear: props.allowClear,
               size: props.size,
+              onChange: (value) => {
+                onChange(value, props.name);
+              },
             }}
           />
         );
@@ -461,15 +402,15 @@ const Field: React.FC<any> = (props: any) => {
       case 'yearField':
         component = (
           <ProFormDatePicker.Year
-            label={props.label}
-            name={props.name}
-            rules={props.frontendRules}
-            help={props.help ? props.help : undefined}
-            extra={props.extra}
-            placeholder={props.placeholder}
+            {...baseProps}
             fieldProps={{
+              style: props.style && props.style,
+              width: props.width,
               allowClear: props.allowClear,
               size: props.size,
+              onChange: (value) => {
+                onChange(value, props.name);
+              },
             }}
           />
         );
@@ -477,15 +418,15 @@ const Field: React.FC<any> = (props: any) => {
       case 'datetimeField':
         component = (
           <ProFormDateTimePicker
-            label={props.label}
-            name={props.name}
-            rules={props.frontendRules}
-            help={props.help ? props.help : undefined}
-            extra={props.extra}
-            placeholder={props.placeholder}
+            {...baseProps}
             fieldProps={{
+              style: props.style && props.style,
+              width: props.width,
               allowClear: props.allowClear,
               size: props.size,
+              onChange: (value) => {
+                onChange(value, props.name);
+              },
             }}
           />
         );
@@ -493,17 +434,17 @@ const Field: React.FC<any> = (props: any) => {
       case 'dateRangeField':
         component = (
           <ProFormDateRangePicker
-            label={props.label}
-            name={props.name}
-            rules={props.frontendRules}
-            help={props.help ? props.help : undefined}
-            extra={props.extra}
-            placeholder={props.placeholder}
+            {...baseProps}
             fieldProps={{
+              style: props.style && props.style,
+              width: props.width,
               allowClear: props.allowClear,
               size: props.size,
               picker: props.picker,
               format: props.format,
+              onChange: (value) => {
+                onChange(value, props.name);
+              },
             }}
           />
         );
@@ -511,51 +452,51 @@ const Field: React.FC<any> = (props: any) => {
       case 'datetimeRangeField':
         component = (
           <ProFormDateTimeRangePicker
-            label={props.label}
-            name={props.name}
-            rules={props.frontendRules}
-            help={props.help ? props.help : undefined}
-            extra={props.extra}
-            placeholder={props.placeholder}
+            {...baseProps}
             fieldProps={{
+              style: props.style && props.style,
+              width: props.width,
               allowClear: props.allowClear,
               size: props.size,
+              onChange: (value) => {
+                onChange(value, props.name);
+              },
             }}
           />
         );
         break;
       case 'timeField':
         component = (
-          <ProForm.Item
-            label={props.label}
-            name={props.name}
-            rules={props.frontendRules}
-            help={props.help ? props.help : undefined}
-            extra={props.extra}
-          >
-            <TimePicker
-              size={props.size}
-              locale={locale}
-              format={props.format}
-            />
-          </ProForm.Item>
+          <ProFormTimePicker
+            {...baseProps}
+            fieldProps={{
+              style: props.style && props.style,
+              width: props.width,
+              allowClear: props.allowClear,
+              size: props.size,
+              format: props.format,
+              onChange: (value) => {
+                onChange(value, props.name);
+              },
+            }}
+          />
         );
         break;
       case 'timeRangeField':
         component = (
-          <ProForm.Item
-            label={props.label}
-            name={props.name}
-            rules={props.frontendRules}
-            help={props.help ? props.help : undefined}
-            extra={props.extra}
-          >
-            <TimePicker.RangePicker
-              size={props.size}
-              locale={locale}
-              format={props.format}
-            />
-          </ProForm.Item>
+          <ProFormTimePicker.RangePicker
+            {...baseProps}
+            fieldProps={{
+              style: props.style && props.style,
+              width: props.width,
+              allowClear: props.allowClear,
+              size: props.size,
+              format: props.format,
+              onChange: (value) => {
+                onChange(value, props.name);
+              },
+            }}
+          />
         );
         break;
       case 'displayField':
@@ -670,7 +611,7 @@ const Field: React.FC<any> = (props: any) => {
         if (props.body.hasOwnProperty('component')) {
           component = (
             <ProForm.Group
-              label={props.label}
+              title={props.label}
               style={props.style}
               size={props.size}
             >
@@ -680,7 +621,7 @@ const Field: React.FC<any> = (props: any) => {
         } else {
           component = (
             <ProForm.Group
-              label={props.label}
+              title={props.label}
               style={props.style}
               size={props.size}
             >
@@ -701,16 +642,7 @@ const Field: React.FC<any> = (props: any) => {
         );
         break;
       default:
-        component = (
-          <ProForm.Item
-            label={props.label}
-            name={props.name}
-            help={props.help ? props.help : undefined}
-            extra={props.extra}
-          >
-            <span key={props.name}>无{props.component}组件</span>
-          </ProForm.Item>
-        );
+        component = <span key={props.name}>无{props.component}组件</span>;
         break;
     }
 
@@ -718,7 +650,7 @@ const Field: React.FC<any> = (props: any) => {
     if (props.when) {
       let fieldData: any = {};
       fieldData['formKey'] = props.data.formKey;
-      fieldData[props.name] = window[props.data.formKey]?.getFieldValue(
+      fieldData[props.name] = getObject[props.data?.formKey]?.getFieldValue(
         props.name,
       );
       return (

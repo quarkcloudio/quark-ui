@@ -1,14 +1,14 @@
-import { request } from 'umi';
-import { stringify } from 'qs';
+import { request } from '@umijs/max';
+import qs from 'query-string';
 
 export async function get(params: any) {
   let url = params.url;
   let data = params.data;
 
-  if (url.indexOf('?') != -1) {
-    url = `${url}&${stringify(data)}`;
+  if (url.indexOf('?') !== -1) {
+    url = `${url}&${qs.stringify(data)}`;
   } else {
-    url = `${url}?${stringify(data)}`;
+    url = `${url}?${qs.stringify(data)}`;
   }
 
   return request(url);

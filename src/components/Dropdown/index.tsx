@@ -1,91 +1,94 @@
 import React from 'react';
-import Render from '@/components/Render';
-import Action from '@/components/Action/Action';
-import { Menu as BaseMenu, Dropdown as BaseDropdown,Button } from 'antd';
-import { tplEngine } from '@/utils/template';
-
-import {
-  DownOutlined,
-  createFromIconfontCN,
-} from '@ant-design/icons';
+import type { MenuProps } from 'antd';
+import { Dropdown as BaseDropdown, Button } from 'antd';
+import Action from '@/components/Action';
+import tplEngine from '@/utils/template';
+import { DownOutlined, createFromIconfontCN } from '@ant-design/icons';
 
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js',
 });
-const { SubMenu, ItemGroup, Item, Divider } = BaseMenu;
 
-const Dropdown: React.FC<any> = (props:any) => {
+type MenuItem = Required<MenuProps>['items'][number];
 
+function getItem(
+  label: React.ReactNode,
+  key: React.Key,
+  icon?: React.ReactNode,
+  children?: MenuItem[],
+  type?: 'group',
+): MenuItem {
+  return {
+    key,
+    icon,
+    children,
+    label,
+    type,
+  } as MenuItem;
+}
+
+const Dropdown: React.FC<any> = (props: any) => {
   // 渲染组件
-  const menuItemRender = (item:any) => {
-
+  const menuItemRender = (item: any, index: number) => {
     let component = null;
-
     if (item.component === 'menuSubMenu') {
-      component = (
-        <SubMenu key={item.key} icon={props.icon ? <IconFont type={props.icon} /> : false} title={item.title}>
-          {componentRender(item.items)}
-        </SubMenu>
+      component = getItem(
+        item.title,
+        index,
+        props.icon && <IconFont type={props.icon} />,
+        [...componentRender(item.items)],
       );
     }
-
     if (item.component === 'menuItemGroup') {
-      component = (
-        <ItemGroup key={item.key} title={item.title}>
-          {componentRender(item.items)}
-        </ItemGroup>
+      component = getItem(
+        item.title,
+        index,
+        null,
+        [...componentRender(item.items)],
+        'group',
       );
     }
-
     if (item.component === 'menuItem') {
-      component = (
-        <Item key={item.key} icon={props.icon ? <IconFont type={props.icon} /> : false}>
-          <Action
-            {...item}
-            data={{ ...props.data }}
-            callback={props.callback}
-          />
-        </Item>
+      component = getItem(
+        <Action {...item} data={{ ...props.data }} callback={props.callback} />,
+        index,
+        props.icon && <IconFont type={props.icon} />,
       );
     }
-
     if (item.component === 'menuDivider') {
-      component = <Divider {...item} />;
+      component = { type: 'divider' };
     }
 
     return component;
   };
 
   // 渲染组件
-  const componentRender = (items:any) => {
-
-    let component = items.map((item: any) => {
-      return menuItemRender(item);
-    })
+  const componentRender = (items: any) => {
+    let component = items.map((item: any, index: number) => {
+      return menuItemRender(item, index);
+    });
 
     return component;
   };
-
-  const overlay = (
-    <BaseMenu
-      defaultOpenKeys={props.overlay.defaultOpenKeys}
-      defaultSelectedKeys={props.overlay.defaultSelectedKeys}
-      inlineIndent={props.overlay.inlineIndent}
-      mode={props.overlay.mode}
-      multiple={props.overlay.multiple}
-      selectable={props.overlay.selectable}
-      style={props.overlay.style ? props.overlay.style : undefined}
-      subMenuCloseDelay={props.overlay.subMenuCloseDelay}
-      subMenuOpenDelay={props.overlay.subMenuOpenDelay}
-      theme={props.overlay.theme}
-      triggerSubMenuAction={props.overlay.triggerSubMenuAction}
-    >
-      {props.overlay.items ? componentRender(props.overlay.items) : null}
-    </BaseMenu>
-  );
 
   return (
-    <BaseDropdown {...props} overlay={overlay}>
+    <BaseDropdown
+      {...props}
+      menu={{
+        defaultOpenKeys: props.menu.defaultOpenKeys,
+        defaultSelectedKeys: props.menu.defaultSelectedKeys,
+        inlineIndent: props.menu.inlineIndent,
+        mode: props.menu.mode,
+        multiple: props.menu.multiple,
+        selectable: props.menu.selectable,
+        style: props.menu.style,
+        subMenuCloseDelay: props.menu.subMenuCloseDelay,
+        subMenuOpenDelay: props.menu.subMenuOpenDelay,
+        theme: props.menu.theme,
+        triggerSubMenuAction: props.menu.triggerSubMenuAction,
+        items: props.menu.items ? componentRender(props.menu.items) : null,
+      }}
+    >
       <Button
         style={props.style}
         block={props.block}
@@ -102,6 +105,6 @@ const Dropdown: React.FC<any> = (props:any) => {
       </Button>
     </BaseDropdown>
   );
-}
+};
 
 export default Dropdown;

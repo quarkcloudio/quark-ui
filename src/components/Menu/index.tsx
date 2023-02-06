@@ -1,30 +1,27 @@
 import React from 'react';
-import Action from '@/components/Action/Action';
+import Action from '@/components/Action';
 import { Menu as BaseMenu } from 'antd';
-import {
-  createFromIconfontCN,
-} from '@ant-design/icons';
-
+import { createFromIconfontCN } from '@ant-design/icons';
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js',
 });
 const { SubMenu, ItemGroup, Item, Divider } = BaseMenu;
 
-const Menu: React.FC<any> = (props:any) => {
-
+const Menu: React.FC<any> = (props: any) => {
   // 渲染组件
-  const menuItemRender = (item:any) => {
-
+  const menuItemRender = (item: any) => {
     let component = null;
-
     if (item.component === 'menuSubMenu') {
       component = (
-        <SubMenu key={item.key} icon={props.icon ? <IconFont type={props.icon} /> : false} title={item.title}>
+        <SubMenu
+          key={item.key}
+          icon={props.icon ? <IconFont type={props.icon} /> : false}
+          title={item.title}
+        >
           {componentRender(item.items)}
         </SubMenu>
       );
     }
-
     if (item.component === 'menuItemGroup') {
       component = (
         <ItemGroup key={item.key} title={item.title}>
@@ -32,10 +29,12 @@ const Menu: React.FC<any> = (props:any) => {
         </ItemGroup>
       );
     }
-
     if (item.component === 'menuItem') {
       component = (
-        <Item key={item.key} icon={props.icon ? <IconFont type={props.icon} /> : false}>
+        <Item
+          key={item.key}
+          icon={props.icon ? <IconFont type={props.icon} /> : false}
+        >
           <Action
             {...item}
             data={{ ...props.data }}
@@ -44,7 +43,6 @@ const Menu: React.FC<any> = (props:any) => {
         </Item>
       );
     }
-
     if (item.component === 'menuDivider') {
       component = <Divider {...item} />;
     }
@@ -53,11 +51,10 @@ const Menu: React.FC<any> = (props:any) => {
   };
 
   // 渲染组件
-  const componentRender = (items:any) => {
-
+  const componentRender = (items: any) => {
     let component = items.map((item: any) => {
       return menuItemRender(item);
-    })
+    });
 
     return component;
   };
@@ -79,6 +76,6 @@ const Menu: React.FC<any> = (props:any) => {
       {props.items ? componentRender(props.items) : null}
     </BaseMenu>
   );
-}
+};
 
 export default Menu;
