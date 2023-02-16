@@ -112,7 +112,6 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
 
   // 解析column
   const parseColumns = (columns: any) => {
-    console.log("B")
     columns.forEach((item: any, key: any) => {
       item.render = (text: any, row: any) => columnRender(item, row, text);
       columns[key] = item;
