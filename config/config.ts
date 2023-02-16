@@ -12,7 +12,7 @@ export default defineConfig({
     { src: './scripts/loading.js', async: true }, // 解决首次加载时白屏的问题
     { src: './tinymce/tinymce.min.js', async: true },
   ],
-  publicPath: './',
+  publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
   history: { type: 'hash' },
   title: 'Engine Loading',
   layout: {

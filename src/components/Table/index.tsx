@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { ProTable, ProTableProps } from '@ant-design/pro-components';
 import { useModel, useLocation } from '@umijs/max';
 import { Button, Space, Card, message } from 'antd';
@@ -39,14 +39,14 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
   const location = useLocation();
   const query = qs.parse(location.search);
   const { object, setObject } = useModel('object');
+  const [ columns, setColumns ] = useState(props.columns);
+  const [ toolBar, setToolBar ] = useState(props.toolBar);
   const getObject: any = object;
   const {
     componentkey,
     api,
     apiType,
     batchActions,
-    columns,
-    toolBar,
     search,
     striped,
     data,
@@ -66,7 +66,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
 
   useEffect(() => {
     actionRef.current.reload();
-  }, [columns, search, toolBar, tableExtraRender]);
+  }, [search, tableExtraRender]);
 
   // 注册全局变量
   if (componentkey) {
@@ -112,6 +112,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
 
   // 解析column
   const parseColumns = (columns: any) => {
+    console.log("B")
     columns.forEach((item: any, key: any) => {
       item.render = (text: any, row: any) => columnRender(item, row, text);
       columns[key] = item;
@@ -291,6 +292,12 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
           sorter,
           filter,
         );
+
+        // 更新表头
+        setColumns(table.columns)
+
+        // 更新toolbar
+        setToolBar(table.toolBar)
 
         // 返回数据
         return Promise.resolve({
