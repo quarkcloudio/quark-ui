@@ -335,12 +335,12 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
         })
       }
       pagination={
-        pagination && {
+        pagination ? {
           defaultCurrent: pagination?.defaultCurrent
             ? pagination.defaultCurrent
             : 1,
           defaultPageSize: pagination?.pageSize ? pagination.pageSize : 10,
-        }
+        } : false
       }
       rowClassName={(record, index) => {
         if (striped && index % 2 !== 0) {
