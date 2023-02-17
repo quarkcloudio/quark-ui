@@ -449,9 +449,9 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
               </Col>
             </Row>
             <Divider />
-            <Form form={checkPictureForm}>
-              <Form.Item name="checkPictures">
-                <Checkbox.Group style={{ width: '100%' }}>
+            <Form form={checkPictureForm} style={{ width: '100%' }}>
+              <Form.Item name="checkPictures" style={{ width: '100%' }}>
+                <Checkbox.Group style={{ width: '100%',display:'block' }}>
                   <Row gutter={[16, 16]}>
                     {!!picture &&
                       picture.lists.map((item: any, index: number) => {
