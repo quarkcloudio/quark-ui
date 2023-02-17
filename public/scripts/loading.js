@@ -7,7 +7,7 @@
   const _root = document.querySelector('#root');
   const _loading = document.createElement("div")
   if (_root && _root.innerHTML === '') {
-    window.onload=function(){
+    window.onload = function(){
       _loading.style.display = "none"
     }
     _loading.innerHTML = `
