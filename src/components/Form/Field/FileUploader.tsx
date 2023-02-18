@@ -51,7 +51,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({
 
       fileList[key] = fileInfo;
     });
-    triggerChange({ ...fileList });
+    triggerChange(fileList);
   };
 
   const uploadButton = (title: string) => {
