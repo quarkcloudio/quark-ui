@@ -424,6 +424,7 @@ const Field: React.FC<any> = (props: any) => {
               width: props.width,
               allowClear: props.allowClear,
               size: props.size,
+              format: props.format,
               onChange: (value) => {
                 onChange(value, props.name);
               },
@@ -458,6 +459,7 @@ const Field: React.FC<any> = (props: any) => {
               width: props.width,
               allowClear: props.allowClear,
               size: props.size,
+              format: props.format,
               onChange: (value) => {
                 onChange(value, props.name);
               },
