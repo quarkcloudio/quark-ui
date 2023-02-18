@@ -33,7 +33,7 @@ const Field: React.FC<any> = (props: any) => {
   const IconFont = createFromIconfontCN({
     scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js',
   });
-  const [random, setRandom] = useState(0); //hack
+  const [random, setRandom] = useState(0); // hack
   let { object } = useModel('object');
   let getObject: any = object;
   const baseProps = {
@@ -53,7 +53,7 @@ const Field: React.FC<any> = (props: any) => {
   const onChange = (value: any, name: string) => {
     let item: any = [];
     item[name] = value;
-    getObject[props.data?.formKey]?.setFieldsValue(item);
+    getObject[props.data?.componentkey]?.setFieldsValue(item);
     setRandom(Math.random);
   };
 
@@ -649,10 +649,11 @@ const Field: React.FC<any> = (props: any) => {
     // 解析when
     if (props.when) {
       let fieldData: any = {};
-      fieldData['formKey'] = props.data.formKey;
-      fieldData[props.name] = getObject[props.data?.formKey]?.getFieldValue(
+      fieldData['componentkey'] = props.data.componentkey;
+      fieldData[props.name] = getObject[props.data?.componentkey]?.getFieldValue(
         props.name,
       );
+      
       return (
         <>
           {component}

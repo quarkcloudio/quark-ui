@@ -4,10 +4,11 @@ import tplEngine from '@/utils/template';
 
 const When: React.FC<any> = (props: any) => {
   const componentRender = () => {
-    return props.items.forEach((item: any) => {
+    return props.items.map((item: any,index: number) => {
       if (tplEngine(item.condition, props.data) === 'true') {
         return (
           <Render
+            key={index}
             body={item.body}
             data={props.data}
             callback={props.callback}

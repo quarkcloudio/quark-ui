@@ -12,7 +12,7 @@ import reload from '@/utils/reload';
 
 export interface FormExtendProps {
   component?: string;
-  componentkey: string;
+  componentkey?: string;
   api?: string;
   apiType?: string;
   initApi?: string;
@@ -69,10 +69,9 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
     callback,
   } = { ...defaultProps, ...props };
 
-  if (componentkey) {
-    getObject[componentkey] = form;
-    setObject(getObject);
-  }
+  const formKey = componentkey ? componentkey : 'form'
+  getObject[formKey] = form;
+  setObject(getObject);
 
   useEffect(() => {
     if (initApi) {
@@ -89,7 +88,7 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
       });
 
       const getObject: any = object;
-      getObject[componentkey].setFieldsValue(result.data);
+      getObject[formKey].setFieldsValue(result.data);
       setLoading(false);
     }
   };
@@ -97,7 +96,7 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
   const onFinish = async (values: any) => {
     let result = null;
     let getbuttonLoadings: any = buttonLoadings;
-    getbuttonLoadings[componentkey] = true;
+    getbuttonLoadings[formKey] = true;
     setButtonLoadings(getbuttonLoadings);
     setRandom(Math.random);
 
@@ -110,7 +109,7 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
         }
 
         window.open(`${url}?${qs.stringify(values)}`);
-        getbuttonLoadings[componentkey] = false;
+        getbuttonLoadings[formKey] = false;
         setButtonLoadings(getbuttonLoadings);
         setRandom(Math.random);
         return false;
@@ -127,7 +126,7 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
       });
     }
 
-    getbuttonLoadings[componentkey] = false;
+    getbuttonLoadings[formKey] = false;
     setButtonLoadings(getbuttonLoadings);
     setRandom(Math.random);
 
@@ -156,7 +155,7 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
   return (
     <Spin spinning={spinning}>
       <ProForm
-        form={getObject[componentkey]}
+        form={getObject[formKey]}
         title={title}
         colon={colon}
         initialValues={initialValues}
@@ -189,7 +188,7 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
                         <Action
                           key={index}
                           {...action}
-                          submitForm={action.submitForm ?? componentkey}
+                          submitForm={action.submitForm ?? formKey}
                           data={data}
                           callback={callback}
                         />
@@ -204,7 +203,7 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
       >
         <Render
           body={body}
-          data={{ ...data, componentkey: componentkey }}
+          data={{ ...data, componentkey: formKey }}
           callback={callback}
         />
         {submitResult && (

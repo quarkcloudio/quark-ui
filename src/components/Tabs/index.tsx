@@ -5,7 +5,7 @@ import Render from '@/components/Render';
 
 export interface TabsExtendProps {
   component?: string;
-  componentkey: string;
+  componentkey?: string;
   tabPanes?: any;
   data?: any;
   callback?: any;
