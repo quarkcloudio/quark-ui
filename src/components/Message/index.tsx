@@ -11,6 +11,9 @@ const Message: any = (props:any, successCallback:any = null) => {
     messageApi.open({
       type: props.type,
       content: props.content,
+      duration: props.duration,
+      icon: props.icon,
+      style: props.style
     });
   }
 
