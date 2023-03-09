@@ -55,8 +55,10 @@ const Selects: React.FC<any> = (props: any) => {
       const promises = items.map(async (item: any, key: any) => {
         if (load.field === item.name && load.api) {
           const result = await get({
-            actionUrl: load.api,
-            search: value,
+            url: load.api,
+            data: {
+              search: value,
+            }
           });
 
           item.options = result.data;

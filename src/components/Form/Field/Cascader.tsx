@@ -119,9 +119,11 @@ const Cascader: React.FC<Search> = ({
     setTimeout(async () => {
       targetOption.loading = false;
       const result = await get({
-        actionUrl: api,
-        search: targetOption.value,
-        level: selectedOptions.length,
+        url: api,
+        data: {
+          search: targetOption.value,
+          level: selectedOptions.length,
+        }
       });
 
       targetOption.children = result.data;
@@ -134,7 +136,7 @@ const Cascader: React.FC<Search> = ({
 
   if (api) {
     return (
-      <Spin spinning={spinning} size="small">
+      <Spin style={style} spinning={spinning} size="small">
         <AntCascader
           size={size}
           loadData={loadData}
