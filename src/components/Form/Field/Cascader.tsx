@@ -67,7 +67,7 @@ const Cascader: React.FC<Search> = ({
                 }
               } else {
                 let children = await loadOptions(level + 1);
-                if (children.length > 0) {
+                if (children?.length > 0) {
                   return (item.children = children);
                 }
               }
