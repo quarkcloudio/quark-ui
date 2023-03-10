@@ -284,9 +284,34 @@ const Field: React.FC<any> = (props: any) => {
             {...baseProps}
             style={props.style && props.style} 
             width={props.width}
-            valuePropName={'checkedKeys'}
-            trigger={'onCheck'}
             fieldProps={{
+              allowClear:props.allowClear,
+              autoClearSearchValue:props.autoClearSearchValue,
+              bordered:props.bordered,
+              defaultValue:props.defaultValue,
+              disabled:props.disabled,
+              popupClassName:props.popupClassName,
+              listHeight:props.listHeight,
+              maxTagCount:props?.maxTagCount,
+              maxTagPlaceholder:props?.maxTagPlaceholder,
+              maxTagTextLength:props?.maxTagTextLength,
+              multiple:props.multiple,
+              notFoundContent:props?.notFoundContent,
+              placeholder:props?.placeholder,
+              placement:props?.placement,
+              showArrow:props.showArrow,
+              showSearch:props.showSearch,
+              status:props.status,
+              suffixIcon:props?.suffixIcon,
+              treeCheckable:props.treeCheckable,
+              treeDataSimpleMode:props.treeDataSimpleMode,
+              treeDefaultExpandAll:props.treeDefaultExpandAll,
+              treeDefaultExpandedKeys:props?.treeDefaultExpandedKeys,
+              treeExpandAction:props?.treeExpandAction,
+              treeExpandedKeys:props?.treeExpandedKeys,
+              treeIcon:props?.treeIcon,
+              treeLine:props?.treeLine,
+              virtual:props?.virtual,
               style: props.style && props.style,
               width: props.width,
               size: props.size,
