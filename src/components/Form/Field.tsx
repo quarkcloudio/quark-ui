@@ -291,6 +291,7 @@ const Field: React.FC<any> = (props: any) => {
               defaultValue:props.defaultValue,
               disabled:props.disabled,
               popupClassName:props.popupClassName,
+              dropdownStyle:props.dropdownStyle,
               listHeight:props.listHeight,
               maxTagCount:props?.maxTagCount,
               maxTagPlaceholder:props?.maxTagPlaceholder,
