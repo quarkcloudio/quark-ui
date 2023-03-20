@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { ProTable, ProTableProps } from '@ant-design/pro-components';
-import { useModel, useLocation } from '@umijs/max';
+import { useModel, useLocation, history } from '@umijs/max';
 import { Button, Space, Card, message } from 'antd';
 import qs from 'query-string';
 import { EditableRow, EditableCell } from './Editable';
@@ -253,6 +253,13 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
             </Button>
           ),
         ],
+      }}
+      onReset={() => {
+        const getApi = api ? api : query.api;
+        history.push({
+          pathname: '/index',
+          search: 'api='+getApi,
+        });
       }}
       components={{
         body: {
