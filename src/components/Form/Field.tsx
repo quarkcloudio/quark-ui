@@ -248,8 +248,8 @@ const Field: React.FC<any> = (props: any) => {
         component = (
           <ProFormSwitch
             {...baseProps}
-            checkedChildren={props.options.on}
-            unCheckedChildren={props.options.off}
+            checkedChildren={props.checkedChildren}
+            unCheckedChildren={props.unCheckedChildren}
             fieldProps={{
               style: props.style && props.style,
               width: props.width,

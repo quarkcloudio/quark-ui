@@ -126,8 +126,8 @@ const EditableCell: React.FC<EditableCellProps> = ({
             <Switch
               ref={inputRef}
               onChange={save}
-              checkedChildren={editable.options.on}
-              unCheckedChildren={editable.options.off}
+              checkedChildren={editable.options[1]}
+              unCheckedChildren={editable.options[0]}
               checked={record[dataIndex] === 1 ? true : false}
             />
           </Form.Item>
@@ -137,16 +137,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
       case 'selectField':
         childNode = (
           <Form.Item style={{ margin: 0 }} name={dataIndex}>
-            <Select ref={inputRef} onChange={save} bordered={false}>
-              {!!editable.options &&
-                editable.options.map((option: any, index: number) => {
-                  return (
-                    <Select.Option key={index} value={option.value.toString()}>
-                      {option.label}
-                    </Select.Option>
-                  );
-                })}
-            </Select>
+            <Select ref={inputRef} onChange={save} bordered={false} options={editable.options} />
           </Form.Item>
         );
         editableForm.setFieldsValue({
