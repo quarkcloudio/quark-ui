@@ -35,14 +35,17 @@ const Cascader: React.FC<Search> = ({
     if (api) {
       const getOptions = await loadOptions();
       setSelectOptions(getOptions);
-
-      setTimeout(async () => {
-        setSpinning(false);
-      }, 3000);
+      setSpinning(false);
     }
   };
 
   const loadOptions = async (level: any = 0) => {
+    if(!value) {
+      return []
+    }
+    if (level >= value.length) {
+      return []
+    }
     const result = await get({
       url: api,
       data: {
@@ -52,34 +55,18 @@ const Cascader: React.FC<Search> = ({
     });
 
     let data = result.data;
-    if (value) {
-      if (level < value.length) {
-        await Promise.all(
-          data?.map(async (item: any) => {
-            if (item.value === value[level]) {
-              let rank = parseQueryString(api, 'rank');
-              if (rank) {
-                if (level < rank) {
-                  let children = await loadOptions(level + 1);
-                  if (children.length > 0) {
-                    return (item.children = children);
-                  }
-                }
-              } else {
-                let children = await loadOptions(level + 1);
-                if (children?.length > 0) {
-                  return (item.children = children);
-                }
-              }
-            }
-          }),
-        );
-      }
+    await Promise.all(
+      data?.map(async (item: any) => {
+        if (item.value === value[level]) {
+          let children = await loadOptions(level + 1);
+          if (children.length > 0) {
+            return (item.children = children);
+          }
+        }
+      }),
+    );
 
-      return data;
-    } else {
-      return data;
-    }
+    return data
   };
 
   const parseQueryString = (url: any, key: any = null) => {
@@ -136,7 +123,7 @@ const Cascader: React.FC<Search> = ({
 
   if (api) {
     return (
-      <Spin style={style} spinning={spinning} size="small">
+      <Spin style={{background: "rgba(255,255,255,0.8)", ...style}} spinning={spinning} size="small">
         <AntCascader
           size={size}
           loadData={loadData}
