@@ -40,12 +40,6 @@ const Cascader: React.FC<Search> = ({
   };
 
   const loadOptions = async (level: any = 0) => {
-    if(!value) {
-      return []
-    }
-    if (level >= value.length) {
-      return []
-    }
     const result = await get({
       url: api,
       data: {
@@ -55,6 +49,13 @@ const Cascader: React.FC<Search> = ({
     });
 
     let data = result.data;
+    if(!value) {
+      return data
+    }
+    if (level >= value.length) {
+      return []
+    }
+
     await Promise.all(
       data?.map(async (item: any) => {
         if (item.value === value[level]) {
@@ -67,26 +68,6 @@ const Cascader: React.FC<Search> = ({
     );
 
     return data
-  };
-
-  const parseQueryString = (url: any, key: any = null) => {
-    let queryString = url.slice(url.indexOf('?') + 1);
-    let querys = queryString.split('&');
-    let queryObject: any = {};
-    querys.forEach((item: any) => {
-      let arr = item.split('=');
-      queryObject[arr[0]] = arr[1];
-    });
-
-    if (key) {
-      if (queryObject.hasOwnProperty(key)) {
-        return queryObject[key];
-      } else {
-        return null;
-      }
-    }
-
-    return queryObject;
   };
 
   const triggerChange = (changedValue: any) => {
