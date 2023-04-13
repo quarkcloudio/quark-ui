@@ -42,6 +42,7 @@ const Field: React.FC<any> = (props: any) => {
     tooltip: props.tooltip,
     rules: props.frontendRules,
     extra: props.extra,
+    required: props.required,
     help: props.help && props.help,
     placeholder: props.placeholder,
     disabled: props.disabled,
