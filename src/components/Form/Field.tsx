@@ -102,6 +102,7 @@ const Field: React.FC<any> = (props: any) => {
               size: props.size,
               maxLength: props.maxLength,
               autoSize: props.autoSize,
+              rows: props.rows,
               onKeyPress: (e) => {
                 e.stopPropagation();
               },
