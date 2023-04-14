@@ -17,6 +17,8 @@ import {
   ProFormDateRangePicker,
   ProFormDateTimeRangePicker,
   ProFormList,
+  ProFormFieldSet,
+  ProFormDependency,
 } from '@ant-design/pro-components';
 import { Select, Tree, Space } from 'antd';
 import { createFromIconfontCN } from '@ant-design/icons';
@@ -29,6 +31,7 @@ import Geofence from './Field/Geofence';
 import Editor from './Field/Editor';
 import Cascader from './Field/Cascader';
 import Selects from './Field/Selects';
+import tplEngine from '@/utils/template';
 
 const Field: React.FC<any> = (props: any) => {
   const IconFont = createFromIconfontCN({
@@ -608,6 +611,15 @@ const Field: React.FC<any> = (props: any) => {
           </ProForm.Item>
         );
         break;
+      case 'selects':
+        component = (
+          <Selects
+            body={props.body}
+            callback={props.callback}
+            data={props.data}
+          />
+        );
+        break;
       case 'listField':
         if (props.items.hasOwnProperty('component')) {
           component = (
@@ -732,18 +744,43 @@ const Field: React.FC<any> = (props: any) => {
           );
         }
         break;
-      case 'selects':
-        component = (
-          <Selects
-            body={props.body}
-            callback={props.callback}
-            data={props.data}
-          />
-        );
+      case 'fieldsetField':
+        if (props.body.hasOwnProperty('component')) {
+          component = (
+            <ProFormFieldSet name={props.name} label={props.label} type={props.type}>
+              {fieldRender(props.body)}
+            </ProFormFieldSet>
+          );
+        } else {
+          component = (
+            <ProFormFieldSet name={props.name} label={props.label} type={props.type}>
+              {props.body.map((item: any) => {
+                return fieldRender(item);
+              })}
+            </ProFormFieldSet>
+          );
+        }
         break;
       default:
         component = <span key={props.name}>无{props.component}组件</span>;
         break;
+    }
+
+    // 数据联动组件特殊处理
+    if(props.component === "dependencyField") {
+      return (
+        <ProFormDependency name={props.names} ignoreFormListField={props.ignoreFormListField}>
+          {(values) => {
+            return (
+              <Render
+                body={props.when}
+                data={values}
+                callback={props.callback}
+              />
+            );
+          }}
+        </ProFormDependency>
+      )
     }
 
     // 解析when
