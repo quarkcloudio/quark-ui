@@ -34,7 +34,7 @@ fileField|switchField|selectField|treeField|cascaderField|\
 dateField|weekField|monthField|quarterField|yearField|datetimeField|\
 dateRangeField|datetimeRangeField|timeField|timeRangeField|displayField|\
 editorField|searchField|mapField|geofenceField|listField|groupField|selects|\
-treeSelectField|';
+treeSelectField|spaceField|compactField|';
 
 const components = [
   { name: 'page', component: <Page /> },

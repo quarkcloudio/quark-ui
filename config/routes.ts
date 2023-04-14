@@ -22,4 +22,10 @@ export default [
     component: './Index',
     layout: false,
   },
+  {
+    name: '测试页',
+    path: '/test',
+    component: './Test',
+    layout: false,
+  },
 ];

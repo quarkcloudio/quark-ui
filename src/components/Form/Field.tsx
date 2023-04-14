@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useModel } from '@umijs/max';
 import {
   ProForm,
+  ProFormItem,
   ProFormText,
   ProFormTextArea,
   ProFormDigit,
@@ -17,7 +18,7 @@ import {
   ProFormDateTimeRangePicker,
   ProFormList,
 } from '@ant-design/pro-components';
-import { Select, Tree } from 'antd';
+import { Select, Tree, Space } from 'antd';
 import { createFromIconfontCN } from '@ant-design/icons';
 import Render from '@/components/Render';
 import ImageUploader from './Field/ImageUploader';
@@ -36,26 +37,29 @@ const Field: React.FC<any> = (props: any) => {
   const [random, setRandom] = useState(0); // hack
   let { object } = useModel('object');
   let getObject: any = object;
-  const baseProps = {
-    name: props.name,
-    label: props.label,
-    tooltip: props.tooltip,
-    rules: props.frontendRules,
-    extra: props.extra,
-    required: props.required,
-    help: props.help && props.help,
-    placeholder: props.placeholder,
-    disabled: props.disabled,
-    addonAfter: props.addonAfter,
-    addonBefore: props.addonBefore,
-    wrapperCol: props.wrapperCol,
-  };
 
   const onChange = (value: any, name: string) => {
     let item: any = [];
     item[name] = value;
     getObject[props.data?.componentkey]?.setFieldsValue(item);
     setRandom(Math.random);
+  };
+
+  const baseProps = (props:any) => {
+    return {
+      name: props.name,
+      label: props.label,
+      tooltip: props.tooltip,
+      rules: props.frontendRules,
+      extra: props.extra,
+      required: props.required,
+      help: props.help && props.help,
+      placeholder: props.placeholder,
+      disabled: props.disabled,
+      addonAfter: props.addonAfter,
+      addonBefore: props.addonBefore,
+      wrapperCol: props.wrapperCol,
+    };
   };
 
   // 渲染组件
@@ -66,7 +70,7 @@ const Field: React.FC<any> = (props: any) => {
       case 'textField':
         component = (
           <ProFormText
-            {...baseProps}
+            {...baseProps(props)}
             fieldProps={{
               style: props.style && props.style,
               width: props.width,
@@ -79,7 +83,7 @@ const Field: React.FC<any> = (props: any) => {
       case 'passwordField':
         component = (
           <ProFormText.Password
-            {...baseProps}
+            {...baseProps(props)}
             fieldProps={{
               style: props.style && props.style,
               width: props.width,
@@ -95,7 +99,7 @@ const Field: React.FC<any> = (props: any) => {
       case 'textAreaField':
         component = (
           <ProFormTextArea
-            {...baseProps}
+            {...baseProps(props)}
             fieldProps={{
               style: props.style && props.style,
               width: props.width,
@@ -116,7 +120,7 @@ const Field: React.FC<any> = (props: any) => {
       case 'inputNumberField':
         component = (
           <ProFormDigit
-            {...baseProps}
+            {...baseProps(props)}
             min={props.min}
             max={props.max}
             fieldProps={{
@@ -189,7 +193,7 @@ const Field: React.FC<any> = (props: any) => {
       case 'checkboxField':
         component = (
           <ProFormCheckbox.Group
-            {...baseProps}
+            {...baseProps(props)}
             options={props.options}
             fieldProps={{
               style: props.style && props.style,
@@ -204,7 +208,7 @@ const Field: React.FC<any> = (props: any) => {
       case 'radioField':
         component = (
           <ProFormRadio.Group
-            {...baseProps}
+            {...baseProps(props)}
             options={props.options}
             fieldProps={{
               style: props.style && props.style,
@@ -218,7 +222,7 @@ const Field: React.FC<any> = (props: any) => {
         break;
       case 'imageField':
         component = (
-          <ProForm.Item {...baseProps}>
+          <ProForm.Item {...baseProps(props)}>
             <ImageUploader
               key={props.name}
               mode={props.mode}
@@ -234,7 +238,7 @@ const Field: React.FC<any> = (props: any) => {
         break;
       case 'fileField':
         component = (
-          <ProForm.Item {...baseProps}>
+          <ProForm.Item {...baseProps(props)}>
             <FileUploader
               key={props.name}
               title={props.button}
@@ -249,7 +253,7 @@ const Field: React.FC<any> = (props: any) => {
       case 'switchField':
         component = (
           <ProFormSwitch
-            {...baseProps}
+            {...baseProps(props)}
             checkedChildren={props.checkedChildren}
             unCheckedChildren={props.unCheckedChildren}
             fieldProps={{
@@ -265,7 +269,7 @@ const Field: React.FC<any> = (props: any) => {
       case 'selectField':
         component = (
           <ProFormSelect
-            {...baseProps}
+            {...baseProps(props)}
             mode={props.mode}
             options={props.options}
             fieldProps={{
@@ -283,7 +287,7 @@ const Field: React.FC<any> = (props: any) => {
       case 'treeSelectField':
         component = (
           <ProFormTreeSelect
-            {...baseProps}
+            {...baseProps(props)}
             style={props.style && props.style} 
             width={props.width}
             fieldProps={{
@@ -330,7 +334,7 @@ const Field: React.FC<any> = (props: any) => {
       case 'treeField':
         component = (
           <ProForm.Item
-            {...baseProps}
+            {...baseProps(props)}
             valuePropName={'checkedKeys'}
             trigger={'onCheck'}
           >
@@ -364,7 +368,7 @@ const Field: React.FC<any> = (props: any) => {
       case 'dateField':
         component = (
           <ProFormDatePicker
-            {...baseProps}
+            {...baseProps(props)}
             fieldProps={{
               style: props.style && props.style,
               width: props.width,
@@ -382,7 +386,7 @@ const Field: React.FC<any> = (props: any) => {
       case 'weekField':
         component = (
           <ProFormDatePicker.Week
-            {...baseProps}
+            {...baseProps(props)}
             fieldProps={{
               style: props.style && props.style,
               width: props.width,
@@ -398,7 +402,7 @@ const Field: React.FC<any> = (props: any) => {
       case 'monthField':
         component = (
           <ProFormDatePicker.Month
-            {...baseProps}
+            {...baseProps(props)}
             fieldProps={{
               style: props.style && props.style,
               width: props.width,
@@ -414,7 +418,7 @@ const Field: React.FC<any> = (props: any) => {
       case 'quarterField':
         component = (
           <ProFormDatePicker.Quarter
-            {...baseProps}
+            {...baseProps(props)}
             fieldProps={{
               style: props.style && props.style,
               width: props.width,
@@ -430,7 +434,7 @@ const Field: React.FC<any> = (props: any) => {
       case 'yearField':
         component = (
           <ProFormDatePicker.Year
-            {...baseProps}
+            {...baseProps(props)}
             fieldProps={{
               style: props.style && props.style,
               width: props.width,
@@ -446,7 +450,7 @@ const Field: React.FC<any> = (props: any) => {
       case 'datetimeField':
         component = (
           <ProFormDateTimePicker
-            {...baseProps}
+            {...baseProps(props)}
             fieldProps={{
               style: props.style && props.style,
               width: props.width,
@@ -463,7 +467,7 @@ const Field: React.FC<any> = (props: any) => {
       case 'dateRangeField':
         component = (
           <ProFormDateRangePicker
-            {...baseProps}
+            {...baseProps(props)}
             fieldProps={{
               style: props.style && props.style,
               width: props.width,
@@ -481,7 +485,7 @@ const Field: React.FC<any> = (props: any) => {
       case 'datetimeRangeField':
         component = (
           <ProFormDateTimeRangePicker
-            {...baseProps}
+            {...baseProps(props)}
             fieldProps={{
               style: props.style && props.style,
               width: props.width,
@@ -498,7 +502,7 @@ const Field: React.FC<any> = (props: any) => {
       case 'timeField':
         component = (
           <ProFormTimePicker
-            {...baseProps}
+            {...baseProps(props)}
             fieldProps={{
               style: props.style && props.style,
               width: props.width,
@@ -515,7 +519,7 @@ const Field: React.FC<any> = (props: any) => {
       case 'timeRangeField':
         component = (
           <ProFormTimePicker.RangePicker
-            {...baseProps}
+            {...baseProps(props)}
             fieldProps={{
               style: props.style && props.style,
               width: props.width,
@@ -641,7 +645,7 @@ const Field: React.FC<any> = (props: any) => {
         if (props.body.hasOwnProperty('component')) {
           component = (
             <ProForm.Group
-              title={props.label}
+              title={props.title}
               style={props.style}
               size={props.size}
             >
@@ -651,7 +655,7 @@ const Field: React.FC<any> = (props: any) => {
         } else {
           component = (
             <ProForm.Group
-              title={props.label}
+              title={props.title}
               style={props.style}
               size={props.size}
             >
@@ -659,6 +663,72 @@ const Field: React.FC<any> = (props: any) => {
                 return fieldRender(item);
               })}
             </ProForm.Group>
+          );
+        }
+        break;
+      case 'spaceField':
+        if (props.body.hasOwnProperty('component')) {
+          delete props.body["label"]
+          component = (
+            <ProFormItem label={props.label} style={{ marginBottom: 0 }}>
+              <Space
+                align={props.align}
+                direction={props.direction}
+                size={props.size}
+                split={props.split}
+                wrap={props.wrap}
+              >
+                {fieldRender(props.body)}
+              </Space>
+            </ProFormItem>
+          );
+        } else {
+          component = (
+            <ProFormItem label={props.label} style={{ marginBottom: 0 }}>
+              <Space
+                align={props.align}
+                direction={props.direction}
+                size={props.size}
+                split={props.split}
+                wrap={props.wrap}
+              >
+              {props.body.map((item: any) => {
+                delete item["label"]
+                return fieldRender(item);
+              })}
+              </Space>
+            </ProFormItem>
+          );
+        }
+        break;
+      case 'compactField':
+        if (props.body.hasOwnProperty('component')) {
+          delete props.body["label"]
+          component = (
+            <ProFormItem label={props.label} style={{ marginBottom: 0 }}>
+              <Space.Compact
+                block={props.block}
+                direction={props.direction}
+                size={props.size}
+              >
+                {fieldRender(props.body)}
+              </Space.Compact>
+            </ProFormItem>
+          );
+        } else {
+          component = (
+            <ProFormItem label={props.label} style={{ marginBottom: 0 }}>
+              <Space.Compact
+                block={props.block}
+                direction={props.direction}
+                size={props.size}
+              >
+              {props.body.map((item: any) => {
+                delete item["label"]
+                return fieldRender(item);
+              })}
+              </Space.Compact>
+            </ProFormItem>
           );
         }
         break;
