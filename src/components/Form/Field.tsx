@@ -66,19 +66,19 @@ const Field: React.FC<any> = (props: any) => {
   };
 
   // 渲染组件
-  const fieldRender = (props: any) => {
+  const fieldRender = (currentProps: any) => {
     let component = null;
 
-    switch (props.component) {
+    switch (currentProps.component) {
       case 'textField':
         component = (
           <ProFormText
-            {...baseProps(props)}
+            {...baseProps(currentProps)}
             fieldProps={{
-              style: props.style && props.style,
-              width: props.width,
-              size: props.size,
-              maxLength: props.maxLength,
+              style: currentProps.style && currentProps.style,
+              width: currentProps.width,
+              size: currentProps.size,
+              maxLength: currentProps.maxLength,
             }}
           />
         );
@@ -86,14 +86,14 @@ const Field: React.FC<any> = (props: any) => {
       case 'passwordField':
         component = (
           <ProFormText.Password
-            {...baseProps(props)}
+            {...baseProps(currentProps)}
             fieldProps={{
-              style: props.style && props.style,
-              width: props.width,
-              size: props.size,
-              maxLength: props.maxLength,
+              style: currentProps.style && currentProps.style,
+              width: currentProps.width,
+              size: currentProps.size,
+              maxLength: currentProps.maxLength,
               onChange: (e) => {
-                onChange(e.target.value, props.name);
+                onChange(e.target.value, currentProps.name);
               },
             }}
           />
@@ -102,19 +102,19 @@ const Field: React.FC<any> = (props: any) => {
       case 'textAreaField':
         component = (
           <ProFormTextArea
-            {...baseProps(props)}
+            {...baseProps(currentProps)}
             fieldProps={{
-              style: props.style && props.style,
-              width: props.width,
+              style: currentProps.style && currentProps.style,
+              width: currentProps.width,
               size: props.size,
-              maxLength: props.maxLength,
-              autoSize: props.autoSize,
-              rows: props.rows,
+              maxLength: currentProps.maxLength,
+              autoSize: currentProps.autoSize,
+              rows: currentProps.rows,
               onKeyPress: (e) => {
                 e.stopPropagation();
               },
               onChange: (e) => {
-                onChange(e.target.value, props.name);
+                onChange(e.target.value, currentProps.name);
               },
             }}
           />
@@ -123,18 +123,18 @@ const Field: React.FC<any> = (props: any) => {
       case 'inputNumberField':
         component = (
           <ProFormDigit
-            {...baseProps(props)}
-            min={props.min}
-            max={props.max}
+            {...baseProps(currentProps)}
+            min={currentProps.min}
+            max={currentProps.max}
             fieldProps={{
-              style: props.style && props.style,
-              width: props.width,
-              size: props.size,
-              maxLength: props.maxLength,
-              step: props.step,
-              precision: props.precision,
+              style: currentProps.style && currentProps.style,
+              width: currentProps.width,
+              size: currentProps.size,
+              maxLength: currentProps.maxLength,
+              step: currentProps.step,
+              precision: currentProps.precision,
               onChange: (value) => {
-                onChange(value, props.name);
+                onChange(value, currentProps.name);
               },
             }}
           />
@@ -143,23 +143,23 @@ const Field: React.FC<any> = (props: any) => {
       case 'iconField':
         component = (
           <ProForm.Item
-            key={props.name}
-            label={props.label}
-            name={props.name}
-            tooltip={props.tooltip}
-            rules={props.frontendRules}
-            help={props.help && props.help}
-            extra={props.extra}
+            key={currentProps.name}
+            label={currentProps.label}
+            name={currentProps.name}
+            tooltip={currentProps.tooltip}
+            rules={currentProps.frontendRules}
+            help={currentProps.help && currentProps.help}
+            extra={currentProps.extra}
           >
             <Select
-              style={props.style && props.style}
-              disabled={props.disabled}
-              placeholder={props.placeholder}
+              style={currentProps.style && currentProps.style}
+              disabled={currentProps.disabled}
+              placeholder={currentProps.placeholder}
             >
               <Select.Option key={undefined} value={''}>
                 无图标
               </Select.Option>
-              {props.options.map((item: any) => {
+              {currentProps.options.map((item: any) => {
                 return (
                   <Select.Option key={item} value={item}>
                     <IconFont type={item} /> {item}
@@ -173,22 +173,22 @@ const Field: React.FC<any> = (props: any) => {
       case 'hiddenField':
         component = (
           <div style={{ display: 'none' }}>
-            <ProFormText name={props.name} />
+            <ProFormText name={currentProps.name} />
           </div>
         );
         break;
       case 'idField':
-        if (props.onFormDisplayed) {
+        if (currentProps.onFormDisplayed) {
           component = (
             <div style={{ display: 'none' }}>
-              <span style={props.style ? props.style : []}>{props.value}</span>
-              <ProFormText label={props.label} name={props.name} />
+              <span style={currentProps.style ? currentProps.style : []}>{currentProps.value}</span>
+              <ProFormText label={currentProps.label} name={currentProps.name} />
             </div>
           );
         } else {
           component = (
             <div style={{ display: 'none' }}>
-              <ProFormText name={props.name} />
+              <ProFormText name={currentProps.name} />
             </div>
           );
         }
@@ -196,13 +196,13 @@ const Field: React.FC<any> = (props: any) => {
       case 'checkboxField':
         component = (
           <ProFormCheckbox.Group
-            {...baseProps(props)}
-            options={props.options}
+            {...baseProps(currentProps)}
+            options={currentProps.options}
             fieldProps={{
-              style: props.style && props.style,
-              width: props.width,
+              style: currentProps.style && currentProps.style,
+              width: currentProps.width,
               onChange: (value) => {
-                onChange(value, props.name);
+                onChange(value, currentProps.name);
               },
             }}
           />
@@ -211,13 +211,13 @@ const Field: React.FC<any> = (props: any) => {
       case 'radioField':
         component = (
           <ProFormRadio.Group
-            {...baseProps(props)}
-            options={props.options}
+            {...baseProps(currentProps)}
+            options={currentProps.options}
             fieldProps={{
-              style: props.style && props.style,
-              width: props.width,
+              style: currentProps.style && currentProps.style,
+              width: currentProps.width,
               onChange: (e) => {
-                onChange(e.target.value, props.name);
+                onChange(e.target.value, currentProps.name);
               },
             }}
           />
@@ -225,30 +225,30 @@ const Field: React.FC<any> = (props: any) => {
         break;
       case 'imageField':
         component = (
-          <ProForm.Item {...baseProps(props)}>
+          <ProForm.Item {...baseProps(currentProps)}>
             <ImageUploader
-              key={props.name}
-              mode={props.mode}
-              title={props.button}
-              limitType={props.limitType}
-              limitSize={props.limitSize}
-              limitNum={props.limitNum}
-              limitWH={props.limitWH}
-              action={props.api}
+              key={currentProps.name}
+              mode={currentProps.mode}
+              title={currentProps.button}
+              limitType={currentProps.limitType}
+              limitSize={currentProps.limitSize}
+              limitNum={currentProps.limitNum}
+              limitWH={currentProps.limitWH}
+              action={currentProps.api}
             />
           </ProForm.Item>
         );
         break;
       case 'fileField':
         component = (
-          <ProForm.Item {...baseProps(props)}>
+          <ProForm.Item {...baseProps(currentProps)}>
             <FileUploader
-              key={props.name}
-              title={props.button}
-              limitType={props.limitType}
-              limitSize={props.limitSize}
-              limitNum={props.limitNum}
-              action={props.api}
+              key={currentProps.name}
+              title={currentProps.button}
+              limitType={currentProps.limitType}
+              limitSize={currentProps.limitSize}
+              limitNum={currentProps.limitNum}
+              action={currentProps.api}
             />
           </ProForm.Item>
         );
@@ -256,14 +256,14 @@ const Field: React.FC<any> = (props: any) => {
       case 'switchField':
         component = (
           <ProFormSwitch
-            {...baseProps(props)}
-            checkedChildren={props.checkedChildren}
-            unCheckedChildren={props.unCheckedChildren}
+            {...baseProps(currentProps)}
+            checkedChildren={currentProps.checkedChildren}
+            unCheckedChildren={currentProps.unCheckedChildren}
             fieldProps={{
-              style: props.style && props.style,
-              width: props.width,
+              style: currentProps.style && currentProps.style,
+              width: currentProps.width,
               onChange: (value) => {
-                onChange(value, props.name);
+                onChange(value, currentProps.name);
               },
             }}
           />
@@ -272,16 +272,16 @@ const Field: React.FC<any> = (props: any) => {
       case 'selectField':
         component = (
           <ProFormSelect
-            {...baseProps(props)}
-            mode={props.mode}
-            options={props.options}
+            {...baseProps(currentProps)}
+            mode={currentProps.mode}
+            options={currentProps.options}
             fieldProps={{
-              style: props.style && props.style,
-              width: props.width,
-              size: props.size,
-              maxLength: props.maxLength,
+              style: currentProps.style && currentProps.style,
+              width: currentProps.width,
+              size: currentProps.size,
+              maxLength: currentProps.maxLength,
               onChange: (value) => {
-                onChange(value, props.name);
+                onChange(value, currentProps.name);
               },
             }}
           />
@@ -290,45 +290,45 @@ const Field: React.FC<any> = (props: any) => {
       case 'treeSelectField':
         component = (
           <ProFormTreeSelect
-            {...baseProps(props)}
-            style={props.style && props.style} 
-            width={props.width}
+            {...baseProps(currentProps)}
+            style={currentProps.style && currentProps.style} 
+            width={currentProps.width}
             fieldProps={{
-              allowClear:props.allowClear,
-              autoClearSearchValue:props.autoClearSearchValue,
-              bordered:props.bordered,
-              defaultValue:props.defaultValue,
-              disabled:props.disabled,
-              popupClassName:props.popupClassName,
-              dropdownStyle:props.dropdownStyle,
-              listHeight:props.listHeight,
-              maxTagCount:props?.maxTagCount,
-              maxTagPlaceholder:props?.maxTagPlaceholder,
-              maxTagTextLength:props?.maxTagTextLength,
-              multiple:props.multiple,
-              notFoundContent:props?.notFoundContent,
-              placeholder:props?.placeholder,
-              placement:props?.placement,
-              showArrow:props.showArrow,
-              showSearch:props.showSearch,
-              status:props.status,
-              suffixIcon:props?.suffixIcon,
-              treeCheckable:props.treeCheckable,
-              treeDataSimpleMode:props.treeDataSimpleMode,
-              treeDefaultExpandAll:props.treeDefaultExpandAll,
-              treeDefaultExpandedKeys:props?.treeDefaultExpandedKeys,
-              treeExpandAction:props?.treeExpandAction,
-              treeExpandedKeys:props?.treeExpandedKeys,
-              treeIcon:props?.treeIcon,
-              treeLine:props?.treeLine,
-              virtual:props?.virtual,
-              style: props.style && props.style,
-              width: props.width,
-              size: props.size,
-              maxLength: props.maxLength,
-              treeData: props.treeData,
+              allowClear:currentProps.allowClear,
+              autoClearSearchValue:currentProps.autoClearSearchValue,
+              bordered:currentProps.bordered,
+              defaultValue:currentProps.defaultValue,
+              disabled:currentProps.disabled,
+              popupClassName:currentProps.popupClassName,
+              dropdownStyle:currentProps.dropdownStyle,
+              listHeight:currentProps.listHeight,
+              maxTagCount:currentProps?.maxTagCount,
+              maxTagPlaceholder:currentProps?.maxTagPlaceholder,
+              maxTagTextLength:currentProps?.maxTagTextLength,
+              multiple:currentProps.multiple,
+              notFoundContent:currentProps?.notFoundContent,
+              placeholder:currentProps?.placeholder,
+              placement:currentProps?.placement,
+              showArrow:currentProps.showArrow,
+              showSearch:currentProps.showSearch,
+              status:currentProps.status,
+              suffixIcon:currentProps?.suffixIcon,
+              treeCheckable:currentProps.treeCheckable,
+              treeDataSimpleMode:currentProps.treeDataSimpleMode,
+              treeDefaultExpandAll:currentProps.treeDefaultExpandAll,
+              treeDefaultExpandedKeys:currentProps?.treeDefaultExpandedKeys,
+              treeExpandAction:currentProps?.treeExpandAction,
+              treeExpandedKeys:currentProps?.treeExpandedKeys,
+              treeIcon:currentProps?.treeIcon,
+              treeLine:currentProps?.treeLine,
+              virtual:currentProps?.virtual,
+              style: currentProps.style && currentProps.style,
+              width: currentProps.width,
+              size: currentProps.size,
+              maxLength: currentProps.maxLength,
+              treeData: currentProps.treeData,
               onChange: (value) => {
-                onChange(value, props.name);
+                onChange(value, currentProps.name);
               },
             }}
           />
@@ -337,14 +337,14 @@ const Field: React.FC<any> = (props: any) => {
       case 'treeField':
         component = (
           <ProForm.Item
-            {...baseProps(props)}
+            {...baseProps(currentProps)}
             valuePropName={'checkedKeys'}
             trigger={'onCheck'}
           >
             <Tree
               checkable
-              style= {props.style && props.style}
-              treeData={props.treeData}
+              style= {currentProps.style && currentProps.style}
+              treeData={currentProps.treeData}
             />
           </ProForm.Item>
         );
@@ -352,18 +352,18 @@ const Field: React.FC<any> = (props: any) => {
       case 'cascaderField':
         component = (
           <ProForm.Item
-            label={props.label}
-            name={props.name}
-            rules={props.frontendRules}
-            help={props.help ? props.help : undefined}
-            extra={props.extra}
+            label={currentProps.label}
+            name={currentProps.name}
+            rules={currentProps.frontendRules}
+            help={currentProps.help ? currentProps.help : undefined}
+            extra={currentProps.extra}
           >
             <Cascader
-              api={props.api}
-              size={props.size}
-              options={props.options}
-              style={props.style}
-              placeholder={props.placeholder}
+              api={currentProps.api}
+              size={currentProps.size}
+              options={currentProps.options}
+              style={currentProps.style}
+              placeholder={currentProps.placeholder}
             />
           </ProForm.Item>
         );
@@ -371,16 +371,16 @@ const Field: React.FC<any> = (props: any) => {
       case 'dateField':
         component = (
           <ProFormDatePicker
-            {...baseProps(props)}
+            {...baseProps(currentProps)}
             fieldProps={{
-              style: props.style && props.style,
-              width: props.width,
-              allowClear: props.allowClear,
-              size: props.size,
-              picker: props.picker,
-              format: props.format,
+              style: currentProps.style && currentProps.style,
+              width: currentProps.width,
+              allowClear: currentProps.allowClear,
+              size: currentProps.size,
+              picker: currentProps.picker,
+              format: currentProps.format,
               onChange: (value) => {
-                onChange(value, props.name);
+                onChange(value, currentProps.name);
               },
             }}
           />
@@ -389,14 +389,14 @@ const Field: React.FC<any> = (props: any) => {
       case 'weekField':
         component = (
           <ProFormDatePicker.Week
-            {...baseProps(props)}
+            {...baseProps(currentProps)}
             fieldProps={{
-              style: props.style && props.style,
-              width: props.width,
-              allowClear: props.allowClear,
-              size: props.size,
+              style: currentProps.style && currentProps.style,
+              width: currentProps.width,
+              allowClear: currentProps.allowClear,
+              size: currentProps.size,
               onChange: (value) => {
-                onChange(value, props.name);
+                onChange(value, currentProps.name);
               },
             }}
           />
@@ -405,14 +405,14 @@ const Field: React.FC<any> = (props: any) => {
       case 'monthField':
         component = (
           <ProFormDatePicker.Month
-            {...baseProps(props)}
+            {...baseProps(currentProps)}
             fieldProps={{
-              style: props.style && props.style,
-              width: props.width,
-              allowClear: props.allowClear,
-              size: props.size,
+              style: currentProps.style && currentProps.style,
+              width: currentProps.width,
+              allowClear: currentProps.allowClear,
+              size: currentProps.size,
               onChange: (value) => {
-                onChange(value, props.name);
+                onChange(value, currentProps.name);
               },
             }}
           />
@@ -421,14 +421,14 @@ const Field: React.FC<any> = (props: any) => {
       case 'quarterField':
         component = (
           <ProFormDatePicker.Quarter
-            {...baseProps(props)}
+            {...baseProps(currentProps)}
             fieldProps={{
-              style: props.style && props.style,
-              width: props.width,
-              allowClear: props.allowClear,
-              size: props.size,
+              style: currentProps.style && currentProps.style,
+              width: currentProps.width,
+              allowClear: currentProps.allowClear,
+              size: currentProps.size,
               onChange: (value) => {
-                onChange(value, props.name);
+                onChange(value, currentProps.name);
               },
             }}
           />
@@ -437,14 +437,14 @@ const Field: React.FC<any> = (props: any) => {
       case 'yearField':
         component = (
           <ProFormDatePicker.Year
-            {...baseProps(props)}
+            {...baseProps(currentProps)}
             fieldProps={{
-              style: props.style && props.style,
-              width: props.width,
-              allowClear: props.allowClear,
-              size: props.size,
+              style: currentProps.style && currentProps.style,
+              width: currentProps.width,
+              allowClear: currentProps.allowClear,
+              size: currentProps.size,
               onChange: (value) => {
-                onChange(value, props.name);
+                onChange(value, currentProps.name);
               },
             }}
           />
@@ -453,15 +453,15 @@ const Field: React.FC<any> = (props: any) => {
       case 'datetimeField':
         component = (
           <ProFormDateTimePicker
-            {...baseProps(props)}
+            {...baseProps(currentProps)}
             fieldProps={{
-              style: props.style && props.style,
-              width: props.width,
-              allowClear: props.allowClear,
-              size: props.size,
-              format: props.format,
+              style: currentProps.style && currentProps.style,
+              width: currentProps.width,
+              allowClear: currentProps.allowClear,
+              size: currentProps.size,
+              format: currentProps.format,
               onChange: (value) => {
-                onChange(value, props.name);
+                onChange(value, currentProps.name);
               },
             }}
           />
@@ -470,16 +470,16 @@ const Field: React.FC<any> = (props: any) => {
       case 'dateRangeField':
         component = (
           <ProFormDateRangePicker
-            {...baseProps(props)}
+            {...baseProps(currentProps)}
             fieldProps={{
-              style: props.style && props.style,
-              width: props.width,
-              allowClear: props.allowClear,
-              size: props.size,
-              picker: props.picker,
-              format: props.format,
+              style: currentProps.style && currentProps.style,
+              width: currentProps.width,
+              allowClear: currentProps.allowClear,
+              size: currentProps.size,
+              picker: currentProps.picker,
+              format: currentProps.format,
               onChange: (value) => {
-                onChange(value, props.name);
+                onChange(value, currentProps.name);
               },
             }}
           />
@@ -488,15 +488,15 @@ const Field: React.FC<any> = (props: any) => {
       case 'datetimeRangeField':
         component = (
           <ProFormDateTimeRangePicker
-            {...baseProps(props)}
+            {...baseProps(currentProps)}
             fieldProps={{
-              style: props.style && props.style,
-              width: props.width,
-              allowClear: props.allowClear,
-              size: props.size,
-              format: props.format,
+              style: currentProps.style && currentProps.style,
+              width: currentProps.width,
+              allowClear: currentProps.allowClear,
+              size: currentProps.size,
+              format: currentProps.format,
               onChange: (value) => {
-                onChange(value, props.name);
+                onChange(value, currentProps.name);
               },
             }}
           />
@@ -505,15 +505,15 @@ const Field: React.FC<any> = (props: any) => {
       case 'timeField':
         component = (
           <ProFormTimePicker
-            {...baseProps(props)}
+            {...baseProps(currentProps)}
             fieldProps={{
-              style: props.style && props.style,
-              width: props.width,
-              allowClear: props.allowClear,
-              size: props.size,
-              format: props.format,
+              style: currentProps.style && currentProps.style,
+              width: currentProps.width,
+              allowClear: currentProps.allowClear,
+              size: currentProps.size,
+              format: currentProps.format,
               onChange: (value) => {
-                onChange(value, props.name);
+                onChange(value, currentProps.name);
               },
             }}
           />
@@ -522,15 +522,15 @@ const Field: React.FC<any> = (props: any) => {
       case 'timeRangeField':
         component = (
           <ProFormTimePicker.RangePicker
-            {...baseProps(props)}
+            {...baseProps(currentProps)}
             fieldProps={{
-              style: props.style && props.style,
-              width: props.width,
-              allowClear: props.allowClear,
-              size: props.size,
-              format: props.format,
+              style: currentProps.style && currentProps.style,
+              width: currentProps.width,
+              allowClear: currentProps.allowClear,
+              size: currentProps.size,
+              format: currentProps.format,
               onChange: (value) => {
-                onChange(value, props.name);
+                onChange(value, currentProps.name);
               },
             }}
           />
@@ -538,24 +538,24 @@ const Field: React.FC<any> = (props: any) => {
         break;
       case 'displayField':
         component = (
-          <ProForm.Item label={props.label}>
-            <span style={props.style ? props.style : []}>{props.value}</span>
+          <ProForm.Item label={currentProps.label}>
+            <span style={currentProps.style ? currentProps.style : []}>{currentProps.value}</span>
           </ProForm.Item>
         );
         break;
       case 'editorField':
         component = (
           <ProForm.Item
-            label={props.label}
-            name={props.name}
-            rules={props.frontendRules}
-            help={props.help ? props.help : undefined}
-            extra={props.extra}
+            label={currentProps.label}
+            name={currentProps.name}
+            rules={currentProps.frontendRules}
+            help={currentProps.help ? currentProps.help : undefined}
+            extra={currentProps.extra}
           >
             <Editor
-              key={props.name}
-              height={props?.style?.height}
-              width={props?.style?.width}
+              key={currentProps.name}
+              height={currentProps?.style?.height}
+              width={currentProps?.style?.width}
             />
           </ProForm.Item>
         );
@@ -563,20 +563,20 @@ const Field: React.FC<any> = (props: any) => {
       case 'searchField':
         component = (
           <ProForm.Item
-            label={props.label}
-            name={props.name}
-            rules={props.frontendRules}
-            help={props.help ? props.help : undefined}
-            extra={props.extra}
+            label={currentProps.label}
+            name={currentProps.name}
+            rules={currentProps.frontendRules}
+            help={currentProps.help ? currentProps.help : undefined}
+            extra={currentProps.extra}
           >
             <Search
-              mode={props.mode}
-              size={props.size}
-              placeholder={props.placeholder}
-              style={props.style}
-              options={props.options}
-              api={props.api}
-              allowClear={props.allowClear}
+              mode={currentProps.mode}
+              size={currentProps.size}
+              placeholder={currentProps.placeholder}
+              style={currentProps.style}
+              options={currentProps.options}
+              api={currentProps.api}
+              allowClear={currentProps.allowClear}
             />
           </ProForm.Item>
         );
@@ -584,29 +584,29 @@ const Field: React.FC<any> = (props: any) => {
       case 'mapField':
         component = (
           <ProForm.Item
-            label={props.label}
-            name={props.name}
-            rules={props.frontendRules}
-            help={props.help ? props.help : undefined}
-            extra={props.extra}
+            label={currentProps.label}
+            name={currentProps.name}
+            rules={currentProps.frontendRules}
+            help={currentProps.help ? currentProps.help : undefined}
+            extra={currentProps.extra}
           >
-            <Map zoom={props.zoom} mapKey={props.mapKey} style={props.style} />
+            <Map zoom={currentProps.zoom} mapKey={currentProps.mapKey} style={currentProps.style} />
           </ProForm.Item>
         );
         break;
       case 'geofenceField':
         component = (
           <ProForm.Item
-            label={props.label}
-            name={props.name}
-            rules={props.frontendRules}
-            help={props.help ? props.help : undefined}
-            extra={props.extra}
+            label={currentProps.label}
+            name={currentProps.name}
+            rules={currentProps.frontendRules}
+            help={currentProps.help ? currentProps.help : undefined}
+            extra={currentProps.extra}
           >
             <Geofence
-              zoom={props.zoom}
-              mapKey={props.mapKey}
-              style={props.style}
+              zoom={currentProps.zoom}
+              mapKey={currentProps.mapKey}
+              style={currentProps.style}
             />
           </ProForm.Item>
         );
@@ -614,39 +614,39 @@ const Field: React.FC<any> = (props: any) => {
       case 'selects':
         component = (
           <Selects
-            body={props.body}
-            callback={props.callback}
-            data={props.data}
+            body={currentProps.body}
+            callback={currentProps.callback}
+            data={currentProps.data}
           />
         );
         break;
       case 'listField':
-        if (props.items.hasOwnProperty('component')) {
+        if (currentProps.items.hasOwnProperty('component')) {
           component = (
             <ProFormList
-              label={props.label}
-              name={props.name}
+              label={currentProps.label}
+              name={currentProps.name}
               creatorButtonProps={{
-                position: props.buttonPosition,
-                creatorButtonText: props.buttonText,
+                position: currentProps.buttonPosition,
+                creatorButtonText: currentProps.buttonText,
               }}
-              alwaysShowItemLabel={props.alwaysShowItemLabel}
+              alwaysShowItemLabel={currentProps.alwaysShowItemLabel}
             >
-              {fieldRender(props.items)}
+              {fieldRender(currentProps.items)}
             </ProFormList>
           );
         } else {
           component = (
             <ProFormList
-              label={props.label}
-              name={props.name}
+              label={currentProps.label}
+              name={currentProps.name}
               creatorButtonProps={{
-                position: props.buttonPosition,
-                creatorButtonText: props.buttonText,
+                position: currentProps.buttonPosition,
+                creatorButtonText: currentProps.buttonText,
               }}
-              alwaysShowItemLabel={props.alwaysShowItemLabel}
+              alwaysShowItemLabel={currentProps.alwaysShowItemLabel}
             >
-              {props.items.map((item: any) => {
+              {currentProps.items.map((item: any) => {
                 return fieldRender(item);
               })}
             </ProFormList>
@@ -654,24 +654,24 @@ const Field: React.FC<any> = (props: any) => {
         }
         break;
       case 'groupField':
-        if (props.body.hasOwnProperty('component')) {
+        if (currentProps.body.hasOwnProperty('component')) {
           component = (
             <ProForm.Group
-              title={props.title}
-              style={props.style}
-              size={props.size}
+              title={currentProps.title}
+              style={currentProps.style}
+              size={currentProps.size}
             >
-              {fieldRender(props.body)}
+              {fieldRender(currentProps.body)}
             </ProForm.Group>
           );
         } else {
           component = (
             <ProForm.Group
-              title={props.title}
-              style={props.style}
-              size={props.size}
+              title={currentProps.title}
+              style={currentProps.style}
+              size={currentProps.size}
             >
-              {props.body.map((item: any) => {
+              {currentProps.body.map((item: any) => {
                 return fieldRender(item);
               })}
             </ProForm.Group>
@@ -679,32 +679,32 @@ const Field: React.FC<any> = (props: any) => {
         }
         break;
       case 'spaceField':
-        if (props.body.hasOwnProperty('component')) {
-          delete props.body["label"]
+        if (currentProps.body.hasOwnProperty('component')) {
+          delete currentProps.body["label"]
           component = (
-            <ProFormItem label={props.label} style={{ marginBottom: 0 }}>
+            <ProFormItem label={currentProps.label} style={{ marginBottom: 0 }}>
               <Space
-                align={props.align}
-                direction={props.direction}
-                size={props.size}
-                split={props.split}
-                wrap={props.wrap}
+                align={currentProps.align}
+                direction={currentProps.direction}
+                size={currentProps.size}
+                split={currentProps.split}
+                wrap={currentProps.wrap}
               >
-                {fieldRender(props.body)}
+                {fieldRender(currentProps.body)}
               </Space>
             </ProFormItem>
           );
         } else {
           component = (
-            <ProFormItem label={props.label} style={{ marginBottom: 0 }}>
+            <ProFormItem label={currentProps.label} style={{ marginBottom: 0 }}>
               <Space
-                align={props.align}
-                direction={props.direction}
-                size={props.size}
-                split={props.split}
-                wrap={props.wrap}
+                align={currentProps.align}
+                direction={currentProps.direction}
+                size={currentProps.size}
+                split={currentProps.split}
+                wrap={currentProps.wrap}
               >
-              {props.body.map((item: any) => {
+              {currentProps.body.map((item: any) => {
                 delete item["label"]
                 return fieldRender(item);
               })}
@@ -714,28 +714,28 @@ const Field: React.FC<any> = (props: any) => {
         }
         break;
       case 'compactField':
-        if (props.body.hasOwnProperty('component')) {
-          delete props.body["label"]
+        if (currentProps.body.hasOwnProperty('component')) {
+          delete currentProps.body["label"]
           component = (
-            <ProFormItem label={props.label} style={{ marginBottom: 0 }}>
+            <ProFormItem label={currentProps.label} style={{ marginBottom: 0 }}>
               <Space.Compact
-                block={props.block}
-                direction={props.direction}
-                size={props.size}
+                block={currentProps.block}
+                direction={currentProps.direction}
+                size={currentProps.size}
               >
-                {fieldRender(props.body)}
+                {fieldRender(currentProps.body)}
               </Space.Compact>
             </ProFormItem>
           );
         } else {
           component = (
-            <ProFormItem label={props.label} style={{ marginBottom: 0 }}>
+            <ProFormItem label={currentProps.label} style={{ marginBottom: 0 }}>
               <Space.Compact
-                block={props.block}
-                direction={props.direction}
-                size={props.size}
+                block={currentProps.block}
+                direction={currentProps.direction}
+                size={currentProps.size}
               >
-              {props.body.map((item: any) => {
+              {currentProps.body.map((item: any) => {
                 delete item["label"]
                 return fieldRender(item);
               })}
@@ -745,16 +745,16 @@ const Field: React.FC<any> = (props: any) => {
         }
         break;
       case 'fieldsetField':
-        if (props.body.hasOwnProperty('component')) {
+        if (currentProps.body.hasOwnProperty('component')) {
           component = (
-            <ProFormFieldSet name={props.name} label={props.label} type={props.type}>
-              {fieldRender(props.body)}
+            <ProFormFieldSet name={currentProps.name} label={currentProps.label} type={currentProps.type}>
+              {fieldRender(currentProps.body)}
             </ProFormFieldSet>
           );
         } else {
           component = (
-            <ProFormFieldSet name={props.name} label={props.label} type={props.type}>
-              {props.body.map((item: any) => {
+            <ProFormFieldSet name={currentProps.name} label={currentProps.label} type={currentProps.type}>
+              {currentProps.body.map((item: any) => {
                 return fieldRender(item);
               })}
             </ProFormFieldSet>
@@ -762,20 +762,20 @@ const Field: React.FC<any> = (props: any) => {
         }
         break;
       default:
-        component = <span key={props.name}>无{props.component}组件</span>;
+        component = <span key={currentProps.name}>无{currentProps.component}组件</span>;
         break;
     }
 
     // 数据联动组件特殊处理
-    if(props.component === "dependencyField") {
+    if(currentProps.component === "dependencyField") {
       return (
-        <ProFormDependency name={props.names} ignoreFormListField={props.ignoreFormListField}>
+        <ProFormDependency name={currentProps.names} ignoreFormListField={currentProps.ignoreFormListField}>
           {(values) => {
             return (
               <Render
-                body={props.when}
+                body={currentProps.when}
                 data={values}
-                callback={props.callback}
+                callback={currentProps.callback}
               />
             );
           }}
@@ -784,18 +784,18 @@ const Field: React.FC<any> = (props: any) => {
     }
 
     // 解析when
-    if (props.when) {
+    if (currentProps.when) {
       let fieldData: any = {};
-      fieldData['componentkey'] = props.data.componentkey;
-      fieldData[props.name] = getObject[props.data?.componentkey]?.getFieldValue(
-        props.name,
+      fieldData['componentkey'] = props.data?.componentkey;
+      fieldData[currentProps.name] = getObject[props.data?.componentkey]?.getFieldValue(
+        currentProps.name,
       );
       
       return (
         <>
           {component}
           <Render
-            body={props.when}
+            body={currentProps.when}
             data={fieldData}
             callback={props.callback}
           />
