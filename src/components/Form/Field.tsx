@@ -680,7 +680,6 @@ const Field: React.FC<any> = (props: any) => {
         break;
       case 'spaceField':
         if (currentProps.body.hasOwnProperty('component')) {
-          delete currentProps.body["label"]
           component = (
             <ProFormItem label={currentProps.label} style={{ marginBottom: 0 }}>
               <Space
@@ -704,10 +703,9 @@ const Field: React.FC<any> = (props: any) => {
                 split={currentProps.split}
                 wrap={currentProps.wrap}
               >
-              {currentProps.body.map((item: any) => {
-                delete item["label"]
-                return fieldRender(item);
-              })}
+                {currentProps.body.map((item: any) => {
+                  return fieldRender(item);
+                })}
               </Space>
             </ProFormItem>
           );
@@ -715,7 +713,6 @@ const Field: React.FC<any> = (props: any) => {
         break;
       case 'compactField':
         if (currentProps.body.hasOwnProperty('component')) {
-          delete currentProps.body["label"]
           component = (
             <ProFormItem label={currentProps.label} style={{ marginBottom: 0 }}>
               <Space.Compact
@@ -736,7 +733,6 @@ const Field: React.FC<any> = (props: any) => {
                 size={currentProps.size}
               >
               {currentProps.body.map((item: any) => {
-                delete item["label"]
                 return fieldRender(item);
               })}
               </Space.Compact>
@@ -771,6 +767,18 @@ const Field: React.FC<any> = (props: any) => {
       return (
         <ProFormDependency name={currentProps.names} ignoreFormListField={currentProps.ignoreFormListField}>
           {(values) => {
+
+            // Space、Compact组件下，需要特殊处理
+            if(props.component === "spaceField" || props.component === "compactField") {
+              return currentProps.when.items.map((item: any,index: number) => {
+                if (tplEngine(item.condition, values) === 'true') {
+                  return item.body.map((item: any) => {
+                    return fieldRender(item);
+                  })
+                }
+              })
+            }
+            
             return (
               <Render
                 body={currentProps.when}
@@ -783,14 +791,30 @@ const Field: React.FC<any> = (props: any) => {
       )
     }
 
-    // 解析when
+    // 存在When组件，需要特殊处理
     if (currentProps.when) {
       let fieldData: any = {};
       fieldData['componentkey'] = props.data?.componentkey;
       fieldData[currentProps.name] = getObject[props.data?.componentkey]?.getFieldValue(
         currentProps.name,
       );
-      
+
+      // Space、Compact组件下，需要特殊处理
+      if(props.component === "spaceField" || props.component === "compactField") {
+        return (
+          <>
+            {component}
+            {currentProps.when.items.map((item: any,index: number) => {
+              if (tplEngine(item.condition, fieldData) === 'true') {
+                return item.body.map((item: any) => {
+                  return fieldRender(item);
+                })
+              }
+            })}
+          </>
+        );
+      }
+
       return (
         <>
           {component}
@@ -801,9 +825,9 @@ const Field: React.FC<any> = (props: any) => {
           />
         </>
       );
-    } else {
-      return component;
     }
+
+    return component;
   };
 
   return fieldRender(props);
