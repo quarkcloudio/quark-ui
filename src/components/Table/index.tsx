@@ -76,19 +76,15 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
 
   // 渲染column
   const columnRender = (column: any, row: any, text: any) => {
-    if (column.valueType === 'option') {
-      text = (
-        <Render
-          body={column.actions}
-          data={{ ...query, ...row }}
-          callback={callback}
-        />
-      );
-    }
-    if (column.valueType === 'text') {
-      if (typeof text === 'string' || typeof text === 'number') {
-        text = <Render body={text} data={row} callback={callback} />;
-      }
+    switch (column.valueType) {
+      case 'option':
+        text = <Render body={column.actions} data={{ ...query, ...row }} callback={callback} />
+        break;
+      case 'text':
+        if (typeof text === 'string' || typeof text === 'number') {
+          text = <Render body={text} data={row} callback={callback} />;
+        }
+        break;
     }
 
     return text;
@@ -112,25 +108,29 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
 
   // 解析column
   const parseColumns = (columns: any) => {
-    columns.forEach((item: any, key: any) => {
-      item.render = (text: any, row: any) => columnRender(item, row, text);
-      columns[key] = item;
-    });
-
     columns = columns.map((column: any) => {
-      if (!column.editable) {
-        return column;
-      }
-      return {
+
+      // 渲染字符串和数字
+      column = {
         ...column,
-        onCell: (record: any) => ({
-          record,
-          editable: column.editable,
-          dataIndex: column.dataIndex,
-          title: column.title,
-          handleSave: editableSave,
-        }),
+        render: (text: any, row: any) => columnRender(column, row, text),
       };
+
+      // 渲染可编辑
+      if (column.editable) {
+        column = {
+          ...column,
+          onCell: (record: any) => ({
+            record,
+            editable: column.editable,
+            dataIndex: column.dataIndex,
+            title: column.title,
+            handleSave: editableSave,
+          }),
+        };
+      }
+
+      return column
     });
 
     // 解析搜索栏

@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
-import styles from './Editable.less';
-
 import { Switch, Form, Select, Input } from 'antd';
+import styles from './Editable.less';
 
 const EditableContext = React.createContext<any>(null);
 const EditableRow: React.FC<any> = ({ index, ...props }) => {
