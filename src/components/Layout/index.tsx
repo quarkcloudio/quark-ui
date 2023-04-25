@@ -72,7 +72,7 @@ const Layout: React.FC<ProLayoutProps & LayoutProps> = (props) => {
       // 设置页面标题
       setInnerTitle(title);
       // 获取当前选中的菜单
-      const menuSelectedKey = getMenuSelectedKey(menu, decodeURIComponent(api));
+      const menuSelectedKey = getMenuSelectedKey(menu, location.pathname, decodeURIComponent(api));
       // 获取当前展开的菜单
       const currentMenuOpenKeys = getMenuOpenKeys(menu, menuSelectedKey);
       // 设置菜单展开

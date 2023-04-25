@@ -52,9 +52,9 @@ const Layout: React.FC<any> = (props) => {
     // 设置Layout数据
     setLayout(result);
 
-    if (result.menu && query.api) {
+    if (result.menu) {
       // 获取当前选中的菜单
-      const menuSelectedKey = getMenuSelectedKey(result.menu, decodeURIComponent(api));
+      const menuSelectedKey = getMenuSelectedKey(result.menu, location.pathname, decodeURIComponent(api));
       // 获取当前展开的菜单
       const currentMenuOpenKeys = getMenuOpenKeys(result.menu, menuSelectedKey);
       // 设置菜单展开

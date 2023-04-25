@@ -15,10 +15,10 @@ const menuTreeToList = (menus: any, pkey: any = 0) => {
   return list;
 };
 
-const getMenuName = (menus: any,pathname: string, api: string) => {
+const getMenuName = (menus: any, pathname: string, api: string) => {
   let menuName = '';
   menus?.forEach?.((item: any) => {
-    if (item.path.indexOf(api) !== -1 && api!="") {
+    if (item.path.indexOf(api)!==-1 && api!="") {
       menuName = item.name;
     } else if(item.path === pathname){
       menuName = item.name;
@@ -34,15 +34,17 @@ const getMenuName = (menus: any,pathname: string, api: string) => {
   return menuName;
 };
 
-const getMenuSelectedKey = (menus: any, path: string) => {
+const getMenuSelectedKey = (menus: any, pathname: string, api: string) => {
   let menuKey: any = '';
   menus?.forEach?.((item: any) => {
-    if (item.path.indexOf(path) !== -1) {
+    if (item.path.indexOf(api)!==-1 && api!="") {
+      menuKey = item.key;
+    } else if(item.path === pathname){
       menuKey = item.key;
     } else {
       if (item.hasOwnProperty('routes')) {
-        if (getMenuSelectedKey(item.routes, path)) {
-          menuKey = getMenuSelectedKey(item.routes, path);
+        if (getMenuSelectedKey(item.routes, pathname, api)) {
+          menuKey = getMenuSelectedKey(item.routes, pathname, api);
         }
       }
     }
