@@ -1,7 +1,7 @@
 // Tree转List
 const menuTreeToList = (menus: any, pkey: any = 0) => {
   let list: any = [];
-  menus.forEach((item: any) => {
+  menus?.forEach?.((item: any) => {
     item['pkey'] = pkey;
     list.push(item);
     if (item.hasOwnProperty('routes')) {
@@ -15,25 +15,28 @@ const menuTreeToList = (menus: any, pkey: any = 0) => {
   return list;
 };
 
-const getMenuName = (menus: any, path: string) => {
+const getMenuName = (menus: any,pathname: string, api: string) => {
   let menuName = '';
-  menus.forEach((item: any) => {
-    if (item.path.indexOf(path) !== -1) {
+  menus?.forEach?.((item: any) => {
+    if (item.path.indexOf(api) !== -1 && api!="") {
+      menuName = item.name;
+    } else if(item.path === pathname){
       menuName = item.name;
     } else {
       if (item.hasOwnProperty('routes')) {
-        if (getMenuName(item.routes, path)) {
-          menuName = getMenuName(item.routes, path);
+        if (getMenuName(item.routes, pathname, api)) {
+          menuName = getMenuName(item.routes, pathname, api);
         }
       }
     }
   });
+
   return menuName;
 };
 
 const getMenuSelectedKey = (menus: any, path: string) => {
   let menuKey: any = '';
-  menus.forEach((item: any) => {
+  menus?.forEach?.((item: any) => {
     if (item.path.indexOf(path) !== -1) {
       menuKey = item.key;
     } else {
@@ -67,7 +70,7 @@ const getMenuOpenKeys = (menu: any, key: string) => {
 // 根据key获取菜单行
 const getMenuWithKey = (menuTreeList: any, key: string) => {
   let row: any = '';
-  menuTreeList.forEach((item: any) => {
+  menuTreeList?.forEach?.((item: any) => {
     if (item.key === key) {
       row = item;
     }
@@ -78,7 +81,7 @@ const getMenuWithKey = (menuTreeList: any, key: string) => {
 // 根据pkey获取父亲菜单的key
 const getParentMenuKey = (menuTreeList: any, pkey: string) => {
   let menuKey: string = '';
-  menuTreeList.forEach((item: any) => {
+  menuTreeList?.forEach?.((item: any) => {
     if (item.key === pkey) {
       menuKey = item.key;
     }
@@ -88,7 +91,7 @@ const getParentMenuKey = (menuTreeList: any, pkey: string) => {
 
 const getMenuPath = (menus: any, key: string) => {
   let menuPath = '';
-  menus.forEach((item: any) => {
+  menus?.forEach?.((item: any) => {
     if (key === item.key) {
       menuPath = item.path;
     } else {

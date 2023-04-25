@@ -104,7 +104,7 @@ const componentRender = (body: any, data: any, callback: any) => {
   if (body.hasOwnProperty('component')) {
     component = parserComponent(0, body.component, body, data, callback);
   } else {
-    component = body.map((item: any, index: number) => {
+    component = body?.map?.((item: any, index: number) => {
       if (item.hasOwnProperty(0)) {
         return componentRender(item, data, callback);
       }

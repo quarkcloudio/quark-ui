@@ -23,9 +23,13 @@ export default [
     layout: false,
   },
   {
-    name: '测试页',
-    path: '/test',
-    component: './Test',
+    name: '布局页',
+    path: '/layout',
+    component: '@/layouts/index',
+    routes: [
+      { path: '/layout/index', component: './Index' }, // 携带布局的引擎页
+      { path: '/layout/test', component: './Test' },
+    ],
     layout: false,
   },
 ];

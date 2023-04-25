@@ -68,7 +68,7 @@ const Layout: React.FC<ProLayoutProps & LayoutProps> = (props) => {
   useEffect(() => {
     if (menu && query.api) {
       // 获取当前选中菜单的名称
-      const title = getMenuName(menu, decodeURIComponent(api));
+      const title = getMenuName(menu, location.pathname, decodeURIComponent(api));
       // 设置页面标题
       setInnerTitle(title);
       // 获取当前选中的菜单

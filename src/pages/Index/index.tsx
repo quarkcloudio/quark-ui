@@ -15,7 +15,7 @@ const Index: React.FC = () => {
 
   const getApi = async () => {
     const config = await request('./config.json');
-    let api = config.api;
+    let api = config.api.default;
     if (query?.api) {
       api = query.api;
     }
