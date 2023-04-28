@@ -13,6 +13,7 @@ import Drawer from '@/components/Drawer';
 import Render from '@/components/Render';
 
 const Action: React.FC<any> = (props) => {
+  const [modal, contextHolder] = AntModal.useModal();
   const { buttonLoadings, setButtonLoadings } = useModel('buttonLoading');
   const [random, setRandom] = useState(0); //hack
   const [submitResult, setSubmitResult] = useState(null);
@@ -22,7 +23,7 @@ const Action: React.FC<any> = (props) => {
   let { object } = useModel('object');
   let getObject: any = object;
   const formKey = props.submitForm ? props.submitForm : 'form';
-  const { confirm } = AntModal;
+  const { confirm } = modal;
   const waitTime = (time: number = 100) => {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -579,6 +580,7 @@ const Action: React.FC<any> = (props) => {
   if (submitResult) {
     return (
       <>
+        {contextHolder}
         {component}
         {submitResult ? (
           <Render
@@ -590,7 +592,7 @@ const Action: React.FC<any> = (props) => {
       </>
     );
   } else {
-    return component;
+    return <>{contextHolder}{component}</>;
   }
 };
 

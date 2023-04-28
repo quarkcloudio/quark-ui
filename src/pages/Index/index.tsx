@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, request } from '@umijs/max';
-import { ConfigProvider, Spin } from 'antd';
+import { ConfigProvider, App, Spin } from 'antd';
 import Engine from '@/components/Engine';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
@@ -29,13 +29,15 @@ const Index: React.FC = () => {
 
   return (
     <ConfigProvider locale={locale}>
-      {api ? (
-        <Engine api={api} />
-      ) : (
-        <div className={styles.loading}>
-          <Spin />
-        </div>
-      )}
+      <App>
+        {api ? (
+          <Engine api={api} />
+        ) : (
+          <div className={styles.loading}>
+            <Spin />
+          </div>
+        )}
+      </App>
     </ConfigProvider>
   );
 };

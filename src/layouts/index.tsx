@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, request, history, Helmet, useModel, Outlet } from '@umijs/max';
 import type { MenuProps } from 'antd';
+import { ConfigProvider, App } from 'antd';
+import 'dayjs/locale/zh-cn';
+import locale from 'antd/locale/zh_CN';
 import { ProLayout } from '@ant-design/pro-components';
 import qs from 'query-string';
 import Render from '@/components/Render';
@@ -177,54 +180,56 @@ const Layout: React.FC<any> = (props) => {
   ];
 
   return (
-    <>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>{innerTitle}</title>
-      </Helmet>
-      {layout?.title && (
-        <ProLayout
-          {...layout}
-          loading={pageLoading}
-          logo={layout.logo ? layout.logo : defaultLogo}
-          iconfontUrl={layout.iconfontUrl}
-          openKeys={menuOpenKeys}
-          selectedKeys={menuSelectedKeys}
-          menuProps={{
-            onOpenChange: onMenuOpenChange,
-            onClick: onMenuClick,
-          }}
-          onCollapse={(collapsed: boolean) => {
-            setCollapsed(collapsed);
-          }}
-          menuDataRender={() => layout.menu}
-          actionsRender={() => [
-            <Render key="action" body={layout.actions}/>,
-          ]}
-          rightContentRender={() => (
-            <RightContent
-              menu={{
-                items: items,
-                onClick: onRightContentMenuClick,
-              }}
-              avatar={
-                accountInfo?.avatar ? accountInfo?.avatar : <UserOutlined />
-              }
-              name={
-                props.layout === 'side'
-                  ? !collapsed
-                    ? accountInfo?.nickname
-                    : undefined
-                  : accountInfo?.nickname
-              }
-            />
-          )}
-          footerRender={() => <Render body={layout.footer}/>}
-        >
-          {component ? <Render body={component} /> : <Outlet/>}
-        </ProLayout>
-      )}
-    </>
+    <ConfigProvider locale={locale}>
+      <App>
+        <Helmet>
+          <meta charSet="utf-8" />
+          <title>{innerTitle}</title>
+        </Helmet>
+        {layout?.title && (
+          <ProLayout
+            {...layout}
+            loading={pageLoading}
+            logo={layout.logo ? layout.logo : defaultLogo}
+            iconfontUrl={layout.iconfontUrl}
+            openKeys={menuOpenKeys}
+            selectedKeys={menuSelectedKeys}
+            menuProps={{
+              onOpenChange: onMenuOpenChange,
+              onClick: onMenuClick,
+            }}
+            onCollapse={(collapsed: boolean) => {
+              setCollapsed(collapsed);
+            }}
+            menuDataRender={() => layout.menu}
+            actionsRender={() => [
+              <Render key="action" body={layout.actions}/>,
+            ]}
+            rightContentRender={() => (
+              <RightContent
+                menu={{
+                  items: items,
+                  onClick: onRightContentMenuClick,
+                }}
+                avatar={
+                  accountInfo?.avatar ? accountInfo?.avatar : <UserOutlined />
+                }
+                name={
+                  props.layout === 'side'
+                    ? !collapsed
+                      ? accountInfo?.nickname
+                      : undefined
+                    : accountInfo?.nickname
+                }
+              />
+            )}
+            footerRender={() => <Render body={layout.footer}/>}
+          >
+            {component ? <Render body={component} /> : <Outlet/>}
+          </ProLayout>
+        )}
+      </App>
+    </ConfigProvider>
   );
 };
 
