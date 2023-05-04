@@ -257,7 +257,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
       onReset={() => {
         const getApi = api ? api : query.api;
         history.replace({
-          pathname: '/index',
+          pathname: location.pathname,
           search: 'api='+getApi,
         });
       }}
