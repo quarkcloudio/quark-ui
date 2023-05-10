@@ -107,4 +107,20 @@ const getMenuPath = (menus: any, key: string) => {
   return menuPath;
 };
 
-export { getMenuName, getMenuSelectedKey, getMenuOpenKeys, getMenuPath };
+const getMenu = (menus: any, key: string) => {
+  let menu = undefined;
+  menus?.forEach?.((item: any) => {
+    if (key === item.key) {
+      menu = item;
+    } else {
+      if (item.hasOwnProperty('routes')) {
+        if (getMenu(item.routes, key)) {
+          menu = getMenu(item.routes, key);
+        }
+      }
+    }
+  });
+  return menu;
+};
+
+export { getMenuName, getMenuSelectedKey, getMenuOpenKeys, getMenuPath, getMenu };

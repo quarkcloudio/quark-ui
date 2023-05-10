@@ -10,7 +10,7 @@ import {
   getMenuName,
   getMenuSelectedKey,
   getMenuOpenKeys,
-  getMenuPath,
+  getMenu,
 } from '@/components/Layout/menu';
 import { get } from '@/services/action';
 import {
@@ -85,13 +85,13 @@ const Layout: React.FC<ProLayoutProps & LayoutProps> = (props) => {
 
   const onMenuClick = (event: any) => {
     setMenuSelectedKeys([event.key]);
-    const menuPath = getMenuPath(menu, event.key);
-    if (menuPath.indexOf('http') === 0) {
-      window.open(menuPath, '_blank');
+    const menuItem:any = getMenu(menu ,event.key);
+    if (menuItem.is_link === 1) {
+      window.open(menuItem.path, '_blank');
       return false;
     }
 
-    history.push(menuPath);
+    history.push(menuItem.path);
   };
 
   const onMenuOpenChange = (openKeys: any) => {
