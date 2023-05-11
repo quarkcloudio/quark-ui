@@ -16,7 +16,7 @@ const Selects: React.FC<any> = (props: any) => {
 
   const init = async () => {
     let allItems = items.map(async (item: any) => {
-      let value = getObject[props.data.formKey]?.getFieldValue(item.name);
+      let value = getObject[props.data.componentkey]?.getFieldValue(item.name);
 
       if (value && item.load) {
         const promises = items.map(async (subItem: any, key: any) => {
@@ -74,7 +74,7 @@ const Selects: React.FC<any> = (props: any) => {
 
     fieldsValue[name] = value;
 
-    getObject[props.data.formKey]?.setFieldsValue(fieldsValue);
+    getObject[props.data.componentkey]?.setFieldsValue(fieldsValue);
     setRandom(Math.random);
   };
 
@@ -139,7 +139,7 @@ const Selects: React.FC<any> = (props: any) => {
     }
   };
 
-  const component = items.forEach((item: any) => {
+  const component = items.map((item: any) => {
     return fieldRender(item);
   });
 
