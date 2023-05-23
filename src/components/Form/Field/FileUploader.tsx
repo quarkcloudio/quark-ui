@@ -25,7 +25,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({
 
   const triggerChange = (changedValue: any) => {
     if (onChange) {
-      onChange({ ...changedValue });
+      onChange(changedValue);
     }
   };
 
