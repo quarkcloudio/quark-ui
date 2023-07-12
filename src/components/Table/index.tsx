@@ -244,7 +244,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
                 let getQuery: any = { ...query };
                 let url = search.exportApi;
                 getQuery['search'] = JSON.stringify(formRef.current?.getFieldsFormatValue?.());
-                getQuery['token'] = sessionStorage.getItem('token');
+                getQuery['token'] = localStorage.getItem('token');
 
                 window.open(`${url}?${qs.stringify(getQuery)}`);
               }}

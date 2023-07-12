@@ -103,7 +103,7 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
     if (apiType === 'GET') {
       if (targetBlank) {
         let url = tplEngine(api, data);
-        values['token'] = sessionStorage.getItem('token');
+        values['token'] = localStorage.getItem('token');
         if (api?.indexOf('http') === -1) {
           url = `${url}`;
         }

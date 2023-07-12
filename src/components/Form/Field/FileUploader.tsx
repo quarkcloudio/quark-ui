@@ -95,7 +95,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({
       multiple={true}
       action={action}
       headers={{
-        authorization: 'Bearer ' + sessionStorage['token'],
+        authorization: 'Bearer ' + localStorage['token'],
       }}
       beforeUpload={(file: any) => {
         return checkUpload(file);

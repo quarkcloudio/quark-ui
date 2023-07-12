@@ -177,7 +177,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
           showUploadList={false}
           action={action}
           headers={{
-            authorization: 'Bearer ' + sessionStorage['token'],
+            authorization: 'Bearer ' + localStorage['token'],
           }}
           beforeUpload={(file: any) => {
             return checkUpload(file);
@@ -210,7 +210,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
           listType="picture-card"
           action={action}
           headers={{
-            authorization: 'Bearer ' + sessionStorage['token'],
+            authorization: 'Bearer ' + localStorage['token'],
           }}
           beforeUpload={(file: any) => {
             return checkUpload(file);

@@ -17,7 +17,7 @@ export interface InitialStateProps {
 // 更多信息见文档：https://next.umijs.org/docs/api/runtime-config#getinitialstate
 export async function getInitialState(): Promise<InitialStateProps> {
   const getAccountInfo = () => {
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token');
     if (token) {
       // 返回解析的用户信息
       return JSON.parse(Base64.decode(token.split('.')[1]));
@@ -26,7 +26,7 @@ export async function getInitialState(): Promise<InitialStateProps> {
     return undefined;
   };
 
-  const token = sessionStorage.getItem('token');
+  const token = localStorage.getItem('token');
   if (token) {
     const accountInfo = getAccountInfo();
     return { accountInfo: accountInfo, getAccountInfo };

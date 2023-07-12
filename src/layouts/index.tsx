@@ -161,7 +161,7 @@ const Layout: React.FC<any> = (props) => {
       url: '/api/admin/logout/index/handle',
     });
     if (result['status'] === 'success') {
-      sessionStorage.removeItem('token');
+      localStorage.removeItem('token');
     }
     history.push('/');
   };

@@ -140,7 +140,7 @@ const Login: React.FC<LoginProps> = (props) => {
 
       if (result.status === 'success') {
         // 记录登录凭据
-        sessionStorage.setItem('token', result.data.token);
+        localStorage.setItem('token', result.data.token);
 
         // 清空layout
         sessionStorage.removeItem('layout');

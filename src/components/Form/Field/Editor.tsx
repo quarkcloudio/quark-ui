@@ -349,7 +349,7 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
                 xhr.open('POST', upurl);
                 xhr.setRequestHeader(
                   'authorization',
-                  'Bearer ' + sessionStorage['token'],
+                  'Bearer ' + localStorage['token'],
                 );
                 xhr.onload = function () {
                   if (xhr.status !== 200) {
@@ -435,7 +435,7 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
                     multiple={true}
                     action={'/api/admin/upload/image/handle'}
                     headers={{
-                      authorization: 'Bearer ' + sessionStorage['token'],
+                      authorization: 'Bearer ' + localStorage['token'],
                     }}
                     onChange={(info: any) => {
                       getPictures();

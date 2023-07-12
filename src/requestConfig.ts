@@ -90,7 +90,7 @@ export const requestConfig: RequestConfig = {
     (config: RequestOptions) => {
       config.headers = {
         Accept: 'application/json',
-        Authorization: `Bearer ${sessionStorage.getItem('token') ?? ''}`,
+        Authorization: `Bearer ${localStorage.getItem('token') ?? ''}`,
       };
       const url = config?.url;
       return { ...config, url };
