@@ -131,13 +131,13 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
     setRandom(Math.random);
 
     if (result.component === 'message') {
-      if (result.status === 'success') {
+      if (result.type === 'success') {
         if (callback) {
           callback();
         }
-        message.success(result.msg);
+        message.success(result.content);
       } else {
-        message.error(result.msg);
+        message.error(result.content);
       }
 
       if (result.url) {

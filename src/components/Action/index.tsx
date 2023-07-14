@@ -168,13 +168,13 @@ const Action: React.FC<any> = (props) => {
     setRandom(Math.random);
 
     if (result.component === 'message') {
-      if (result.status === 'success') {
+      if (result.type === 'success') {
         if (props.callback) {
           props.callback();
         }
 
-        if (result.msg) {
-          message.success(result.msg);
+        if (result.content) {
+          message.success(result.content);
         }
 
         if (result.url) {
@@ -193,7 +193,7 @@ const Action: React.FC<any> = (props) => {
           }
         }
       } else {
-        message.error(result.msg);
+        message.error(result.content);
       }
     } else {
       setSubmitResult(result);

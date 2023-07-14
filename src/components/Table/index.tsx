@@ -99,10 +99,10 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
         ...data.values,
       },
     });
-    if (result.status === 'success') {
+    if (result.type === 'success') {
       actionRef.current.reload();
     } else {
-      message.error(result.msg);
+      message.error(result.content);
     }
   };
 

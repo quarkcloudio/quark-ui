@@ -113,8 +113,8 @@ const Login: React.FC<LoginProps> = (props) => {
       const result = await get({
         url: captchaIdUrl,
       });
-      if (result.status === 'error') {
-        message.error(result.msg);
+      if (result.type === 'error') {
+        message.error(result.content);
       } else {
         captchaId = result.data['captchaId'];
       }
@@ -138,7 +138,7 @@ const Login: React.FC<LoginProps> = (props) => {
         data: { ...values, loginType: loginTypeActive },
       });
 
-      if (result.status === 'success') {
+      if (result.type === 'success') {
         // 记录登录凭据
         localStorage.setItem('token', result.data.token);
 
@@ -157,14 +157,14 @@ const Login: React.FC<LoginProps> = (props) => {
         }
 
         // 弹出消息
-        message.success(result.msg);
+        message.success(result.content);
 
         // 跳转页面
         replaceGoto(redirect);
         return;
       } else {
         onSetInnerCaptchaUrl();
-        message.error(result.msg);
+        message.error(result.content);
       }
     } catch (error) {
       message.error('登录失败，请重试！');

@@ -215,8 +215,8 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
       },
     });
 
-    if (result.status === 'error') {
-      message.error(result.msg, 3);
+    if (result.type === 'error') {
+      message.error(result.content, 3);
     }
 
     getPictures(1);
@@ -242,8 +242,8 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
       },
     });
 
-    if (result.status === 'error') {
-      message.error(result.msg, 3);
+    if (result.type === 'error') {
+      message.error(result.content, 3);
     }
 
     getPictures(1);
@@ -259,11 +259,11 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
       },
     });
 
-    if (result.status === 'success') {
+    if (result.type === 'success') {
       changecropBoxOpen(false);
-      message.success(result.msg);
+      message.success(result.content);
     } else {
-      message.error(result.msg, 3);
+      message.error(result.content, 3);
     }
 
     getPictures(1);
@@ -357,8 +357,8 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
                     return;
                   }
                   const result = JSON.parse(xhr.responseText);
-                  if (result.status === 'error') {
-                    alert(result.msg);
+                  if (result.type === 'error') {
+                    alert(result.content);
                     return;
                   }
                   callback(result.data.url, {

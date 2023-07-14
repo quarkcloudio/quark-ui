@@ -150,11 +150,11 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
       },
     });
 
-    if (result.status === 'success') {
-      message.success(result.msg);
+    if (result.type === 'success') {
+      message.success(result.content);
       changeCropBoxVisible(false);
     } else {
-      message.error(result.msg, 3);
+      message.error(result.content, 3);
     }
   };
 
