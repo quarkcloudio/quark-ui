@@ -48,7 +48,7 @@ const Dropdown: React.FC<any> = (props: any) => {
         'group',
       );
     }
-    if (item.component === 'menuItem') {
+    if (item.component === 'menuItem' || item.component === 'action') {
       component = getItem(
         <Action {...item} data={{ ...props.data }} callback={props.callback} />,
         index,
