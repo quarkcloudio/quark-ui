@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Map as AMap, Marker, Polygon, PolyEditor } from 'react-amap';
-import Autocomplete from 'react-amap-plugin-autocomplete';
+import Autocomplete from '../../AMap/AutoComplete';
 import { Button } from 'antd';
 
 export interface Map {
