@@ -531,7 +531,7 @@ const Action: React.FC<any> = (props) => {
     case 'link':
       component = (
         <Button
-          style={{color: "#1890ff",...props.style}}
+          style={props.type == "link" ? {color: "#1890ff",...props.style} : props.style }
           block={props.block}
           danger={props.danger}
           disabled={props.disabled}
