@@ -184,10 +184,10 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
           }}
           onChange={(info: any) => {
             if (info.file.status === 'done') {
-              if (info.file.response.status === 'success') {
+              if (info.file.response.type === 'success') {
                 onFileInfoChange(info.file.response.data);
               } else {
-                message.error(info.file.response.msg);
+                message.error(info.file.response.content);
               }
             }
           }}
@@ -225,7 +225,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
             // 只保存上传成功的数据
             fileList = fileList.filter((file: any) => {
               if (file.response) {
-                return file.response.status === 'success';
+                return file.response.type === 'success';
               }
               if (file.status) {
                 return true;

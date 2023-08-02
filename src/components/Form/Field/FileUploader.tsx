@@ -109,7 +109,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({
         // 只保存上传成功的数据
         fileList = fileList.filter((file: any) => {
           if (file.response) {
-            return file.response.status === 'success';
+            return file.response.type === 'success';
           }
           if (file.status) {
             return true;
