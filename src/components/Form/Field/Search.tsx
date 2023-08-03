@@ -60,6 +60,16 @@ const Search: React.FC<SearchProps> = ({
   const onInputSearch = (value: any, type = 'label') => {
     let timeout: any = null;
 
+    if(!api) {
+      if (timeout) {
+        clearTimeout(timeout);
+        timeout = null;
+      }
+
+      setLoading(false);
+      return;
+    }
+
     if (value) {
       if (timeout) {
         clearTimeout(timeout);
