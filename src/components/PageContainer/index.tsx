@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PageContainer as AntPageContainer } from '@ant-design/pro-components';
+import { PageContainer as AntPageContainer, PageHeader } from '@ant-design/pro-components';
 import { useLocation, history } from '@umijs/max';
 import qs from 'query-string';
 import Render from '@/components/Render';
@@ -54,6 +54,28 @@ const PageContainer: React.FC<any> = (props: any) => {
   return (
     <AntPageContainer
       {...props}
+      header={
+        props.header && (
+          {
+            ...props.header,
+            onBack: ()=>{ history.go(-1) },
+            children: props.header.body && (
+              <Render
+                body={props.header.body}
+                data={props.data}
+                callback={props.callback}
+              />
+            ),
+            extra: props.header.extra && (
+              <Render
+                body={props.header.extra}
+                data={props.data}
+                callback={props.callback}
+              />
+            ),
+          }
+        )
+      }
       content={
         props.content ? (
           <Render
