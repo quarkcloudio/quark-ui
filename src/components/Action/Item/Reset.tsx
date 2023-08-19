@@ -8,7 +8,6 @@ const Reset: React.FC<any> = (props) => {
   const [modal, contextHolder] = AntModal.useModal();
   const IconFont = createFromIconfontCN({ scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js' });
   let { object } = useModel('object');
-  let getObject: any = object;
   const formKey = props.submitForm ? props.submitForm : 'form';
   const { confirm } = modal;
 
@@ -18,7 +17,7 @@ const Reset: React.FC<any> = (props) => {
       title: tplEngine(props.confirmTitle, props.data),
       icon: <ExclamationCircleOutlined />,
       content: tplEngine(props.confirmText, props.data),
-      onOk() { getObject[formKey]?.resetFields?.()}
+      onOk() { object[formKey]?.resetFields?.()}
     })
   };
 
@@ -33,7 +32,7 @@ const Reset: React.FC<any> = (props) => {
       size={props.size}
       type={props.type}
       icon={props.icon && <IconFont type={props.icon} />}
-      onClick={() => { props.confirmTitle ? showConfirm() : getObject[formKey]?.resetFields?.() }}
+      onClick={() => { props.confirmTitle ? showConfirm() : object[formKey]?.resetFields?.() }}
     >
       {tplEngine(props.label, props.data)}
     </Button>
@@ -44,7 +43,7 @@ const Reset: React.FC<any> = (props) => {
       <Popconfirm
         placement="topRight"
         title={tplEngine(props.confirmTitle, props.data)}
-        onConfirm={() => { getObject[formKey]?.resetFields?.() }}
+        onConfirm={() => { object[formKey]?.resetFields?.() }}
       >
         <Button
           style={props.style}

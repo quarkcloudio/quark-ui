@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 const useObject = () => {
-  const [object, setObject] = useState({});
+  const [object, setObject] = useState(<any>{});
 
   return {
     object,

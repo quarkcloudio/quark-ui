@@ -10,7 +10,6 @@ const Action: React.FC<any> = (props) => {
   const { buttonLoadings, setButtonLoadings } = useModel('buttonLoading');
   const IconFont = createFromIconfontCN({ scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js' });
   let { object } = useModel('object');
-  let getObject: any = object;
   const formKey = props.submitForm ? props.submitForm : 'form';
   const { confirm } = modal;
   const waitTime = (time: number = 100) => {
@@ -33,7 +32,7 @@ const Action: React.FC<any> = (props) => {
 
   // 提交表单
   const submit = async () => {
-    getObject[formKey]?.submit?.();
+    object[formKey]?.submit?.();
 
     // hack
     await waitTime(1000);
@@ -42,7 +41,7 @@ const Action: React.FC<any> = (props) => {
       if (props.reload === 'window') {
         reload();
       } else {
-        getObject[props.reload]?.current?.reload();
+        object[props.reload]?.current?.reload();
       }
     }
   };

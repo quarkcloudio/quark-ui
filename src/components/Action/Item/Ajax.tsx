@@ -31,17 +31,16 @@ const Ajax: React.FC<any> = (props) => {
 
   // 执行行为
   const handle = async (api: string) => {
-    let getbuttonLoadings: any = buttonLoadings;
-    getbuttonLoadings[props.componentkey] = true;
-    setButtonLoadings(getbuttonLoadings);
+    buttonLoadings[props.componentkey] = true;
+    setButtonLoadings(buttonLoadings);
     setRandom(Math.random);
 
     const result = await get({
       url: tplEngine(api, props.data),
     });
 
-    getbuttonLoadings[props.componentkey] = false;
-    setButtonLoadings(getbuttonLoadings);
+    buttonLoadings[props.componentkey] = false;
+    setButtonLoadings(buttonLoadings);
     setRandom(Math.random);
 
     if (result.component === 'message') {

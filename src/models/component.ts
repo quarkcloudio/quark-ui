@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 const useComponent = () => {
-  const [components, setComponents] = useState({});
+  const [components, setComponents] = useState(<any>{});
 
   return {
     components,
