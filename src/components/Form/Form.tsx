@@ -39,7 +39,6 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
   const { buttonLoadings, setButtonLoadings } = useModel('buttonLoading');
   const { object, setObject } = useModel('object');
   const [random, setRandom] = useState(0); // hack
-  const getObject: any = object;
   const {
     componentkey,
     title,
@@ -70,8 +69,8 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
   } = { ...defaultProps, ...props };
 
   const formKey = componentkey ? componentkey : 'form'
-  getObject[formKey] = form;
-  setObject(getObject);
+  object[formKey] = form;
+  setObject(object);
 
   useEffect(() => {
     if (initApi) {
@@ -87,8 +86,7 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
         url: tplEngine(initApi, data),
       });
 
-      const getObject: any = object;
-      getObject[formKey].setFieldsValue(result.data);
+      object[formKey].setFieldsValue(result.data);
       setLoading(false);
     }
   };
@@ -99,7 +97,10 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
     setButtonLoadings(buttonLoadings);
     setRandom(Math.random);
 
+    // 处理Get请求
     if (apiType === 'GET') {
+
+      // 新页面打开
       if (targetBlank) {
         let url = tplEngine(api, data);
         values['token'] = localStorage.getItem('token');
@@ -112,12 +113,12 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
         setButtonLoadings(buttonLoadings);
         setRandom(Math.random);
         return false;
-      } else {
-        result = await get({
-          url: tplEngine(api, data),
-          data: values,
-        });
       }
+      
+      result = await get({
+        url: tplEngine(api, data),
+        data: values,
+      });
     } else {
       result = await post({
         url: tplEngine(api, data),
@@ -130,31 +131,40 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
     setRandom(Math.random);
 
     if (result.component === 'message') {
-      if (result.type === 'success') {
-        if (callback) {
-          callback();
-        }
-        message.success(result.content);
-      } else {
+
+      // 提示错误信息
+      if (result.type === 'error') {
         message.error(result.content);
+        return
       }
 
+      // 调用回调函数
+      if (callback) {
+        callback();
+      }
+
+      // 成功信息
+      message.success(result.content);
+
+      // 解析跳转
       if (result.url) {
         if (result.url === 'reload') {
           reload();
-        } else {
-          history.push(result.url);
+          return
         }
+        history.push(result.url);
       }
-    } else {
-      setSubmitResult(result);
+
+      return
     }
+    
+    setSubmitResult(result);
   };
 
   return (
     <Spin spinning={spinning}>
       <ProForm
-        form={getObject[formKey]}
+        form={object[formKey]}
         title={title}
         colon={colon}
         initialValues={initialValues}
@@ -169,9 +179,7 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
         labelCol={labelCol}
         wrapperCol={wrapperCol}
         style={style}
-        onFinish={async (values: any) => {
-          onFinish(values);
-        }}
+        onFinish={async (values: any) => {onFinish(values)}}
         submitter={{
           searchConfig: {
             resetText: resetButtonText,
