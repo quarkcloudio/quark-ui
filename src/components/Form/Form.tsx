@@ -95,9 +95,8 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
 
   const onFinish = async (values: any) => {
     let result = null;
-    let getbuttonLoadings: any = buttonLoadings;
-    getbuttonLoadings[formKey] = true;
-    setButtonLoadings(getbuttonLoadings);
+    buttonLoadings[formKey] = true;
+    setButtonLoadings(buttonLoadings);
     setRandom(Math.random);
 
     if (apiType === 'GET') {
@@ -109,8 +108,8 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
         }
 
         window.open(`${url}?${qs.stringify(values)}`);
-        getbuttonLoadings[formKey] = false;
-        setButtonLoadings(getbuttonLoadings);
+        buttonLoadings[formKey] = false;
+        setButtonLoadings(buttonLoadings);
         setRandom(Math.random);
         return false;
       } else {
@@ -126,8 +125,8 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
       });
     }
 
-    getbuttonLoadings[formKey] = false;
-    setButtonLoadings(getbuttonLoadings);
+    buttonLoadings[formKey] = false;
+    setButtonLoadings(buttonLoadings);
     setRandom(Math.random);
 
     if (result.component === 'message') {
