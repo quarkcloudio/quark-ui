@@ -34,17 +34,14 @@ import Selects from './Field/Selects';
 import tplEngine from '@/utils/template';
 
 const Field: React.FC<any> = (props: any) => {
-  const IconFont = createFromIconfontCN({
-    scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js',
-  });
+  const IconFont = createFromIconfontCN({scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js'});
   const [random, setRandom] = useState(0); // hack
   let { object } = useModel('object');
-  let getObject: any = object;
 
   const onChange = (value: any, name: string) => {
     let item: any = [];
     item[name] = value;
-    getObject[props.data?.componentkey]?.setFieldsValue(item);
+    object[props.data?.componentkey]?.setFieldsValue(item);
     setRandom(Math.random);
   };
 
@@ -795,7 +792,7 @@ const Field: React.FC<any> = (props: any) => {
     if (currentProps.when) {
       let fieldData: any = {};
       fieldData['componentkey'] = props.data?.componentkey;
-      fieldData[currentProps.name] = getObject[props.data?.componentkey]?.getFieldValue(
+      fieldData[currentProps.name] = object[props.data?.componentkey]?.getFieldValue(
         currentProps.name,
       );
 
