@@ -14,7 +14,6 @@ const Ajax: React.FC<any> = (props) => {
   const [submitResult, setSubmitResult] = useState(null);
   const IconFont = createFromIconfontCN({ scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js' });
   let { object } = useModel('object');
-  let getObject: any = object;
   const { confirm } = modal;
 
   // 确认弹框
@@ -64,7 +63,7 @@ const Ajax: React.FC<any> = (props) => {
         if (props.reload === 'window') {
           reload();
         } else {
-          getObject[props.reload]?.current?.reload();
+          object[props.reload]?.current?.reload();
         }
       }
       return
