@@ -17,7 +17,7 @@ const Reset: React.FC<any> = (props) => {
       title: tplEngine(props.confirmTitle, props.data),
       icon: <ExclamationCircleOutlined />,
       content: tplEngine(props.confirmText, props.data),
-      onOk() { object[formKey]?.resetFields?.()}
+      onOk() { object[formKey]?.current?.resetFields?.()}
     })
   };
 
@@ -32,7 +32,7 @@ const Reset: React.FC<any> = (props) => {
       size={props.size}
       type={props.type}
       icon={props.icon && <IconFont type={props.icon} />}
-      onClick={() => { props.confirmTitle ? showConfirm() : object[formKey]?.resetFields?.() }}
+      onClick={() => { props.confirmTitle ? showConfirm() : object[formKey]?.current?.resetFields?.() }}
     >
       {tplEngine(props.label, props.data)}
     </Button>
@@ -43,7 +43,7 @@ const Reset: React.FC<any> = (props) => {
       <Popconfirm
         placement="topRight"
         title={tplEngine(props.confirmTitle, props.data)}
-        onConfirm={() => { object[formKey]?.resetFields?.() }}
+        onConfirm={() => { object[formKey]?.current?.resetFields?.() }}
       >
         <Button
           style={props.style}

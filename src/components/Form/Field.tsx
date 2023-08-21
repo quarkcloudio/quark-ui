@@ -41,7 +41,7 @@ const Field: React.FC<any> = (props: any) => {
   const onChange = (value: any, name: string) => {
     let item: any = [];
     item[name] = value;
-    object[props.data?.componentkey]?.setFieldsValue(item);
+    object[props.data?.componentkey]?.current?.setFieldsValue(item);
     setRandom(Math.random);
   };
 
@@ -792,7 +792,7 @@ const Field: React.FC<any> = (props: any) => {
     if (currentProps.when) {
       let fieldData: any = {};
       fieldData['componentkey'] = props.data?.componentkey;
-      fieldData[currentProps.name] = object[props.data?.componentkey]?.getFieldValue(
+      fieldData[currentProps.name] = object[props.data?.componentkey]?.current?.getFieldValue(
         currentProps.name,
       );
 

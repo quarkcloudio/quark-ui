@@ -8,7 +8,6 @@ const Selects: React.FC<any> = (props: any) => {
   const [random, setRandom] = useState(0);
   const [items, setItems] = useState(props.body);
   let { object } = useModel('object');
-  let getObject: any = object;
 
   useEffect(() => {
     init();
@@ -16,7 +15,7 @@ const Selects: React.FC<any> = (props: any) => {
 
   const init = async () => {
     let allItems = items.map(async (item: any) => {
-      let value = getObject[props.data.componentkey]?.getFieldValue(item.name);
+      let value = object[props.data.componentkey]?.current?.getFieldValue(item.name);
 
       if (value && item.load) {
         const promises = items.map(async (subItem: any, key: any) => {
@@ -74,7 +73,7 @@ const Selects: React.FC<any> = (props: any) => {
 
     fieldsValue[name] = value;
 
-    getObject[props.data.componentkey]?.setFieldsValue(fieldsValue);
+    object[props.data.componentkey]?.current?.setFieldsValue(fieldsValue);
     setRandom(Math.random);
   };
 
@@ -125,7 +124,7 @@ const Selects: React.FC<any> = (props: any) => {
     // 解析when
     if (item.when) {
       let fieldData: any = {};
-      fieldData[item.name] = getObject[props.data.formKey]?.getFieldValue(
+      fieldData[item.name] = object[props.data.formKey]?.current?.getFieldValue(
         item.name,
       );
       return (

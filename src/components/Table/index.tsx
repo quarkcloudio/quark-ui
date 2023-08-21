@@ -41,7 +41,6 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
   const { object, setObject } = useModel('object');
   const [ columns, setColumns ] = useState(props.columns);
   const [ toolBar, setToolBar ] = useState(props.toolBar);
-  const getObject: any = object;
   const {
     componentkey,
     api,
@@ -70,8 +69,8 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
 
   // 注册全局变量
   if (componentkey) {
-    getObject[componentkey] = actionRef;
-    setObject(getObject);
+    object[componentkey] = actionRef;
+    setObject(object);
   }
 
   // 渲染column
@@ -148,8 +147,8 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
             }
 
             // 将form对象注册到全局
-            getObject[search.componentkey] = form;
-            setObject(getObject);
+            object[search.componentkey] = form;
+            setObject(object);
 
             return (
               <SearchField

@@ -5,9 +5,7 @@ import Render from '@/components/Render';
 import { createFromIconfontCN } from '@ant-design/icons';
 
 const Modal: React.FC<any> = (props: any) => {
-  const IconFont = createFromIconfontCN({
-    scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js',
-  });
+  const IconFont = createFromIconfontCN({scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js'});
   const [open, setOpen] = useState(props.modal.open);
 
   return (
@@ -20,7 +18,7 @@ const Modal: React.FC<any> = (props: any) => {
         shape={props.shape}
         size={props.size}
         type={props.type}
-        icon={props.icon ? <IconFont type={props.icon} /> : false}
+        icon={props.icon && <IconFont type={props.icon} />}
         onClick={() => {
           setOpen(true);
         }}
@@ -33,13 +31,13 @@ const Modal: React.FC<any> = (props: any) => {
         open={open}
         onCancel={() => setOpen(false)}
         footer={
-          props?.modal?.actions ? (
+          props?.modal?.actions && (
             <Render
               body={props?.modal?.actions}
               data={props.data}
               callback={() => setOpen(false)}
             />
-          ) : null
+          )
         }
       >
         <Render

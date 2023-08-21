@@ -6,9 +6,7 @@ import Action from '@/components/Action';
 import { createFromIconfontCN } from '@ant-design/icons';
 
 const Drawer: React.FC<any> = (props: any) => {
-  const IconFont = createFromIconfontCN({
-    scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js',
-  });
+  const IconFont = createFromIconfontCN({ scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js' });
   const [open, setOpen] = useState(props.drawer.open);
 
   return (
@@ -21,7 +19,7 @@ const Drawer: React.FC<any> = (props: any) => {
         shape={props.shape}
         size={props.size}
         type={props.type}
-        icon={props.icon ? <IconFont type={props.icon} /> : false}
+        icon={props.icon && <IconFont type={props.icon} />}
         onClick={() => {
           setOpen(true);
         }}
@@ -34,7 +32,7 @@ const Drawer: React.FC<any> = (props: any) => {
         open={open}
         onClose={() => setOpen(false)}
         footer={
-          props?.drawer?.actions ? (
+          props?.drawer?.actions && (
             <Space>
               {props.drawer.actions?.map((action: any, index: number) => {
                 return (
@@ -47,7 +45,7 @@ const Drawer: React.FC<any> = (props: any) => {
                 );
               })}
             </Space>
-          ) : null
+          )
         }
       >
         <Render

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import type { CSSProperties } from 'react';
 import { history, useModel } from '@umijs/max';
 import { message, Space, Spin } from 'antd';
 import { ProForm, ProFormProps } from '@ant-design/pro-components';
-import qs from 'query-string';
+import type { ProFormInstance } from '@ant-design/pro-components';
 import { post, get } from '@/services/action';
+import qs from 'query-string';
 import Action from '@/components/Action';
 import Render from '@/components/Render';
 import tplEngine from '@/utils/template';
@@ -33,11 +34,12 @@ const defaultProps = {
 } as FormExtendProps;
 
 const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
-  const [form] = ProForm.useForm();
+  const formRef = useRef<ProFormInstance<any>>();
   const [spinning, setLoading] = useState(false);
   const [submitResult, setSubmitResult] = useState(null);
   const { buttonLoadings, setButtonLoadings } = useModel('buttonLoading');
-  const { object, setObject } = useModel('object');
+  const { object, setObject } = useModel('object'); // 全局对象
+  const { submit, setSubmit } = useModel('submit'); // 全局表单提交方法
   const [random, setRandom] = useState(0); // hack
   const {
     componentkey,
@@ -69,7 +71,7 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
   } = { ...defaultProps, ...props };
 
   const formKey = componentkey ? componentkey : 'form'
-  object[formKey] = form;
+  object[formKey] = formRef;
   setObject(object);
 
   useEffect(() => {
@@ -86,7 +88,7 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
         url: tplEngine(initApi, data),
       });
 
-      object[formKey].setFieldsValue(result.data);
+      object[formKey]?.current?.setFieldsValue(result.data);
       setLoading(false);
     }
   };
@@ -161,10 +163,14 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
     setSubmitResult(result);
   };
 
+  // 将表单提交方法注入到全局
+  submit[formKey] = onFinish;
+  setSubmit(submit);
+
   return (
     <Spin spinning={spinning}>
       <ProForm
-        form={object[formKey]}
+        formRef={object[formKey]}
         title={title}
         colon={colon}
         initialValues={initialValues}

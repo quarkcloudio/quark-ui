@@ -10,15 +10,10 @@ const Action: React.FC<any> = (props) => {
   const { buttonLoadings, setButtonLoadings } = useModel('buttonLoading');
   const IconFont = createFromIconfontCN({ scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js' });
   let { object } = useModel('object');
+  let { submit } = useModel('submit');
+  const [random, setRandom] = useState(0); // hack
   const formKey = props.submitForm ? props.submitForm : 'form';
   const { confirm } = modal;
-  const waitTime = (time: number = 100) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(true);
-      }, time);
-    });
-  };
 
   // 确认弹框
   const showConfirm = async () => {
@@ -26,24 +21,32 @@ const Action: React.FC<any> = (props) => {
       title: tplEngine(props.confirmTitle, props.data),
       icon: <ExclamationCircleOutlined />,
       content: tplEngine(props.confirmText, props.data),
-      onOk: ()=>{submit()},
+      onOk: ()=>{handle()},
     })
   };
 
   // 提交表单
-  const submit = async () => {
-    object[formKey]?.submit?.();
+  const handle = async () => {
 
-    // hack
-    await waitTime(1000);
+    // 设置按钮提交状态
+    buttonLoadings[formKey] = true;
+    setButtonLoadings(buttonLoadings);
+    setRandom(Math.random);
 
-    if (props.reload) {
-      if (props.reload === 'window') {
-        reload();
-      } else {
-        object[props.reload]?.current?.reload();
+    // 提交表单
+    object[formKey]?.current?.validateFieldsReturnFormatValue()?.then(async (values:any) => {
+      await submit[formKey]?.(values);
+      if (props.reload) {
+        if (props.reload === 'window') {
+          reload();
+        } else {
+          object[props.reload]?.current?.reload();
+        }
       }
-    }
+    })
+    .catch((errorInfo:any) => {
+      console.log(errorInfo)
+    });
   };
 
   let component = (
@@ -62,7 +65,7 @@ const Action: React.FC<any> = (props) => {
         if (props.confirmTitle) {
           showConfirm()
         } else {
-          submit();
+          handle();
         }
       }}
     >
@@ -75,9 +78,7 @@ const Action: React.FC<any> = (props) => {
       <Popconfirm
         placement="topRight"
         title={tplEngine(props.confirmTitle, props.data)}
-        onConfirm={() => {
-          submit();
-        }}
+        onConfirm={() => { handle() }}
       >
         <Button
           loading={buttonLoadings[formKey]}
