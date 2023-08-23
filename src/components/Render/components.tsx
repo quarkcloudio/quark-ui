@@ -28,13 +28,13 @@ import When from '@/components/When';
 import { DefaultFooter } from '@ant-design/pro-components';
 
 const fieldName =
-  'textField|passwordField|textAreaField|inputNumberField|\
+'textField|passwordField|textAreaField|inputNumberField|\
 iconField|idField|hiddenField|checkboxField|radioField|imageField|\
 fileField|switchField|selectField|treeField|cascaderField|\
 dateField|weekField|monthField|quarterField|yearField|datetimeField|\
 dateRangeField|datetimeRangeField|timeField|timeRangeField|displayField|\
 editorField|searchField|mapField|geofenceField|listField|groupField|selects|\
-treeSelectField|spaceField|compactField|fieldsetField|dependencyField|';
+treeSelectField|spaceField|compactField|fieldsetField|dependencyField|transferField|';
 
 const components = [
   { name: 'page', component: <Page /> },

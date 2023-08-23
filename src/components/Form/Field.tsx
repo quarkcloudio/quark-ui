@@ -31,6 +31,7 @@ import Geofence from './Field/Geofence';
 import Editor from './Field/Editor';
 import Cascader from './Field/Cascader';
 import Selects from './Field/Selects';
+import Transfer from './Field/Transfer';
 import tplEngine from '@/utils/template';
 
 const Field: React.FC<any> = (props: any) => {
@@ -753,6 +754,39 @@ const Field: React.FC<any> = (props: any) => {
             </ProFormFieldSet>
           );
         }
+        break;
+      case 'transferField':
+        component = (
+          <ProForm.Item
+            label={currentProps.label}
+            name={currentProps.name}
+            rules={currentProps.frontendRules}
+            help={currentProps.help ? currentProps.help : undefined}
+            extra={currentProps.extra}
+          >
+            <Transfer
+              api={currentProps.api}
+              dataSource={currentProps.dataSource}
+              disabled={currentProps.disabled}
+              selectionsIcon={currentProps.selectionsIcon}
+              filterOption={currentProps.filterOption}
+              footer={currentProps.footer}
+              listStyle={currentProps.listStyle}
+              locale={currentProps.locale}
+              oneWay={currentProps.oneWay}
+              operations={currentProps.operations}
+              operationStyle={currentProps.operationStyle}
+              pagination={currentProps.pagination}
+              selectAllLabels={currentProps.selectAllLabels}
+              selectedKeys={currentProps.selectedKeys}
+              showSearch={currentProps.showSearch}
+              showSelectAll={currentProps.showSelectAll}
+              status={currentProps.status}
+              targetKeys={currentProps.targetKeys}
+              titles={currentProps.titles}
+            />
+          </ProForm.Item>
+        );
         break;
       default:
         component = <span key={currentProps.name}>无{currentProps.component}组件</span>;
