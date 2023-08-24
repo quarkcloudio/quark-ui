@@ -43,9 +43,7 @@ const Field: React.FC<any> = (props: any) => {
   let { object } = useModel('object');
 
   const onChange = (value: any, name: string) => {
-    let item: any = [];
-    item[name] = value;
-    object[props.data?.componentkey]?.current?.setFieldsValue(item);
+    object[props.data?.componentkey]?.current?.setFieldValue(name,value);
     setRandom(Math.random);
   };
 
