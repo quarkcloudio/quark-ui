@@ -54,6 +54,8 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
     size,
     dateFormatter,
     layout,
+    grid,
+    rowProps,
     labelCol,
     wrapperCol,
     style,
@@ -70,7 +72,7 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
     callback,
   } = { ...defaultProps, ...props };
 
-  const formKey = componentkey ? componentkey : 'form'
+  const formKey = componentkey ? componentkey : 'form';
   object[formKey] = formRef;
   setObject(object);
 
@@ -101,7 +103,6 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
 
     // 处理Get请求
     if (apiType === 'GET') {
-
       // 新页面打开
       if (targetBlank) {
         let url = tplEngine(api, data);
@@ -116,7 +117,7 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
         setRandom(Math.random);
         return false;
       }
-      
+
       result = await get({
         url: tplEngine(api, data),
         data: values,
@@ -133,11 +134,10 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
     setRandom(Math.random);
 
     if (result.component === 'message') {
-
       // 提示错误信息
       if (result.type === 'error') {
         message.error(result.content);
-        return
+        return;
       }
 
       // 调用回调函数
@@ -152,14 +152,14 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
       if (result.url) {
         if (result.url === 'reload') {
           reload();
-          return
+          return;
         }
         history.push(result.url);
       }
 
-      return
+      return;
     }
-    
+
     setSubmitResult(result);
   };
 
@@ -182,10 +182,14 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
         size={size}
         dateFormatter={dateFormatter}
         layout={layout}
+        grid={grid}
+        rowProps={rowProps}
         labelCol={labelCol}
         wrapperCol={wrapperCol}
         style={style}
-        onFinish={async (values: any) => {onFinish(values)}}
+        onFinish={async (values: any) => {
+          onFinish(values);
+        }}
         submitter={{
           searchConfig: {
             resetText: resetButtonText,

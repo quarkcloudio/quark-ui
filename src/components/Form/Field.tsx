@@ -23,6 +23,7 @@ import {
 import { Select, Tree, Space } from 'antd';
 import { createFromIconfontCN } from '@ant-design/icons';
 import Render from '@/components/Render';
+import Icon from './Field/Icon';
 import ImageUploader from './Field/ImageUploader';
 import FileUploader from './Field/FileUploader';
 import Search from './Field/Search';
@@ -35,7 +36,9 @@ import Transfer from './Field/Transfer';
 import tplEngine from '@/utils/template';
 
 const Field: React.FC<any> = (props: any) => {
-  const IconFont = createFromIconfontCN({scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js'});
+  const IconFont = createFromIconfontCN({
+    scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js',
+  });
   const [random, setRandom] = useState(0); // hack
   let { object } = useModel('object');
 
@@ -46,7 +49,7 @@ const Field: React.FC<any> = (props: any) => {
     setRandom(Math.random);
   };
 
-  const baseProps = (props:any) => {
+  const baseProps = (props: any) => {
     return {
       name: props.name,
       label: props.label,
@@ -60,6 +63,8 @@ const Field: React.FC<any> = (props: any) => {
       addonAfter: props.addonAfter,
       addonBefore: props.addonBefore,
       wrapperCol: props.wrapperCol,
+      colProps: props.colProps,
+      secondary: props.secondary,
     };
   };
 
@@ -140,32 +145,20 @@ const Field: React.FC<any> = (props: any) => {
         break;
       case 'iconField':
         component = (
-          <ProForm.Item
-            key={currentProps.name}
-            label={currentProps.label}
-            name={currentProps.name}
-            tooltip={currentProps.tooltip}
-            rules={currentProps.frontendRules}
-            help={currentProps.help && currentProps.help}
-            extra={currentProps.extra}
-          >
-            <Select
-              style={currentProps.style && currentProps.style}
-              disabled={currentProps.disabled}
-              placeholder={currentProps.placeholder}
-            >
-              <Select.Option key={undefined} value={''}>
-                无图标
-              </Select.Option>
-              {currentProps.options.map((item: any) => {
-                return (
-                  <Select.Option key={item} value={item}>
-                    <IconFont type={item} /> {item}
-                  </Select.Option>
-                );
-              })}
-            </Select>
-          </ProForm.Item>
+          <Icon
+            {...baseProps(currentProps)}
+            fieldProps={{
+              style: currentProps.style && currentProps.style,
+              disabled: currentProps.disabled && currentProps.disabled,
+              placeholder: currentProps.placeholder && currentProps.placeholder,
+              size: currentProps.size && currentProps.size,
+              allowClear: currentProps.allowClear && currentProps.allowClear,
+              options: currentProps.options && currentProps.options,
+              onChange: (value: any) => {
+                onChange(value, currentProps.name);
+              },
+            }}
+          />
         );
         break;
       case 'hiddenField':
@@ -179,8 +172,13 @@ const Field: React.FC<any> = (props: any) => {
         if (currentProps.onFormDisplayed) {
           component = (
             <div style={{ display: 'none' }}>
-              <span style={currentProps.style ? currentProps.style : []}>{currentProps.value}</span>
-              <ProFormText label={currentProps.label} name={currentProps.name} />
+              <span style={currentProps.style ? currentProps.style : []}>
+                {currentProps.value}
+              </span>
+              <ProFormText
+                label={currentProps.label}
+                name={currentProps.name}
+              />
             </div>
           );
         } else {
@@ -223,7 +221,7 @@ const Field: React.FC<any> = (props: any) => {
         break;
       case 'imageField':
         component = (
-          <ProForm.Item {...baseProps(currentProps)}>
+          <ProFormItem {...baseProps(currentProps)}>
             <ImageUploader
               key={currentProps.name}
               mode={currentProps.mode}
@@ -234,12 +232,12 @@ const Field: React.FC<any> = (props: any) => {
               limitWH={currentProps.limitWH}
               action={currentProps.api}
             />
-          </ProForm.Item>
+          </ProFormItem>
         );
         break;
       case 'fileField':
         component = (
-          <ProForm.Item {...baseProps(currentProps)}>
+          <ProFormItem {...baseProps(currentProps)}>
             <FileUploader
               key={currentProps.name}
               title={currentProps.button}
@@ -248,7 +246,7 @@ const Field: React.FC<any> = (props: any) => {
               limitNum={currentProps.limitNum}
               action={currentProps.api}
             />
-          </ProForm.Item>
+          </ProFormItem>
         );
         break;
       case 'switchField':
@@ -289,37 +287,37 @@ const Field: React.FC<any> = (props: any) => {
         component = (
           <ProFormTreeSelect
             {...baseProps(currentProps)}
-            style={currentProps.style && currentProps.style} 
+            style={currentProps.style && currentProps.style}
             width={currentProps.width}
             fieldProps={{
-              allowClear:currentProps.allowClear,
-              autoClearSearchValue:currentProps.autoClearSearchValue,
-              bordered:currentProps.bordered,
-              defaultValue:currentProps.defaultValue,
-              disabled:currentProps.disabled,
-              popupClassName:currentProps.popupClassName,
-              dropdownStyle:currentProps.dropdownStyle,
-              listHeight:currentProps.listHeight,
-              maxTagCount:currentProps?.maxTagCount,
-              maxTagPlaceholder:currentProps?.maxTagPlaceholder,
-              maxTagTextLength:currentProps?.maxTagTextLength,
-              multiple:currentProps.multiple,
-              notFoundContent:currentProps?.notFoundContent,
-              placeholder:currentProps?.placeholder,
-              placement:currentProps?.placement,
-              showArrow:currentProps.showArrow,
-              showSearch:currentProps.showSearch,
-              status:currentProps.status,
-              suffixIcon:currentProps?.suffixIcon,
-              treeCheckable:currentProps.treeCheckable,
-              treeDataSimpleMode:currentProps.treeDataSimpleMode,
-              treeDefaultExpandAll:currentProps.treeDefaultExpandAll,
-              treeDefaultExpandedKeys:currentProps?.treeDefaultExpandedKeys,
-              treeExpandAction:currentProps?.treeExpandAction,
-              treeExpandedKeys:currentProps?.treeExpandedKeys,
-              treeIcon:currentProps?.treeIcon,
-              treeLine:currentProps?.treeLine,
-              virtual:currentProps?.virtual,
+              allowClear: currentProps.allowClear,
+              autoClearSearchValue: currentProps.autoClearSearchValue,
+              bordered: currentProps.bordered,
+              defaultValue: currentProps.defaultValue,
+              disabled: currentProps.disabled,
+              popupClassName: currentProps.popupClassName,
+              dropdownStyle: currentProps.dropdownStyle,
+              listHeight: currentProps.listHeight,
+              maxTagCount: currentProps?.maxTagCount,
+              maxTagPlaceholder: currentProps?.maxTagPlaceholder,
+              maxTagTextLength: currentProps?.maxTagTextLength,
+              multiple: currentProps.multiple,
+              notFoundContent: currentProps?.notFoundContent,
+              placeholder: currentProps?.placeholder,
+              placement: currentProps?.placement,
+              showArrow: currentProps.showArrow,
+              showSearch: currentProps.showSearch,
+              status: currentProps.status,
+              suffixIcon: currentProps?.suffixIcon,
+              treeCheckable: currentProps.treeCheckable,
+              treeDataSimpleMode: currentProps.treeDataSimpleMode,
+              treeDefaultExpandAll: currentProps.treeDefaultExpandAll,
+              treeDefaultExpandedKeys: currentProps?.treeDefaultExpandedKeys,
+              treeExpandAction: currentProps?.treeExpandAction,
+              treeExpandedKeys: currentProps?.treeExpandedKeys,
+              treeIcon: currentProps?.treeIcon,
+              treeLine: currentProps?.treeLine,
+              virtual: currentProps?.virtual,
               style: currentProps.style && currentProps.style,
               width: currentProps.width,
               size: currentProps.size,
@@ -334,22 +332,22 @@ const Field: React.FC<any> = (props: any) => {
         break;
       case 'treeField':
         component = (
-          <ProForm.Item
+          <ProFormItem
             {...baseProps(currentProps)}
             valuePropName={'checkedKeys'}
             trigger={'onCheck'}
           >
             <Tree
               checkable
-              style= {currentProps.style && currentProps.style}
+              style={currentProps.style && currentProps.style}
               treeData={currentProps.treeData}
             />
-          </ProForm.Item>
+          </ProFormItem>
         );
         break;
       case 'cascaderField':
         component = (
-          <ProForm.Item
+          <ProFormItem
             label={currentProps.label}
             name={currentProps.name}
             rules={currentProps.frontendRules}
@@ -363,7 +361,7 @@ const Field: React.FC<any> = (props: any) => {
               style={currentProps.style}
               placeholder={currentProps.placeholder}
             />
-          </ProForm.Item>
+          </ProFormItem>
         );
         break;
       case 'dateField':
@@ -536,14 +534,16 @@ const Field: React.FC<any> = (props: any) => {
         break;
       case 'displayField':
         component = (
-          <ProForm.Item label={currentProps.label}>
-            <span style={currentProps.style ? currentProps.style : []}>{currentProps.value}</span>
-          </ProForm.Item>
+          <ProFormItem label={currentProps.label}>
+            <span style={currentProps.style ? currentProps.style : []}>
+              {currentProps.value}
+            </span>
+          </ProFormItem>
         );
         break;
       case 'editorField':
         component = (
-          <ProForm.Item
+          <ProFormItem
             label={currentProps.label}
             name={currentProps.name}
             rules={currentProps.frontendRules}
@@ -555,12 +555,12 @@ const Field: React.FC<any> = (props: any) => {
               height={currentProps?.style?.height}
               width={currentProps?.style?.width}
             />
-          </ProForm.Item>
+          </ProFormItem>
         );
         break;
       case 'searchField':
         component = (
-          <ProForm.Item
+          <ProFormItem
             label={currentProps.label}
             name={currentProps.name}
             rules={currentProps.frontendRules}
@@ -576,25 +576,29 @@ const Field: React.FC<any> = (props: any) => {
               api={currentProps.api}
               allowClear={currentProps.allowClear}
             />
-          </ProForm.Item>
+          </ProFormItem>
         );
         break;
       case 'mapField':
         component = (
-          <ProForm.Item
+          <ProFormItem
             label={currentProps.label}
             name={currentProps.name}
             rules={currentProps.frontendRules}
             help={currentProps.help ? currentProps.help : undefined}
             extra={currentProps.extra}
           >
-            <Map zoom={currentProps.zoom} mapKey={currentProps.mapKey} style={currentProps.style} />
-          </ProForm.Item>
+            <Map
+              zoom={currentProps.zoom}
+              mapKey={currentProps.mapKey}
+              style={currentProps.style}
+            />
+          </ProFormItem>
         );
         break;
       case 'geofenceField':
         component = (
-          <ProForm.Item
+          <ProFormItem
             label={currentProps.label}
             name={currentProps.name}
             rules={currentProps.frontendRules}
@@ -606,7 +610,7 @@ const Field: React.FC<any> = (props: any) => {
               mapKey={currentProps.mapKey}
               style={currentProps.style}
             />
-          </ProForm.Item>
+          </ProFormItem>
         );
         break;
       case 'selects':
@@ -629,6 +633,7 @@ const Field: React.FC<any> = (props: any) => {
                 creatorButtonText: currentProps.buttonText,
               }}
               alwaysShowItemLabel={currentProps.alwaysShowItemLabel}
+              rowProps={currentProps.rowProps}
             >
               {fieldRender(currentProps.items)}
             </ProFormList>
@@ -643,6 +648,7 @@ const Field: React.FC<any> = (props: any) => {
                 creatorButtonText: currentProps.buttonText,
               }}
               alwaysShowItemLabel={currentProps.alwaysShowItemLabel}
+              rowProps={currentProps.rowProps}
             >
               {currentProps.items.map((item: any) => {
                 return fieldRender(item);
@@ -658,6 +664,7 @@ const Field: React.FC<any> = (props: any) => {
               title={currentProps.title}
               style={currentProps.style}
               size={currentProps.size}
+              rowProps={currentProps.rowProps}
             >
               {fieldRender(currentProps.body)}
             </ProForm.Group>
@@ -668,6 +675,7 @@ const Field: React.FC<any> = (props: any) => {
               title={currentProps.title}
               style={currentProps.style}
               size={currentProps.size}
+              rowProps={currentProps.rowProps}
             >
               {currentProps.body.map((item: any) => {
                 return fieldRender(item);
@@ -730,9 +738,9 @@ const Field: React.FC<any> = (props: any) => {
                 direction={currentProps.direction}
                 size={currentProps.size}
               >
-              {currentProps.body.map((item: any) => {
-                return fieldRender(item);
-              })}
+                {currentProps.body.map((item: any) => {
+                  return fieldRender(item);
+                })}
               </Space.Compact>
             </ProFormItem>
           );
@@ -741,13 +749,21 @@ const Field: React.FC<any> = (props: any) => {
       case 'fieldsetField':
         if (currentProps.body.hasOwnProperty('component')) {
           component = (
-            <ProFormFieldSet name={currentProps.name} label={currentProps.label} type={currentProps.type}>
+            <ProFormFieldSet
+              name={currentProps.name}
+              label={currentProps.label}
+              type={currentProps.type}
+            >
               {fieldRender(currentProps.body)}
             </ProFormFieldSet>
           );
         } else {
           component = (
-            <ProFormFieldSet name={currentProps.name} label={currentProps.label} type={currentProps.type}>
+            <ProFormFieldSet
+              name={currentProps.name}
+              label={currentProps.label}
+              type={currentProps.type}
+            >
               {currentProps.body.map((item: any) => {
                 return fieldRender(item);
               })}
@@ -757,7 +773,7 @@ const Field: React.FC<any> = (props: any) => {
         break;
       case 'transferField':
         component = (
-          <ProForm.Item
+          <ProFormItem
             label={currentProps.label}
             name={currentProps.name}
             rules={currentProps.frontendRules}
@@ -785,31 +801,40 @@ const Field: React.FC<any> = (props: any) => {
               targetKeys={currentProps.targetKeys}
               titles={currentProps.titles}
             />
-          </ProForm.Item>
+          </ProFormItem>
         );
         break;
       default:
-        component = <span key={currentProps.name}>无{currentProps.component}组件</span>;
+        component = (
+          <span key={currentProps.name}>无{currentProps.component}组件</span>
+        );
         break;
     }
 
     // 数据联动组件特殊处理
-    if(currentProps.component === "dependencyField") {
+    if (currentProps.component === 'dependencyField') {
       return (
-        <ProFormDependency name={currentProps.names} ignoreFormListField={currentProps.ignoreFormListField}>
+        <ProFormDependency
+          name={currentProps.names}
+          ignoreFormListField={currentProps.ignoreFormListField}
+        >
           {(values) => {
-
             // Space、Compact组件下，需要特殊处理
-            if(props.component === "spaceField" || props.component === "compactField") {
-              return currentProps.when.items.map((item: any,index: number) => {
+            if (
+              props.component === 'spaceField' ||
+              props.component === 'compactField'
+            ) {
+              return currentProps.when.items.map((item: any, index: number) => {
                 if (tplEngine(item.condition, values) === 'true') {
                   return item.body.map((item: any) => {
                     return fieldRender(item);
-                  })
+                  });
+                } else {
+                  return null;
                 }
-              })
+              });
             }
-            
+
             return (
               <Render
                 body={currentProps.when}
@@ -819,27 +844,32 @@ const Field: React.FC<any> = (props: any) => {
             );
           }}
         </ProFormDependency>
-      )
+      );
     }
 
     // 存在When组件，需要特殊处理
     if (currentProps.when) {
       let fieldData: any = {};
       fieldData['componentkey'] = props.data?.componentkey;
-      fieldData[currentProps.name] = object[props.data?.componentkey]?.current?.getFieldValue(
-        currentProps.name,
-      );
+      fieldData[currentProps.name] = object[
+        props.data?.componentkey
+      ]?.current?.getFieldValue(currentProps.name);
 
       // Space、Compact组件下，需要特殊处理
-      if(props.component === "spaceField" || props.component === "compactField") {
+      if (
+        props.component === 'spaceField' ||
+        props.component === 'compactField'
+      ) {
         return (
           <>
             {component}
-            {currentProps.when.items.map((item: any,index: number) => {
+            {currentProps.when.items.map((item: any, index: number) => {
               if (tplEngine(item.condition, fieldData) === 'true') {
                 return item.body.map((item: any) => {
                   return fieldRender(item);
-                })
+                });
+              } else {
+                return null;
               }
             })}
           </>
