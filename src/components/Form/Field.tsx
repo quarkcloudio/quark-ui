@@ -20,7 +20,7 @@ import {
   ProFormFieldSet,
   ProFormDependency,
 } from '@ant-design/pro-components';
-import { Select, Tree, Space } from 'antd';
+import { Tree, Space } from 'antd';
 import { createFromIconfontCN } from '@ant-design/icons';
 import Render from '@/components/Render';
 import Icon from './Field/Icon';
@@ -36,14 +36,11 @@ import Transfer from './Field/Transfer';
 import tplEngine from '@/utils/template';
 
 const Field: React.FC<any> = (props: any) => {
-  const IconFont = createFromIconfontCN({
-    scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js',
-  });
   const [random, setRandom] = useState(0); // hack
   let { object } = useModel('object');
 
   const onChange = (value: any, name: string) => {
-    object[props.data?.componentkey]?.current?.setFieldValue(name,value);
+    object[props.data?.componentkey]?.current?.setFieldValue(name, value);
     setRandom(Math.random);
   };
 
