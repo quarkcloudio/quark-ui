@@ -45,11 +45,18 @@ const Field: React.FC<any> = (props: any) => {
   };
 
   const baseProps = (props: any) => {
+    const frontendRules = props?.frontendRules?.map((item: any, index: number) => {
+      if (item?.pattern) {
+        item.pattern = eval(item.pattern)
+      }
+      return item
+    })
+
     return {
       name: props.name,
       label: props.label,
       tooltip: props.tooltip,
-      rules: props.frontendRules,
+      rules: frontendRules,
       extra: props.extra,
       required: props.required,
       help: props.help && props.help,
