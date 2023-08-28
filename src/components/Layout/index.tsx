@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, history, Helmet, useModel } from '@umijs/max';
+import { useLocation, history, Helmet, useModel, Outlet } from '@umijs/max';
 import type { MenuProps } from 'antd';
+import { ConfigProvider, App, Dropdown } from 'antd';
 import { ProLayout, ProLayoutProps } from '@ant-design/pro-components';
 import qs from 'query-string';
 import Render from '@/components/Render';
-import RightContent from '@/components/RightContent';
+import locale from 'antd/locale/zh_CN';
 import defaultLogo from '@/assets/logo.png';
 import {
   getMenuName,
@@ -68,11 +69,19 @@ const Layout: React.FC<ProLayoutProps & LayoutProps> = (props) => {
   useEffect(() => {
     if (menu && query.api) {
       // 获取当前选中菜单的名称
-      const title = getMenuName(menu, location.pathname, decodeURIComponent(api));
+      const title = getMenuName(
+        menu,
+        location.pathname,
+        decodeURIComponent(api),
+      );
       // 设置页面标题
       setInnerTitle(title);
       // 获取当前选中的菜单
-      const menuSelectedKey = getMenuSelectedKey(menu, location.pathname, decodeURIComponent(api));
+      const menuSelectedKey = getMenuSelectedKey(
+        menu,
+        location.pathname,
+        decodeURIComponent(api),
+      );
       // 获取当前展开的菜单
       const currentMenuOpenKeys = getMenuOpenKeys(menu, menuSelectedKey);
       // 设置菜单展开
@@ -85,7 +94,7 @@ const Layout: React.FC<ProLayoutProps & LayoutProps> = (props) => {
 
   const onMenuClick = (event: any) => {
     setMenuSelectedKeys([event.key]);
-    const menuItem:any = getMenu(menu ,event.key);
+    const menuItem: any = getMenu(menu, event.key);
     if (menuItem.is_link === 1) {
       window.open(menuItem.path, '_blank');
       return false;
@@ -137,52 +146,62 @@ const Layout: React.FC<ProLayoutProps & LayoutProps> = (props) => {
   ];
 
   return (
-    <>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>{innerTitle}</title>
-      </Helmet>
-      <ProLayout
-        {...props}
-        loading={pageLoading}
-        logo={logo ? logo : defaultLogo}
-        iconfontUrl={iconfontUrl}
-        openKeys={menuOpenKeys}
-        selectedKeys={menuSelectedKeys}
-        menuProps={{
-          onOpenChange: onMenuOpenChange,
-          onClick: onMenuClick,
-        }}
-        onCollapse={(collapsed: boolean) => {
-          setCollapsed(collapsed);
-        }}
-        menuDataRender={() => menu}
-        actionsRender={() => [
-          <Render key="action" body={actions} data={props.data} />,
-        ]}
-        rightContentRender={() => (
-          <RightContent
-            menu={{
-              items: items,
-              onClick: onRightContentMenuClick,
-            }}
-            avatar={
-              accountInfo?.avatar ? accountInfo?.avatar : <UserOutlined />
-            }
-            name={
+    <ConfigProvider locale={locale}>
+      <App>
+        <Helmet>
+          <meta charSet="utf-8" />
+          <title>{innerTitle}</title>
+        </Helmet>
+        <ProLayout
+          {...props}
+          loading={pageLoading}
+          logo={logo ? logo : defaultLogo}
+          iconfontUrl={iconfontUrl}
+          openKeys={menuOpenKeys}
+          selectedKeys={menuSelectedKeys}
+          menuProps={{
+            onOpenChange: onMenuOpenChange,
+            onClick: onMenuClick,
+          }}
+          onCollapse={(collapsed: boolean) => {
+            setCollapsed(collapsed);
+          }}
+          menuDataRender={() => menu}
+          actionsRender={() => [
+            <Render key="action" body={actions} data={props.data} />,
+          ]}
+          avatarProps={{
+            src: accountInfo?.avatar ? accountInfo?.avatar : <UserOutlined />,
+            size: 'small',
+            title:
               props.layout === 'side'
                 ? !collapsed
                   ? accountInfo?.nickname
                   : undefined
-                : accountInfo?.nickname
-            }
-          />
-        )}
-        footerRender={() => <Render body={footer} data={props.data} />}
-      >
-        {props.children ?? <Render body={props.body} data={props.data} />}
-      </ProLayout>
-    </>
+                : accountInfo?.nickname,
+            render: (props, dom) => {
+              return (
+                <Dropdown
+                  menu={{
+                    items: items,
+                    onClick: onRightContentMenuClick,
+                  }}
+                >
+                  {dom}
+                </Dropdown>
+              );
+            },
+          }}
+          footerRender={() => <Render body={footer} data={props.data} />}
+        >
+          {props.body ? (
+            <Render body={props.body} data={props.data} />
+          ) : (
+            <Outlet />
+          )}
+        </ProLayout>
+      </App>
+    </ConfigProvider>
   );
 };
 

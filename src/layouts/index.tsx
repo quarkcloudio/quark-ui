@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, request, history, Helmet, useModel, Outlet } from '@umijs/max';
+import {
+  useLocation,
+  request,
+  history,
+  Helmet,
+  useModel,
+  Outlet,
+} from '@umijs/max';
 import type { MenuProps } from 'antd';
-import { ConfigProvider, App } from 'antd';
+import { ConfigProvider, App, Dropdown } from 'antd';
 import 'dayjs/locale/zh-cn';
 import locale from 'antd/locale/zh_CN';
 import { ProLayout } from '@ant-design/pro-components';
 import qs from 'query-string';
 import Render from '@/components/Render';
-import RightContent from '@/components/RightContent';
 import defaultLogo from '@/assets/logo.png';
 import {
   getMenuName,
@@ -49,7 +55,7 @@ const Layout: React.FC<any> = (props) => {
     setPageLoading(true);
 
     const result = await get({
-      url: layoutApi
+      url: layoutApi,
     });
 
     // 设置Layout数据
@@ -57,7 +63,11 @@ const Layout: React.FC<any> = (props) => {
 
     if (result.menu) {
       // 获取当前选中的菜单
-      const menuSelectedKey = getMenuSelectedKey(result.menu, location.pathname, decodeURIComponent(api));
+      const menuSelectedKey = getMenuSelectedKey(
+        result.menu,
+        location.pathname,
+        decodeURIComponent(api),
+      );
       // 获取当前展开的菜单
       const currentMenuOpenKeys = getMenuOpenKeys(result.menu, menuSelectedKey);
       // 设置菜单展开
@@ -68,7 +78,11 @@ const Layout: React.FC<any> = (props) => {
     }
 
     // 获取当前选中菜单的名称
-    const title = getMenuName(result.menu, location.pathname, decodeURIComponent(api));
+    const title = getMenuName(
+      result.menu,
+      location.pathname,
+      decodeURIComponent(api),
+    );
 
     // 设置页面标题
     setInnerTitle(title);
@@ -78,9 +92,12 @@ const Layout: React.FC<any> = (props) => {
   };
 
   const getComponent = async () => {
-
     // 获取当前选中菜单的名称
-    const title = getMenuName(layout.menu, location.pathname, decodeURIComponent(api));
+    const title = getMenuName(
+      layout.menu,
+      location.pathname,
+      decodeURIComponent(api),
+    );
 
     // 设置页面标题
     setInnerTitle(title);
@@ -118,17 +135,17 @@ const Layout: React.FC<any> = (props) => {
 
   // 获取布局数据
   useEffect(() => {
-    getLayout()
+    getLayout();
   }, []);
 
   // 获取组件数据
   useEffect(() => {
-    getComponent()
+    getComponent();
   }, [query.api]);
 
   const onMenuClick = (event: any) => {
     setMenuSelectedKeys([event.key]);
-    const menu:any = getMenu(layout.menu, event.key);
+    const menu: any = getMenu(layout.menu, event.key);
     if (menu.is_link === 1) {
       window.open(menu.path, '_blank');
       return false;
@@ -203,29 +220,33 @@ const Layout: React.FC<any> = (props) => {
             }}
             menuDataRender={() => layout.menu}
             actionsRender={() => [
-              <Render key="action" body={layout.actions}/>,
+              <Render key="action" body={layout.actions} />,
             ]}
-            rightContentRender={() => (
-              <RightContent
-                menu={{
-                  items: items,
-                  onClick: onRightContentMenuClick,
-                }}
-                avatar={
-                  accountInfo?.avatar ? accountInfo?.avatar : <UserOutlined />
-                }
-                name={
-                  props.layout === 'side'
-                    ? !collapsed
-                      ? accountInfo?.nickname
-                      : undefined
-                    : accountInfo?.nickname
-                }
-              />
-            )}
-            footerRender={() => <Render body={layout.footer}/>}
+            avatarProps={{
+              src: accountInfo?.avatar ? accountInfo?.avatar : <UserOutlined />,
+              size: 'small',
+              title:
+                props.layout === 'side'
+                  ? !collapsed
+                    ? accountInfo?.nickname
+                    : undefined
+                  : accountInfo?.nickname,
+              render: (props, dom) => {
+                return (
+                  <Dropdown
+                    menu={{
+                      items: items,
+                      onClick: onRightContentMenuClick,
+                    }}
+                  >
+                    {dom}
+                  </Dropdown>
+                );
+              },
+            }}
+            footerRender={() => <Render body={layout.footer} />}
           >
-            {component ? <Render body={component} /> : <Outlet/>}
+            {component ? <Render body={component} /> : <Outlet />}
           </ProLayout>
         )}
       </App>
