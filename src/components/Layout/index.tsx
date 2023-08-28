@@ -171,7 +171,11 @@ const Layout: React.FC<ProLayoutProps & LayoutProps> = (props) => {
             <Render key="action" body={actions} data={props.data} />,
           ]}
           avatarProps={{
-            src: accountInfo?.avatar ? accountInfo?.avatar : <UserOutlined />,
+            src: accountInfo?.avatar ? (
+              accountInfo?.avatar
+            ) : (
+              <UserOutlined style={{ color: 'rgb(22, 119, 255)' }} />
+            ),
             size: 'small',
             title:
               props.layout === 'side'
