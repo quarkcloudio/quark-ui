@@ -30,8 +30,8 @@ const Transfer: React.FC<TransferProps> = ({
   api = null,
   dataSource = undefined,
   disabled = undefined,
-  selectionsIcon = null,
-  filterOption = null,
+  selectionsIcon = undefined,
+  filterOption = undefined,
   footer = undefined,
   listStyle = undefined,
   locale = undefined,
@@ -49,9 +49,7 @@ const Transfer: React.FC<TransferProps> = ({
   value = null,
   onChange,
 }) => {
-  useEffect(() => {
-
-  }, [value]);
+  useEffect(() => {}, [value]);
 
   const triggerChange = (changedValue: any) => {
     if (onChange) {
@@ -65,9 +63,27 @@ const Transfer: React.FC<TransferProps> = ({
 
   return (
     <AntdTransfer
-      titles={['Source', 'Target']}
       onChange={onChange}
       onSelectChange={onSelectChange}
+      dataSource={dataSource}
+      disabled={disabled}
+      selectionsIcon={selectionsIcon}
+      filterOption={filterOption}
+      footer={footer}
+      listStyle={listStyle}
+      locale={locale}
+      oneWay={oneWay}
+      operations={operations}
+      operationStyle={operationStyle}
+      pagination={pagination}
+      selectAllLabels={selectAllLabels}
+      selectedKeys={selectedKeys}
+      showSearch={showSearch}
+      showSelectAll={showSelectAll}
+      status={status}
+      targetKeys={targetKeys}
+      titles={titles}
+      render={(item) => item.title}
     />
   );
 };
