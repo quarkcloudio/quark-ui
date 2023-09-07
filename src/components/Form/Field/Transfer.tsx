@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Transfer as AntdTransfer } from 'antd';
+import type { TransferDirection } from 'antd/es/transfer';
 import { get } from '@/services/action';
 
 export interface TransferProps {
@@ -40,16 +41,28 @@ const Transfer: React.FC<TransferProps> = ({
   operationStyle = undefined,
   pagination = undefined,
   selectAllLabels = undefined,
-  selectedKeys = undefined,
   showSearch = undefined,
   showSelectAll = undefined,
   status = undefined,
-  targetKeys = undefined,
   titles = undefined,
   value = null,
   onChange,
 }) => {
-  useEffect(() => {}, [value]);
+  useEffect(() => {
+    setTargetKeys(value)
+  }, [value]);
+
+  const [targetKeys, setTargetKeys] = useState(value);
+  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+
+  const onTransferChange = (nextTargetKeys: string[], direction: TransferDirection, moveKeys: string[]) => {
+    setTargetKeys(nextTargetKeys)
+    triggerChange(nextTargetKeys);
+  };
+
+  const onSelectChange = (sourceSelectedKeys: string[], targetSelectedKeys: string[]) => {
+    setSelectedKeys([...sourceSelectedKeys, ...targetSelectedKeys]);
+  };
 
   const triggerChange = (changedValue: any) => {
     if (onChange) {
@@ -57,13 +70,9 @@ const Transfer: React.FC<TransferProps> = ({
     }
   };
 
-  const onSelectChange = (value: any) => {
-    triggerChange(value);
-  };
-
   return (
     <AntdTransfer
-      onChange={onChange}
+      onChange={onTransferChange}
       onSelectChange={onSelectChange}
       dataSource={dataSource}
       disabled={disabled}
@@ -77,11 +86,11 @@ const Transfer: React.FC<TransferProps> = ({
       operationStyle={operationStyle}
       pagination={pagination}
       selectAllLabels={selectAllLabels}
+      targetKeys={targetKeys}
       selectedKeys={selectedKeys}
       showSearch={showSearch}
       showSelectAll={showSelectAll}
       status={status}
-      targetKeys={targetKeys}
       titles={titles}
       render={(item) => item.title}
     />
