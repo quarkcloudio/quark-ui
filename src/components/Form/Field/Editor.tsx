@@ -127,10 +127,16 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
   };
 
   const editorExecCommand = (content: any, editor: any) => {
+    if (content.command === 'mceFocus') {
+      setTinymceEditor(editor);
+    }
+    if (content.command === "RemoveFormat") {
+      editor.execCommand('unlink');
+      editor.execCommand('FormatBlock', false, 'p');
+    }
     if (sessionStorage['editorCommand'] === 'multipleimage') {
       changepictureBoxOpen(true);
       getPictures();
-      setTinymceEditor(editor);
       checkPictureForm.resetFields();
       sessionStorage.removeItem('editorCommand');
     }
@@ -287,11 +293,40 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
     });
   });
 
+  const handleEditorPaste = async (e: any) => {
+    if (tinymceEditor) {
+      // e.preventDefault(); // 阻止默认行为
+      const clipboardData = e.clipboardData || window.clipboardData;
+      // 剪贴板图片获取并上传
+      if (clipboardData.items) {
+        const items = clipboardData.items;
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].type.indexOf("image") !== -1) {
+            const file = items[i].getAsFile();
+            // 上传图片到服务器
+            const formData = new FormData()
+            formData.append("file", file)
+            const result = await post({
+              url: '/api/admin/upload/image/handle',
+              data: formData,
+            });
+            if (result.type === 'success') {
+              const html = '<img src="' + result.data.url + '" />'
+              // 插入图片到编辑器
+              tinymceEditor.insertContent(html);
+            }
+          }
+        }
+      }
+    }
+  }
+
   return (
     <span>
       <Editor
         value={value}
         onEditorChange={onContentChange}
+        onPaste={handleEditorPaste}
         init={{
           language: 'zh_CN',
           height: height ? height : 500,
