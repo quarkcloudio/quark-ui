@@ -13,36 +13,63 @@ import Reset from '@/components/Action/Item/Reset';
 import Submit from '@/components/Action/Item/Submit';
 
 const Action: React.FC<any> = (props) => {
-  const IconFont = createFromIconfontCN({ scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js' });
+  const IconFont = createFromIconfontCN({
+    scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js',
+  });
+  let component;
 
-  var component
+  // 如果label为空，直接返回
+  if (
+    !tplEngine(props.label, props.data) ||
+    tplEngine(props.label, props.data) === ''
+  ) {
+    return component;
+  }
+
+  // 解析行为
   switch (props.actionType) {
     case 'js':
-      component = <Js {...props} data={props.data} callback={props.callback} /> 
+      component = <Js {...props} data={props.data} callback={props.callback} />;
       break;
     case 'ajax':
-      component = <Ajax {...props} data={props.data} callback={props.callback} /> 
+      component = (
+        <Ajax {...props} data={props.data} callback={props.callback} />
+      );
       break;
     case 'submit':
-      component = <Submit {...props} data={props.data} callback={props.callback} /> 
+      component = (
+        <Submit {...props} data={props.data} callback={props.callback} />
+      );
       break;
     case 'reset':
-      component = <Reset {...props} data={props.data} callback={props.callback} /> 
+      component = (
+        <Reset {...props} data={props.data} callback={props.callback} />
+      );
       break;
     case 'cancel':
-      component = <Cancel {...props} data={props.data} callback={props.callback} /> 
+      component = (
+        <Cancel {...props} data={props.data} callback={props.callback} />
+      );
       break;
     case 'back':
-      component = <Back {...props} data={props.data} callback={props.callback} /> 
+      component = (
+        <Back {...props} data={props.data} callback={props.callback} />
+      );
       break;
     case 'link':
-      component = <Link {...props} data={props.data} callback={props.callback} /> 
+      component = (
+        <Link {...props} data={props.data} callback={props.callback} />
+      );
       break;
     case 'modal':
-      component = <Modal {...props} data={props.data} callback={props.callback} />
+      component = (
+        <Modal {...props} data={props.data} callback={props.callback} />
+      );
       break;
     case 'drawer':
-      component = <Drawer {...props} data={props.data} callback={props.callback} />
+      component = (
+        <Drawer {...props} data={props.data} callback={props.callback} />
+      );
       break;
     default:
       component = (
@@ -63,7 +90,7 @@ const Action: React.FC<any> = (props) => {
       break;
   }
 
-  return component
+  return component;
 };
 
 export default Action;
