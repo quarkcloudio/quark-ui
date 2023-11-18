@@ -11,3 +11,5 @@
 /dist
 /.mfsu
 .swc
+/.idea
+.DS_Store
