@@ -130,7 +130,7 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
     if (content.command === 'mceFocus') {
       setTinymceEditor(editor);
     }
-    if (content.command === "RemoveFormat") {
+    if (content.command === 'RemoveFormat') {
       editor.execCommand('unlink');
       editor.execCommand('FormatBlock', false, 'p');
     }
@@ -300,18 +300,26 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
       // 剪贴板图片获取并上传
       if (clipboardData.items) {
         const items = clipboardData.items;
+        console.log('clipboardData.length', items.length);
         for (let i = 0; i < items.length; i++) {
-          if (items[i].type.indexOf("image") !== -1) {
+          if (items[i].type.indexOf('image') !== -1) {
+            // Safari 浏览器阻止默认事件，防止粘贴Blob文件到编辑器
+            if (
+              /Safari/.test(navigator.userAgent) &&
+              !/Chrome/.test(navigator.userAgent)
+            ) {
+              e.preventDefault();
+            }
             const file = items[i].getAsFile();
             // 上传图片到服务器
-            const formData = new FormData()
-            formData.append("file", file)
+            const formData = new FormData();
+            formData.append('file', file);
             const result = await post({
               url: '/api/admin/upload/image/handle',
               data: formData,
             });
             if (result.type === 'success') {
-              const html = '<img src="' + result.data.url + '" />'
+              const html = '<img src="' + result.data.url + '" />';
               // 插入图片到编辑器
               tinymceEditor.insertContent(html);
             }
@@ -319,7 +327,7 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
         }
       }
     }
-  }
+  };
 
   return (
     <span>
@@ -486,7 +494,7 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
             <Divider />
             <Form form={checkPictureForm} style={{ width: '100%' }}>
               <Form.Item name="checkPictures" style={{ width: '100%' }}>
-                <Checkbox.Group style={{ width: '100%',display:'block' }}>
+                <Checkbox.Group style={{ width: '100%', display: 'block' }}>
                   <Row gutter={[16, 16]}>
                     {!!picture &&
                       picture.lists.map((item: any, index: number) => {
