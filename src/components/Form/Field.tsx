@@ -594,6 +594,7 @@ const Field: React.FC<any> = (props: any) => {
             <Map
               zoom={currentProps.zoom}
               mapKey={currentProps.mapKey}
+              mapSecurityJsCode={currentProps.mapSecurityJsCode}
               style={currentProps.style}
             />
           </ProFormItem>
@@ -611,6 +612,7 @@ const Field: React.FC<any> = (props: any) => {
             <Geofence
               zoom={currentProps.zoom}
               mapKey={currentProps.mapKey}
+              mapSecurityJsCode={currentProps.mapSecurityJsCode}
               style={currentProps.style}
             />
           </ProFormItem>

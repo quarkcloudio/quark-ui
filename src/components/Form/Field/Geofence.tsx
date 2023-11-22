@@ -6,6 +6,7 @@ import { Button } from 'antd';
 export interface Map {
   zoom?: any;
   mapKey?: any;
+  mapSecurityJsCode?: any;
   value?: any;
   style?: any;
   onChange?: (value: any) => void;
@@ -14,6 +15,7 @@ export interface Map {
 const Geofence: React.FC<Map> = ({
   zoom = null,
   mapKey = undefined,
+  mapSecurityJsCode = undefined,
   value = {
     center: {
       longitude: '116.397724',
@@ -29,7 +31,9 @@ const Geofence: React.FC<Map> = ({
     points: [],
   });
   const [polygonActive, setPolygonActive] = useState(false);
-
+  window._AMapSecurityConfig = {
+    securityJsCode: mapSecurityJsCode,
+  };
   const markerEvents = {
     dragend: (instance: any) => {
       let getMapData: any = {

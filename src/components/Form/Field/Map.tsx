@@ -6,6 +6,7 @@ import { Input } from 'antd';
 export interface MapProps {
   zoom?: any;
   mapKey?: any;
+  mapSecurityJsCode?: any;
   value?: any;
   style?: any;
   onChange?: (value: any) => void;
@@ -14,6 +15,7 @@ export interface MapProps {
 const Map: React.FC<MapProps> = ({
   zoom = null,
   mapKey = undefined,
+  mapSecurityJsCode = undefined,
   value = { longitude: undefined, latitude: undefined },
   style = [],
   onChange,
@@ -22,6 +24,10 @@ const Map: React.FC<MapProps> = ({
     longitude: undefined,
     latitude: undefined,
   });
+
+  window._AMapSecurityConfig = {
+    securityJsCode: mapSecurityJsCode,
+  };
 
   const markerEvents = {
     dragend: (instance: any) => {
