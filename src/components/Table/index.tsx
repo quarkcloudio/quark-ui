@@ -39,8 +39,8 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
   const location = useLocation();
   const query = qs.parse(location.search);
   const { object, setObject } = useModel('object');
-  const [ columns, setColumns ] = useState(props.columns);
-  const [ toolBar, setToolBar ] = useState(props.toolBar);
+  const [columns, setColumns] = useState(props.columns);
+  const [toolBar, setToolBar] = useState(props.toolBar);
   const {
     componentkey,
     api,
@@ -77,7 +77,13 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
   const columnRender = (column: any, row: any, text: any) => {
     switch (column.valueType) {
       case 'option':
-        text = <Render body={column.actions} data={{ ...query, ...row }} callback={callback} />
+        text = (
+          <Render
+            body={column.actions}
+            data={{ ...query, ...row }}
+            callback={callback}
+          />
+        );
         break;
       case 'text':
         if (typeof text === 'string' || typeof text === 'number') {
@@ -108,7 +114,6 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
   // 解析column
   const parseColumns = (columns: any) => {
     columns = columns.map((column: any) => {
-
       // 渲染字符串和数字
       column = {
         ...column,
@@ -129,7 +134,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
         };
       }
 
-      return column
+      return column;
     });
 
     // 解析搜索栏
@@ -155,7 +160,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
                 {...searchItem}
                 form={form}
                 label={undefined}
-                wrapperCol={{ span: 0, offset: 0 }}
+                wrapperCol={{ offset: 0 }}
                 data={{ formKey: search.componentkey }}
               />
             );
@@ -186,7 +191,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
           search: JSON.stringify(params),
           sorter: JSON.stringify(sorter),
           filter: JSON.stringify(filter),
-          ...query
+          ...query,
         },
       });
     }
@@ -197,7 +202,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
           search: params,
           sorter: sorter,
           filter: filter,
-          ...query
+          ...query,
         },
       });
     }
@@ -242,7 +247,9 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
               onClick={() => {
                 let getQuery: any = { ...query };
                 let url = search.exportApi;
-                getQuery['search'] = JSON.stringify(formRef.current?.getFieldsFormatValue?.());
+                getQuery['search'] = JSON.stringify(
+                  formRef.current?.getFieldsFormatValue?.(),
+                );
                 getQuery['token'] = localStorage.getItem('token');
 
                 window.open(`${url}?${qs.stringify(getQuery)}`);
@@ -257,7 +264,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
         const getApi = api ? api : query.api;
         history.replace({
           pathname: location.pathname,
-          search: 'api='+getApi,
+          search: 'api=' + getApi,
         });
       }}
       components={{
@@ -301,10 +308,10 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
         );
 
         // 更新表头
-        setColumns(table.columns)
+        setColumns(table.columns);
 
         // 更新toolbar
-        setToolBar(table.toolBar)
+        setToolBar(table.toolBar);
 
         // 返回数据
         return Promise.resolve({
@@ -343,12 +350,14 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
         })
       }
       pagination={
-        pagination ? {
-          defaultCurrent: pagination?.defaultCurrent
-            ? pagination.defaultCurrent
-            : 1,
-          defaultPageSize: pagination?.pageSize ? pagination.pageSize : 10,
-        } : false
+        pagination
+          ? {
+              defaultCurrent: pagination?.defaultCurrent
+                ? pagination.defaultCurrent
+                : 1,
+              defaultPageSize: pagination?.pageSize ? pagination.pageSize : 10,
+            }
+          : false
       }
       rowClassName={(record, index) => {
         if (striped && index % 2 !== 0) {
