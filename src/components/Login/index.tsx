@@ -177,154 +177,141 @@ const Login: React.FC<LoginProps> = (props) => {
         <meta charSet="utf-8" />
         <title>{title}</title>
       </Helmet>
-      <div style={{ padding: '24px', contentVisibility: 'auto' }}>
-        <div
-          style={{ padding: '24px', border: '1px solid rgb(240, 240, 240)' }}
-        >
-          <div
-            style={{
-              backgroundColor: 'white',
-              height: 'calc(100vh - 48px)',
-              margin: -24,
-            }}
+      <LoginFormPage
+        logo={logo ? logo : defaultLogo}
+        title={title}
+        subTitle={subTitle}
+        activityConfig={activityConfig}
+        actions={actions}
+        backgroundImageUrl={backgroundImageUrl}
+        style={{ overflow: 'hidden', height: '100vh' }}
+        onFinish={async (values) => {
+          await onFinish(values);
+        }}
+      >
+        {loginType && loginType.length > 1 && (
+          <Tabs
+            centered
+            activeKey={loginTypeActive}
+            onChange={(activeKey) => setLoginType(activeKey as LoginType)}
           >
-            <LoginFormPage
-              logo={logo ? logo : defaultLogo}
-              title={title}
-              subTitle={subTitle}
-              activityConfig={activityConfig}
-              actions={actions}
-              backgroundImageUrl={backgroundImageUrl}
-              style={{ overflow: 'hidden' }}
-              onFinish={async (values) => {
-                await onFinish(values);
+            <Tabs.TabPane key={'account'} tab={'账号密码登录'} />
+            <Tabs.TabPane key={'phone'} tab={'手机号登录'} />
+          </Tabs>
+        )}
+        {loginType && loginType.length === 1 && (
+          <Divider style={{ marginTop: -15 }} />
+        )}
+        {loginTypeActive === 'account' && (
+          <>
+            <ProFormText
+              name="username"
+              fieldProps={{
+                size: 'large',
+                prefix: <UserOutlined className={'prefixIcon'} />,
               }}
-            >
-              {loginType && loginType.length > 1 && (
-                <Tabs
-                  centered
-                  activeKey={loginTypeActive}
-                  onChange={(activeKey) => setLoginType(activeKey as LoginType)}
-                >
-                  <Tabs.TabPane key={'account'} tab={'账号密码登录'} />
-                  <Tabs.TabPane key={'phone'} tab={'手机号登录'} />
-                </Tabs>
-              )}
-              {loginType && loginType.length === 1 && (
-                <Divider style={{ marginTop: -15 }} />
-              )}
-              {loginTypeActive === 'account' && (
-                <>
-                  <ProFormText
-                    name="username"
-                    fieldProps={{
-                      size: 'large',
-                      prefix: <UserOutlined className={'prefixIcon'} />,
+              placeholder={'用户名'}
+              rules={[
+                {
+                  required: true,
+                  message: '请输入用户名!',
+                },
+              ]}
+            />
+            <ProFormText.Password
+              name="password"
+              fieldProps={{
+                size: 'large',
+                prefix: <LockOutlined className={'prefixIcon'} />,
+              }}
+              placeholder={'密码'}
+              rules={[
+                {
+                  required: true,
+                  message: '请输入密码！',
+                },
+              ]}
+            />
+            {innerCaptchaUrl && (
+              <ProFormText
+                name="captcha"
+                rules={[
+                  {
+                    required: true,
+                    message: '请输入图形验证码!',
+                  },
+                ]}
+                fieldProps={{
+                  size: 'large',
+                  prefix: (
+                    <SafetyCertificateOutlined className={'prefixIcon'} />
+                  ),
+                  style: { width: '200px' },
+                }}
+                placeholder="图形验证码"
+                addonAfter={
+                  <img
+                    src={innerCaptchaUrl}
+                    alt="验证码"
+                    onClick={() => {
+                      onSetInnerCaptchaUrl();
                     }}
-                    placeholder={'用户名'}
-                    rules={[
-                      {
-                        required: true,
-                        message: '请输入用户名!',
-                      },
-                    ]}
+                    style={{ cursor: 'pointer', width: 110 }}
                   />
-                  <ProFormText.Password
-                    name="password"
-                    fieldProps={{
-                      size: 'large',
-                      prefix: <LockOutlined className={'prefixIcon'} />,
-                    }}
-                    placeholder={'密码'}
-                    rules={[
-                      {
-                        required: true,
-                        message: '请输入密码！',
-                      },
-                    ]}
-                  />
-                  {innerCaptchaUrl && (
-                    <ProFormText
-                      name="captcha"
-                      rules={[
-                        {
-                          required: true,
-                          message: '请输入图形验证码!',
-                        },
-                      ]}
-                      fieldProps={{
-                        size: 'large',
-                        prefix: (
-                          <SafetyCertificateOutlined className={'prefixIcon'} />
-                        ),
-                      }}
-                      placeholder="图形验证码"
-                      addonAfter={
-                        <img
-                          src={innerCaptchaUrl}
-                          alt="验证码"
-                          onClick={() => {
-                            onSetInnerCaptchaUrl();
-                          }}
-                          style={{ cursor: 'pointer', width: 110 }}
-                        />
-                      }
-                    />
-                  )}
-                </>
-              )}
-              {loginTypeActive === 'phone' && (
-                <>
-                  <ProFormText
-                    fieldProps={{
-                      size: 'large',
-                      prefix: <MobileOutlined className={'prefixIcon'} />,
-                    }}
-                    name="mobile"
-                    placeholder={'手机号'}
-                    rules={[
-                      {
-                        required: true,
-                        message: '请输入手机号！',
-                      },
-                      {
-                        pattern: /^1\d{10}$/,
-                        message: '手机号格式错误！',
-                      },
-                    ]}
-                  />
-                  <ProFormCaptcha
-                    fieldProps={{
-                      size: 'large',
-                      prefix: <LockOutlined className={'prefixIcon'} />,
-                    }}
-                    captchaProps={{
-                      size: 'large',
-                    }}
-                    placeholder={'请输入验证码'}
-                    captchaTextRender={(timing, count) => {
-                      if (timing) {
-                        return `${count} ${'获取验证码'}`;
-                      }
-                      return '获取验证码';
-                    }}
-                    name="captcha"
-                    rules={[
-                      {
-                        required: true,
-                        message: '请输入验证码！',
-                      },
-                    ]}
-                    onGetCaptcha={async () => {
-                      message.success('验证码发送成功！');
-                    }}
-                  />
-                </>
-              )}
-            </LoginFormPage>
-          </div>
-        </div>
-      </div>
+                }
+              />
+            )}
+          </>
+        )}
+        {loginTypeActive === 'phone' && (
+          <>
+            <ProFormText
+              fieldProps={{
+                size: 'large',
+                prefix: <MobileOutlined className={'prefixIcon'} />,
+              }}
+              name="mobile"
+              placeholder={'手机号'}
+              rules={[
+                {
+                  required: true,
+                  message: '请输入手机号！',
+                },
+                {
+                  pattern: /^1\d{10}$/,
+                  message: '手机号格式错误！',
+                },
+              ]}
+            />
+            <ProFormCaptcha
+              fieldProps={{
+                size: 'large',
+                prefix: <LockOutlined className={'prefixIcon'} />,
+              }}
+              captchaProps={{
+                size: 'large',
+              }}
+              placeholder={'请输入验证码'}
+              captchaTextRender={(timing, count) => {
+                if (timing) {
+                  return `${count} ${'获取验证码'}`;
+                }
+                return '获取验证码';
+              }}
+              name="captcha"
+              rules={[
+                {
+                  required: true,
+                  message: '请输入验证码！',
+                },
+              ]}
+              onGetCaptcha={async () => {
+                message.success('验证码发送成功！');
+              }}
+            />
+          </>
+        )}
+      </LoginFormPage>
     </>
   );
 };
