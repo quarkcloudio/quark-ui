@@ -30,8 +30,8 @@ import ProFormIcon from './ProField/ProFormIcon';
 import ProFormImageUploader from './ProField/ProFormImageUploader';
 import ProFormMap from './ProField/ProFormMap';
 import ProFormSearch from './ProField/ProFormSearch';
+import ProFormTransfer from './ProField/ProFormTransfer';
 import Selects from './Field/Selects';
-import Transfer from './Field/Transfer';
 import tplEngine from '@/utils/template';
 
 const Field: React.FC<any> = (props: any) => {
@@ -750,7 +750,7 @@ const Field: React.FC<any> = (props: any) => {
         break;
       case 'transferField':
         component = (
-          <ProFormGeofence
+          <ProFormTransfer
             {...baseProps(currentProps)}
             fieldProps={{
               api: currentProps.api,
