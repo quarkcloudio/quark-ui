@@ -21,16 +21,15 @@ import {
   ProFormDependency,
 } from '@ant-design/pro-components';
 import { Tree, Space } from 'antd';
-import { createFromIconfontCN } from '@ant-design/icons';
 import Render from '@/components/Render';
-import Icon from './Field/Icon';
-import ImageUploader from './Field/ImageUploader';
-import FileUploader from './Field/FileUploader';
-import Search from './Field/Search';
-import Map from './Field/Map';
-import Geofence from './Field/Geofence';
-import Editor from './Field/Editor';
-import Cascader from './Field/Cascader';
+import ProFormEditor from './ProField/ProFormEditor';
+import ProFormCascader from './ProField/ProFormCascader';
+import ProFormFileUploader from './ProField/ProFormFileUploader';
+import ProFormGeofence from './ProField/ProFormGeofence';
+import ProFormIcon from './ProField/ProFormIcon';
+import ProFormImageUploader from './ProField/ProFormImageUploader';
+import ProFormMap from './ProField/ProFormMap';
+import ProFormSearch from './ProField/ProFormSearch';
 import Selects from './Field/Selects';
 import Transfer from './Field/Transfer';
 import tplEngine from '@/utils/template';
@@ -148,7 +147,7 @@ const Field: React.FC<any> = (props: any) => {
         break;
       case 'iconField':
         component = (
-          <Icon
+          <ProFormIcon
             {...baseProps(currentProps)}
             fieldProps={{
               style: currentProps.style && currentProps.style,
@@ -224,32 +223,32 @@ const Field: React.FC<any> = (props: any) => {
         break;
       case 'imageField':
         component = (
-          <ProFormItem {...baseProps(currentProps)}>
-            <ImageUploader
-              key={currentProps.name}
-              mode={currentProps.mode}
-              title={currentProps.button}
-              limitType={currentProps.limitType}
-              limitSize={currentProps.limitSize}
-              limitNum={currentProps.limitNum}
-              limitWH={currentProps.limitWH}
-              action={currentProps.api}
-            />
-          </ProFormItem>
+          <ProFormImageUploader
+            {...baseProps(currentProps)}
+            fieldProps={{
+              mode: currentProps.mode,
+              title: currentProps.title,
+              limitType: currentProps.limitType,
+              limitSize: currentProps.limitSize,
+              limitNum: currentProps.limitNum,
+              limitWH: currentProps.limitWH,
+              action: currentProps.api,
+            }}
+          />
         );
         break;
       case 'fileField':
         component = (
-          <ProFormItem {...baseProps(currentProps)}>
-            <FileUploader
-              key={currentProps.name}
-              title={currentProps.button}
-              limitType={currentProps.limitType}
-              limitSize={currentProps.limitSize}
-              limitNum={currentProps.limitNum}
-              action={currentProps.api}
-            />
-          </ProFormItem>
+          <ProFormFileUploader
+            {...baseProps(currentProps)}
+            fieldProps={{
+              title: currentProps.button,
+              limitType: currentProps.limitType,
+              limitSize: currentProps.limitSize,
+              limitNum: currentProps.limitNum,
+              action: currentProps.api,
+            }}
+          />
         );
         break;
       case 'switchField':
@@ -350,21 +349,16 @@ const Field: React.FC<any> = (props: any) => {
         break;
       case 'cascaderField':
         component = (
-          <ProFormItem
-            label={currentProps.label}
-            name={currentProps.name}
-            rules={currentProps.frontendRules}
-            help={currentProps.help ? currentProps.help : undefined}
-            extra={currentProps.extra}
-          >
-            <Cascader
-              api={currentProps.api}
-              size={currentProps.size}
-              options={currentProps.options}
-              style={currentProps.style}
-              placeholder={currentProps.placeholder}
-            />
-          </ProFormItem>
+          <ProFormCascader
+            {...baseProps(currentProps)}
+            fieldProps={{
+              api: currentProps.style,
+              size: currentProps.size,
+              options: currentProps.options,
+              style: currentProps.style && currentProps.style,
+              placeholder: currentProps.placeholder,
+            }}
+          />
         );
         break;
       case 'dateField':
@@ -546,76 +540,54 @@ const Field: React.FC<any> = (props: any) => {
         break;
       case 'editorField':
         component = (
-          <ProFormItem
-            label={currentProps.label}
-            name={currentProps.name}
-            rules={currentProps.frontendRules}
-            help={currentProps.help ? currentProps.help : undefined}
-            extra={currentProps.extra}
-          >
-            <Editor
-              key={currentProps.name}
-              height={currentProps?.style?.height}
-              width={currentProps?.style?.width}
-            />
-          </ProFormItem>
+          <ProFormEditor
+            {...baseProps(currentProps)}
+            fieldProps={{
+              style: currentProps.style && currentProps.style,
+            }}
+          />
         );
         break;
       case 'searchField':
         component = (
-          <ProFormItem
-            label={currentProps.label}
-            name={currentProps.name}
-            rules={currentProps.frontendRules}
-            help={currentProps.help ? currentProps.help : undefined}
-            extra={currentProps.extra}
-          >
-            <Search
-              mode={currentProps.mode}
-              size={currentProps.size}
-              placeholder={currentProps.placeholder}
-              style={currentProps.style}
-              options={currentProps.options}
-              api={currentProps.api}
-              allowClear={currentProps.allowClear}
-            />
-          </ProFormItem>
+          <ProFormSearch
+            {...baseProps(currentProps)}
+            fieldProps={{
+              mode: currentProps.mode,
+              size: currentProps.size,
+              placeholder: currentProps.placeholder,
+              style: currentProps.style && currentProps.style,
+              options: currentProps.options,
+              api: currentProps.api,
+              allowClear: currentProps.allowClear,
+            }}
+          />
         );
         break;
       case 'mapField':
         component = (
-          <ProFormItem
-            label={currentProps.label}
-            name={currentProps.name}
-            rules={currentProps.frontendRules}
-            help={currentProps.help ? currentProps.help : undefined}
-            extra={currentProps.extra}
-          >
-            <Map
-              zoom={currentProps.zoom}
-              mapKey={currentProps.mapKey}
-              mapSecurityJsCode={currentProps.mapSecurityJsCode}
-              style={currentProps.style}
-            />
-          </ProFormItem>
+          <ProFormMap
+            {...baseProps(currentProps)}
+            fieldProps={{
+              zoom: currentProps.zoom,
+              mapKey: currentProps.mapKey,
+              mapSecurityJsCode: currentProps.mapSecurityJsCode,
+              style: currentProps.style && currentProps.style,
+            }}
+          />
         );
         break;
       case 'geofenceField':
         component = (
-          <ProFormItem
-            label={currentProps.label}
-            name={currentProps.name}
-            rules={currentProps.frontendRules}
-            help={currentProps.help ? currentProps.help : undefined}
-            extra={currentProps.extra}
-          >
-            <Geofence
-              zoom={currentProps.zoom}
-              mapKey={currentProps.mapKey}
-              mapSecurityJsCode={currentProps.mapSecurityJsCode}
-              style={currentProps.style}
-            />
-          </ProFormItem>
+          <ProFormGeofence
+            {...baseProps(currentProps)}
+            fieldProps={{
+              zoom: currentProps.zoom,
+              mapKey: currentProps.mapKey,
+              mapSecurityJsCode: currentProps.mapSecurityJsCode,
+              style: currentProps.style && currentProps.style,
+            }}
+          />
         );
         break;
       case 'selects':
@@ -778,35 +750,30 @@ const Field: React.FC<any> = (props: any) => {
         break;
       case 'transferField':
         component = (
-          <ProFormItem
-            label={currentProps.label}
-            name={currentProps.name}
-            rules={currentProps.frontendRules}
-            help={currentProps.help ? currentProps.help : undefined}
-            extra={currentProps.extra}
-          >
-            <Transfer
-              api={currentProps.api}
-              dataSource={currentProps.dataSource}
-              disabled={currentProps.disabled}
-              selectionsIcon={currentProps.selectionsIcon}
-              filterOption={currentProps.filterOption}
-              footer={currentProps.footer}
-              listStyle={currentProps.listStyle}
-              locale={currentProps.locale}
-              oneWay={currentProps.oneWay}
-              operations={currentProps.operations}
-              operationStyle={currentProps.operationStyle}
-              pagination={currentProps.pagination}
-              selectAllLabels={currentProps.selectAllLabels}
-              selectedKeys={currentProps.selectedKeys}
-              showSearch={currentProps.showSearch}
-              showSelectAll={currentProps.showSelectAll}
-              status={currentProps.status}
-              targetKeys={currentProps.targetKeys}
-              titles={currentProps.titles}
-            />
-          </ProFormItem>
+          <ProFormGeofence
+            {...baseProps(currentProps)}
+            fieldProps={{
+              api: currentProps.api,
+              dataSource: currentProps.dataSource,
+              disabled: currentProps.disabled,
+              selectionsIcon: currentProps.selectionsIcon,
+              filterOption: currentProps.filterOption,
+              footer: currentProps.footer,
+              listStyle: currentProps.listStyle,
+              locale: currentProps.locale,
+              oneWay: currentProps.oneWay,
+              operations: currentProps.operations,
+              operationStyle: currentProps.operationStyle,
+              pagination: currentProps.pagination,
+              selectAllLabels: currentProps.selectAllLabels,
+              selectedKeys: currentProps.selectedKeys,
+              showSearch: currentProps.showSearch,
+              showSelectAll: currentProps.showSelectAll,
+              status: currentProps.status,
+              targetKeys: currentProps.targetKeys,
+              titles: currentProps.titles,
+            }}
+          />
         );
         break;
       default:
