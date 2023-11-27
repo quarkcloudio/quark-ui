@@ -15,14 +15,18 @@ const Selects: React.FC<any> = (props: any) => {
 
   const init = async () => {
     let allItems = items.map(async (item: any) => {
-      let value = object[props.data.componentkey]?.current?.getFieldValue(item.name);
+      let value = object[props.data.componentkey]?.current?.getFieldValue(
+        item.name,
+      );
 
       if (value && item.load) {
         const promises = items.map(async (subItem: any, key: any) => {
           if (item.load.field === subItem.name && item.load.api) {
             const result = await get({
-              actionUrl: item.load.api,
-              search: value,
+              url: item.load.api,
+              data: {
+                search: value,
+              },
             });
 
             subItem.options = result.data;
@@ -57,7 +61,7 @@ const Selects: React.FC<any> = (props: any) => {
             url: load.api,
             data: {
               search: value,
-            }
+            },
           });
 
           item.options = result.data;
