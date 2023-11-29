@@ -143,8 +143,9 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
         const columnItem = {
           title: searchItem.label,
           key: searchItem.name,
-          hideInTable: true,
           dataIndex: searchItem.name,
+          hideInTable: true,
+          fixed: true,
           renderFormItem: (item: any, option: any, form: any) => {
             const { type } = option;
             if (type === 'form') {
