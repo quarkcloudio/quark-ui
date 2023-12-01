@@ -232,7 +232,7 @@ const Field: React.FC<any> = (props: any) => {
               limitSize: currentProps.limitSize,
               limitNum: currentProps.limitNum,
               limitWH: currentProps.limitWH,
-              action: currentProps.api,
+              api: currentProps.api,
             }}
           />
         );
@@ -246,7 +246,7 @@ const Field: React.FC<any> = (props: any) => {
               limitType: currentProps.limitType,
               limitSize: currentProps.limitSize,
               limitNum: currentProps.limitNum,
-              action: currentProps.api,
+              api: currentProps.api,
             }}
           />
         );
