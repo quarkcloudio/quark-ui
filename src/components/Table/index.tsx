@@ -138,6 +138,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
     });
 
     // 解析搜索栏
+    let searchItems: any = [];
     if (search.items) {
       search.items.forEach((searchItem: any) => {
         const columnItem = {
@@ -167,8 +168,12 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
             );
           },
         };
-        columns.push(columnItem);
+        searchItems.push(columnItem);
       });
+    }
+
+    if (searchItems.length > 0) {
+      columns = searchItems.concat(columns);
     }
 
     return columns;
