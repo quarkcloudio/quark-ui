@@ -48,7 +48,7 @@ const ProFormFileUploader: React.FC<ProFormFileUploaderProps> = ({
     >
       <FileUploader
         key={name}
-        title={fieldProps.button}
+        button={fieldProps.button}
         limitType={fieldProps.limitType}
         limitSize={fieldProps.limitSize}
         limitNum={fieldProps.limitNum}

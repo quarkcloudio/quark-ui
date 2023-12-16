@@ -227,7 +227,7 @@ const Field: React.FC<any> = (props: any) => {
             {...baseProps(currentProps)}
             fieldProps={{
               mode: currentProps.mode,
-              title: currentProps.title,
+              button: currentProps.button,
               limitType: currentProps.limitType,
               limitSize: currentProps.limitSize,
               limitNum: currentProps.limitNum,
@@ -242,7 +242,7 @@ const Field: React.FC<any> = (props: any) => {
           <ProFormFileUploader
             {...baseProps(currentProps)}
             fieldProps={{
-              title: currentProps.button,
+              button: currentProps.button,
               limitType: currentProps.limitType,
               limitSize: currentProps.limitSize,
               limitNum: currentProps.limitNum,

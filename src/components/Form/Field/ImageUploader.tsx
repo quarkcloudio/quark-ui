@@ -20,7 +20,7 @@ import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 
 export interface ImageUploaderProps {
-  title: string;
+  button: string;
   action: string;
   limitType: [];
   limitSize: number;
@@ -35,7 +35,7 @@ export interface ImageUploaderProps {
 }
 
 const ImageUploader: React.FC<ImageUploaderProps> = ({
-  title,
+  button,
   action,
   limitType,
   limitSize,
@@ -102,11 +102,11 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     triggerChange(fileList);
   };
 
-  const uploadButton = (title: string) => {
+  const uploadButton = (button: string) => {
     return (
       <div>
         <PlusOutlined />
-        <div>{title}</div>
+        <div>{button}</div>
       </div>
     );
   };
@@ -199,7 +199,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
               <img src={value.url} alt={value.name} width={80} />
             )
           ) : (
-            uploadButton(title)
+            uploadButton(button)
           )}
         </Upload>
       ) : (
@@ -246,7 +246,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
             onFileListChange(fileList);
           }}
         >
-          {uploadButton(title)}
+          {uploadButton(button)}
         </Upload>
       )}
       <Modal

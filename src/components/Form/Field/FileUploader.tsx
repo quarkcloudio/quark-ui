@@ -3,7 +3,7 @@ import { Upload, message, Button } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 
 export interface FileUploaderProps {
-  title: string;
+  button: string;
   action: string;
   limitType: [];
   limitSize: number;
@@ -13,7 +13,7 @@ export interface FileUploaderProps {
 }
 
 const FileUploader: React.FC<FileUploaderProps> = ({
-  title,
+  button,
   action,
   limitType,
   limitSize,
@@ -132,7 +132,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({
         onFileListChange(fileList);
       }}
     >
-      {uploadButton(title)}
+      {uploadButton(button)}
     </Upload>
   );
 };
