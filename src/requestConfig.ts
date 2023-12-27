@@ -1,5 +1,6 @@
 ﻿import type { RequestOptions } from '@@/plugin-request/request';
 import type { RequestConfig } from '@umijs/max';
+import { history } from '@umijs/max';
 import { message, notification } from 'antd';
 
 // 错误处理方案： 错误类型
@@ -70,6 +71,12 @@ export const requestConfig: RequestConfig = {
           }
         }
       } else if (error.response) {
+        // token过期后，跳转到登录页
+        if (error.response.status === 401) {
+          history.push('/');
+          return;
+        }
+
         // Axios 的错误
         // 请求成功发出且服务器也响应了状态码，但状态代码超出了 2xx 的范围
         message.error(`Response status:${error.response.status}`);
