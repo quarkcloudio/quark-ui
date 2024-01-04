@@ -66,7 +66,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
         case 'select':
           value = values[dataIndex];
           editableForm.setFieldsValue({
-            [dataIndex]: record[dataIndex].toString(),
+            [dataIndex]: record[dataIndex],
           });
           break;
 
@@ -136,11 +136,16 @@ const EditableCell: React.FC<EditableCellProps> = ({
       case 'selectField':
         childNode = (
           <Form.Item style={{ margin: 0 }} name={dataIndex}>
-            <Select ref={inputRef} onChange={save} bordered={false} options={editable.options} />
+            <Select
+              ref={inputRef}
+              onChange={save}
+              bordered={false}
+              options={editable.options}
+            />
           </Form.Item>
         );
         editableForm.setFieldsValue({
-          [dataIndex]: record[dataIndex].toString(),
+          [dataIndex]: record[dataIndex],
         });
         break;
 
