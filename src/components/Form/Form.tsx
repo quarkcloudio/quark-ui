@@ -77,19 +77,19 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
   setObject(object);
 
   useEffect(() => {
-    if (initApi) {
-      getInitialValues();
-    }
+    setInitialValues();
   }, []);
 
-  const getInitialValues = async () => {
+  const setInitialValues = async () => {
+    // 更新组件状态
+    setRandom(Math.random);
+
+    // 从接口获取初始值
     if (initApi) {
       setLoading(true);
-
       let result = await get({
         url: tplEngine(initApi, data),
       });
-
       object[formKey]?.current?.setFieldsValue(result.data);
       setLoading(false);
     }
@@ -187,15 +187,14 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
         labelCol={labelCol}
         wrapperCol={wrapperCol}
         style={style}
-        onFinish={async (values: any) => {
-          onFinish(values);
-        }}
+        onFinish={async (values: any) => onFinish(values)}
+        onValuesChange={() => setRandom(Math.random)}
         submitter={{
           searchConfig: {
             resetText: resetButtonText,
             submitText: submitButtonText,
           },
-          render: (proFormProps: any, doms: any) => {
+          render: () => {
             if (actions) {
               return (
                 <ProForm.Item wrapperCol={buttonWrapperCol}>

@@ -38,11 +38,6 @@ const Field: React.FC<any> = (props: any) => {
   const [random, setRandom] = useState(0); // hack
   let { object } = useModel('object');
 
-  const onChange = (value: any, name: string) => {
-    object[props.data?.componentkey]?.current?.setFieldValue(name, value);
-    setRandom(Math.random);
-  };
-
   const baseProps = (props: any) => {
     const rules = props?.frontendRules?.map((item: any, index: number) => {
       if (item?.pattern) {
@@ -97,9 +92,6 @@ const Field: React.FC<any> = (props: any) => {
               width: currentProps.width,
               size: currentProps.size,
               maxLength: currentProps.maxLength,
-              onChange: (e) => {
-                onChange(e.target.value, currentProps.name);
-              },
             }}
           />
         );
@@ -118,9 +110,6 @@ const Field: React.FC<any> = (props: any) => {
               onKeyPress: (e) => {
                 e.stopPropagation();
               },
-              onChange: (e) => {
-                onChange(e.target.value, currentProps.name);
-              },
             }}
           />
         );
@@ -138,9 +127,6 @@ const Field: React.FC<any> = (props: any) => {
               maxLength: currentProps.maxLength,
               step: currentProps.step,
               precision: currentProps.precision,
-              onChange: (value) => {
-                onChange(value, currentProps.name);
-              },
             }}
           />
         );
@@ -156,9 +142,6 @@ const Field: React.FC<any> = (props: any) => {
               size: currentProps.size && currentProps.size,
               allowClear: currentProps.allowClear && currentProps.allowClear,
               options: currentProps.options && currentProps.options,
-              onChange: (value: any) => {
-                onChange(value, currentProps.name);
-              },
             }}
           />
         );
@@ -199,9 +182,6 @@ const Field: React.FC<any> = (props: any) => {
             fieldProps={{
               style: currentProps.style && currentProps.style,
               width: currentProps.width,
-              onChange: (value) => {
-                onChange(value, currentProps.name);
-              },
             }}
           />
         );
@@ -214,9 +194,6 @@ const Field: React.FC<any> = (props: any) => {
             fieldProps={{
               style: currentProps.style && currentProps.style,
               width: currentProps.width,
-              onChange: (e) => {
-                onChange(e.target.value, currentProps.name);
-              },
             }}
           />
         );
@@ -260,9 +237,6 @@ const Field: React.FC<any> = (props: any) => {
             fieldProps={{
               style: currentProps.style && currentProps.style,
               width: currentProps.width,
-              onChange: (value) => {
-                onChange(value, currentProps.name);
-              },
             }}
           />
         );
@@ -278,9 +252,6 @@ const Field: React.FC<any> = (props: any) => {
               width: currentProps.width,
               size: currentProps.size,
               maxLength: currentProps.maxLength,
-              onChange: (value) => {
-                onChange(value, currentProps.name);
-              },
             }}
           />
         );
@@ -325,9 +296,6 @@ const Field: React.FC<any> = (props: any) => {
               size: currentProps.size,
               maxLength: currentProps.maxLength,
               treeData: currentProps.treeData,
-              onChange: (value) => {
-                onChange(value, currentProps.name);
-              },
             }}
           />
         );
@@ -372,9 +340,6 @@ const Field: React.FC<any> = (props: any) => {
               size: currentProps.size,
               picker: currentProps.picker,
               format: currentProps.format,
-              onChange: (value) => {
-                onChange(value, currentProps.name);
-              },
             }}
           />
         );
@@ -388,9 +353,6 @@ const Field: React.FC<any> = (props: any) => {
               width: currentProps.width,
               allowClear: currentProps.allowClear,
               size: currentProps.size,
-              onChange: (value) => {
-                onChange(value, currentProps.name);
-              },
             }}
           />
         );
@@ -404,9 +366,6 @@ const Field: React.FC<any> = (props: any) => {
               width: currentProps.width,
               allowClear: currentProps.allowClear,
               size: currentProps.size,
-              onChange: (value) => {
-                onChange(value, currentProps.name);
-              },
             }}
           />
         );
@@ -420,9 +379,6 @@ const Field: React.FC<any> = (props: any) => {
               width: currentProps.width,
               allowClear: currentProps.allowClear,
               size: currentProps.size,
-              onChange: (value) => {
-                onChange(value, currentProps.name);
-              },
             }}
           />
         );
@@ -436,9 +392,6 @@ const Field: React.FC<any> = (props: any) => {
               width: currentProps.width,
               allowClear: currentProps.allowClear,
               size: currentProps.size,
-              onChange: (value) => {
-                onChange(value, currentProps.name);
-              },
             }}
           />
         );
@@ -453,9 +406,6 @@ const Field: React.FC<any> = (props: any) => {
               allowClear: currentProps.allowClear,
               size: currentProps.size,
               format: currentProps.format,
-              onChange: (value) => {
-                onChange(value, currentProps.name);
-              },
             }}
           />
         );
@@ -471,9 +421,6 @@ const Field: React.FC<any> = (props: any) => {
               size: currentProps.size,
               picker: currentProps.picker,
               format: currentProps.format,
-              onChange: (value) => {
-                onChange(value, currentProps.name);
-              },
             }}
           />
         );
@@ -488,9 +435,6 @@ const Field: React.FC<any> = (props: any) => {
               allowClear: currentProps.allowClear,
               size: currentProps.size,
               format: currentProps.format,
-              onChange: (value) => {
-                onChange(value, currentProps.name);
-              },
             }}
           />
         );
@@ -505,9 +449,6 @@ const Field: React.FC<any> = (props: any) => {
               allowClear: currentProps.allowClear,
               size: currentProps.size,
               format: currentProps.format,
-              onChange: (value) => {
-                onChange(value, currentProps.name);
-              },
             }}
           />
         );
@@ -522,9 +463,6 @@ const Field: React.FC<any> = (props: any) => {
               allowClear: currentProps.allowClear,
               size: currentProps.size,
               format: currentProps.format,
-              onChange: (value) => {
-                onChange(value, currentProps.name);
-              },
             }}
           />
         );
