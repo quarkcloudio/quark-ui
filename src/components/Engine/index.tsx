@@ -21,7 +21,7 @@ const Engine: React.FC<EngineProps> = (props) => {
 
   const getComponents = async () => {
     if (!api) {
-      setComponents('请设置接口！');
+      setComponents('The initialization API cannot be null!');
       return;
     }
 

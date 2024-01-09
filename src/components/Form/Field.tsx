@@ -716,7 +716,9 @@ const Field: React.FC<any> = (props: any) => {
         break;
       default:
         component = (
-          <span key={currentProps.name}>无{currentProps.component}组件</span>
+          <span key={currentProps.name}>
+            No {currentProps.component} component found
+          </span>
         );
         break;
     }

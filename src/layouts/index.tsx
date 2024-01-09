@@ -47,7 +47,7 @@ const Layout: React.FC<any> = (props) => {
     let layoutApi = config.api.layout;
 
     if (!layoutApi) {
-      setComponent('请设置布局接口！');
+      setComponent('The layout API cannot be null!');
       return;
     }
 
