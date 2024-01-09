@@ -149,7 +149,7 @@ const Login: React.FC<LoginProps> = (props) => {
         const accountInfo = initialState?.getAccountInfo?.();
         if (accountInfo) {
           flushSync(() => {
-            setInitialState((s) => ({
+            setInitialState((s: any) => ({
               ...s,
               accountInfo: accountInfo,
             }));
@@ -167,7 +167,7 @@ const Login: React.FC<LoginProps> = (props) => {
         message.error(result.content);
       }
     } catch (error) {
-      message.error('登录失败，请重试！');
+      message.error('login failed, please try again!');
     }
   };
 
