@@ -1,18 +1,18 @@
+import { useState, useEffect, useRef } from 'react';
+import type { CSSProperties } from 'react';
+import { Divider, message, Tabs } from 'antd';
+import type { ProFormInstance } from '@ant-design/pro-components';
+import { useModel, useLocation, Helmet, history } from '@umijs/max';
 import {
   LockOutlined,
   MobileOutlined,
   UserOutlined,
   SafetyCertificateOutlined,
 } from '@ant-design/icons';
-import {
-  LoginFormPage,
-  ProFormCaptcha,
-  ProFormText,
-} from '@ant-design/pro-components';
-import { Divider, message, Tabs } from 'antd';
-import type { CSSProperties } from 'react';
-import { useState, useEffect } from 'react';
-import { useModel, useLocation, Helmet, history } from '@umijs/max';
+import { LoginFormPage, ProFormText } from '@ant-design/pro-components';
+import Action from '@/components/Action';
+import ProFormImageCaptcha from '@/components/Form/ProField/ProFormImageCaptcha';
+import ProFormSmsCaptcha from '@/components/Form/ProField/ProFormSmsCaptcha';
 import { flushSync } from 'react-dom';
 import qs from 'query-string';
 import { post, get } from '@/services/action';
@@ -29,6 +29,8 @@ type ActivityConfigType =
   | undefined;
 
 export interface LoginProps {
+  component?: string;
+  componentkey?: string;
   logo?: React.ReactNode;
   title?:
     | string
@@ -40,7 +42,7 @@ export interface LoginProps {
   subTitle?: React.ReactNode;
   backgroundImageUrl?: string | undefined;
   activityConfig?: ActivityConfigType;
-  actions?: React.ReactNode | undefined;
+  actions?: any;
   captchaUrl?: string | undefined;
   captchaIdUrl?: string | undefined;
   api?: string;
@@ -49,6 +51,7 @@ export interface LoginProps {
 }
 
 const defaultProps = {
+  componentkey: 'form',
   logo: '',
   title: 'QuarkCMS',
   subTitle: '信息丰富的世界里，唯一稀缺的就是人类的注意力',
@@ -65,6 +68,7 @@ const defaultProps = {
 
 const Login: React.FC<LoginProps> = (props) => {
   const {
+    componentkey,
     logo,
     title,
     subTitle,
@@ -83,8 +87,13 @@ const Login: React.FC<LoginProps> = (props) => {
     loginType ? loginType[0] : 'account',
   );
   const [innerCaptchaUrl, setInnerCaptchaUrl] = useState(captchaUrl);
-  const [captchaId, setCaptchaId] = useState('');
   const { initialState, setInitialState } = useModel('@@initialState');
+  const { object, setObject } = useModel('object'); // 全局对象
+  const formRef = useRef<ProFormInstance<any>>();
+
+  const formKey = componentkey ? componentkey : 'form';
+  object[formKey] = formRef;
+  setObject(object);
 
   useEffect(() => {
     onSetInnerCaptchaUrl();
@@ -104,35 +113,12 @@ const Login: React.FC<LoginProps> = (props) => {
 
   // 刷新图形验证码
   const onSetInnerCaptchaUrl = async () => {
-    let captchaId = '';
-    if (captchaUrl === undefined) {
-      return;
-    }
-
-    if (captchaIdUrl) {
-      const result = await get({
-        url: captchaIdUrl,
-      });
-      if (result.type === 'error') {
-        message.error(result.content);
-      } else {
-        captchaId = result.data['captchaId'];
-      }
-      setCaptchaId(captchaId);
-    }
-
-    let getCaptchaUrl = captchaUrl.replace(/:id/g, captchaId);
-    getCaptchaUrl = getCaptchaUrl.replace('${id}', captchaId);
-
-    setInnerCaptchaUrl(getCaptchaUrl + '?random=' + Math.random());
+    setInnerCaptchaUrl(captchaUrl + '?random=' + Math.random());
   };
 
   // 提交表单
   const onFinish = async (values: any) => {
     try {
-      if (captchaIdUrl) {
-        values['captchaId'] = captchaId;
-      }
       const result = await post({
         url: api,
         data: { ...values, loginType: loginTypeActive },
@@ -178,11 +164,20 @@ const Login: React.FC<LoginProps> = (props) => {
         <title>{title}</title>
       </Helmet>
       <LoginFormPage
+        formRef={object[formKey]}
         logo={logo ? logo : defaultLogo}
         title={title}
         subTitle={subTitle}
         activityConfig={activityConfig}
-        actions={actions}
+        actions={
+          actions && (
+            <>
+              {actions?.map((action: any, index: number) => {
+                return <Action key={index} {...action} />;
+              })}
+            </>
+          )
+        }
         backgroundImageUrl={backgroundImageUrl}
         style={{ overflow: 'hidden', height: '100vh' }}
         onFinish={async (values) => {
@@ -208,7 +203,7 @@ const Login: React.FC<LoginProps> = (props) => {
               name="username"
               fieldProps={{
                 size: 'large',
-                prefix: <UserOutlined className={'prefixIcon'} />,
+                prefix: <UserOutlined />,
               }}
               placeholder={'用户名'}
               rules={[
@@ -222,7 +217,7 @@ const Login: React.FC<LoginProps> = (props) => {
               name="password"
               fieldProps={{
                 size: 'large',
-                prefix: <LockOutlined className={'prefixIcon'} />,
+                prefix: <LockOutlined />,
               }}
               placeholder={'密码'}
               rules={[
@@ -233,8 +228,10 @@ const Login: React.FC<LoginProps> = (props) => {
               ]}
             />
             {innerCaptchaUrl && (
-              <ProFormText
+              <ProFormImageCaptcha
                 name="captcha"
+                captchaUrl={innerCaptchaUrl}
+                captchaIdUrl={captchaIdUrl}
                 rules={[
                   {
                     required: true,
@@ -243,73 +240,42 @@ const Login: React.FC<LoginProps> = (props) => {
                 ]}
                 fieldProps={{
                   size: 'large',
-                  prefix: (
-                    <SafetyCertificateOutlined className={'prefixIcon'} />
-                  ),
-                  style: { width: '200px' },
+                  prefix: <SafetyCertificateOutlined />,
                 }}
                 placeholder="图形验证码"
-                addonAfter={
-                  <img
-                    src={innerCaptchaUrl}
-                    alt="验证码"
-                    onClick={() => {
-                      onSetInnerCaptchaUrl();
-                    }}
-                    style={{ cursor: 'pointer', width: 110 }}
-                  />
-                }
               />
             )}
           </>
         )}
         {loginTypeActive === 'phone' && (
-          <>
-            <ProFormText
-              fieldProps={{
-                size: 'large',
-                prefix: <MobileOutlined className={'prefixIcon'} />,
-              }}
-              name="mobile"
-              placeholder={'手机号'}
-              rules={[
-                {
-                  required: true,
-                  message: '请输入手机号！',
-                },
-                {
-                  pattern: /^1\d{10}$/,
-                  message: '手机号格式错误！',
-                },
-              ]}
-            />
-            <ProFormCaptcha
-              fieldProps={{
-                size: 'large',
-                prefix: <LockOutlined className={'prefixIcon'} />,
-              }}
-              captchaProps={{
-                size: 'large',
-              }}
-              placeholder={'请输入验证码'}
-              captchaTextRender={(timing, count) => {
-                if (timing) {
-                  return `${count} ${'获取验证码'}`;
-                }
-                return '获取验证码';
-              }}
-              name="captcha"
-              rules={[
-                {
-                  required: true,
-                  message: '请输入验证码！',
-                },
-              ]}
-              onGetCaptcha={async () => {
-                message.success('验证码发送成功！');
-              }}
-            />
-          </>
+          <ProFormSmsCaptcha
+            name="smsCaptcha"
+            captchaSize={'large'}
+            captchaText={'获取验证码'}
+            sendSmsUrl={'http://www.baidu.com'}
+            phoneSize={'large'}
+            phonePrefix={<MobileOutlined />}
+            phonePlaceholder={'手机号'}
+            phoneRules={[
+              {
+                required: true,
+                message: '请输入手机号！',
+              },
+              {
+                pattern: /^1\d{10}$/,
+                message: '手机号格式错误！',
+              },
+            ]}
+            codeSize={'large'}
+            codePrefix={<LockOutlined />}
+            codePlaceholder={'请输入验证码'}
+            codeRules={[
+              {
+                required: true,
+                message: '请输入验证码！',
+              },
+            ]}
+          />
         )}
       </LoginFormPage>
     </>

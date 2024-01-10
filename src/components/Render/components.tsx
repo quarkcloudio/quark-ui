@@ -26,9 +26,10 @@ import Typography from '@/components/Typography';
 import View from '@/components/View';
 import When from '@/components/When';
 import { DefaultFooter } from '@ant-design/pro-components';
+import Icon from '@/components/Icon';
 
 const fieldName =
-'textField|passwordField|textAreaField|inputNumberField|\
+  'textField|passwordField|textAreaField|inputNumberField|\
 iconField|idField|hiddenField|checkboxField|radioField|imageField|\
 fileField|switchField|selectField|treeField|cascaderField|\
 dateField|weekField|monthField|quarterField|yearField|datetimeField|\
@@ -65,6 +66,7 @@ const components = [
   { name: 'tabs', component: <Tabs /> },
   { name: 'view', component: <View /> },
   { name: 'when', component: <When /> },
+  { name: 'icon', component: <Icon /> },
   { name: fieldName, component: <Field /> },
 ];
 
