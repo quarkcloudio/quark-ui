@@ -15,7 +15,7 @@ import ProFormImageCaptcha from '@/components/Form/ProField/ProFormImageCaptcha'
 import ProFormSmsCaptcha from '@/components/Form/ProField/ProFormSmsCaptcha';
 import { flushSync } from 'react-dom';
 import qs from 'query-string';
-import { post, get } from '@/services/action';
+import { post } from '@/services/action';
 import defaultLogo from '@/assets/logo.png';
 
 type LoginType = 'phone' | 'account';
@@ -248,34 +248,45 @@ const Login: React.FC<LoginProps> = (props) => {
           </>
         )}
         {loginTypeActive === 'phone' && (
-          <ProFormSmsCaptcha
-            name="smsCaptcha"
-            captchaSize={'large'}
-            captchaText={'获取验证码'}
-            sendSmsUrl={'http://www.baidu.com'}
-            phoneSize={'large'}
-            phonePrefix={<MobileOutlined />}
-            phonePlaceholder={'手机号'}
-            phoneRules={[
-              {
-                required: true,
-                message: '请输入手机号！',
-              },
-              {
-                pattern: /^1\d{10}$/,
-                message: '手机号格式错误！',
-              },
-            ]}
-            codeSize={'large'}
-            codePrefix={<LockOutlined />}
-            codePlaceholder={'请输入验证码'}
-            codeRules={[
-              {
-                required: true,
-                message: '请输入验证码！',
-              },
-            ]}
-          />
+          <>
+            <ProFormText
+              fieldProps={{
+                size: 'large',
+                prefix: <MobileOutlined />,
+              }}
+              name="phone"
+              placeholder={'手机号'}
+              rules={[
+                {
+                  required: true,
+                  message: '请输入手机号！',
+                },
+                {
+                  pattern: /^1\d{10}$/,
+                  message: '手机号格式错误！',
+                },
+              ]}
+            />
+            <ProFormSmsCaptcha
+              name="code"
+              captchaProps={{
+                size: 'large',
+                text: '获取验证码',
+                url: '/',
+              }}
+              fieldProps={{
+                size: 'large',
+                prefix: <LockOutlined />,
+                placeholder: '请输入验证码',
+              }}
+              rules={[
+                {
+                  required: true,
+                  message: '请输入验证码！',
+                },
+              ]}
+            />
+          </>
         )}
       </LoginFormPage>
     </>
