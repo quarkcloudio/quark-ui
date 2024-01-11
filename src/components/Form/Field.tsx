@@ -81,6 +81,7 @@ const Field: React.FC<any> = (props: any) => {
               width: currentProps.width,
               size: currentProps.size,
               maxLength: currentProps.maxLength,
+              prefix: <Render body={currentProps.prefix} />,
             }}
           />
         );
@@ -94,6 +95,7 @@ const Field: React.FC<any> = (props: any) => {
               width: currentProps.width,
               size: currentProps.size,
               maxLength: currentProps.maxLength,
+              prefix: <Render body={currentProps.prefix} />,
             }}
           />
         );
@@ -129,6 +131,7 @@ const Field: React.FC<any> = (props: any) => {
               maxLength: currentProps.maxLength,
               step: currentProps.step,
               precision: currentProps.precision,
+              prefix: <Render body={currentProps.prefix} />,
             }}
           />
         );
@@ -500,6 +503,7 @@ const Field: React.FC<any> = (props: any) => {
               options: currentProps.options,
               api: currentProps.api,
               allowClear: currentProps.allowClear,
+              prefix: <Render body={currentProps.prefix} />,
             }}
           />
         );
@@ -541,7 +545,7 @@ const Field: React.FC<any> = (props: any) => {
               size: currentProps.size,
               maxLength: currentProps.maxLength,
               placeholder: currentProps.placeholder,
-              prefix: currentProps.prefix,
+              prefix: <Render body={currentProps.prefix} />,
               style: currentProps.style && currentProps.style,
             }}
           />
@@ -560,7 +564,7 @@ const Field: React.FC<any> = (props: any) => {
               size: currentProps.size,
               maxLength: currentProps.maxLength,
               placeholder: currentProps.placeholder,
-              prefix: currentProps.prefix,
+              prefix: <Render body={currentProps.prefix} />,
               style: currentProps.style && currentProps.style,
             }}
           />

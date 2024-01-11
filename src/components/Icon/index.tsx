@@ -6,9 +6,6 @@ export interface IconExtendProps {
   extraCommonProps?: any;
   scriptUrl?: string;
   type?: string;
-  body?: any;
-  data?: any;
-  callback?: any;
 }
 
 const Icon: React.FC<
