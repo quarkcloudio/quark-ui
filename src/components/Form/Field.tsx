@@ -31,6 +31,8 @@ import ProFormImageUploader from './ProField/ProFormImageUploader';
 import ProFormMap from './ProField/ProFormMap';
 import ProFormSearch from './ProField/ProFormSearch';
 import ProFormTransfer from './ProField/ProFormTransfer';
+import ProFormImageCaptcha from './ProField/ProFormImageCaptcha';
+import ProFormSmsCaptcha from './ProField/ProFormSmsCaptcha';
 import Selects from './Field/Selects';
 import tplEngine from '@/utils/template';
 
@@ -523,6 +525,42 @@ const Field: React.FC<any> = (props: any) => {
               zoom: currentProps.zoom,
               mapKey: currentProps.mapKey,
               mapSecurityJsCode: currentProps.mapSecurityJsCode,
+              style: currentProps.style && currentProps.style,
+            }}
+          />
+        );
+        break;
+      case 'imageCaptchaField':
+        component = (
+          <ProFormImageCaptcha
+            {...baseProps(currentProps)}
+            captchaIdUrl={currentProps.captchaIdUrl}
+            captchaUrl={currentProps.captchaUrl}
+            fieldProps={{
+              width: currentProps.width,
+              size: currentProps.size,
+              maxLength: currentProps.maxLength,
+              placeholder: currentProps.placeholder,
+              prefix: currentProps.prefix,
+              style: currentProps.style && currentProps.style,
+            }}
+          />
+        );
+        break;
+      case 'smsCaptchaField':
+        component = (
+          <ProFormSmsCaptcha
+            {...baseProps(currentProps)}
+            captchaIdUrl={currentProps.captchaIdUrl}
+            captchaUrl={currentProps.captchaUrl}
+            dependency={currentProps.dependency}
+            captchaProps={currentProps.captchaProps}
+            fieldProps={{
+              width: currentProps.width,
+              size: currentProps.size,
+              maxLength: currentProps.maxLength,
+              placeholder: currentProps.placeholder,
+              prefix: currentProps.prefix,
               style: currentProps.style && currentProps.style,
             }}
           />
