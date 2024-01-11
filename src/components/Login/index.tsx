@@ -109,6 +109,9 @@ const Login: React.FC<LoginProps> = (props) => {
 
   // 提交表单
   const onFinish = async (values: any) => {
+    // 刷新验证码
+    object?.refreshCaptcha?.();
+
     try {
       const result = await post({
         url: api,

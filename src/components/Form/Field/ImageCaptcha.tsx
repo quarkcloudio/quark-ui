@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Input, InputProps, message } from 'antd';
+import { useModel } from '@umijs/max';
 import { get } from '@/services/action';
 
 export interface ImageCaptchaProps {
@@ -22,9 +23,9 @@ const ImageCaptcha: React.FC<InputProps & ImageCaptchaProps> = (props) => {
     prefix,
     onChange,
   } = { ...props };
+  const { object, setObject } = useModel('object'); // 全局对象
   const [innerCaptchaUrl, setInnerCaptchaUrl] = useState(captchaUrl);
   const [captchaId, setCaptchaId] = useState('');
-
   useEffect(() => {
     refreshCaptcha();
   }, [captchaUrl]);
@@ -46,6 +47,10 @@ const ImageCaptcha: React.FC<InputProps & ImageCaptchaProps> = (props) => {
       .replace('${id}', captchaId);
     setInnerCaptchaUrl(getCaptchaUrl);
   };
+
+  // 将验证码对象存储到全局
+  object['refreshCaptcha'] = refreshCaptcha;
+  setObject(object);
 
   const triggerChange = (changedValue: { id?: string; value?: any }) => {
     onChange?.({ ...value, ...changedValue });
