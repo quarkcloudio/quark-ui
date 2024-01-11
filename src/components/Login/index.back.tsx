@@ -13,7 +13,6 @@ import { LoginFormPage, ProFormText } from '@ant-design/pro-components';
 import Action from '@/components/Action';
 import ProFormImageCaptcha from '@/components/Form/ProField/ProFormImageCaptcha';
 import ProFormSmsCaptcha from '@/components/Form/ProField/ProFormSmsCaptcha';
-import Render from '@/components/Render';
 import { flushSync } from 'react-dom';
 import qs from 'query-string';
 import { post } from '@/services/action';
@@ -49,7 +48,6 @@ export interface LoginProps {
   api?: string;
   loginType?: Array<LoginType>;
   redirect?: string;
-  body?: any;
 }
 
 const defaultProps = {
@@ -77,16 +75,18 @@ const Login: React.FC<LoginProps> = (props) => {
     backgroundImageUrl,
     activityConfig,
     actions,
+    captchaUrl,
+    captchaIdUrl,
     api,
     loginType,
     redirect,
-    body,
   } = { ...defaultProps, ...props };
   const location = useLocation();
   const query = qs.parse(location.search);
   const [loginTypeActive, setLoginType] = useState<LoginType>(
     loginType ? loginType[0] : 'account',
   );
+  const [innerCaptchaUrl, setInnerCaptchaUrl] = useState(captchaUrl);
   const { initialState, setInitialState } = useModel('@@initialState');
   const { object, setObject } = useModel('object'); // 全局对象
   const formRef = useRef<ProFormInstance<any>>();
@@ -94,6 +94,10 @@ const Login: React.FC<LoginProps> = (props) => {
   const formKey = componentkey ? componentkey : 'form';
   object[formKey] = formRef;
   setObject(object);
+
+  useEffect(() => {
+    onSetInnerCaptchaUrl();
+  }, []);
 
   // 跳转到 redirect 参数所在的位置
   const replaceGoto = (redirectUrl: string = '') => {
@@ -105,6 +109,11 @@ const Login: React.FC<LoginProps> = (props) => {
       }
       history.replace(redirect);
     }, 10);
+  };
+
+  // 刷新图形验证码
+  const onSetInnerCaptchaUrl = async () => {
+    setInnerCaptchaUrl(captchaUrl + '?random=' + Math.random());
   };
 
   // 提交表单
@@ -140,6 +149,7 @@ const Login: React.FC<LoginProps> = (props) => {
         replaceGoto(redirect);
         return;
       } else {
+        onSetInnerCaptchaUrl();
         message.error(result.content);
       }
     } catch (error) {
@@ -174,8 +184,110 @@ const Login: React.FC<LoginProps> = (props) => {
           await onFinish(values);
         }}
       >
-        <Divider style={{ marginTop: -15 }} />
-        <Render body={body} data={{ componentkey: formKey }} />
+        {loginType && loginType.length > 1 && (
+          <Tabs
+            centered
+            activeKey={loginTypeActive}
+            onChange={(activeKey) => setLoginType(activeKey as LoginType)}
+          >
+            <Tabs.TabPane key={'account'} tab={'账号密码登录'} />
+            <Tabs.TabPane key={'phone'} tab={'手机号登录'} />
+          </Tabs>
+        )}
+        {loginType && loginType.length === 1 && (
+          <Divider style={{ marginTop: -15 }} />
+        )}
+        {loginTypeActive === 'account' && (
+          <>
+            <ProFormText
+              name="username"
+              fieldProps={{
+                size: 'large',
+                prefix: <UserOutlined />,
+              }}
+              placeholder={'用户名'}
+              rules={[
+                {
+                  required: true,
+                  message: '请输入用户名!',
+                },
+              ]}
+            />
+            <ProFormText.Password
+              name="password"
+              fieldProps={{
+                size: 'large',
+                prefix: <LockOutlined />,
+              }}
+              placeholder={'密码'}
+              rules={[
+                {
+                  required: true,
+                  message: '请输入密码！',
+                },
+              ]}
+            />
+            {innerCaptchaUrl && (
+              <ProFormImageCaptcha
+                name="captcha"
+                captchaUrl={innerCaptchaUrl}
+                captchaIdUrl={captchaIdUrl}
+                rules={[
+                  {
+                    required: true,
+                    message: '请输入图形验证码!',
+                  },
+                ]}
+                fieldProps={{
+                  size: 'large',
+                  prefix: <SafetyCertificateOutlined />,
+                }}
+                placeholder="图形验证码"
+              />
+            )}
+          </>
+        )}
+        {loginTypeActive === 'phone' && (
+          <>
+            <ProFormText
+              fieldProps={{
+                size: 'large',
+                prefix: <MobileOutlined />,
+              }}
+              name="phone"
+              placeholder={'手机号'}
+              rules={[
+                {
+                  required: true,
+                  message: '请输入手机号！',
+                },
+                {
+                  pattern: /^1\d{10}$/,
+                  message: '手机号格式错误！',
+                },
+              ]}
+            />
+            <ProFormSmsCaptcha
+              name="code"
+              captchaProps={{
+                size: 'large',
+                text: '获取验证码',
+                url: '/',
+              }}
+              fieldProps={{
+                size: 'large',
+                prefix: <LockOutlined />,
+                placeholder: '请输入验证码',
+              }}
+              rules={[
+                {
+                  required: true,
+                  message: '请输入验证码！',
+                },
+              ]}
+            />
+          </>
+        )}
       </LoginFormPage>
     </>
   );

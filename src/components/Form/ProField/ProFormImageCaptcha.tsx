@@ -47,15 +47,17 @@ const ProFormImageCaptcha: React.FC<ProFormImageCaptchaProps> = ({
       label={label}
       name={name}
       tooltip={tooltip}
-      rules={[
-        ...rules,
-        {
-          type: 'object',
-          fields: {
-            value: rules,
+      rules={
+        rules && [
+          ...rules,
+          {
+            type: 'object',
+            fields: {
+              value: rules,
+            },
           },
-        },
-      ]}
+        ]
+      }
       help={help}
       extra={extra}
       required={required}
