@@ -177,7 +177,6 @@ const Login: React.FC<LoginProps> = (props) => {
           await onFinish(values);
         }}
       >
-        <Divider style={{ marginTop: -15 }} />
         <Render body={body} data={{ componentkey: formKey }} />
       </LoginFormPage>
     </>
