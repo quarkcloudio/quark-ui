@@ -158,11 +158,18 @@ const Layout: React.FC<any> = (props) => {
     setMenuOpenKeys(openKeys);
   };
 
-  const onRightContentMenuClick = (event: any) => {
+  const onRightContentMenuClick = async (event: any) => {
     switch (event.key) {
-      case 'logout':
-        loginOut();
+      case 'logout': {
+        let result = await get({
+          url: '/api/admin/logout/index/handle',
+        });
+        if (result['status'] === 'success') {
+          localStorage.removeItem('token');
+        }
+        history.push('/');
         break;
+      }
       case 'setting':
         history.push({
           pathname: '/layout/index',
@@ -170,17 +177,6 @@ const Layout: React.FC<any> = (props) => {
         });
         break;
     }
-  };
-
-  // 退出登录
-  const loginOut = async () => {
-    const result = await get({
-      url: '/api/admin/logout/index/handle',
-    });
-    if (result['status'] === 'success') {
-      localStorage.removeItem('token');
-    }
-    history.push('/');
   };
 
   const items: MenuProps['items'] = [
