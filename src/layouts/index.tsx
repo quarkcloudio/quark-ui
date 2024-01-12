@@ -22,11 +22,7 @@ import {
   getMenu,
 } from '@/components/Layout/menu';
 import { get } from '@/services/action';
-import {
-  LogoutOutlined,
-  SettingOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
+import { UserOutlined } from '@ant-design/icons';
 
 const Layout: React.FC<any> = (props) => {
   const { pageLoading } = useModel('pageLoading');
