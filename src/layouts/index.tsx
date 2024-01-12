@@ -158,39 +158,14 @@ const Layout: React.FC<any> = (props) => {
     setMenuOpenKeys(openKeys);
   };
 
-  const onRightContentMenuClick = async (event: any) => {
-    switch (event.key) {
-      case 'logout': {
-        let result = await get({
-          url: '/api/admin/logout/index/handle',
-        });
-        if (result['status'] === 'success') {
-          localStorage.removeItem('token');
-        }
-        history.push('/');
-        break;
-      }
-      case 'setting':
-        history.push({
-          pathname: '/layout/index',
-          search: 'api=/api/admin/account/setting/form',
-        });
-        break;
-    }
-  };
-
-  const items: MenuProps['items'] = [
-    {
-      key: 'setting',
-      icon: <SettingOutlined />,
-      label: '个人设置',
+  const items: MenuProps['items'] = layout?.rightMenus?.map(
+    (item: any, index: number) => {
+      return {
+        key: index,
+        label: <Render body={item} />,
+      };
     },
-    {
-      key: 'logout',
-      icon: <LogoutOutlined />,
-      label: '退出登录',
-    },
-  ];
+  );
 
   return (
     <ConfigProvider locale={locale}>
@@ -232,7 +207,6 @@ const Layout: React.FC<any> = (props) => {
                   <Dropdown
                     menu={{
                       items: items,
-                      onClick: onRightContentMenuClick,
                     }}
                   >
                     {dom}
