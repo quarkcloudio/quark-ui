@@ -325,7 +325,7 @@ const Field: React.FC<any> = (props: any) => {
           <ProFormCascader
             {...baseProps(currentProps)}
             fieldProps={{
-              api: currentProps.style,
+              api: currentProps.api,
               size: currentProps.size,
               options: currentProps.options,
               style: currentProps.style && currentProps.style,
