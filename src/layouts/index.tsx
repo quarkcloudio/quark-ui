@@ -139,7 +139,11 @@ const Layout: React.FC<any> = (props) => {
     getComponent();
   }, [query.api]);
 
-  const findMenuItem = (key: string, routes = layout.menu, selected: string[] = []): any => {
+  const findMenuItem = (
+    key: string,
+    routes = layout.menu,
+    selected: string[] = [],
+  ): any => {
     for (let item of routes) {
       const currentKey = item.key;
       if (key === currentKey) {
@@ -154,7 +158,7 @@ const Layout: React.FC<any> = (props) => {
           setMenuSelectedKeys([...new Set(selected)]); // 确保添加的 keys 是唯一的
           return foundItem; // 如果在递归调用中找到了匹配项，立即返回该项
         } else {
-          selected.pop(); // 如果当前分支没有找到匹配项，撤销添加的 key
+          selected.pop(); // 如果当前分支没有找到匹配项，撤销添加的key
         }
       }
     }
@@ -211,7 +215,9 @@ const Layout: React.FC<any> = (props) => {
   useEffect(() => {
     if (layout.menu && layout.menu.length > 0) {
       const flatRoutes = flattenRoutes(layout.menu);
-      const route = flatRoutes.find((item) => item.path === (location.pathname + location.search));
+      const route = flatRoutes.find(
+        (item) => item.path === location.pathname + location.search,
+      );
       if (!route) return;
       const menuItem = findMenuItem(route.key);
       if (menuItem && menuItem.type === 1) {
