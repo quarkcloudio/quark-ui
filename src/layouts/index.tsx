@@ -165,9 +165,9 @@ const Layout: React.FC<any> = (props) => {
   };
 
   const findFirstChild = (menu: any, openKeys: string[] = []): any => {
-    if (menu.type === 2) {
-      return menu;
-    }
+    if (menu.type === 2) return menu;
+    // 如果没有子菜单的时候则保持不动
+    if (!menu.routes || menu.routes.length) return;
     for (let item of menu.routes) {
       if (item.type === 2) {
         return item;
