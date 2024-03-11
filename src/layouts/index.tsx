@@ -139,15 +139,60 @@ const Layout: React.FC<any> = (props) => {
     getComponent();
   }, [query.api]);
 
-  const onMenuClick = (event: any) => {
-    setMenuSelectedKeys([event.key]);
-    const menu: any = getMenu(layout.menu, event.key);
-    if (menu.is_link === 1) {
-      window.open(menu.path, '_blank');
-      return false;
+  const findMenuItem = (key: string, routes = layout.menu, selected: string[] = []): any => {
+    for (let item in routes) {
+      const currentKey = routes[item].key;
+      if (key === currentKey) {
+        selected.push(currentKey);
+        setMenuSelectedKeys([...new Set(selected)]); // 使用 Set 来确保唯一性，防止重复的 key
+        return routes[item];
+      }
+      if (routes[item].routes && routes[item].routes.length > 0) {
+        selected.push(currentKey); // 先添加当前层的 key
+        const foundItem = findMenuItem(key, routes[item].routes, selected); // 递归调用
+        if (foundItem) {
+          setMenuSelectedKeys([...new Set(selected)]); // 确保添加的 keys 是唯一的
+          return foundItem; // 如果在递归调用中找到了匹配项，立即返回该项
+        } else {
+          selected.pop(); // 如果当前分支没有找到匹配项，撤销添加的 key
+        }
+      }
     }
+  };
 
-    history.push(menu.path);
+  const findFirstChild = (menu: any, openKeys: string[] = []): any => {
+    if (menu.type === 2) {
+      return menu;
+    }
+    for (let item in menu.routes) {
+      if (menu.routes[item].type === 2) {
+        return menu.routes[item];
+      }
+      if (menu.routes[item].routes && menu.routes[item].routes.length > 0) {
+        openKeys.push(menu.routes[item].key);
+        setMenuOpenKeys(openKeys);
+        return findFirstChild(menu.routes[item].routes[0]);
+      }
+    }
+  };
+
+  const onMenuClick = (event: any) => {
+    const menuItem = findMenuItem(event.key);
+    if (!menuItem) return;
+    if (menuItem.type === 3) return;
+    if (menuItem.type === 1) {
+      const child = findFirstChild(menuItem);
+      if (!child) return;
+      menuSelectedKeys.push(child.key);
+      setMenuSelectedKeys([menuItem.key, child.key]);
+      history.push(child.path);
+    } else {
+      if (menuItem.is_link === 1) {
+        window.open(menuItem.path, '_blank');
+        return false;
+      }
+      history.push(menuItem.path);
+    }
   };
 
   const onMenuOpenChange = (openKeys: any) => {
@@ -173,6 +218,8 @@ const Layout: React.FC<any> = (props) => {
         {layout?.title && (
           <ProLayout
             {...layout}
+            // layout="mix"
+            // splitMenus={true}
             loading={pageLoading}
             logo={layout.logo ? layout.logo : defaultLogo}
             iconfontUrl={layout.iconfontUrl}
