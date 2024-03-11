@@ -208,6 +208,29 @@ const Layout: React.FC<any> = (props) => {
     },
   );
 
+  useEffect(() => {
+    if (layout.menu && layout.menu.length > 0) {
+      const flatRoutes = flattenRoutes(layout.menu);
+      const route = flatRoutes.find((item) => item.path === (location.pathname + location.search));
+      if (!route) return;
+      const menuItem = findMenuItem(route.key);
+      if (menuItem && menuItem.type === 1) {
+        findFirstChild(menuItem);
+      }
+    }
+  }, [location, layout.menu]);
+  const flattenRoutes = (routes: any[]): any[] => {
+    return routes.reduce((accumulator: any[], currentValue: any) => {
+      // 将当前值添加到累加器数组中
+      accumulator.push(currentValue);
+      // 如果当前值有routes属性，递归调用flattenRoutes并将结果展平后添加到累加器数组中
+      if (currentValue.routes && currentValue.routes.length > 0) {
+        accumulator = accumulator.concat(flattenRoutes(currentValue.routes));
+      }
+      return accumulator;
+    }, []);
+  };
+
   return (
     <ConfigProvider locale={locale}>
       <App>
