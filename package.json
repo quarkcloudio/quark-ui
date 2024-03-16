@@ -28,6 +28,7 @@
     "react-cropper": "^2.1.8"
   },
   "devDependencies": {
+    "@types/lodash-es": "^4.17.12",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "husky": "^8.0.1",
