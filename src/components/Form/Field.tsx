@@ -146,6 +146,7 @@ const Field: React.FC<any> = (props: any) => {
               placeholder: currentProps.placeholder && currentProps.placeholder,
               size: currentProps.size && currentProps.size,
               allowClear: currentProps.allowClear && currentProps.allowClear,
+              allowSearch: currentProps.allowSearch && currentProps.allowSearch,
               options: currentProps.options && currentProps.options,
             }}
           />
@@ -807,7 +808,7 @@ const Field: React.FC<any> = (props: any) => {
       fieldData['componentkey'] = props.data?.componentkey;
       fieldData[currentProps.name] = object[
         props.data?.componentkey
-      ]?.current?.getFieldValue(currentProps.name);
+        ]?.current?.getFieldValue(currentProps.name);
 
       // Space、Compact组件下，需要特殊处理
       if (

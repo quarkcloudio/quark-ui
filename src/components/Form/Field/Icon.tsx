@@ -20,20 +20,20 @@ export interface IconProps {
 }
 
 const Icon: React.FC<IconProps> = ({
-  label = null,
-  name = undefined,
-  tooltip = undefined,
-  rules = undefined,
-  help = undefined,
-  extra = undefined,
-  addonAfter = undefined,
-  addonBefore = undefined,
-  wrapperCol = undefined,
-  colProps = undefined,
-  secondary = undefined,
-  fieldProps = undefined,
-  onChange,
-}) => {
+                                     label = null,
+                                     name = undefined,
+                                     tooltip = undefined,
+                                     rules = undefined,
+                                     help = undefined,
+                                     extra = undefined,
+                                     addonAfter = undefined,
+                                     addonBefore = undefined,
+                                     wrapperCol = undefined,
+                                     colProps = undefined,
+                                     secondary = undefined,
+                                     fieldProps = undefined,
+                                     onChange,
+                                   }) => {
   const Option = Select.Option;
   const IconFont = createFromIconfontCN({
     scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js',
@@ -68,6 +68,7 @@ const Icon: React.FC<IconProps> = ({
         size={fieldProps.size}
         allowClear={fieldProps.allowClear}
         onChange={onSelectChange}
+        showSearch={fieldProps.allowSearch}
       >
         {fieldProps?.options?.map((item: any) => {
           if (!item) {
