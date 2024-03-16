@@ -17,12 +17,10 @@ import Render from '@/components/Render';
 import defaultLogo from '@/assets/logo.png';
 import {
   getMenuName,
-  getMenuSelectedKey,
-  getMenuOpenKeys,
-  getMenu,
 } from '@/components/Layout/menu';
 import { get } from '@/services/action';
 import { UserOutlined } from '@ant-design/icons';
+import { cloneDeep } from 'lodash-es';
 
 const Layout: React.FC<any> = (props) => {
   const { pageLoading } = useModel('pageLoading');
@@ -37,7 +35,10 @@ const Layout: React.FC<any> = (props) => {
   const [menuOpenKeys, setMenuOpenKeys] = useState<any>([]);
   const [menuSelectedKeys, setMenuSelectedKeys] = useState(['']);
   const [collapsed, setCollapsed] = useState<boolean>(false);
-
+  // 平铺的菜单列表
+  const [flatRoutes, setFlatRoutes] = useState<any[]>([]);
+  // 渲染的菜单项
+  const [layoutMenu, setLayoutMenu] = useState<any[]>([]);
   const getLayout = async () => {
     const config = await request('./config.json');
     let layoutApi = config.api.layout;
@@ -58,19 +59,8 @@ const Layout: React.FC<any> = (props) => {
     setLayout(result);
 
     if (result.menu) {
-      // 获取当前选中的菜单
-      const menuSelectedKey = getMenuSelectedKey(
-        result.menu,
-        location.pathname,
-        decodeURIComponent(api),
-      );
-      // 获取当前展开的菜单
-      const currentMenuOpenKeys = getMenuOpenKeys(result.menu, menuSelectedKey);
-      // 设置菜单展开
-      menuOpenKeys.push(...currentMenuOpenKeys);
-      setMenuOpenKeys(menuOpenKeys);
-      // 设置选中菜单
-      setMenuSelectedKeys([menuSelectedKey]);
+      setFlatRoutes(handleFlatten(result.menu));
+      setLayoutMenu(handleFilter(cloneDeep(result.menu)));
     }
 
     // 获取当前选中菜单的名称
@@ -147,14 +137,16 @@ const Layout: React.FC<any> = (props) => {
     for (let item of routes) {
       const currentKey = item.key;
       if (key === currentKey) {
+        setMenuOpenKeys([...new Set(selected)]);
         selected.push(currentKey);
-        setMenuSelectedKeys([...new Set(selected)]); // 使用 Set 来确保唯一性，防止重复的 key
+        setMenuSelectedKeys([...new Set(selected)]); // 使用 Set 来确保唯一性，防止重复的 keys
         return item;
       }
       if (item.routes && item.routes.length > 0) {
         selected.push(currentKey); // 先添加当前层的 key
         const foundItem = findMenuItem(key, item.routes, selected); // 递归调用
         if (foundItem) {
+          setMenuOpenKeys([...new Set(selected)]);
           setMenuSelectedKeys([...new Set(selected)]); // 确保添加的 keys 是唯一的
           return foundItem; // 如果在递归调用中找到了匹配项，立即返回该项
         } else {
@@ -165,8 +157,9 @@ const Layout: React.FC<any> = (props) => {
   };
 
   const findFirstChild = (menu: any, openKeys: string[] = []): any => {
-    if (menu.type === 2) return menu;
-    // 如果没有子菜单的时候则保持不动
+    if (menu.type === 2) {
+      return menu;
+    }
     if (!menu.routes || !menu.routes.length) return;
     for (let item of menu.routes) {
       if (item.type === 2) {
@@ -174,23 +167,26 @@ const Layout: React.FC<any> = (props) => {
       }
       if (item.routes && item.routes.length > 0) {
         openKeys.push(item.key);
-        setMenuOpenKeys(openKeys);
-        return findFirstChild(item.routes[0]);
+        const foundItem = findFirstChild(item.routes[0]);
+        if (foundItem) {
+          setMenuOpenKeys(openKeys);
+          return foundItem;
+        } else {
+          openKeys.pop();
+        }
       }
     }
   };
-
   const onMenuClick = (event: any) => {
-    const menuItem = findMenuItem(event.key);
+    const menuItem = flatRoutes.find((item) => item.key === event.key);
     if (!menuItem) return;
     if (menuItem.type === 3) return;
-    if (menuItem.type === 1) {
+    if (menuItem.type === 1 && menuItem.routes && menuItem.routes.length) {
       const child = findFirstChild(menuItem);
       if (!child) return;
-      menuSelectedKeys.push(child.key);
-      setMenuSelectedKeys([menuItem.key, child.key]);
+      setMenuSelectedKeys([...new Set([...menuSelectedKeys, child.key])]);
       history.push(child.path);
-    } else {
+    } else if (menuItem.type === 2) {
       if (menuItem.is_link === 1) {
         window.open(menuItem.path, '_blank');
         return false;
@@ -213,28 +209,32 @@ const Layout: React.FC<any> = (props) => {
   );
 
   useEffect(() => {
-    if (layout.menu && layout.menu.length > 0) {
-      const flatRoutes = flattenRoutes(layout.menu);
+    if (flatRoutes && flatRoutes.length > 0) {
       const route = flatRoutes.find(
         (item) => item.path === location.pathname + location.search,
       );
       if (!route) return;
-      const menuItem = findMenuItem(route.key);
-      if (menuItem && menuItem.type === 1) {
-        findFirstChild(menuItem);
-      }
+      findMenuItem(route.key);
     }
-  }, [location, layout.menu]);
-  const flattenRoutes = (routes: any[]): any[] => {
+  }, [location, flatRoutes]);
+  const handleFlatten = (routes: any[]): any[] => {
     return routes.reduce((accumulator: any[], currentValue: any) => {
       // 将当前值添加到累加器数组中
       accumulator.push(currentValue);
-      // 如果当前值有routes属性，递归调用flattenRoutes并将结果展平后添加到累加器数组中
+      // 如果当前值有routes属性，递归调用handleFlatten并将结果展平后添加到累加器数组中
       if (currentValue.routes && currentValue.routes.length > 0) {
-        accumulator = accumulator.concat(flattenRoutes(currentValue.routes));
+        accumulator = accumulator.concat(handleFlatten(currentValue.routes));
       }
       return accumulator;
     }, []);
+  };
+  const handleFilter = (routes: any[]): any[] => {
+    return routes.filter((item) => {
+      if (item.routes && item.routes.length) {
+        item.routes = handleFilter(item.routes);
+      }
+      return item.show;
+    });
   };
 
   return (
@@ -259,7 +259,7 @@ const Layout: React.FC<any> = (props) => {
             onCollapse={(collapsed: boolean) => {
               setCollapsed(collapsed);
             }}
-            menuDataRender={() => layout.menu}
+            menuDataRender={() => layoutMenu}
             actionsRender={() => [
               <Render key="action" body={layout.actions} />,
             ]}

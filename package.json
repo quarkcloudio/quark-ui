@@ -20,6 +20,7 @@
     "@umijs/max": "^4.0.47",
     "antd": "^5.0.0",
     "js-base64": "^3.7.4",
+    "lodash-es": "^4.17.21",
     "lodash.template": "^4.5.0",
     "query-string": "^8.1.0",
     "react-amap": "^1.2.8",
