@@ -200,6 +200,8 @@ const Field: React.FC<any> = (props: any) => {
             fieldProps={{
               style: currentProps.style && currentProps.style,
               width: currentProps.width,
+              buttonStyle: currentProps.buttonStyle,
+              optionType: currentProps.optionType,
             }}
           />
         );
