@@ -41,6 +41,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
   const { object, setObject } = useModel('object');
   const [columns, setColumns] = useState(props.columns);
   const [toolBar, setToolBar] = useState(props.toolBar);
+  const [activeKey, setActiveKey] = useState<any>(undefined);
   const {
     componentkey,
     api,
@@ -66,6 +67,10 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
   useEffect(() => {
     actionRef.current.reload();
   }, [search, tableExtraRender]);
+
+  useEffect(() => {
+    actionRef.current.reload(true);
+  }, [activeKey]);
 
   // 注册全局变量
   if (componentkey) {
@@ -197,6 +202,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
           search: JSON.stringify(params),
           sorter: JSON.stringify(sorter),
           filter: JSON.stringify(filter),
+          activeKey: JSON.stringify(activeKey),
           ...query,
         },
       });
@@ -208,6 +214,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
           search: params,
           sorter: sorter,
           filter: filter,
+          activeKey,
           ...query,
         },
       });
@@ -317,6 +324,11 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
         setColumns(table.columns);
 
         // 更新toolbar
+        if (table.toolBar && table.toolBar.hasOwnProperty('menu')) {
+          table.toolBar.menu.onChange = (key: any) => {
+            setActiveKey(key);
+          };
+        }
         setToolBar(table.toolBar);
 
         // 返回数据
@@ -358,11 +370,11 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
       pagination={
         pagination
           ? {
-              defaultCurrent: pagination?.defaultCurrent
-                ? pagination.defaultCurrent
-                : 1,
-              defaultPageSize: pagination?.pageSize ? pagination.pageSize : 10,
-            }
+            defaultCurrent: pagination?.defaultCurrent
+              ? pagination.defaultCurrent
+              : 1,
+            defaultPageSize: pagination?.pageSize ? pagination.pageSize : 10,
+          }
           : false
       }
       rowClassName={(record, index) => {
