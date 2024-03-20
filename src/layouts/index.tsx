@@ -213,7 +213,7 @@ const Layout: React.FC<any> = (props) => {
   useEffect(() => {
     if (flatRoutes && flatRoutes.length > 0) {
       const route = flatRoutes.find(
-        (item) => item.path.startsWith(location.pathname + '?api=' + searchParams.get('api')),
+        (item) => item.path.startsWith(location.pathname + (searchParams.get('api') ? '?api=' + searchParams.get('api') : '')),
       );
       if (!route) return;
       findMenuItem(route.key);
