@@ -21,6 +21,8 @@ import {
 import { get } from '@/services/action';
 import { UserOutlined } from '@ant-design/icons';
 import { cloneDeep } from 'lodash-es';
+import { useParams } from 'react-router';
+import { useSearchParams } from 'react-router-dom';
 
 const Layout: React.FC<any> = (props) => {
   const { pageLoading } = useModel('pageLoading');
@@ -207,11 +209,11 @@ const Layout: React.FC<any> = (props) => {
       };
     },
   );
-
+  let [searchParams, _setSearchParams] = useSearchParams();
   useEffect(() => {
     if (flatRoutes && flatRoutes.length > 0) {
       const route = flatRoutes.find(
-        (item) => item.path === location.pathname + location.search,
+        (item) => item.path.startsWith(location.pathname + '?api=' + searchParams.get('api')),
       );
       if (!route) return;
       findMenuItem(route.key);

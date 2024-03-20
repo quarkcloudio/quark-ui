@@ -4,6 +4,7 @@ import { useLocation, history } from '@umijs/max';
 import qs from 'query-string';
 import Render from '@/components/Render';
 import { get } from '@/services/action';
+import { setObjToUrlParams } from '@/utils/url';
 
 const PageContainer: React.FC<any> = (props: any) => {
   const location = useLocation();
@@ -47,7 +48,7 @@ const PageContainer: React.FC<any> = (props: any) => {
     let getQuery: any = {};
     getQuery['api'] = query.api;
     getQuery['tabKey'] = key;
-    history.push({ pathname: history.location.pathname, search: getQuery });
+    history.push({ pathname: history.location.pathname, search: setObjToUrlParams('', getQuery)  });
     getPageContainer(props.componentkey);
   };
 
@@ -58,7 +59,9 @@ const PageContainer: React.FC<any> = (props: any) => {
         props.header && (
           {
             ...props.header,
-            onBack: ()=>{ history.go(-1) },
+            onBack: () => {
+              history.go(-1);
+            },
             children: props.header.body && (
               <Render
                 body={props.header.body}
