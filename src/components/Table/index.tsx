@@ -324,7 +324,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
         setColumns(table.columns);
 
         // 更新toolbar
-        if (table.toolBar && table.toolBar.hasOwnProperty('menu')) {
+        if (table.toolBar && table.toolBar.menu) {
           table.toolBar.menu.onChange = (key: any) => {
             setActiveKey(key);
           };
