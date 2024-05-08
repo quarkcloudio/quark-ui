@@ -44,7 +44,8 @@ const ImageCaptcha: React.FC<InputProps & ImageCaptchaProps> = (props) => {
     setCaptchaId(captchaId);
     let getCaptchaUrl = captchaUrl
       .replace(/:id/g, captchaId)
-      .replace('${id}', captchaId);
+      .replace('${id}', captchaId)
+      .replace('{id}', captchaId);
     setInnerCaptchaUrl(getCaptchaUrl);
   };
 
