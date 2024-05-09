@@ -33,6 +33,7 @@ const ImageCaptcha: React.FC<InputProps & ImageCaptchaProps> = (props) => {
   // 刷新图形验证码
   const refreshCaptcha = async () => {
     let captchaId = '';
+    let timestamp = new Date().getTime().toString();
     const result = await get({
       url: captchaIdUrl,
     });
@@ -42,10 +43,13 @@ const ImageCaptcha: React.FC<InputProps & ImageCaptchaProps> = (props) => {
     }
     captchaId = result.data['captchaId'];
     setCaptchaId(captchaId);
-    let getCaptchaUrl = captchaUrl
-      .replace(/:id/g, captchaId)
-      .replace('${id}', captchaId)
-      .replace('{id}', captchaId);
+    let getCaptchaUrl =
+      captchaUrl
+        .replace(/:id/g, captchaId)
+        .replace('${id}', captchaId)
+        .replace('{id}', captchaId) +
+      '?t=' +
+      timestamp;
     setInnerCaptchaUrl(getCaptchaUrl);
   };
 
