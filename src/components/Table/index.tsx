@@ -274,11 +274,12 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
         ],
       }}
       onReset={() => {
-        const getApi = api ? api : query.api;
-        history.replace({
-          pathname: location.pathname,
-          search: 'api=' + getApi,
-        });
+        // const getApi = api ? api : query.api;
+        // history.replace({
+        //   pathname: location.pathname,
+        //   search: 'api=' + getApi,
+        // });
+        actionRef.current?.reload();
       }}
       components={{
         body: {
@@ -370,11 +371,11 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
       pagination={
         pagination
           ? {
-            defaultCurrent: pagination?.defaultCurrent
-              ? pagination.defaultCurrent
-              : 1,
-            defaultPageSize: pagination?.pageSize ? pagination.pageSize : 10,
-          }
+              defaultCurrent: pagination?.defaultCurrent
+                ? pagination.defaultCurrent
+                : 1,
+              defaultPageSize: pagination?.pageSize ? pagination.pageSize : 10,
+            }
           : false
       }
       rowClassName={(record, index) => {

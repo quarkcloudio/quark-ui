@@ -17,6 +17,7 @@ export interface ProFormImageUploaderProps {
   secondary?: any;
   fieldProps?: any;
   onChange?: (value: any) => void;
+  disabled?: boolean;
 }
 
 const ProFormImageUploader: React.FC<ProFormImageUploaderProps> = ({
@@ -32,6 +33,7 @@ const ProFormImageUploader: React.FC<ProFormImageUploaderProps> = ({
   colProps = undefined,
   secondary = undefined,
   fieldProps = undefined,
+  disabled = false,
   onChange,
 }) => {
   let component = (
@@ -55,6 +57,7 @@ const ProFormImageUploader: React.FC<ProFormImageUploaderProps> = ({
         limitNum={fieldProps.limitNum}
         limitWH={fieldProps.limitWH}
         action={fieldProps.api}
+        disabled={disabled}
       />
     </ProFormItem>
   );

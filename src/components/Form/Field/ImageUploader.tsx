@@ -31,6 +31,7 @@ export interface ImageUploaderProps {
   };
   mode: string;
   value?: any;
+  disabled?: boolean;
   onChange?: (value: any) => void;
 }
 
@@ -44,8 +45,9 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   mode,
   value = null,
   onChange,
+  disabled,
 }) => {
-  const [getFileList, setGetFileList] = useState(undefined);
+  const [getFileList, setGetFileList] = useState([]);
   // 上传图片文件
   const [pictureBoxVisible, changePictureBoxVisible] = useState(false);
   const [cropBoxVisible, changeCropBoxVisible] = useState(false);
@@ -78,7 +80,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     triggerChange(value);
   };
   const onFileListChange = (value: any) => {
-    setGetFileList(value);
+    setGetFileList(value || []);
     let fileList: any = [];
     value.forEach((file: any, key: number) => {
       let fileInfo = {
@@ -176,6 +178,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
           listType="picture-card"
           showUploadList={false}
           action={action}
+          disabled={disabled}
           headers={{
             authorization: 'Bearer ' + localStorage['token'],
           }}
@@ -209,6 +212,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
           multiple={true}
           listType="picture-card"
           action={action}
+          disabled={disabled}
           headers={{
             authorization: 'Bearer ' + localStorage['token'],
           }}
@@ -246,7 +250,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
             onFileListChange(fileList);
           }}
         >
-          {uploadButton(button)}
+          {disabled && value && value.length ? null : uploadButton(button)}
         </Upload>
       )}
       <Modal
