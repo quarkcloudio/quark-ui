@@ -15,13 +15,10 @@ import { ProLayout } from '@ant-design/pro-components';
 import qs from 'query-string';
 import Render from '@/components/Render';
 import defaultLogo from '@/assets/logo.png';
-import {
-  getMenuName,
-} from '@/components/Layout/menu';
+import { getMenuName } from '@/components/Layout/menu';
 import { get } from '@/services/action';
 import { UserOutlined } from '@ant-design/icons';
 import { cloneDeep } from 'lodash-es';
-import { useParams } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
 
 const Layout: React.FC<any> = (props) => {
@@ -189,7 +186,7 @@ const Layout: React.FC<any> = (props) => {
       setMenuSelectedKeys([...new Set([...menuSelectedKeys, child.key])]);
       history.push(child.path);
     } else if (menuItem.type === 2) {
-      if (menuItem.is_link === 1) {
+      if (menuItem.is_link === 1 || menuItem.isLink === 1) {
         window.open(menuItem.path, '_blank');
         return false;
       }
@@ -212,8 +209,11 @@ const Layout: React.FC<any> = (props) => {
   let [searchParams, _setSearchParams] = useSearchParams();
   useEffect(() => {
     if (flatRoutes && flatRoutes.length > 0) {
-      const route = flatRoutes.find(
-        (item) => item.path.startsWith(location.pathname + (searchParams.get('api') ? '?api=' + searchParams.get('api') : '')),
+      const route = flatRoutes.find((item) =>
+        item.path.startsWith(
+          location.pathname +
+            (searchParams.get('api') ? '?api=' + searchParams.get('api') : ''),
+        ),
       );
       if (!route) return;
       findMenuItem(route.key);
