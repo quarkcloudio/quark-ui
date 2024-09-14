@@ -4,7 +4,7 @@ import tplEngine from '@/utils/template';
 
 const When: React.FC<any> = (props: any) => {
   const componentRender = () => {
-    return props.items.map((item: any,index: number) => {
+    return props?.items?.map((item: any, index: number) => {
       if (tplEngine(item.condition, props.data) === 'true') {
         return (
           <Render
@@ -15,6 +15,7 @@ const When: React.FC<any> = (props: any) => {
           />
         );
       }
+      return null;
     });
   };
 

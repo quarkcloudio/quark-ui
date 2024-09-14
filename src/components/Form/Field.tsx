@@ -810,7 +810,7 @@ const Field: React.FC<any> = (props: any) => {
       fieldData['componentkey'] = props.data?.componentkey;
       fieldData[currentProps.name] = object[
         props.data?.componentkey
-        ]?.current?.getFieldValue(currentProps.name);
+      ]?.current?.getFieldValue(currentProps.name);
 
       // Space、Compact组件下，需要特殊处理
       if (
@@ -820,7 +820,7 @@ const Field: React.FC<any> = (props: any) => {
         return (
           <>
             {component}
-            {currentProps.when.items.map((item: any, index: number) => {
+            {currentProps?.when?.items?.map((item: any, index: number) => {
               if (tplEngine(item.condition, fieldData) === 'true') {
                 return item.body.map((item: any) => {
                   return fieldRender(item);
