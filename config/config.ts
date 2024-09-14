@@ -20,5 +20,11 @@ export default defineConfig({
   },
   routes: routes,
   proxy: proxy,
+  plugins: [
+    require.resolve('@umijs/plugins/dist/unocss')
+  ],
+  unocss :{
+    watch: ['src/**/*.tsx']
+  },
   npmClient: 'pnpm',
 });

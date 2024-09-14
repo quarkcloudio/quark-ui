@@ -18,6 +18,7 @@
     "@tinymce/tinymce-react": "^4.3.0",
     "@types/lodash.template": "^4.5.1",
     "@umijs/max": "^4.0.47",
+    "@unocss/cli": "^0.62.3",
     "antd": "^5.0.0",
     "js-base64": "^3.7.4",
     "lodash-es": "^4.17.21",
@@ -25,7 +26,8 @@
     "query-string": "^8.1.0",
     "react-amap": "^1.2.8",
     "react-amap-plugin-autocomplete": "^0.0.4",
-    "react-cropper": "^2.1.8"
+    "react-cropper": "^2.1.8",
+    "unocss": "^0.62.3"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.12",
