@@ -127,7 +127,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
               onChange={save}
               checkedChildren={editable.options[1]}
               unCheckedChildren={editable.options[0]}
-              checked={record[dataIndex] === 1 ? true : false}
+              checked={record[dataIndex] === 1 || record[dataIndex] === true ? true : false}
             />
           </Form.Item>
         );
