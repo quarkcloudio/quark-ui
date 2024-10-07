@@ -9,8 +9,9 @@ import {
 } from '@umijs/max';
 import type { MenuProps } from 'antd';
 import { ConfigProvider, App, Dropdown } from 'antd';
-import 'dayjs/locale/zh-cn';
 import locale from 'antd/locale/zh_CN';
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
 import { ProLayout } from '@ant-design/pro-components';
 import qs from 'query-string';
 import Render from '@/components/Render';
@@ -38,6 +39,7 @@ const Layout: React.FC<any> = (props) => {
   const [flatRoutes, setFlatRoutes] = useState<any[]>([]);
   // 渲染的菜单项
   const [layoutMenu, setLayoutMenu] = useState<any[]>([]);
+  dayjs.locale('zh-cn');
   const getLayout = async () => {
     const config = await request('./config.json');
     let layoutApi = config.api.layout;

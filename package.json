@@ -20,6 +20,8 @@
     "@umijs/max": "^4.0.47",
     "@unocss/cli": "^0.62.3",
     "antd": "^5.0.0",
+    "cropperjs": "^1.6.2",
+    "dayjs": "^1.11.13",
     "js-base64": "^3.7.4",
     "lodash-es": "^4.17.21",
     "lodash.template": "^4.5.0",
