@@ -316,9 +316,29 @@ const Field: React.FC<any> = (props: any) => {
             trigger={'onCheck'}
           >
             <Tree
-              checkable
               style={currentProps.style && currentProps.style}
+              allowDrop={currentProps?.allowDrop}
+              autoExpandParent={currentProps?.autoExpandParent}
+              blockNode={currentProps?.blockNode}
+              checkable={currentProps?.checkable}
+              defaultCheckedKeys={currentProps?.defaultCheckedKeys}
+              defaultExpandAll={currentProps?.defaultExpandAll}
+              defaultExpandedKeys={currentProps?.defaultExpandedKeys}
+              defaultExpandParent={currentProps?.defaultExpandParent}
+              defaultSelectedKeys={currentProps?.defaultSelectedKeys}
+              disabled={currentProps?.disabled}
+              draggable={currentProps?.draggable}
+              fieldNames={currentProps?.fieldNames}
+              height={currentProps?.height}
+              icon={currentProps?.icon}
+              multiple={currentProps?.multiple}
+              rootClassName={currentProps?.rootClassName}
+              rootStyle={currentProps?.rootStyle}
+              showIcon={currentProps?.showIcon}
+              showLine={currentProps?.showLine}
+              switcherIcon={currentProps?.switcherIcon}
               treeData={currentProps.treeData}
+              virtual={currentProps?.virtual}
             />
           </ProFormItem>
         );
