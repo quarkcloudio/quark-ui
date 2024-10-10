@@ -1,7 +1,8 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { ProTable, ProTableProps } from '@ant-design/pro-components';
 import { useModel, useLocation, history } from '@umijs/max';
-import { Button, Space, Card, message } from 'antd';
+import { Button, Space, Card, message, Splitter, Input, Tree } from 'antd';
+import type { TreeDataNode, TreeProps } from 'antd';
 import qs from 'query-string';
 import { EditableRow, EditableCell } from './Editable';
 import { get, post } from '@/services/action';
@@ -18,6 +19,7 @@ export interface TableExtendProps {
   batchActions?: any;
   columns?: any;
   toolBar?: any;
+  treeBar?: any;
   search?: any;
   striped?: boolean;
   tableExtraRender?: any;
@@ -41,7 +43,12 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
   const { object, setObject } = useModel('object');
   const [columns, setColumns] = useState(props.columns);
   const [toolBar, setToolBar] = useState(props.toolBar);
+  const [treeBar, setTreeBar] = useState(props.treeBar);
   const [activeKey, setActiveKey] = useState<any>(undefined);
+  const [treeBarSelectedKeys, setTreeBarSelectedKeys] =
+    useState<any>(undefined);
+  const [treeBarSearchValue, setTreeBarSearchValue] = useState('');
+
   const {
     componentkey,
     api,
@@ -71,6 +78,39 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
   useEffect(() => {
     actionRef.current.reload(true);
   }, [activeKey]);
+
+  const onTreeBarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setTreeBarSearchValue(value);
+  };
+
+  const onTreeBarSelect: TreeProps['onSelect'] = (selectedKeys) => {
+    setTreeBarSelectedKeys(selectedKeys);
+    actionRef.current?.reload();
+  };
+
+  const treeData = useMemo(() => {
+    const loop = (data: TreeDataNode[]): TreeDataNode[] =>
+      data?.reduce((acc: TreeDataNode[], item) => {
+        const strTitle = item.title as string;
+        const index = strTitle.indexOf(treeBarSearchValue);
+
+        // 如果title中包含searchValue，保留节点
+        if (index > -1) {
+          acc.push({ ...item });
+        } else if (item.children) {
+          // 递归过滤子节点
+          const filteredChildren = loop(item.children);
+          if (filteredChildren.length > 0) {
+            // 如果有子节点包含searchValue，保留该节点并更新children
+            acc.push({ ...item, children: filteredChildren });
+          }
+        }
+        return acc;
+      }, []);
+
+    return loop(treeBar.treeData);
+  }, [treeBarSearchValue]);
 
   // 注册全局变量
   if (componentkey) {
@@ -192,31 +232,44 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
     filter: any,
   ) => {
     let result,
-      table = null;
+      table = null,
+      data: any;
     const getApi = api ? api : query.api;
 
     if (apiType === 'GET') {
+      data = {
+        search: JSON.stringify(params),
+        sorter: JSON.stringify(sorter),
+        filter: JSON.stringify(filter),
+        activeKey: JSON.stringify(activeKey),
+        ...query,
+      };
+
+      if (treeBarSelectedKeys) {
+        data[treeBar.name] = JSON.stringify(treeBarSelectedKeys);
+      }
+
       result = await get({
         url: getApi,
-        data: {
-          search: JSON.stringify(params),
-          sorter: JSON.stringify(sorter),
-          filter: JSON.stringify(filter),
-          activeKey: JSON.stringify(activeKey),
-          ...query,
-        },
+        data: data,
       });
     }
     if (apiType === 'POST') {
+      data = {
+        search: params,
+        sorter: sorter,
+        filter: filter,
+        activeKey,
+        ...query,
+      };
+
+      if (treeBarSelectedKeys) {
+        data[treeBar.name] = treeBarSelectedKeys;
+      }
+
       result = await post({
         url: getApi,
-        data: {
-          search: params,
-          sorter: sorter,
-          filter: filter,
-          activeKey,
-          ...query,
-        },
+        data: data,
       });
     }
     if (api) {
@@ -228,7 +281,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
     return table;
   };
 
-  return (
+  const tableComponent = (
     <ProTable
       actionRef={actionRef}
       formRef={formRef}
@@ -274,11 +327,6 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
         ],
       }}
       onReset={() => {
-        // const getApi = api ? api : query.api;
-        // history.replace({
-        //   pathname: location.pathname,
-        //   search: 'api=' + getApi,
-        // });
         actionRef.current?.reload();
       }}
       components={{
@@ -331,6 +379,9 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
           };
         }
         setToolBar(table.toolBar);
+
+        // 更新树形
+        setTreeBar(table.treeBar);
 
         // 返回数据
         return Promise.resolve({
@@ -386,6 +437,26 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
       }}
     />
   );
+
+  if (treeBar?.treeData) {
+    return (
+      <Splitter>
+        <Splitter.Panel defaultSize="20%" min="20%" max="70%">
+          <Card style={{ height: '100%' }}>
+            <Input.Search
+              placeholder={treeBar.placeholder}
+              onChange={onTreeBarChange}
+              style={{ marginBottom: 12 }}
+            />
+            <Tree {...treeBar} treeData={treeData} onSelect={onTreeBarSelect} />
+          </Card>
+        </Splitter.Panel>
+        <Splitter.Panel>{tableComponent}</Splitter.Panel>
+      </Splitter>
+    );
+  } else {
+    return tableComponent;
+  }
 };
 
 export default Table;
