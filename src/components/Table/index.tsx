@@ -111,7 +111,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
         return acc;
       }, []);
 
-    return loop(treeBar.treeData);
+    return loop(treeBar?.treeData);
   }, [treeBarSearchValue]);
 
   // 注册全局变量
