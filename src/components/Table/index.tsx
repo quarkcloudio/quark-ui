@@ -23,6 +23,7 @@ export interface TableExtendProps {
   search?: any;
   striped?: boolean;
   tableExtraRender?: any;
+  expandable?: any;
   pagination?: any;
   body?: any;
   data?: any;
@@ -69,6 +70,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
     scroll,
     polling,
     tableExtraRender,
+    expandable,
   } = { ...defaultProps, ...props };
 
   useEffect(() => {
@@ -295,6 +297,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
       scroll={scroll}
       polling={polling}
       columns={columns && parseColumns(columns)}
+      expandable={expandable}
       search={{
         filterType: search.filterType,
         searchText: search.searchText,
