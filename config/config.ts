@@ -15,16 +15,15 @@ export default defineConfig({
   publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
   history: { type: 'hash' },
   title: 'Engine Loading',
+  favicons: ['/favicon.ico'],
   layout: {
     title: false,
   },
   routes: routes,
   proxy: proxy,
-  plugins: [
-    require.resolve('@umijs/plugins/dist/unocss')
-  ],
-  unocss :{
-    watch: ['src/**/*.tsx']
+  plugins: [require.resolve('@umijs/plugins/dist/unocss')],
+  unocss: {
+    watch: ['src/**/*.tsx'],
   },
   npmClient: 'pnpm',
 });
