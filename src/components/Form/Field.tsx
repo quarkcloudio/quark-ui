@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useModel } from '@umijs/max';
+import { get } from '@/services/action';
 import {
   ProForm,
   ProFormItem,
@@ -39,6 +40,74 @@ import tplEngine from '@/utils/template';
 const Field: React.FC<any> = (props: any) => {
   const [random, setRandom] = useState(0); // hack
   let { object } = useModel('object');
+  const { fields, setFields } = useModel('formFields'); // 全局表单字段
+  useEffect(() => {
+    if (Object.keys(fields).length !== 0) {
+      selectLoad(props);
+    }
+  }, []);
+
+  // 解决select组件联动问题
+  const selectLoad = async (props: any) => {
+    let getFields = fields[props.data.componentkey]?.map?.(
+      async (item: any) => {
+        let value = object[props.data.componentkey]?.current?.getFieldValue(
+          item.name,
+        );
+        if (value && item.load) {
+          const promises = fields[props.data.componentkey]?.map(
+            async (subItem: any, key: any) => {
+              if (item.load.field === subItem.name && item.load.api) {
+                const result = await get({
+                  url: item.load.api,
+                  data: {
+                    search: value,
+                  },
+                });
+                subItem.options = result.data;
+              }
+              return subItem;
+            },
+          );
+          return await Promise.all(promises);
+        }
+        return item;
+      },
+    );
+
+    let results = await Promise.all(getFields);
+    if (results.length > 0) {
+      fields[props.data.componentkey] = results;
+      setFields(fields);
+    }
+  };
+
+  const selectChange = async (value: any, name: string, load: any = null) => {
+    let fieldsValue: any = {};
+    if (load && Object.keys(fields).length !== 0) {
+      const promises = fields[props.data.componentkey]?.map(
+        async (item: any, key: any) => {
+          if (load.field === item.name && load.api) {
+            const result = await get({
+              url: load.api,
+              data: {
+                search: value,
+              },
+            });
+            item.options = result.data;
+          }
+          return item;
+        },
+      );
+
+      fields[props.data.componentkey] = await Promise.all(promises);
+      setFields(fields);
+      fieldsValue[load.field] = undefined;
+    }
+    fieldsValue[name] = value;
+    object[props.data.componentkey]?.current?.setFieldsValue(fieldsValue);
+    setRandom(Math.random);
+  };
 
   const baseProps = (props: any) => {
     const rules = props?.frontendRules?.map((item: any, index: number) => {
@@ -255,6 +324,9 @@ const Field: React.FC<any> = (props: any) => {
             {...baseProps(currentProps)}
             mode={currentProps.mode}
             options={currentProps.options}
+            onChange={(value) => {
+              selectChange(value, currentProps.name, currentProps.load);
+            }}
             fieldProps={{
               style: currentProps.style && currentProps.style,
               width: currentProps.width,

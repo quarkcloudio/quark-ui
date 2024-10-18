@@ -89,11 +89,13 @@ const Login: React.FC<LoginProps> = (props) => {
   );
   const { initialState, setInitialState } = useModel('@@initialState');
   const { object, setObject } = useModel('object'); // 全局对象
+  const { fields, setFields } = useModel('formFields'); // 全局表单字段
   const formRef = useRef<ProFormInstance<any>>();
-
   const formKey = componentkey ? componentkey : 'form';
   object[formKey] = formRef;
   setObject(object);
+  fields[formKey] = body;
+  setFields(fields);
 
   // 跳转到 redirect 参数所在的位置
   const replaceGoto = (redirectUrl: string = '') => {
@@ -177,7 +179,7 @@ const Login: React.FC<LoginProps> = (props) => {
           await onFinish(values);
         }}
       >
-        <Render body={body} data={{ componentkey: formKey }} />
+        <Render body={fields[formKey]} data={{ componentkey: formKey }} />
       </LoginFormPage>
     </>
   );

@@ -42,6 +42,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
   const location = useLocation();
   const query = qs.parse(location.search);
   const { object, setObject } = useModel('object');
+  const { fields, setFields } = useModel('formFields'); // 全局表单字段
   const [columns, setColumns] = useState(props.columns);
   const [toolBar, setToolBar] = useState(props.toolBar);
   const [treeBar, setTreeBar] = useState(props.treeBar);
@@ -80,6 +81,9 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
   useEffect(() => {
     actionRef.current.reload(true);
   }, [activeKey]);
+
+  fields[search.componentkey] = search.items;
+  setFields(fields);
 
   const onTreeBarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -186,8 +190,8 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
 
     // 解析搜索栏
     let searchItems: any = [];
-    if (search.items) {
-      search.items.forEach((searchItem: any) => {
+    if (fields[search.componentkey]) {
+      fields[search.componentkey].forEach((searchItem: any) => {
         const columnItem = {
           title: searchItem.label,
           key: searchItem.name,
@@ -210,7 +214,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
                 form={form}
                 label={undefined}
                 wrapperCol={{ offset: 0 }}
-                data={{ formKey: search.componentkey }}
+                data={{ componentkey: search.componentkey }}
               />
             );
           },

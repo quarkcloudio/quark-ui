@@ -39,6 +39,7 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
   const [submitResult, setSubmitResult] = useState(null);
   const { buttonLoadings, setButtonLoadings } = useModel('buttonLoading');
   const { object, setObject } = useModel('object'); // 全局对象
+  const { fields, setFields } = useModel('formFields'); // 全局表单字段
   const { submit, setSubmit } = useModel('submit'); // 全局表单提交方法
   const [random, setRandom] = useState(0); // hack
   const {
@@ -75,6 +76,8 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
   const formKey = componentkey ? componentkey : 'form';
   object[formKey] = formRef;
   setObject(object);
+  fields[formKey] = body;
+  setFields(fields);
 
   useEffect(() => {
     setInitialValues();
@@ -218,7 +221,7 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
         }}
       >
         <Render
-          body={body}
+          body={fields[formKey]}
           data={{ ...data, componentkey: formKey }}
           callback={callback}
         />
