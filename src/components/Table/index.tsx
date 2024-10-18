@@ -50,6 +50,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
   const [treeBarSelectedKeys, setTreeBarSelectedKeys] =
     useState<any>(undefined);
   const [treeBarSearchValue, setTreeBarSearchValue] = useState('');
+  const { loading,setLoading } = useModel('loading');
 
   const {
     componentkey,

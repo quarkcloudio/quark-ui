@@ -41,6 +41,8 @@ const Field: React.FC<any> = (props: any) => {
   const [random, setRandom] = useState(0); // hack
   let { object } = useModel('object');
   const { fields, setFields } = useModel('formFields'); // 全局表单字段
+  const { loading, setLoading } = useModel('loading');
+  
   useEffect(() => {
     if (Object.keys(fields).length !== 0) {
       selectLoad(props);
@@ -80,6 +82,7 @@ const Field: React.FC<any> = (props: any) => {
       fields[props.data.componentkey] = results;
       setFields(fields);
     }
+    setRandom(Math.random);
   };
 
   const selectChange = async (value: any, name: string, load: any = null) => {
@@ -107,6 +110,7 @@ const Field: React.FC<any> = (props: any) => {
     fieldsValue[name] = value;
     object[props.data.componentkey]?.current?.setFieldsValue(fieldsValue);
     setRandom(Math.random);
+    setLoading(Math.random)
   };
 
   const baseProps = (props: any) => {
