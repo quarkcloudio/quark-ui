@@ -50,7 +50,6 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
   const [treeBarSelectedKeys, setTreeBarSelectedKeys] =
     useState<any>(undefined);
   const [treeBarSearchValue, setTreeBarSearchValue] = useState('');
-  const { loading,setLoading } = useModel('loading');
 
   const {
     componentkey,
@@ -76,15 +75,17 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
   } = { ...defaultProps, ...props };
 
   useEffect(() => {
+    fields[search.componentkey] = search.items;
+    setFields(fields);
+  }, []);
+
+  useEffect(() => {
     actionRef.current.reload();
   }, [search, tableExtraRender]);
 
   useEffect(() => {
     actionRef.current.reload(true);
   }, [activeKey]);
-
-  fields[search.componentkey] = search.items;
-  setFields(fields);
 
   const onTreeBarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;

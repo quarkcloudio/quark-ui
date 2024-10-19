@@ -38,11 +38,9 @@ import Selects from './Field/Selects';
 import tplEngine from '@/utils/template';
 
 const Field: React.FC<any> = (props: any) => {
-  const [random, setRandom] = useState(0); // hack
   let { object } = useModel('object');
   const { fields, setFields } = useModel('formFields'); // 全局表单字段
-  const { loading, setLoading } = useModel('loading');
-  
+
   useEffect(() => {
     if (Object.keys(fields).length !== 0) {
       selectLoad(props);
@@ -77,12 +75,14 @@ const Field: React.FC<any> = (props: any) => {
       },
     );
 
-    let results = await Promise.all(getFields);
-    if (results.length > 0) {
-      fields[props.data.componentkey] = results;
-      setFields(fields);
+    let updatedItems = await Promise.all(getFields);
+    if (updatedItems.length > 0) {
+      // 正确做法：创建 fields 的新对象副本
+      let newFields = { ...fields, [props.data.componentkey]: updatedItems }; // 创建 fields 的副本
+
+      // 更新 fields
+      setFields(newFields);
     }
-    setRandom(Math.random);
   };
 
   const selectChange = async (value: any, name: string, load: any = null) => {
@@ -97,20 +97,29 @@ const Field: React.FC<any> = (props: any) => {
                 search: value,
               },
             });
-            item.options = result.data;
+            return {
+              ...item,
+              options: result.data, // 更新 item 的 options
+            };
           }
-          return item;
+          return { ...item };
         },
       );
 
-      fields[props.data.componentkey] = await Promise.all(promises);
-      setFields(fields);
+      // 等待所有 promises 完成
+      const updatedItems = await Promise.all(promises);
+
+      // 正确做法：创建 fields 的新对象副本
+      let newFields = { ...fields, [props.data.componentkey]: updatedItems }; // 创建 fields 的副本
+
+      // 更新 fields
+      setFields(newFields);
+
+      // 更新 fieldsValue
       fieldsValue[load.field] = undefined;
     }
     fieldsValue[name] = value;
     object[props.data.componentkey]?.current?.setFieldsValue(fieldsValue);
-    setRandom(Math.random);
-    setLoading(Math.random)
   };
 
   const baseProps = (props: any) => {

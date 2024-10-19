@@ -76,11 +76,11 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
   const formKey = componentkey ? componentkey : 'form';
   object[formKey] = formRef;
   setObject(object);
-  fields[formKey] = body;
-  setFields(fields);
 
   useEffect(() => {
     setInitialValues();
+    fields[formKey] = body;
+    setFields(fields);
   }, []);
 
   const setInitialValues = async () => {

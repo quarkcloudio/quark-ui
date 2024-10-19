@@ -94,8 +94,11 @@ const Login: React.FC<LoginProps> = (props) => {
   const formKey = componentkey ? componentkey : 'form';
   object[formKey] = formRef;
   setObject(object);
-  fields[formKey] = body;
-  setFields(fields);
+
+  useEffect(() => {
+    fields[formKey] = body;
+    setFields(fields);
+  }, []);
 
   // 跳转到 redirect 参数所在的位置
   const replaceGoto = (redirectUrl: string = '') => {
