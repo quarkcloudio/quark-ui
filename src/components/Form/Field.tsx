@@ -49,12 +49,16 @@ const Field: React.FC<any> = (props: any) => {
 
   // 解决select组件联动问题
   const selectLoad = async (props: any) => {
+    if (!fields[props.data.componentkey]) {
+      return;
+    }
     let getFields = fields[props.data.componentkey]?.map?.(
       async (item: any) => {
         let value = object[props.data.componentkey]?.current?.getFieldValue(
           item.name,
         );
         if (value && item.load) {
+          console.log('selectLoad1111111');
           const promises = fields[props.data.componentkey]?.map(
             async (subItem: any, key: any) => {
               if (item.load.field === subItem.name && item.load.api) {
@@ -88,6 +92,9 @@ const Field: React.FC<any> = (props: any) => {
   const selectChange = async (value: any, name: string, load: any = null) => {
     let fieldsValue: any = {};
     if (load && Object.keys(fields).length !== 0) {
+      if (!fields[props.data.componentkey]) {
+        return;
+      }
       const promises = fields[props.data.componentkey]?.map(
         async (item: any, key: any) => {
           if (load.field === item.name && load.api) {
