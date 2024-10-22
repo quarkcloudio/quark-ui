@@ -43,10 +43,7 @@ const Field: React.FC<any> = (props: any) => {
 
   const selectChange = async (value: any, name: string, load: any = null) => {
     let fieldsValue: any = {};
-    if (load && Object.keys(fields).length !== 0) {
-      if (!fields[props.data.componentkey]) {
-        return;
-      }
+    if (load && Array.isArray(fields[props.data.componentkey])) {
       const promises = fields[props.data.componentkey]?.map(
         async (item: any, key: any) => {
           if (load.field === item.name && load.api) {

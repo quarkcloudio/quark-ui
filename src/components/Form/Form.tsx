@@ -84,6 +84,10 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
 
   // 初始化字段
   const setInitialFields = async () => {
+    if (!Array.isArray(body)) {
+      setFields({ ...fields, [formKey]: body });
+      return;
+    }
     let getFields = body?.map?.(async (item: any) => {
       let value = object[formKey]?.current?.getFieldValue(item.name);
       if (value && item.load) {
