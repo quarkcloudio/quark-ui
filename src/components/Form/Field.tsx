@@ -41,54 +41,6 @@ const Field: React.FC<any> = (props: any) => {
   let { object } = useModel('object');
   const { fields, setFields } = useModel('formFields'); // 全局表单字段
 
-  useEffect(() => {
-    if (Object.keys(fields).length !== 0) {
-      selectLoad(props);
-    }
-  }, []);
-
-  // 解决select组件联动问题
-  const selectLoad = async (props: any) => {
-    if (!fields[props.data.componentkey]) {
-      return;
-    }
-    let getFields = fields[props.data.componentkey]?.map?.(
-      async (item: any) => {
-        let value = object[props.data.componentkey]?.current?.getFieldValue(
-          item.name,
-        );
-        if (value && item.load) {
-          console.log('selectLoad1111111');
-          const promises = fields[props.data.componentkey]?.map(
-            async (subItem: any, key: any) => {
-              if (item.load.field === subItem.name && item.load.api) {
-                const result = await get({
-                  url: item.load.api,
-                  data: {
-                    search: value,
-                  },
-                });
-                subItem.options = result.data;
-              }
-              return subItem;
-            },
-          );
-          return await Promise.all(promises);
-        }
-        return item;
-      },
-    );
-
-    let updatedItems = await Promise.all(getFields);
-    if (updatedItems.length > 0) {
-      // 正确做法：创建 fields 的新对象副本
-      let newFields = { ...fields, [props.data.componentkey]: updatedItems }; // 创建 fields 的副本
-
-      // 更新 fields
-      setFields(newFields);
-    }
-  };
-
   const selectChange = async (value: any, name: string, load: any = null) => {
     let fieldsValue: any = {};
     if (load && Object.keys(fields).length !== 0) {

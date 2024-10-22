@@ -78,10 +78,35 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
   setObject(object);
 
   useEffect(() => {
+    setInitialFields();
     setInitialValues();
-    fields[formKey] = body;
-    setFields(fields);
-  }, []);
+  }, [api, initApi, body]);
+
+  // 初始化字段
+  const setInitialFields = async () => {
+    let getFields = body?.map?.(async (item: any) => {
+      let value = object[formKey]?.current?.getFieldValue(item.name);
+      if (value && item.load) {
+        const promises = body?.map(async (subItem: any, key: any) => {
+          if (item.load.field === subItem.name && item.load.api) {
+            const result = await get({
+              url: item.load.api,
+              data: {
+                search: value,
+              },
+            });
+            subItem.options = result.data;
+          }
+          return subItem;
+        });
+        return await Promise.all(promises);
+      }
+      return item;
+    });
+
+    let updatedItems = await Promise.all(getFields);
+    setFields({ ...fields, [formKey]: updatedItems });
+  };
 
   const setInitialValues = async () => {
     // 更新组件状态
