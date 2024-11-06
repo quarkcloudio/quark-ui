@@ -10,6 +10,7 @@ import Action from '@/components/Action';
 import Render from '@/components/Render';
 import tplEngine from '@/utils/template';
 import reload from '@/utils/reload';
+import { forEach } from 'lodash-es';
 
 export interface FormExtendProps {
   component?: string;
@@ -78,8 +79,12 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
   setObject(object);
 
   useEffect(() => {
-    setInitialFields();
-    setInitialValues();
+    const initializeFieldsAndValues = async () => {
+      await setInitialFields();
+      await setInitialValues();
+    };
+
+    initializeFieldsAndValues();
   }, [api, initApi, body]);
 
   // 初始化字段
@@ -88,43 +93,50 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
       setFields({ ...fields, [formKey]: body });
       return;
     }
-    let getFields = body?.map?.(async (item: any) => {
-      let value = object[formKey]?.current?.getFieldValue(item.name);
-      if (value && item.load) {
-        const promises = body?.map(async (subItem: any, key: any) => {
-          if (item.load.field === subItem.name && item.load.api) {
-            const result = await get({
-              url: item.load.api,
-              data: {
-                search: value,
-              },
-            });
-            subItem.options = result.data;
-          }
-          return subItem;
-        });
-        return await Promise.all(promises);
-      }
-      return item;
-    });
-
-    let updatedItems = await Promise.all(getFields);
+    let newFields = await getFields();
+    let updatedItems = await Promise.all(newFields);
     setFields({ ...fields, [formKey]: updatedItems });
   };
 
   const setInitialValues = async () => {
+    setLoading(true);
     // 更新组件状态
     setRandom(Math.random);
 
     // 从接口获取初始值
     if (initApi) {
-      setLoading(true);
       let result = await get({
         url: tplEngine(initApi, data),
       });
       object[formKey]?.current?.setFieldsValue(result.data);
-      setLoading(false);
     }
+    setLoading(false);
+  };
+
+  const getFields = async () => {
+    // 深拷贝一份 body 来防止直接修改 props
+    const fieldsCopy = [...body];
+
+    // 遍历每个字段项
+    for (const item of fieldsCopy) {
+      const value = object[formKey]?.current?.getFieldValue(item.name);
+
+      if (value && item.load) {
+        // 当存在需要加载的字段时，再次遍历 body
+        for (const [key, subItem] of fieldsCopy.entries()) {
+          if (item.load.field === subItem.name && item.load.api) {
+            // 请求数据并更新相应字段项的 options
+            const result = await get({
+              url: item.load.api,
+              data: { search: value },
+            });
+            fieldsCopy[key].options = result.data;
+          }
+        }
+      }
+    }
+
+    return fieldsCopy;
   };
 
   const onFinish = async (values: any) => {
