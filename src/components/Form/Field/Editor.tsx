@@ -46,8 +46,8 @@ const Iconfont = createFromIconfontCN({
 
 const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
   // 上传图片文件
-  const [pictureBoxOpen, changepictureBoxOpen] = useState(false);
-  const [cropBoxOpen, changecropBoxOpen] = useState(false);
+  const [pictureBoxOpen, changePictureBoxOpen] = useState(false);
+  const [cropBoxOpen, changeCropBoxOpen] = useState(false);
   const [imgSrc, setImgSrc] = useState('');
   const [imgId, setImgId] = useState('');
   const cropperRef = useRef<HTMLImageElement>(null);
@@ -116,11 +116,11 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
     }
 
     checkPictureForm.resetFields();
-    changepictureBoxOpen(false);
+    changePictureBoxOpen(false);
   };
 
   const closePictureBox = (e: any) => {
-    changepictureBoxOpen(false);
+    changePictureBoxOpen(false);
   };
 
   const editorExecCommand = (content: any, editor: any) => {
@@ -132,7 +132,7 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
       editor.execCommand('FormatBlock', false, 'p');
     }
     if (sessionStorage['editorCommand'] === 'multipleimage') {
-      changepictureBoxOpen(true);
+      changePictureBoxOpen(true);
       getPictures();
       checkPictureForm.resetFields();
       sessionStorage.removeItem('editorCommand');
@@ -247,7 +247,7 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
       },
     });
     if (result.type === 'success') {
-      changecropBoxOpen(false);
+      changeCropBoxOpen(false);
       message.success(result.content);
     } else {
       message.error(result.content, 3);
@@ -256,7 +256,7 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
   };
 
   const closeCropBox = (e: any) => {
-    changecropBoxOpen(false);
+    changeCropBoxOpen(false);
   };
 
   let menuItems: MenuProps['items'] = [
@@ -497,7 +497,7 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
                                 <span
                                   key="edit"
                                   onClick={() => {
-                                    changecropBoxOpen(true);
+                                    changeCropBoxOpen(true);
                                     setImgSrc(
                                       item.url +
                                         '?timestamp' +
