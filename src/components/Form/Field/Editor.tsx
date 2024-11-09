@@ -275,7 +275,7 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
 
   const handleEditorPaste = async (e: any) => {
     if (tinymceEditor) {
-      const clipboardData = e.clipboardData || window.clipboardData;
+      const clipboardData = e.clipboardData || (window as any).clipboardData;
       // 剪贴板图片获取并上传
       if (clipboardData.items) {
         const items = clipboardData.items;
