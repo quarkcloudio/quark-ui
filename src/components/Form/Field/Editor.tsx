@@ -50,11 +50,11 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
   const [cropBoxOpen, changecropBoxOpen] = useState(false);
   const [imgSrc, setImgSrc] = useState('');
   const [imgId, setImgId] = useState('');
-
   const cropperRef = useRef<HTMLImageElement>(null);
   const [cropper, setCropper] = useState<any>(undefined);
   const [scaleX, setScaleX] = useState<any>(1);
   const [scaleY, setScaleY] = useState<any>(1);
+
   const onCrop = () => {
     const imageElement: any = cropperRef?.current;
     const cropper: any = imageElement?.cropper;
@@ -86,10 +86,8 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
   const onContentChange = (content: any) => {
     triggerChange(content);
   };
-
   const [searchPictureForm] = Form.useForm();
   const [checkPictureForm] = Form.useForm();
-
   const getPictures = async (page: any = 1, search: any = null) => {
     const result = await get({
       url: '/api/admin/upload/image/getList',
@@ -104,7 +102,6 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
   const insertPicture = (e: any) => {
     if (tinymceEditor) {
       const checkPictures = checkPictureForm.getFieldValue('checkPictures');
-
       if (checkPictures) {
         let html = '';
         checkPictures.forEach((item: any) => {
@@ -158,7 +155,6 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
         values['pictureSearchDate'] = [dateStart, dateEnd];
       }
     }
-
     getPictures(1, values);
   };
 
@@ -172,9 +168,7 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
     picture.lists.forEach(function (item: any) {
       data.push(item.id);
     });
-
-    let checkPictures = [];
-    checkPictures = checkPictureForm.getFieldValue('checkPictures');
+    let checkPictures = checkPictureForm.getFieldValue('checkPictures');
     if (checkPictures) {
       if (checkPictures.length === picture.lists.length) {
         checkPictureForm.resetFields();
@@ -199,12 +193,10 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
       checkPictures = [];
       checkPictures.push(id);
     }
-
     let data: any = [];
     checkPictures.forEach(function (item: any) {
       data.push(item);
     });
-
     checkPictureForm.setFieldsValue({ checkPictures: data });
   };
 
@@ -213,45 +205,35 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
       message.error('请选择数据', 3);
       return false;
     }
-
     const result = await post({
       url: '/api/admin/upload/image/delete',
       data: {
         id: id,
       },
     });
-
     if (result.type === 'error') {
       message.error(result.content, 3);
     }
-
     getPictures(1);
     return true;
   };
 
   const onDeletePictures = async (e: any) => {
     e.persist();
-
-    let ids = null;
-
-    ids = checkPictureForm.getFieldValue('checkPictures');
-
+    let ids = checkPictureForm.getFieldValue('checkPictures');
     if (ids === null) {
       message.error('请选择数据', 3);
       return false;
     }
-
     const result = await post({
       url: '/api/admin/upload/image/delete',
       data: {
         id: ids,
       },
     });
-
     if (result.type === 'error') {
       message.error(result.content, 3);
     }
-
     getPictures(1);
     return true;
   };
@@ -264,14 +246,12 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
         file: cropper.getCroppedCanvas().toDataURL(),
       },
     });
-
     if (result.type === 'success') {
       changecropBoxOpen(false);
       message.success(result.content);
     } else {
       message.error(result.content, 3);
     }
-
     getPictures(1);
   };
 
@@ -295,7 +275,6 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
 
   const handleEditorPaste = async (e: any) => {
     if (tinymceEditor) {
-      // e.preventDefault(); // 阻止默认行为
       const clipboardData = e.clipboardData || window.clipboardData;
       // 剪贴板图片获取并上传
       if (clipboardData.items) {
@@ -330,7 +309,7 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
   };
 
   return (
-    <span>
+    <>
       <Editor
         value={value}
         onEditorChange={onContentChange}
@@ -418,7 +397,6 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
         }}
         onExecCommand={editorExecCommand}
       />
-
       <Modal
         title="图片管理"
         open={pictureBoxOpen}
@@ -426,41 +404,40 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
         onCancel={closePictureBox}
         width={1100}
       >
-        <Row gutter={20}>
-          <Col span={4}>
+        <Row gutter={20} style={{ marginTop: 20 }}>
+          {/* <Col span={4}>
             <Menu
               style={{ width: '100%' }}
               defaultSelectedKeys={['1']}
               mode="inline"
               items={menuItems}
             />
-          </Col>
-          <Col span={20}>
+          </Col> */}
+          <Col span={24}>
             <Row gutter={16}>
               <Col span={24}>
-                <span style={{ float: 'left' }}>
-                  <Form
-                    layout="inline"
-                    form={searchPictureForm}
-                    onFinish={onSearchPicture}
-                  >
-                    <Form.Item>
-                      <Button onClick={onSelectAllPictures}>全选</Button>
-                    </Form.Item>
-                    <Form.Item name="pictureSearchDate">
-                      <RangePicker />
-                    </Form.Item>
-                    <Form.Item name="pictureSearchName">
-                      <Input placeholder="文件名称" />
-                    </Form.Item>
-                    <Form.Item>
-                      <Button htmlType="submit" type="primary">
-                        搜索
-                      </Button>
-                    </Form.Item>
-                  </Form>
-                </span>
-                <span style={{ float: 'right' }}>
+                <Form
+                  layout="inline"
+                  form={searchPictureForm}
+                  onFinish={onSearchPicture}
+                  style={{ float: 'left' }}
+                >
+                  <Form.Item>
+                    <Button onClick={onSelectAllPictures}>全选</Button>
+                  </Form.Item>
+                  <Form.Item name="pictureSearchDate">
+                    <RangePicker />
+                  </Form.Item>
+                  <Form.Item name="pictureSearchName">
+                    <Input placeholder="文件名称" />
+                  </Form.Item>
+                  <Form.Item>
+                    <Button htmlType="submit" type="primary">
+                      搜索
+                    </Button>
+                  </Form.Item>
+                </Form>
+                <Space style={{ float: 'right' }}>
                   <Popconfirm
                     title="确认要删除这些数据吗？"
                     onConfirm={onDeletePictures}
@@ -471,7 +448,6 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
                       删除
                     </Button>
                   </Popconfirm>
-                  &nbsp;&nbsp;&nbsp;&nbsp;
                   <Upload
                     showUploadList={false}
                     name={'file'}
@@ -488,7 +464,7 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
                       上传图片
                     </Button>
                   </Upload>
-                </span>
+                </Space>
               </Col>
             </Row>
             <Divider />
@@ -728,7 +704,7 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
           </Col>
         </Row>
       </Modal>
-    </span>
+    </>
   );
 };
 
