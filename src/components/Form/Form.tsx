@@ -100,9 +100,6 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
 
   const setInitialValues = async () => {
     setLoading(true);
-    // 更新组件状态
-    setRandom(Math.random);
-
     // 从接口获取初始值
     if (initApi) {
       let result = await get({
@@ -110,6 +107,8 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
       });
       object[formKey]?.current?.setFieldsValue(result.data);
     }
+    // 更新组件状态
+    setRandom(Math.random);
     setLoading(false);
   };
 

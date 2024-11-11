@@ -47,13 +47,11 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   onChange,
   disabled,
 }) => {
-  const [getFileList, setGetFileList] = useState([]);
+  const [getFileList, setGetFileList] = useState(null);
   // 上传图片文件
-  const [pictureBoxVisible, changePictureBoxVisible] = useState(false);
   const [cropBoxVisible, changeCropBoxVisible] = useState(false);
   const [imgSrc, setImgSrc] = useState('');
   const [imgId, setImgId] = useState('');
-
   const cropperRef = useRef<HTMLImageElement>(null);
   const [cropper, setCropper] = useState<any>(undefined);
   const [scaleX, setScaleX] = useState<any>(1);
