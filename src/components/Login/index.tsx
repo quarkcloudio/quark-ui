@@ -55,7 +55,7 @@ export interface LoginProps {
 const defaultProps = {
   componentkey: 'form',
   logo: '',
-  title: 'QuarkCMS',
+  title: 'QuarkCloud',
   subTitle: '信息丰富的世界里，唯一稀缺的就是人类的注意力',
   backgroundImageUrl:
     'https://gw.alipayobjects.com/zos/rmsportal/FfdJeJRQWjEeGTpqgBKj.png',
