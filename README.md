@@ -1,6 +1,6 @@
 # Quark-UI
 
-基于 ant-design 的 Quark-UI 引擎
+基于 ant-design 的低代码 UI 引擎
 
 ## 启动项目
 
