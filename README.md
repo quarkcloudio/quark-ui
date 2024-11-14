@@ -18,4 +18,4 @@ pnpm run build
 
 ```
 
-更多功能参考 [Umi Max](https://umijs.org/docs/max/introduce)
+脚手架参考 [Umi Max](https://umijs.org/docs/max/introduce)
