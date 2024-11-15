@@ -1,18 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import type { CSSProperties } from 'react';
-import { Divider, message, Tabs } from 'antd';
+import { message } from 'antd';
 import type { ProFormInstance } from '@ant-design/pro-components';
 import { useModel, useLocation, Helmet, history } from '@umijs/max';
-import {
-  LockOutlined,
-  MobileOutlined,
-  UserOutlined,
-  SafetyCertificateOutlined,
-} from '@ant-design/icons';
-import { LoginFormPage, ProFormText } from '@ant-design/pro-components';
+import { LoginFormPage } from '@ant-design/pro-components';
 import Action from '@/components/Action';
-import ProFormImageCaptcha from '@/components/Form/ProField/ProFormImageCaptcha';
-import ProFormSmsCaptcha from '@/components/Form/ProField/ProFormSmsCaptcha';
 import Render from '@/components/Render';
 import { flushSync } from 'react-dom';
 import qs from 'query-string';
