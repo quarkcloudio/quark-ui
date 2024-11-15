@@ -10,46 +10,42 @@ const Selects: React.FC<any> = (props: any) => {
   let { object } = useModel('object');
 
   useEffect(() => {
-    init();
+    setInitialFields();
   }, []);
 
-  const init = async () => {
-    let allItems = items.map(async (item: any) => {
-      let value = object[props.data.componentkey]?.current?.getFieldValue(
+  const getFields = async () => {
+    // 深拷贝一份 body 来防止直接修改 props
+    const fieldsCopy = [...items];
+
+    // 遍历每个字段项
+    for (const item of fieldsCopy) {
+      const value = object[props.data.componentkey]?.current?.getFieldValue(
         item.name,
       );
-
       if (value && item.load) {
-        const promises = items.map(async (subItem: any, key: any) => {
+        for (const [key, subItem] of fieldsCopy.entries()) {
           if (item.load.field === subItem.name && item.load.api) {
             const result = await get({
               url: item.load.api,
-              data: {
-                search: value,
-              },
+              data: { search: value },
             });
-
-            subItem.options = result.data;
+            fieldsCopy[key].options = result.data;
           }
-          return subItem;
-        });
-
-        return await Promise.all(promises);
+        }
       }
-    });
-
-    let results = await Promise.all(allItems);
-    let selectItems: any = [];
-    results.forEach((item: any) => {
-      if (item) {
-        selectItems.push(...item);
-      }
-    });
-
-    if (selectItems.length > 0) {
-      setItems(selectItems);
-      setRandom(Math.random);
     }
+
+    return fieldsCopy;
+  };
+
+  // 初始化字段
+  const setInitialFields = async () => {
+    if (!Array.isArray(items)) {
+      return;
+    }
+    let newFields = await getFields();
+    let updatedItems = await Promise.all(newFields);
+    setItems(updatedItems);
   };
 
   const onSelectChange = async (value: any, name: string, load: any = null) => {
@@ -68,10 +64,8 @@ const Selects: React.FC<any> = (props: any) => {
         }
         return item;
       });
-
       const getItems = await Promise.all(promises);
       setItems(getItems);
-
       fieldsValue[load.field] = undefined;
     }
 
