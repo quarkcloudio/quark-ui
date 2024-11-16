@@ -6,7 +6,7 @@
 
 ```shell
 
-pnpm run start
+pnpm dev
 
 ```
 
@@ -14,7 +14,7 @@ pnpm run start
 
 ```shell
 
-pnpm run build
+pnpm build
 
 ```
 

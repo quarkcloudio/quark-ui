@@ -17,6 +17,7 @@ import {
   Pagination,
   Popconfirm,
   Space,
+  ConfigProvider,
 } from 'antd';
 import {
   UploadOutlined,
@@ -405,15 +406,17 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
         width={1100}
       >
         <Row gutter={20} style={{ marginTop: 20 }}>
-          {/* <Col span={4}>
-            <Menu
-              style={{ width: '100%' }}
-              defaultSelectedKeys={['1']}
-              mode="inline"
-              items={menuItems}
-            />
-          </Col> */}
-          <Col span={24}>
+          <Col span={4}>
+            <ConfigProvider prefixCls="editor-menu">
+              <Menu
+                style={{ width: '100%' }}
+                defaultSelectedKeys={['0']}
+                mode="inline"
+                items={menuItems}
+              />
+            </ConfigProvider>
+          </Col>
+          <Col span={20}>
             <Row gutter={16}>
               <Col span={24}>
                 <Form
