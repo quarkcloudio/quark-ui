@@ -10,7 +10,6 @@ import Action from '@/components/Action';
 import Render from '@/components/Render';
 import tplEngine from '@/utils/template';
 import reload from '@/utils/reload';
-import { forEach } from 'lodash-es';
 
 export interface FormExtendProps {
   component?: string;
