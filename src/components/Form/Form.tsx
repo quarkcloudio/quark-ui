@@ -157,7 +157,10 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
         buttonLoadings[formKey] = false;
         setButtonLoadings(buttonLoadings);
         setRandom(Math.random);
-        return false;
+        if (callback) {
+          callback();
+        }
+        return;
       }
 
       result = await get({
