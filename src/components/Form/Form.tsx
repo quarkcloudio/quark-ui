@@ -77,6 +77,11 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
   object[formKey] = formRef;
   setObject(object);
 
+  // 延时函数，返回一个 Promise
+  const delay = (ms: number) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  };
+
   useEffect(() => {
     const initializeFieldsAndValues = async () => {
       await setInitialFields();
@@ -154,6 +159,9 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
         }
 
         window.open(`${url}?${qs.stringify(values)}`);
+
+        // 延时
+        await delay(1000);
         buttonLoadings[formKey] = false;
         setButtonLoadings(buttonLoadings);
         setRandom(Math.random);
