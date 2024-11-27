@@ -435,6 +435,9 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
                 ? pagination.defaultCurrent
                 : 1,
               defaultPageSize: pagination?.pageSize ? pagination.pageSize : 10,
+              pageSizeOptions: pagination?.pageSizeOptions
+                ? pagination.pageSizeOptions
+                : undefined,
             }
           : false
       }
