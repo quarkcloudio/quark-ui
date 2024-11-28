@@ -128,7 +128,7 @@ const Layout: React.FC<any> = (props) => {
   // 获取组件数据
   useEffect(() => {
     getComponent();
-  }, [query.api]);
+  }, [query.api, query.timestamp]);
 
   const findMenuItem = (
     key: string,
