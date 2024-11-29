@@ -193,21 +193,27 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
         return;
       }
 
-      // 调用回调函数
-      if (callback) {
-        callback();
-      }
-
       // 成功信息
       message.success(result.content);
 
       // 解析跳转
       if (result.url) {
-        if (result.url === 'reload') {
+        const returnUrl = tplEngine(result.url, data);
+        if (returnUrl === 'reload') {
           reload();
           return;
         }
-        history.push(result.url);
+        if (returnUrl?.indexOf('http') === -1) {
+          values['token'] = localStorage.getItem('token');
+          window.open(`${returnUrl}?${qs.stringify(values)}`);
+        } else {
+          history.push(result.url);
+        }
+      }
+
+      // 调用回调函数
+      if (callback) {
+        callback();
       }
 
       return;

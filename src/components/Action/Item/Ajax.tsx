@@ -1,18 +1,24 @@
 import React, { useState } from 'react';
 import { history, useModel } from '@umijs/max';
 import { Button, message, Popconfirm, Modal as AntModal } from 'antd';
-import { ExclamationCircleOutlined,createFromIconfontCN } from '@ant-design/icons';
+import {
+  ExclamationCircleOutlined,
+  createFromIconfontCN,
+} from '@ant-design/icons';
 import { get } from '@/services/action';
 import tplEngine from '@/utils/template';
 import reload from '@/utils/reload';
 import Render from '@/components/Render';
+import qs from 'query-string';
 
 const Ajax: React.FC<any> = (props) => {
   const [modal, contextHolder] = AntModal.useModal();
   const { buttonLoadings, setButtonLoadings } = useModel('buttonLoading');
   const [random, setRandom] = useState(0); // hack
   const [submitResult, setSubmitResult] = useState(null);
-  const IconFont = createFromIconfontCN({ scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js' });
+  const IconFont = createFromIconfontCN({
+    scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js',
+  });
   let { object } = useModel('object');
   const { confirm } = modal;
 
@@ -45,7 +51,7 @@ const Ajax: React.FC<any> = (props) => {
     if (result.component === 'message') {
       if (result.type === 'error') {
         message.error(result.content);
-        return
+        return;
       }
       if (props.callback) {
         props.callback();
@@ -54,10 +60,30 @@ const Ajax: React.FC<any> = (props) => {
         message.success(result.content);
       }
       if (result.url) {
-        history.push(result.url);
+        const returnUrl = tplEngine(result.url, props.data);
+        if (returnUrl === 'reload') {
+          reload();
+          return;
+        }
+        if (returnUrl?.indexOf('http') === -1) {
+          const values: any['token'] = localStorage.getItem('token');
+          window.open(`${returnUrl}?${qs.stringify(values)}`);
+        } else {
+          history.push(result.url);
+        }
       }
       if (props.redirect) {
-        history.push(props.redirect);
+        const redirectUrl = tplEngine(props.redirect, props.data);
+        if (redirectUrl === 'reload') {
+          reload();
+          return;
+        }
+        if (redirectUrl?.indexOf('http') === -1) {
+          const values: any['token'] = localStorage.getItem('token');
+          window.open(`${redirectUrl}?${qs.stringify(values)}`);
+        } else {
+          history.push(redirectUrl);
+        }
       }
       if (props.reload) {
         if (props.reload === 'window') {
@@ -66,7 +92,7 @@ const Ajax: React.FC<any> = (props) => {
           object[props.reload]?.current?.reload();
         }
       }
-      return
+      return;
     }
 
     setSubmitResult(result);
@@ -84,7 +110,9 @@ const Ajax: React.FC<any> = (props) => {
       size={props.size}
       type={props.type}
       icon={props.icon && <IconFont type={props.icon} />}
-      onClick={() => { props.confirmTitle ? showConfirm(props.api) : handle(props.api) }}
+      onClick={() => {
+        void (props.confirmTitle ? showConfirm(props.api) : handle(props.api));
+      }}
     >
       {tplEngine(props.label, props.data)}
     </Button>
@@ -95,7 +123,9 @@ const Ajax: React.FC<any> = (props) => {
       <Popconfirm
         placement="topRight"
         title={tplEngine(props.confirmTitle, props.data)}
-        onConfirm={()=>{handle(props.api)}}
+        onConfirm={() => {
+          handle(props.api);
+        }}
       >
         <Button
           loading={props.withLoading && buttonLoadings[props.componentkey]}
@@ -128,10 +158,15 @@ const Ajax: React.FC<any> = (props) => {
           />
         )}
       </>
-    )
+    );
   }
 
-  return <>{contextHolder}{component}</>
+  return (
+    <>
+      {contextHolder}
+      {component}
+    </>
+  );
 };
 
 export default Ajax;
