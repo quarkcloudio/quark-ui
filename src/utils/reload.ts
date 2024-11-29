@@ -1,17 +1,13 @@
-import { useLocation } from '@umijs/max';
-import qs from 'query-string';
+import { history } from '@umijs/max';
 
 const useReload = () => {
-  const location = useLocation();
-  const query = qs.parse(location.search);
+  const { search }: any = history.location;
+  const timestamp = new Date().getTime().toString();
 
   // @ts-ignore
-  history.replace({
-    pathname: location.pathname,
-    query: {
-      ...query,
-      timestamp: new Date().getTime(),
-    },
+  history.push({
+    pathname: history.location.pathname,
+    search: search + '&timestamp=' + timestamp,
   });
 };
 
