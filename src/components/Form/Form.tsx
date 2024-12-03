@@ -203,7 +203,7 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
           reload();
           return;
         }
-        if (returnUrl?.indexOf('http') === -1) {
+        if (returnUrl?.indexOf('http') !== -1) {
           values['token'] = localStorage.getItem('token');
           window.open(`${returnUrl}?${qs.stringify(values)}`);
         } else {

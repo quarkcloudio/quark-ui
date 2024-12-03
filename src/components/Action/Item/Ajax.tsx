@@ -65,7 +65,7 @@ const Ajax: React.FC<any> = (props) => {
           reload();
           return;
         }
-        if (returnUrl?.indexOf('http') === -1) {
+        if (returnUrl?.indexOf('http') !== -1) {
           const values: any['token'] = localStorage.getItem('token');
           window.open(`${returnUrl}?${qs.stringify(values)}`);
         } else {
@@ -78,7 +78,7 @@ const Ajax: React.FC<any> = (props) => {
           reload();
           return;
         }
-        if (redirectUrl?.indexOf('http') === -1) {
+        if (redirectUrl?.indexOf('http') !== -1) {
           const values: any['token'] = localStorage.getItem('token');
           window.open(`${redirectUrl}?${qs.stringify(values)}`);
         } else {
