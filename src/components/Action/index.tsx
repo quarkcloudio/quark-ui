@@ -11,6 +11,7 @@ import Js from '@/components/Action/Item/Js';
 import Link from '@/components/Action/Item/Link';
 import Reset from '@/components/Action/Item/Reset';
 import Submit from '@/components/Action/Item/Submit';
+import Step from '@/components/Action/Item/Step';
 
 const Action: React.FC<any> = (props) => {
   const IconFont = createFromIconfontCN({
@@ -59,6 +60,11 @@ const Action: React.FC<any> = (props) => {
     case 'link':
       component = (
         <Link {...props} data={props.data} callback={props.callback} />
+      );
+      break;
+    case 'step':
+      component = (
+        <Step {...props} data={props.data} callback={props.callback} />
       );
       break;
     case 'modal':
