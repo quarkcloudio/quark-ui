@@ -35,7 +35,7 @@ const Tabs: React.FC<TabsExtendProps & ProCardTabsProps> = (props) => {
       itemNum: tabPanes.length,
       activeKey: 0,
     });
-  }, [props]);
+  }, []);
 
   const items: TabsProps['items'] = tabPanes.map((tab: any, index: number) => {
     return {
