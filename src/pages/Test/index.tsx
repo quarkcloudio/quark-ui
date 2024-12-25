@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Space, Button } from 'antd';
+import { Select, Button, Switch } from 'antd';
 import type { ProColumns } from '@ant-design/pro-components';
 import {
   EditableProTable,
   ProCard,
-  ProFormField,
   PageContainer,
   ProForm,
   ProFormText,
@@ -24,16 +23,17 @@ type DataSourceType = {
 const defaultData: DataSourceType[] = new Array(4).fill(1).map((_, index) => {
   return {
     id: (Date.now() + index).toString(),
-    title: `活动名称${index}`,
-    decs: '这个活动真好玩',
-    state: 'open',
-    created_at: 1590486176000,
+    color: `黄色${index}`,
+    chicun: '1米',
+    isPatchAction: index === 0,
   };
 });
 
 const Index: React.FC = () => {
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>(() =>
-    defaultData.map((item) => item.id),
+    defaultData.map((item) => {
+      return item.id;
+    }),
   );
   const [dataSource, setDataSource] = useState<readonly DataSourceType[]>(
     () => defaultData,
@@ -41,61 +41,83 @@ const Index: React.FC = () => {
 
   const columns: ProColumns<DataSourceType>[] = [
     {
-      title: '活动名称',
-      dataIndex: 'title',
-      width: '30%',
-      formItemProps: {
-        rules: [
-          {
-            required: true,
-            whitespace: true,
-            message: '此项是必填项',
-          },
-          {
-            message: '必须包含数字',
-            pattern: /[0-9]/,
-          },
-          {
-            max: 16,
-            whitespace: true,
-            message: '最长为 16 位',
-          },
-          {
-            min: 6,
-            whitespace: true,
-            message: '最小为 6 位',
-          },
-        ],
+      title: '颜色',
+      dataIndex: 'color',
+      width: 150,
+      fixed: 'left',
+      renderFormItem: (item: any, form) => {
+        if (item.entity.isPatchAction) {
+          return (
+            <Select
+              allowClear
+              style={{ width: 120 }}
+              options={[{ value: 'lucy', label: 'Lucy' }]}
+            />
+          );
+        }
+        return <>{item.entity[item.dataIndex]}</>;
       },
     },
     {
-      title: '状态',
-      key: 'state',
-      dataIndex: 'state',
-      valueType: 'select',
-      valueEnum: {
-        all: { text: '全部', status: 'Default' },
-        open: {
-          text: '未解决',
-          status: 'Error',
-        },
-        closed: {
-          text: '已解决',
-          status: 'Success',
-        },
+      title: '尺寸',
+      dataIndex: 'chicun',
+      width: 150,
+      fixed: 'left',
+      renderFormItem: (item: any, form) => {
+        if (item.entity.isPatchAction) {
+          return (
+            <Select
+              allowClear
+              style={{ width: 120 }}
+              options={[{ value: 'lucy', label: 'Lucy' }]}
+            />
+          );
+        }
+
+        return <>{item.entity[item.dataIndex]}</>;
       },
     },
     {
-      title: '描述',
-      dataIndex: 'decs',
+      title: '图片',
+      dataIndex: 'tupian',
+      width: 120,
+    },
+    {
+      title: '售价',
+      dataIndex: 'shoujia',
+      width: 120,
+    },
+    {
+      title: '成本价',
+      dataIndex: 'chengbenjia',
+      width: 120,
+    },
+    {
+      title: '划线价',
+      dataIndex: 'huaxianj',
+      width: 120,
+    },
+    {
+      title: '库存',
+      dataIndex: 'kucun',
+      width: 120,
+    },
+    {
+      title: '默认选中规格',
+      width: 120,
+      fixed: 'right',
+      renderFormItem: (item: any, form) => {
+        if (item.entity.isPatchAction) {
+          return null;
+        }
+        return <Switch />;
+      },
     },
     {
       title: '操作',
       valueType: 'option',
-      width: 250,
-      render: () => {
-        return null;
-      },
+      width: 150,
+      fixed: 'right',
     },
   ];
 
@@ -174,8 +196,25 @@ const Index: React.FC = () => {
               editable={{
                 type: 'multiple',
                 editableKeys,
-                actionRender: (row, config, defaultDoms) => {
-                  return [defaultDoms.delete];
+                actionRender: (row: any, config, defaultDoms) => {
+                  if (row.isPatchAction) {
+                    return [
+                      <Button key="1" type="link" size="small">
+                        批量修改
+                      </Button>,
+                      <Button key="1" type="link" size="small">
+                        清空
+                      </Button>,
+                    ];
+                  }
+                  return [
+                    <Switch
+                      key="1"
+                      checkedChildren="显示"
+                      unCheckedChildren="隐藏"
+                      defaultChecked
+                    />,
+                  ];
                 },
                 onValuesChange: (record, recordList) => {
                   setDataSource(recordList);
