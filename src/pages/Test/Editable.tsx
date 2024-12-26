@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { Switch, Form, Select, Input } from 'antd';
+import { useModel } from '@umijs/max';
 
 const EditableContext = React.createContext<any>(null);
 const EditableRow: React.FC<any> = ({ index, ...props }) => {
@@ -19,7 +20,7 @@ interface EditableCellProps {
   children: React.ReactNode;
   dataIndex: string;
   record: any;
-  handleSave: (record: any) => void;
+  handleSave: (record: any,dataSource:any) => void;
 }
 
 const EditableCell: React.FC<EditableCellProps> = ({
@@ -33,10 +34,11 @@ const EditableCell: React.FC<EditableCellProps> = ({
 }) => {
   const inputRef: any = useRef();
   const editableForm: any = useContext(EditableContext);
+  const { dataSource, setDataSource } = useModel('dataSource');
 
   const save = async (e: any) => {
     const values = await editableForm.getFieldsValue();
-    handleSave({ ...record, ...values });
+    handleSave({ ...record, ...values },dataSource);
   };
 
   let childNode = children;

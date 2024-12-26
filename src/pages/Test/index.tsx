@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Table, Select, Button, Switch, Input, Space } from 'antd';
 import { EditableRow, EditableCell } from './Editable';
+import { useModel } from '@umijs/max';
 import type {
   ProColumns,
   FormListActionType,
@@ -118,14 +119,7 @@ const Index: React.FC<ProSKUProps> = (props) => {
     ...props,
   };
   const [itemColumns, setItemColumns] = useState<any[]>(() => []);
-  const [editableKeys, setEditableRowKeys] = useState<React.Key[]>(() =>
-    props?.dataSource?.map((item: any) => {
-      return item.id;
-    }),
-  );
-  const [dataSource, setDataSource] = useState<readonly DataSourceType[]>(
-    () => props?.dataSource,
-  );
+  const { dataSource, setDataSource } = useModel('dataSource');
 
   const actionRef = useRef<
     FormListActionType<{
@@ -170,17 +164,15 @@ const Index: React.FC<ProSKUProps> = (props) => {
     return result;
   }
 
-  const handleSave = (row: any) => {
+  const handleSave = (row: any,dataSource: any) => {
     const newData = [...dataSource];
-    console.log(dataSource);
-    const index = newData.findIndex((item: any) => row.key === item.key);
+    const index = newData.findIndex((item: any) => row.id === item.id);
     const item = newData[index];
     newData.splice(index, 1, {
       ...item,
       ...row,
     });
-    console.log(row);
-    console.log(index);
+    console.log("key",index);
     console.log(newData);
     setDataSource(newData);
   };
@@ -299,17 +291,13 @@ const Index: React.FC<ProSKUProps> = (props) => {
     const specifications = actionRef.current?.getList();
     const getAttributes = parseAttributes(specifications, columns);
     setDataSource(getAttributes);
-    setEditableRowKeys(() =>
-      getAttributes?.map((item: any) => {
-        return item.id;
-      }),
-    );
+    console.log(dataSource);
   };
 
   return (
     <PageContainer title="测试页">
       <ProCard>
-        <ProForm layout="horizontal">
+        <ProForm onFinish={(values) => {console.log(dataSource)}} layout="horizontal">
           <ProFormList
             name="specifications"
             label="商品规格"
@@ -331,8 +319,8 @@ const Index: React.FC<ProSKUProps> = (props) => {
             )}
             creatorRecord={{ name: '', items: [{ name: '' }] }}
             onAfterRemove={() => {
-              changeItemColumns();
               changeDataSource();
+              changeItemColumns();
             }}
           >
             <ProFormText
@@ -342,12 +330,12 @@ const Index: React.FC<ProSKUProps> = (props) => {
               label="规格名"
               fieldProps={{
                 onPressEnter: () => {
-                  changeItemColumns();
                   changeDataSource();
+                  changeItemColumns();
                 },
                 onBlur: () => {
-                  changeItemColumns();
                   changeDataSource();
+                  changeItemColumns();
                 },
               }}
             />
