@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Table, Select, Button, Switch, Input, Space } from 'antd';
-import { EditableRow, EditableCell } from './Editable';
+import { Select, Button, Switch, Input } from 'antd';
 import type {
   ProColumns,
   FormListActionType,
@@ -157,12 +156,7 @@ const Index: React.FC<ProSKUProps> = (props) => {
               <Select allowClear style={{ width: 120 }} options={options} />
             );
           }
-          return (
-            <>
-              <Input />
-              {record.entity[record.dataIndex]}
-            </>
-          );
+          return <Input />;
         },
       };
       result.push(item);
@@ -170,40 +164,16 @@ const Index: React.FC<ProSKUProps> = (props) => {
     return result;
   }
 
-  const handleSave = (row: any) => {
-    const newData = [...dataSource];
-    console.log(dataSource);
-    const index = newData.findIndex((item: any) => row.key === item.key);
-    const item = newData[index];
-    newData.splice(index, 1, {
-      ...item,
-      ...row,
-    });
-    console.log(row);
-    console.log(index);
-    console.log(newData);
-    setDataSource(newData);
-  };
-
   const parseItemColumns: any = (specifications: any[], columns: any[]) => {
     let getColumns = transformColumns(specifications);
     columns.forEach((column) => {
-      getColumns.push({
-        ...column,
-        onCell: (record: any) => ({
-          record,
-          editable: true,
-          dataIndex: column.dataIndex,
-          title: column.title,
-          handleSave: handleSave,
-        }),
-      });
+      getColumns.push(column);
     });
 
     getColumns.push({
       ...checkedColumn,
-      render: (text: any, row: any) => {
-        if (row.isPatchAction) {
+      renderFormItem: (item: any, form: any) => {
+        if (item.entity.isPatchAction) {
           return null;
         }
         return (
@@ -216,27 +186,24 @@ const Index: React.FC<ProSKUProps> = (props) => {
     });
     getColumns.push({
       ...optionColumn,
-      render: (text: any, row: any) => {
-        if (row.isPatchAction) {
-          return (
-            <Space>
-              <Button key="1" type="link" size="small">
-                {patchRowChangeButtonText}
-              </Button>
-              ,
-              <Button key="2" type="link" size="small">
-                {patchRowClearButtonText}
-              </Button>
-            </Space>
-          );
+      renderFormItem: (item: any, form: any) => {
+        if (item.entity.isPatchAction) {
+          return [
+            <Button key="1" type="link" size="small">
+              {patchRowChangeButtonText}
+            </Button>,
+            <Button key="2" type="link" size="small">
+              {patchRowClearButtonText}
+            </Button>,
+          ];
         }
-        return (
+        return [
           <Switch
             key="1"
             checkedChildren={optionColumn?.checkedChildren}
             unCheckedChildren={optionColumn?.unCheckedChildren}
-          />
-        );
+          />,
+        ];
       },
     });
     return getColumns;
@@ -364,7 +331,6 @@ const Index: React.FC<ProSKUProps> = (props) => {
                   type: 'link',
                   style: { width: 'unset' },
                 }}
-                min={1}
                 copyIconProps={false}
                 deleteIconProps={{ tooltipText: '删除' }}
                 onAfterRemove={() => {
@@ -401,25 +367,27 @@ const Index: React.FC<ProSKUProps> = (props) => {
               </ProFormList>
             </ProForm.Item>
           </ProFormList>
-          <ProForm.Item
-            name="attrs"
-            style={{ marginBlockEnd: 0 }}
-            label="商品属性"
-          >
-            <Table
+          <ProForm.Item style={{ marginBlockEnd: 0 }} label="商品属性">
+            <EditableProTable<DataSourceType>
               columns={itemColumns}
               rowKey="id"
               scroll={{
                 x: 960,
               }}
-              components={{
-                body: {
-                  row: EditableRow,
-                  cell: EditableCell,
-                },
+              value={dataSource}
+              onChange={(recordList) => {
+                setDataSource(recordList);
               }}
-              dataSource={dataSource}
-              pagination={false}
+              recordCreatorProps={false}
+              editable={{
+                type: 'multiple',
+                editableKeys,
+                onValuesChange: (record, recordList) => {
+                  console.log(record);
+                  setDataSource(recordList);
+                },
+                onChange: setEditableRowKeys,
+              }}
             />
           </ProForm.Item>
         </ProForm>
