@@ -51,7 +51,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
   let childNode = children;
   if (editable) {
     childNode = (
-      <Form.Item style={{ margin: 0 }} name={dataIndex}>
+      <Form.Item name={dataIndex} style={{ margin: 0 }}>
         <Input ref={inputRef} onPressEnter={save} onBlur={save} />
       </Form.Item>
     );
@@ -344,14 +344,10 @@ const Sku: React.FC<ProSkuProps> = (props) => {
     // 从第一个属性开始递归生成所有组合
     generateCombinations(data);
 
-    // 为每个组合加上一个唯一的 id
-    return result.map((item: any, index: any) => ({
-      id: index + 1,
-      ...item,
-    }));
+    return result;
   }
 
-  const parseAttributes: any = (specifications: any[], columns: any[]) => {
+  const parseAttributes: any = (specifications: any[]) => {
     if (!specifications?.length) {
       return [];
     }
@@ -362,7 +358,9 @@ const Sku: React.FC<ProSkuProps> = (props) => {
       const updatedItem = dataSource.find(
         (item: any) => item.suk === attribute.suk,
       );
-      return updatedItem ? { ...attribute, ...updatedItem } : attribute;
+      return updatedItem
+        ? { [optionColumn?.dataIndex]: true, ...attribute, ...updatedItem }
+        : attribute;
     });
 
     return getAttributes;
@@ -370,7 +368,7 @@ const Sku: React.FC<ProSkuProps> = (props) => {
 
   const changeDataSource: any = () => {
     const specifications = actionRef?.current?.getList();
-    const getAttributes = parseAttributes(specifications, columns);
+    const getAttributes = parseAttributes(specifications);
     setDataSource(getAttributes);
     console.log(dataSource);
   };
@@ -467,7 +465,7 @@ const Sku: React.FC<ProSkuProps> = (props) => {
       <ProForm.Item name="attrs" style={{ marginBlockEnd: 0 }} label="商品属性">
         <Table
           columns={itemColumns}
-          rowKey="id"
+          rowKey="suk"
           scroll={{
             x: 960,
           }}
