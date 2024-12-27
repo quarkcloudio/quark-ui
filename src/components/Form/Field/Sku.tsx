@@ -188,12 +188,7 @@ const Sku: React.FC<ProSkuProps> = (props) => {
               <Select allowClear style={{ width: 120 }} options={options} />
             );
           }
-          return (
-            <>
-              <Input />
-              {record.entity[record.dataIndex]}
-            </>
-          );
+          return <>{record.entity[record.dataIndex]}</>;
         },
       };
       result.push(item);
