@@ -263,7 +263,7 @@ const Sku: React.FC<ProSkuProps> = (props) => {
     // 创建"默认选中规格"栏
     getColumns.push({
       ...checkedColumn,
-      render: (text: any, row: any) => {
+      render: (_: any, row: any) => {
         if (row.isPatchAction) {
           return null;
         }
@@ -308,9 +308,7 @@ const Sku: React.FC<ProSkuProps> = (props) => {
               row[optionColumn?.dataIndex] || row[optionColumn?.dataIndex] === 1
             }
             onChange={(checked: boolean) => {
-              let item: any = {};
-              item[optionColumn?.dataIndex] = checked;
-              handleSave({ ...row, ...item });
+              handleSave({ ...row, [optionColumn?.dataIndex]: checked });
             }}
           />
         );
