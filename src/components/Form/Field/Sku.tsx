@@ -102,39 +102,39 @@ const defaultProps = {
   columns: [
     {
       title: '图片',
-      dataIndex: 'tupian',
+      dataIndex: 'image',
       width: 120,
     },
     {
       title: '售价',
-      dataIndex: 'shoujia',
+      dataIndex: 'price',
       width: 120,
     },
     {
       title: '成本价',
-      dataIndex: 'chengbenjia',
+      dataIndex: 'cost',
       width: 120,
     },
     {
       title: '划线价',
-      dataIndex: 'huaxianj',
+      dataIndex: 'ot_price',
       width: 120,
     },
     {
       title: '库存',
-      dataIndex: 'kucun',
+      dataIndex: 'stock',
       width: 120,
     },
   ],
   checkedColumn: {
     title: '默认选中规格',
-    dataIndex: 'default',
+    dataIndex: 'is_default',
     width: 120,
     fixed: 'right',
   },
   optionColumn: {
     title: '操作',
-    dataIndex: 'show',
+    dataIndex: 'is_show',
     width: 150,
     fixed: 'right',
     checkedChildren: '显示',
@@ -209,7 +209,9 @@ const Sku: React.FC<ProSkuProps> = (props) => {
     setDataSource(newData);
   };
 
+  // 解析表格columns
   const parseItemColumns: any = (specifications: any[], columns: any[]) => {
+    // 根据规格生成columns
     let getColumns = transformColumns(specifications);
     columns.forEach((column) => {
       getColumns.push({
@@ -224,6 +226,7 @@ const Sku: React.FC<ProSkuProps> = (props) => {
       });
     });
 
+    // 创建"默认选中规格"栏
     getColumns.push({
       ...checkedColumn,
       render: (text: any, row: any) => {
@@ -238,9 +241,11 @@ const Sku: React.FC<ProSkuProps> = (props) => {
         );
       },
     });
+
+    // 创建"操作"栏
     getColumns.push({
       ...optionColumn,
-      render: (text: any, row: any) => {
+      render: (_: any, row: any) => {
         if (row.isPatchAction) {
           return (
             <Space>
@@ -272,6 +277,7 @@ const Sku: React.FC<ProSkuProps> = (props) => {
     setItemColumns(getItemColumns);
   };
 
+  // 生成表格dataSource
   function transformAttributes(data: any) {
     const result: any = [];
 
