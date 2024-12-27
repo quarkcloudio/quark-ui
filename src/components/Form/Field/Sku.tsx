@@ -29,7 +29,7 @@ interface EditableCellProps {
   children: React.ReactNode;
   dataIndex: string;
   record: any;
-  handleSave: (record: any, dataSource: any) => void;
+  handleSave: (record: any) => void;
 }
 const EditableCell: React.FC<EditableCellProps> = ({
   title,
@@ -42,11 +42,10 @@ const EditableCell: React.FC<EditableCellProps> = ({
 }) => {
   const inputRef: any = useRef();
   const editableForm: any = useContext(EditableContext);
-  const { dataSource } = useModel('skuData');
 
   const save = async (e: any) => {
     const values = await editableForm.getFieldsValue();
-    handleSave({ ...record, ...values }, dataSource);
+    handleSave({ ...record, ...values });
   };
 
   let childNode = children;
@@ -78,6 +77,7 @@ export interface ProSkuProps {
   columns?: any;
   checkedColumn?: {
     title?: any;
+    dataIndex?: any;
     valueType?: string;
     width?: number;
     fixed?: string;
@@ -86,6 +86,7 @@ export interface ProSkuProps {
   };
   optionColumn?: {
     title?: any;
+    dataIndex?: any;
     valueType?: string;
     width?: number;
     fixed?: string;
@@ -156,13 +157,22 @@ const Sku: React.FC<ProSkuProps> = (props) => {
     ...props,
   };
   const [itemColumns, setItemColumns] = useState<any[]>(() => []);
-  const { dataSource, setDataSource } = useModel('skuData');
+  const [dataSource, setDataSource] = useState<any>(() => props?.dataSource);
 
   const actionRef = useRef<
     FormListActionType<{
       name: string;
     }>
   >();
+
+  useEffect(() => {
+    changeItemColumns();
+  }, [dataSource]);
+
+  useEffect(() => {
+    changeItemColumns();
+    changeDataSource();
+  }, [actionRef.current?.getList()]);
 
   function transformColumns(data: any) {
     // 存储最终结果
@@ -196,9 +206,9 @@ const Sku: React.FC<ProSkuProps> = (props) => {
     return result;
   }
 
-  const handleSave = (row: any, dataSource: any) => {
+  const handleSave = (row: any) => {
     const newData = [...dataSource];
-    const index = newData.findIndex((item: any) => row.id === item.id);
+    const index = newData.findIndex((item: any) => row.suk === item.suk);
     const item = newData[index];
     newData.splice(index, 1, {
       ...item,
@@ -211,6 +221,9 @@ const Sku: React.FC<ProSkuProps> = (props) => {
 
   // 解析表格columns
   const parseItemColumns: any = (specifications: any[], columns: any[]) => {
+    if (!specifications?.length) {
+      return [];
+    }
     // 根据规格生成columns
     let getColumns = transformColumns(specifications);
     columns.forEach((column) => {
@@ -237,6 +250,17 @@ const Sku: React.FC<ProSkuProps> = (props) => {
           <Switch
             checkedChildren={checkedColumn?.checkedChildren}
             unCheckedChildren={checkedColumn?.unCheckedChildren}
+            checked={
+              row[checkedColumn?.dataIndex] ||
+              row[checkedColumn?.dataIndex] === 1
+            }
+            onChange={(checked: boolean) => {
+              let item: any = {};
+              item[checkedColumn?.dataIndex] = checked;
+              // 这里的值不是最新的
+              console.log(dataSource);
+              handleSave({ ...row, ...item });
+            }}
           />
         );
       },
@@ -249,11 +273,11 @@ const Sku: React.FC<ProSkuProps> = (props) => {
         if (row.isPatchAction) {
           return (
             <Space>
-              <Button key="1" type="link" size="small">
+              <Button type="link" size="small">
                 {patchRowChangeButtonText}
               </Button>
               ,
-              <Button key="2" type="link" size="small">
+              <Button type="link" size="small">
                 {patchRowClearButtonText}
               </Button>
             </Space>
@@ -261,9 +285,16 @@ const Sku: React.FC<ProSkuProps> = (props) => {
         }
         return (
           <Switch
-            key="1"
             checkedChildren={optionColumn?.checkedChildren}
             unCheckedChildren={optionColumn?.unCheckedChildren}
+            checked={
+              row[optionColumn?.dataIndex] || row[optionColumn?.dataIndex] === 1
+            }
+            onChange={(checked: boolean) => {
+              let item: any = {};
+              item[optionColumn?.dataIndex] = checked;
+              handleSave({ ...row, ...item });
+            }}
           />
         );
       },
@@ -282,11 +313,11 @@ const Sku: React.FC<ProSkuProps> = (props) => {
     const result: any = [];
 
     // 获取所有属性项（例如，颜色、尺寸等）的名字
-    const attributes = data.map((attr: any) => attr.name);
+    const attributes = data?.map((attr: any) => attr.name);
 
     // 递归生成所有属性组合
     function generateCombinations(items: any, index = 0, current: any = {}) {
-      if (index === attributes.length) {
+      if (index === attributes?.length) {
         // 当所有属性都组合完成时，加入到结果中
         const suk = attributes
           .map((attribute: any) => current[attribute])
@@ -299,7 +330,7 @@ const Sku: React.FC<ProSkuProps> = (props) => {
       const attribute = attributes[index];
 
       // 遍历当前属性的所有可选值
-      items.forEach((attr: any) => {
+      items?.forEach((attr: any) => {
         if (attr.name === attribute) {
           attr.items.forEach((item: any) => {
             // 深拷贝当前状态并设置属性
@@ -321,12 +352,24 @@ const Sku: React.FC<ProSkuProps> = (props) => {
   }
 
   const parseAttributes: any = (specifications: any[], columns: any[]) => {
+    if (!specifications?.length) {
+      return [];
+    }
     let getAttributes = transformAttributes(specifications);
+
+    // 合并 dataSource 中已经修改的属性
+    getAttributes = getAttributes.map((attribute: any) => {
+      const updatedItem = dataSource.find(
+        (item: any) => item.suk === attribute.suk,
+      );
+      return updatedItem ? { ...attribute, ...updatedItem } : attribute;
+    });
+
     return getAttributes;
   };
 
   const changeDataSource: any = () => {
-    const specifications = actionRef.current?.getList();
+    const specifications = actionRef?.current?.getList();
     const getAttributes = parseAttributes(specifications, columns);
     setDataSource(getAttributes);
     console.log(dataSource);
