@@ -61,6 +61,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
 
 // 商品SKU组件
 export interface ProSkuProps {
+  attributesName?: any;
   attributesLabel?: any;
   dataSourceLabel?: any;
   attrNameLabel?: any;
@@ -88,14 +89,12 @@ export interface ProSkuProps {
     checkedChildren?: string;
     unCheckedChildren?: string;
   };
-  value?: {
-    attributes?: any;
-    dataSource?: any;
-  };
+  value?: any;
   onChange?: (value: any) => void;
 }
 
 const defaultProps = {
+  attributesName: 'attributes',
   attributesLabel: '商品规格',
   dataSourceLabel: '商品属性',
   attrNameLabel: '规格名',
@@ -149,6 +148,7 @@ const defaultProps = {
 
 const Sku: React.FC<ProSkuProps> = (props) => {
   const {
+    attributesName,
     attributesLabel,
     dataSourceLabel,
     attrNameLabel,
@@ -161,6 +161,7 @@ const Sku: React.FC<ProSkuProps> = (props) => {
     checkedColumn,
     optionColumn,
     value,
+    onChange,
   } = {
     ...defaultProps,
     ...props,
@@ -182,6 +183,14 @@ const Sku: React.FC<ProSkuProps> = (props) => {
     changeItemColumns();
     changeDataSource();
   }, [actionRef.current?.getList()]);
+
+  const triggerChange = (changedValue: { dataSource?: any }) => {
+    onChange?.({ ...value, ...changedValue });
+  };
+
+  const onSkuChange = () => {
+    triggerChange({ ...dataSource });
+  };
 
   function transformColumns(data: any) {
     // 存储最终结果
@@ -321,6 +330,7 @@ const Sku: React.FC<ProSkuProps> = (props) => {
     const attributes = actionRef.current?.getList();
     const getItemColumns = parseItemColumns(attributes, columns);
     setItemColumns(getItemColumns);
+    onSkuChange();
   };
 
   // 生成表格dataSource
@@ -390,7 +400,7 @@ const Sku: React.FC<ProSkuProps> = (props) => {
   return (
     <>
       <ProFormList
-        name="attributes"
+        name={attributesName}
         label={attributesLabel}
         actionRef={actionRef}
         creatorButtonProps={{
