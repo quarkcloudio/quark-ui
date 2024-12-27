@@ -42,7 +42,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
 }) => {
   const inputRef: any = useRef();
   const editableForm: any = useContext(EditableContext);
-  const { dataSource } = useModel('dataSource');
+  const { dataSource } = useModel('skuData');
 
   const save = async (e: any) => {
     const values = await editableForm.getFieldsValue();
@@ -156,7 +156,7 @@ const Sku: React.FC<ProSkuProps> = (props) => {
     ...props,
   };
   const [itemColumns, setItemColumns] = useState<any[]>(() => []);
-  const { dataSource, setDataSource } = useModel('dataSource');
+  const { dataSource, setDataSource } = useModel('skuData');
 
   const actionRef = useRef<
     FormListActionType<{

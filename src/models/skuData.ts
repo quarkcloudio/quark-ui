@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const useDataSource = () => {
+const useSkuData = () => {
   const [dataSource, setDataSource] = useState(<any>[]);
 
   return {
@@ -9,4 +9,4 @@ const useDataSource = () => {
   };
 };
 
-export default useDataSource;
+export default useSkuData;
