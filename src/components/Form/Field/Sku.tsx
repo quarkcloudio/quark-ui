@@ -1,6 +1,5 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
 import { Table, Form, Select, Button, Switch, Input, Space } from 'antd';
-import { useModel } from '@umijs/max';
 import type { FormListActionType } from '@ant-design/pro-components';
 import {
   ProCard,
@@ -62,18 +61,14 @@ const EditableCell: React.FC<EditableCellProps> = ({
 
 // 商品SKU组件
 export interface ProSkuProps {
-  label?: any;
-  name?: any;
-  tooltip?: any;
-  rules?: any;
-  help?: any;
-  extra?: any;
-  addonAfter?: any;
-  addonBefore?: any;
-  wrapperCol?: any;
-  colProps?: any;
-  secondary?: any;
-  fieldProps?: any;
+  attributesLabel?: any;
+  dataSourceLabel?: any;
+  attrNameLabel?: any;
+  attrValueLabel?: any;
+  createAttrButtonText?: any;
+  createAttrValueButtonText?: any;
+  patchChangeButtonText?: any;
+  patchClearButtonText?: any;
   columns?: any;
   checkedColumn?: {
     title?: any;
@@ -93,13 +88,22 @@ export interface ProSkuProps {
     checkedChildren?: string;
     unCheckedChildren?: string;
   };
-  patchRowChangeButtonText?: any;
-  patchRowClearButtonText?: any;
-  dataSource?: any;
+  value?: {
+    attributes?: any;
+    dataSource?: any;
+  };
   onChange?: (value: any) => void;
 }
 
 const defaultProps = {
+  attributesLabel: '商品规格',
+  dataSourceLabel: '商品属性',
+  attrNameLabel: '规格名',
+  attrValueLabel: '规格值',
+  createAttrButtonText: '添加规格项',
+  createAttrValueButtonText: '新建',
+  patchChangeButtonText: '批量修改',
+  patchClearButtonText: '清空',
   columns: [
     {
       title: '图片',
@@ -141,23 +145,28 @@ const defaultProps = {
     checkedChildren: '显示',
     unCheckedChildren: '隐藏',
   },
-  patchRowChangeButtonText: '批量修改',
-  patchRowClearButtonText: '清空',
 } as ProSkuProps;
 
 const Sku: React.FC<ProSkuProps> = (props) => {
   const {
+    attributesLabel,
+    dataSourceLabel,
+    attrNameLabel,
+    attrValueLabel,
+    createAttrButtonText,
+    createAttrValueButtonText,
+    patchChangeButtonText,
+    patchClearButtonText,
     columns,
     checkedColumn,
     optionColumn,
-    patchRowChangeButtonText,
-    patchRowClearButtonText,
+    value,
   } = {
     ...defaultProps,
     ...props,
   };
   const [itemColumns, setItemColumns] = useState<any[]>(() => []);
-  const [dataSource, setDataSource] = useState<any>(() => props?.dataSource);
+  const [dataSource, setDataSource] = useState<any>(() => value?.dataSource);
 
   const actionRef = useRef<
     FormListActionType<{
@@ -232,12 +241,12 @@ const Sku: React.FC<ProSkuProps> = (props) => {
   };
 
   // 解析表格columns
-  const parseItemColumns: any = (specifications: any[], columns: any[]) => {
-    if (!specifications?.length) {
+  const parseItemColumns: any = (attributes: any[], columns: any[]) => {
+    if (!attributes?.length) {
       return [];
     }
     // 根据规格生成columns
-    let getColumns = transformColumns(specifications);
+    let getColumns = transformColumns(attributes);
     columns.forEach((column) => {
       getColumns.push({
         ...column,
@@ -282,11 +291,11 @@ const Sku: React.FC<ProSkuProps> = (props) => {
           return (
             <Space>
               <Button type="link" size="small">
-                {patchRowChangeButtonText}
+                {patchChangeButtonText}
               </Button>
               ,
               <Button type="link" size="small">
-                {patchRowClearButtonText}
+                {patchClearButtonText}
               </Button>
             </Space>
           );
@@ -311,8 +320,8 @@ const Sku: React.FC<ProSkuProps> = (props) => {
   };
 
   const changeItemColumns: any = () => {
-    const specifications = actionRef.current?.getList();
-    const getItemColumns = parseItemColumns(specifications, columns);
+    const attributes = actionRef.current?.getList();
+    const getItemColumns = parseItemColumns(attributes, columns);
     setItemColumns(getItemColumns);
   };
 
@@ -355,11 +364,11 @@ const Sku: React.FC<ProSkuProps> = (props) => {
     return result;
   }
 
-  const parseAttributes: any = (specifications: any[]) => {
-    if (!specifications?.length) {
+  const parseAttributes: any = (attributes: any[]) => {
+    if (!attributes?.length) {
       return [];
     }
-    let getAttributes = transformAttributes(specifications);
+    let getAttributes = transformAttributes(attributes);
 
     // 合并 dataSource 中已经修改的属性
     getAttributes = getAttributes.map((attribute: any) => {
@@ -375,26 +384,26 @@ const Sku: React.FC<ProSkuProps> = (props) => {
   };
 
   const changeDataSource: any = () => {
-    const specifications = actionRef?.current?.getList();
-    const getAttributes = parseAttributes(specifications);
+    const attributes = actionRef?.current?.getList();
+    const getAttributes = parseAttributes(attributes);
     setDataSource(getAttributes);
   };
 
   return (
     <>
       <ProFormList
-        name="specifications"
-        label="商品规格"
+        name="attributes"
+        label={attributesLabel}
         actionRef={actionRef}
         creatorButtonProps={{
-          creatorButtonText: '添加规格项',
+          creatorButtonText: createAttrButtonText,
         }}
         copyIconProps={false}
         itemRender={({ listDom, action }, { index }) => (
           <ProCard
             bordered
             style={{ marginBlockEnd: 8 }}
-            title={`规格${index + 1}`}
+            title={`${index + 1}#`}
             extra={action}
             bodyStyle={{ paddingBlockEnd: 0 }}
           >
@@ -411,7 +420,7 @@ const Sku: React.FC<ProSkuProps> = (props) => {
           style={{ padding: 0 }}
           width="md"
           name="name"
-          label="规格名"
+          label={attrNameLabel}
           fieldProps={{
             onPressEnter: () => {
               changeDataSource();
@@ -423,18 +432,21 @@ const Sku: React.FC<ProSkuProps> = (props) => {
             },
           }}
         />
-        <ProForm.Item isListField style={{ marginBlockEnd: 0 }} label="规格值">
+        <ProForm.Item
+          isListField
+          style={{ marginBlockEnd: 0 }}
+          label={attrValueLabel}
+        >
           <ProFormList
             name="items"
             creatorButtonProps={{
-              creatorButtonText: '新建',
+              creatorButtonText: createAttrValueButtonText,
               icon: false,
               type: 'link',
               style: { width: 'unset' },
             }}
             min={1}
             copyIconProps={false}
-            deleteIconProps={{ tooltipText: '删除' }}
             onAfterRemove={() => {
               changeItemColumns();
               changeDataSource();
@@ -469,7 +481,11 @@ const Sku: React.FC<ProSkuProps> = (props) => {
           </ProFormList>
         </ProForm.Item>
       </ProFormList>
-      <ProForm.Item name="attrs" style={{ marginBlockEnd: 0 }} label="商品属性">
+      <ProForm.Item
+        name="dataSource"
+        style={{ marginBlockEnd: 0 }}
+        label={dataSourceLabel}
+      >
         <Table
           columns={itemColumns}
           rowKey="suk"
