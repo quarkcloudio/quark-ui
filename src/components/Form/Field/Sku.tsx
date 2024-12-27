@@ -214,8 +214,20 @@ const Sku: React.FC<ProSkuProps> = (props) => {
       ...item,
       ...row,
     });
-    console.log('key', index);
-    console.log(newData);
+    setDataSource(newData);
+  };
+
+  // 更新 checkedColumn 状态并重置其他行
+  const handleSwitchChange = (checked: boolean, row: any) => {
+    const newData = dataSource.map((item: any) => {
+      if (item.suk === row.suk) {
+        // 如果当前行被选中，设置为选中状态
+        return { ...item, [checkedColumn?.dataIndex]: checked };
+      } else {
+        // 否则，重置其他行为未选中状态
+        return { ...item, [checkedColumn?.dataIndex]: false };
+      }
+    });
     setDataSource(newData);
   };
 
@@ -255,11 +267,7 @@ const Sku: React.FC<ProSkuProps> = (props) => {
               row[checkedColumn?.dataIndex] === 1
             }
             onChange={(checked: boolean) => {
-              let item: any = {};
-              item[checkedColumn?.dataIndex] = checked;
-              // 这里的值不是最新的
-              console.log(dataSource);
-              handleSave({ ...row, ...item });
+              handleSwitchChange(checked, row);
             }}
           />
         );
@@ -370,7 +378,6 @@ const Sku: React.FC<ProSkuProps> = (props) => {
     const specifications = actionRef?.current?.getList();
     const getAttributes = parseAttributes(specifications);
     setDataSource(getAttributes);
-    console.log(dataSource);
   };
 
   return (
