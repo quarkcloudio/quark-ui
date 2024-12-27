@@ -60,7 +60,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
 };
 
 // 商品SKU组件
-export interface ProSkuProps {
+export interface SkuProps {
   attributesName?: any;
   attributesLabel?: any;
   dataSourceLabel?: any;
@@ -144,9 +144,9 @@ const defaultProps = {
     checkedChildren: '显示',
     unCheckedChildren: '隐藏',
   },
-} as ProSkuProps;
+} as SkuProps;
 
-const Sku: React.FC<ProSkuProps> = (props) => {
+const Sku: React.FC<SkuProps> = (props) => {
   const {
     attributesName,
     attributesLabel,
