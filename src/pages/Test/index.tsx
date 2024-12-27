@@ -1,14 +1,13 @@
 import React from 'react';
 import { Form } from 'antd';
 import Sku from '@/components/Form/Field/Sku';
+import ImageBox from '@/components/Form/Field/ImageBox';
 import {
   ProForm,
   ProCard,
   PageContainer,
   ProFormItem,
 } from '@ant-design/pro-components';
-import styles from './index.less';
-import { values } from 'lodash-es';
 
 const Index: React.FC<any> = () => {
   return (
@@ -20,8 +19,8 @@ const Index: React.FC<any> = () => {
           }}
           layout="horizontal"
         >
-          <ProFormItem name="sku">
-            <Sku />
+          <ProFormItem name="image">
+            <ImageBox />
           </ProFormItem>
         </ProForm>
       </ProCard>
