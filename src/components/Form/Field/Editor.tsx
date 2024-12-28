@@ -78,7 +78,6 @@ const EditorPage: React.FC<EditorPageProps> = (props) => {
       // 剪贴板图片获取并上传
       if (clipboardData.items) {
         const items = clipboardData.items;
-        console.log('clipboardData.length', items.length);
         for (let i = 0; i < items.length; i++) {
           if (items[i].type.indexOf('image') !== -1) {
             // Safari 浏览器阻止默认事件，防止粘贴Blob文件到编辑器

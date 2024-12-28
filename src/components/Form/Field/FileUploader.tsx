@@ -41,14 +41,12 @@ const FileUploader: React.FC<FileUploaderProps> = ({
         size: null,
         status: '',
       };
-
       fileInfo.uid = file.uid;
       fileInfo.id = file.id;
       fileInfo.name = file.name;
       fileInfo.url = file.url;
       fileInfo.size = file.size;
       fileInfo.status = 'done';
-
       fileList[key] = fileInfo;
     });
     triggerChange(fileList);
@@ -62,29 +60,23 @@ const FileUploader: React.FC<FileUploaderProps> = ({
   const checkUpload = (file: any) => {
     let canUpload = false;
 
-    // 限制文件格式
+    console.log('当前文件类型：', file.type);
     for (let i = 0; i < limitType.length; i++) {
       if (file.type.indexOf(limitType[i]) !== -1) {
         canUpload = true;
       }
     }
-
-    // 返回错误信息
     if (!canUpload) {
       message.error('请上传正确格式的文件!');
       return false;
     }
 
-    // 限制文件大小
     const isLtSize = file.size / 1024 / 1024 < limitSize;
-
-    // 返回错误信息
     if (!isLtSize) {
       message.error('文件大小不可超过' + limitSize + 'MB!');
       return false;
     }
 
-    // 全部通过，返回true
     return true;
   };
 

@@ -84,14 +84,12 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
         size: null,
         status: '',
       };
-
       fileInfo.uid = file.uid;
       fileInfo.id = file.id;
       fileInfo.name = file.name;
       fileInfo.url = file.url;
       fileInfo.size = file.size;
       fileInfo.status = 'done';
-
       fileList[key] = fileInfo;
     });
     triggerChange(fileList);
@@ -110,14 +108,13 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
   const checkUpload = (file: any) => {
     let canUpload = false;
 
-    // 限制文件格式
+    console.log('当前文件类型：', file.type);
     for (let i = 0; i < limitType.length; i++) {
       if (file.type.indexOf(limitType[i]) !== -1) {
         canUpload = true;
       }
     }
 
-    // 返回错误信息
     if (!canUpload) {
       message.error(typeErrorMsg);
       return false;
@@ -125,14 +122,11 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
 
     // 限制文件大小
     const isLtSize = file.size / 1024 / 1024 < limitSize;
-
-    // 返回错误信息
     if (!isLtSize) {
       message.error(sizeErrorMsg + limitSize + 'MB!');
       return false;
     }
 
-    // 全部通过，返回true
     return true;
   };
 
@@ -226,6 +220,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
                 return false;
               }
             });
+
             // 重组数据
             fileList = fileList.map((file: any, key: number) => {
               if (file.response) {
