@@ -7,57 +7,7 @@ import {
   ProFormText,
   ProFormList,
 } from '@ant-design/pro-components';
-
-// 可编辑table行组件
-const EditableContext = React.createContext<any>(null);
-const EditableRow: React.FC<any> = ({ index, ...props }) => {
-  const [editableForm] = Form.useForm();
-  return (
-    <Form form={editableForm} component={false}>
-      <EditableContext.Provider value={editableForm}>
-        <tr {...props} />
-      </EditableContext.Provider>
-    </Form>
-  );
-};
-
-// 可编辑table单元格组件
-interface EditableCellProps {
-  title: React.ReactNode;
-  editable: any;
-  children: React.ReactNode;
-  dataIndex: string;
-  record: any;
-  handleSave: (record: any) => void;
-}
-const EditableCell: React.FC<EditableCellProps> = ({
-  title,
-  editable,
-  children,
-  dataIndex,
-  record,
-  handleSave,
-  ...restProps
-}) => {
-  const inputRef: any = useRef();
-  const editableForm: any = useContext(EditableContext);
-
-  const save = async (e: any) => {
-    const values = await editableForm.getFieldsValue();
-    handleSave({ ...record, ...values });
-  };
-
-  let childNode = children;
-  if (editable) {
-    childNode = (
-      <Form.Item name={dataIndex} style={{ margin: 0 }}>
-        <Input ref={inputRef} onPressEnter={save} onBlur={save} />
-      </Form.Item>
-    );
-  }
-
-  return <td {...restProps}>{childNode}</td>;
-};
+import { EditableRow, EditableCell } from '@/components/Table/Editable';
 
 // 商品SKU组件
 export interface SkuProps {

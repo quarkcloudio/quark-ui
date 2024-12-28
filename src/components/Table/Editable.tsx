@@ -20,7 +20,7 @@ interface EditableCellProps {
   children: React.ReactNode;
   dataIndex: string;
   record: any;
-  handleSave: (record: any) => void;
+  handleSave: (record: any, editable?:any) => void;
 }
 
 const EditableCell: React.FC<EditableCellProps> = ({
@@ -47,127 +47,128 @@ const EditableCell: React.FC<EditableCellProps> = ({
     editableForm.setFieldsValue({ [dataIndex]: record[dataIndex] });
   };
 
+  // 保存数据
   const save = async (e: any) => {
-    try {
-      const values = await editableForm.getFieldsValue();
-      let value = null;
+    const values = await editableForm.getFieldsValue();
+    let value = null;
 
-      switch (editable.name) {
-        case 'text':
-          toggleEdit();
-          value = values[dataIndex];
-          break;
-
-        case 'switch':
-          value = values[dataIndex];
-          editableForm.setFieldsValue({ [dataIndex]: record[dataIndex] });
-          break;
-
-        case 'select':
-          value = values[dataIndex];
-          editableForm.setFieldsValue({
-            [dataIndex]: record[dataIndex],
-          });
-          break;
-
-        default:
-          toggleEdit();
-          value = values[dataIndex];
-          break;
-      }
-
-      let getValues: any = [];
-      getValues[dataIndex] = value;
-      handleSave({ id: record.id, values: getValues, editable: editable });
-    } catch (errInfo) {
-      console.log('Save failed:', errInfo);
-    }
-  };
-
-  let childNode = children;
-  if (editable) {
     switch (editable.name) {
-      case 'textField':
-        childNode = editing ? (
-          <Form.Item style={{ margin: 0 }} name={dataIndex}>
-            <Input ref={inputRef} onPressEnter={save} onBlur={save} />
-          </Form.Item>
-        ) : (
-          <div
-            className={styles.editableCellValueWrap}
-            style={{ paddingRight: 24 }}
-            onClick={toggleEdit}
-          >
-            {children}
-          </div>
-        );
+      case 'text':
+        toggleEdit();
+        value = values[dataIndex];
         break;
 
-      case 'inputNumberField':
-        childNode = editing ? (
-          <Form.Item style={{ margin: 0 }} name={dataIndex}>
-            <Input ref={inputRef} onPressEnter={save} onBlur={save} />
-          </Form.Item>
-        ) : (
-          <div
-            className={styles.editableCellValueWrap}
-            style={{ paddingRight: 24 }}
-            onClick={toggleEdit}
-          >
-            {children}
-          </div>
-        );
+      case 'switch':
+        value = values[dataIndex];
+        editableForm.setFieldsValue({ [dataIndex]: record[dataIndex] });
         break;
 
-      case 'switchField':
-        childNode = (
-          <Form.Item style={{ margin: 0 }} name={dataIndex}>
-            <Switch
-              ref={inputRef}
-              onChange={save}
-              checkedChildren={editable.options[1]}
-              unCheckedChildren={editable.options[0]}
-              checked={record[dataIndex] === 1 || record[dataIndex] === true ? true : false}
-            />
-          </Form.Item>
-        );
-        break;
-
-      case 'selectField':
-        childNode = (
-          <Form.Item style={{ margin: 0 }} name={dataIndex}>
-            <Select
-              ref={inputRef}
-              onChange={save}
-              bordered={false}
-              options={editable.options}
-            />
-          </Form.Item>
-        );
+      case 'select':
+        value = values[dataIndex];
         editableForm.setFieldsValue({
           [dataIndex]: record[dataIndex],
         });
         break;
 
       default:
-        childNode = editing ? (
-          <Form.Item style={{ margin: 0 }} name={dataIndex}>
-            <Input ref={inputRef} onPressEnter={save} onBlur={save} />
-          </Form.Item>
-        ) : (
-          <div
-            className={styles.editableCellValueWrap}
-            style={{ paddingRight: 24 }}
-            onClick={toggleEdit}
-          >
-            {children}
-          </div>
-        );
+        toggleEdit();
+        value = values[dataIndex];
         break;
     }
-  }
 
-  return <td {...restProps}>{childNode}</td>;
+    let getValues: any = [];
+    getValues[dataIndex] = value;
+    handleSave({ ...record, ...getValues }, editable);
+  };
+
+  // 渲染组件
+  const cellRender = () => {
+    let childNode = children;
+    if (editable) {
+      switch (editable.name) {
+        case 'textField':
+          childNode = editing ? (
+            <Form.Item style={{ margin: 0 }} name={dataIndex}>
+              <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+            </Form.Item>
+          ) : (
+            <div
+              className={styles.editableCellValueWrap}
+              style={{ paddingRight: 24 }}
+              onClick={toggleEdit}
+            >
+              {children}
+            </div>
+          );
+          break;
+  
+        case 'inputNumberField':
+          childNode = editing ? (
+            <Form.Item style={{ margin: 0 }} name={dataIndex}>
+              <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+            </Form.Item>
+          ) : (
+            <div
+              className={styles.editableCellValueWrap}
+              style={{ paddingRight: 24 }}
+              onClick={toggleEdit}
+            >
+              {children}
+            </div>
+          );
+          break;
+  
+        case 'switchField':
+          childNode = (
+            <Form.Item style={{ margin: 0 }} name={dataIndex}>
+              <Switch
+                ref={inputRef}
+                onChange={save}
+                checkedChildren={editable.options[1]}
+                unCheckedChildren={editable.options[0]}
+                checked={record[dataIndex] === 1 || record[dataIndex] === true ? true : false}
+              />
+            </Form.Item>
+          );
+          break;
+  
+        case 'selectField':
+          childNode = (
+            <Form.Item style={{ margin: 0 }} name={dataIndex}>
+              <Select
+                ref={inputRef}
+                onChange={save}
+                bordered={false}
+                options={editable.options}
+              />
+            </Form.Item>
+          );
+          editableForm.setFieldsValue({
+            [dataIndex]: record[dataIndex],
+          });
+          break;
+  
+        default:
+          childNode = editing ? (
+            <Form.Item style={{ margin: 0 }} name={dataIndex}>
+              <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+            </Form.Item>
+          ) : (
+            <div
+              className={styles.editableCellValueWrap}
+              style={{ paddingRight: 24 }}
+              onClick={toggleEdit}
+            >
+              {children}
+            </div>
+          );
+          break;
+      }
+    }
+    return childNode
+  };
+
+  return <td {...restProps}>{cellRender()}</td>;
 };
 
 export { EditableRow, EditableCell };

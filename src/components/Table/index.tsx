@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { ProTable, ProTableProps } from '@ant-design/pro-components';
-import { useModel, useLocation, history } from '@umijs/max';
+import { useModel, useLocation } from '@umijs/max';
 import { Button, Space, Card, message, Splitter, Input, Tree } from 'antd';
 import type { TreeDataNode, TreeProps } from 'antd';
 import qs from 'query-string';
@@ -149,13 +149,11 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
   };
 
   // 行内编辑
-  const editableSave = async (data: any) => {
+  const editableSave = async (data: any, editable:any) => {
     const result = await get({
-      url: data.editable.action,
-      data: {
-        id: data.id,
-        ...data.values,
-      },
+      url: editable.action,
+      id: data.id,
+      data: data,
     });
     if (result.type === 'success') {
       actionRef.current.reload();
