@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { Switch, Form, Select, Input } from 'antd';
+import ImagePicker from '@/components/Form/Field/ImagePicker';
 import styles from './Editable.less';
 
 const EditableContext = React.createContext<any>(null);
@@ -20,7 +21,7 @@ interface EditableCellProps {
   children: React.ReactNode;
   dataIndex: string;
   record: any;
-  handleSave: (record: any, editable?:any) => void;
+  handleSave: (record: any, value?: any, editable?:any) => void;
 }
 
 const EditableCell: React.FC<EditableCellProps> = ({
@@ -53,32 +54,28 @@ const EditableCell: React.FC<EditableCellProps> = ({
     let value = null;
 
     switch (editable.name) {
-      case 'text':
+      case 'inputField':
+        value = values[dataIndex];
+        break;
+      case 'textField':
         toggleEdit();
         value = values[dataIndex];
         break;
-
-      case 'switch':
+      case 'switchField':
         value = values[dataIndex];
-        editableForm.setFieldsValue({ [dataIndex]: record[dataIndex] });
         break;
-
-      case 'select':
+      case 'selectField':
         value = values[dataIndex];
-        editableForm.setFieldsValue({
-          [dataIndex]: record[dataIndex],
-        });
         break;
-
       default:
         toggleEdit();
         value = values[dataIndex];
         break;
     }
 
-    let getValues: any = [];
-    getValues[dataIndex] = value;
-    handleSave({ ...record, ...getValues }, editable);
+    let getValue: any = [];
+    getValue[dataIndex] = value;
+    handleSave({ ...record, ...values }, getValue, editable);
   };
 
   // 渲染组件
@@ -86,6 +83,13 @@ const EditableCell: React.FC<EditableCellProps> = ({
     let childNode = children;
     if (editable) {
       switch (editable.name) {
+        case 'inputField':
+          childNode = (
+          <Form.Item style={{ margin: 0 }} name={dataIndex}>
+            <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+          </Form.Item>
+          );
+          break;
         case 'textField':
           childNode = editing ? (
             <Form.Item style={{ margin: 0 }} name={dataIndex}>
@@ -101,7 +105,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
             </div>
           );
           break;
-  
         case 'inputNumberField':
           childNode = editing ? (
             <Form.Item style={{ margin: 0 }} name={dataIndex}>
@@ -117,7 +120,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
             </div>
           );
           break;
-  
         case 'switchField':
           childNode = (
             <Form.Item style={{ margin: 0 }} name={dataIndex}>
@@ -131,7 +133,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
             </Form.Item>
           );
           break;
-  
         case 'selectField':
           childNode = (
             <Form.Item style={{ margin: 0 }} name={dataIndex}>
@@ -147,7 +148,15 @@ const EditableCell: React.FC<EditableCellProps> = ({
             [dataIndex]: record[dataIndex],
           });
           break;
-  
+        case 'imagePickerField':
+            childNode = (
+              <Form.Item style={{ margin: 0 }} name={dataIndex}>
+                <ImagePicker
+                  onChange={save}
+                />
+              </Form.Item>
+            );
+            break;
         default:
           childNode = editing ? (
             <Form.Item style={{ margin: 0 }} name={dataIndex}>

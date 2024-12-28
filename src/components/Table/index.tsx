@@ -149,11 +149,10 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
   };
 
   // 行内编辑
-  const editableSave = async (data: any, editable:any) => {
+  const editableSave = async (record: any, value: any, editable:any) => {
     const result = await get({
       url: editable.action,
-      id: data.id,
-      data: data,
+      data: {id: record.id, ...value},
     });
     if (result.type === 'success') {
       actionRef.current.reload();

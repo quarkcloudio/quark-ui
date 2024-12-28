@@ -58,26 +58,41 @@ const defaultProps = {
       title: '图片',
       dataIndex: 'image',
       width: 120,
+      editable:{
+        name: 'imagePickerField',
+      },
     },
     {
       title: '售价',
       dataIndex: 'price',
       width: 120,
+      editable:{
+        name: 'inputField',
+      },
     },
     {
       title: '成本价',
       dataIndex: 'cost',
       width: 120,
+      editable:{
+        name: 'inputField',
+      },
     },
     {
       title: '划线价',
       dataIndex: 'ot_price',
       width: 120,
+      editable:{
+        name: 'inputField',
+      },
     },
     {
       title: '库存',
       dataIndex: 'stock',
       width: 120,
+      editable:{
+        name: 'inputField',
+      },
     },
   ],
   checkedColumn: {
@@ -211,7 +226,7 @@ const Sku: React.FC<SkuProps> = (props) => {
         ...column,
         onCell: (record: any) => ({
           record,
-          editable: true,
+          editable: column.editable,
           dataIndex: column.dataIndex,
           title: column.title,
           handleSave: handleSave,

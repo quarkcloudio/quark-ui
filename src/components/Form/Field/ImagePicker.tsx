@@ -100,7 +100,7 @@ const ImagePicker: React.FC<ImagePickerProps> = (props) => {
     triggerChange(newFileList);
   };
 
-  const sensor = useSensor(PointerSensor, {
+  const sensor = useSensor?.(PointerSensor, {
     activationConstraint: { distance: 10 },
   });
 
