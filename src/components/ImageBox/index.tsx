@@ -133,10 +133,10 @@ const ImageBox: React.FC<ImageBoxProps> = (props) => {
   };
 
   const onSearch = (values: any) => {
-    if (values?.cteatetime) {
-      values['cteatetime'] = [
-        values?.cteatetime?.[0]?.format('YYYY-MM-DD HH:mm:ss'),
-        values?.cteatetime?.[1]?.format('YYYY-MM-DD HH:mm:ss'),
+    if (values?.createtime) {
+      values['createtime'] = [
+        values?.createtime?.[0]?.format('YYYY-MM-DD HH:mm:ss'),
+        values?.createtime?.[1]?.format('YYYY-MM-DD HH:mm:ss'),
       ];
     }
     getList(1, values);
@@ -284,7 +284,7 @@ const ImageBox: React.FC<ImageBoxProps> = (props) => {
                       {selectedAllButtonText}
                     </Button>
                   </Form.Item>
-                  <Form.Item name="cteatetime">
+                  <Form.Item name="createtime">
                     <DatePicker.RangePicker />
                   </Form.Item>
                   <Form.Item name="name">
