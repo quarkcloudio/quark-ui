@@ -57,7 +57,7 @@ const defaultProps = {
     {
       title: '图片',
       dataIndex: 'image',
-      width: 120,
+      width: 140,
       editable:{
         name: 'imagePickerField',
       },
