@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form } from 'antd';
 import Sku from '@/components/Form/Field/Sku';
-import ImageBox from '@/components/Form/Field/ImageBox';
+import ImagePicker from '@/components/Form/Field/ImagePicker';
 import {
   ProForm,
   ProCard,
@@ -20,7 +20,7 @@ const Index: React.FC<any> = () => {
           layout="horizontal"
         >
           <ProFormItem name="image">
-            <ImageBox />
+            <ImagePicker />
           </ProFormItem>
         </ProForm>
       </ProCard>
