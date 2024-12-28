@@ -69,7 +69,6 @@ export interface ImagePickerProps {
 const defaultProps = {
   button: '上传',
   disabled: false,
-  limitNum: 1,
 } as ImagePickerProps;
 
 const ImagePicker: React.FC<ImagePickerProps> = (props) => {
