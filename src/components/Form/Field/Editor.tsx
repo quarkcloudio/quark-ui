@@ -1,80 +1,40 @@
-import React, { useState, useRef } from 'react';
-import type { MenuProps } from 'antd';
-import {
-  Card,
-  DatePicker,
-  Form,
-  Input,
-  Button,
-  Checkbox,
-  Upload,
-  message,
-  Modal,
-  Row,
-  Col,
-  Divider,
-  Menu,
-  Pagination,
-  Popconfirm,
-  Space,
-  ConfigProvider,
-} from 'antd';
-import {
-  UploadOutlined,
-  createFromIconfontCN,
-  PlusCircleOutlined,
-  MinusCircleOutlined,
-  RotateLeftOutlined,
-  RotateRightOutlined,
-  ArrowLeftOutlined,
-  ArrowRightOutlined,
-  ArrowUpOutlined,
-  ArrowDownOutlined,
-  SelectOutlined,
-  DragOutlined,
-  ColumnWidthOutlined,
-  ColumnHeightOutlined,
-} from '@ant-design/icons';
-import { get, post } from '@/services/action';
+import React, { useState } from 'react';
+import { post } from '@/services/action';
 import { Editor } from '@tinymce/tinymce-react';
-import Cropper from 'react-cropper';
-import 'cropperjs/dist/cropper.css';
-const { Meta } = Card;
-const { RangePicker } = DatePicker;
-const Iconfont = createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js', // 在 iconfont.cn 上生成
-});
+import ImageBox from '@/components/ImageBox';
 
-const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
-  // 上传图片文件
-  const [pictureBoxOpen, changePictureBoxOpen] = useState(false);
-  const [cropBoxOpen, changeCropBoxOpen] = useState(false);
-  const [imgSrc, setImgSrc] = useState('');
-  const [imgId, setImgId] = useState('');
-  const cropperRef = useRef<HTMLImageElement>(null);
-  const [cropper, setCropper] = useState<any>(undefined);
-  const [scaleX, setScaleX] = useState<any>(1);
-  const [scaleY, setScaleY] = useState<any>(1);
+export interface EditorPageProps {
+  height?: any;
+  width?: any;
+  fileUploadAction?: any;
+  imageUploadAction?: any;
+  value?: any;
+  onChange?: (value: any) => void;
+}
 
-  const onCrop = () => {
-    const imageElement: any = cropperRef?.current;
-    const cropper: any = imageElement?.cropper;
+const defaultProps = {
+  height: 500,
+  width: '100%',
+  fileUploadAction: '/api/admin/upload/file/handle',
+  imageUploadAction: '/api/admin/upload/image/handle',
+} as EditorPageProps;
+
+const EditorPage: React.FC<EditorPageProps> = (props) => {
+  const {
+    height,
+    width,
+    fileUploadAction,
+    imageUploadAction,
+    value,
+    onChange,
+  } = {
+    ...defaultProps,
+    ...props,
   };
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [tinymceEditor, setTinymceEditor] = useState({
     insertContent(value: any) {
       return value;
-    },
-  });
-
-  const [picture, setPictureState] = useState({
-    lists: [],
-    categorys: [],
-    pagination: {
-      defaultCurrent: 1,
-      pageSize: 10,
-      current: 1,
-      total: undefined,
     },
   });
 
@@ -84,44 +44,18 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
     }
   };
 
-  const onContentChange = (content: any) => {
+  const onEditorChange = (content: any) => {
     triggerChange(content);
   };
-  const [searchPictureForm] = Form.useForm();
-  const [checkPictureForm] = Form.useForm();
-  const getPictures = async (page: any = 1, search: any = null) => {
-    const result = await get({
-      url: '/api/admin/upload/image/getList',
-      data: {
-        page: page,
-        ...search,
-      },
-    });
-    setPictureState(result.data);
-  };
 
-  const insertPicture = (e: any) => {
-    if (tinymceEditor) {
-      const checkPictures = checkPictureForm.getFieldValue('checkPictures');
-      if (checkPictures) {
-        let html = '';
-        checkPictures.forEach((item: any) => {
-          picture.lists.forEach((pictureItem: any) => {
-            if (pictureItem.id === item) {
-              html = html + '<img src="' + pictureItem.url + '" />';
-            }
-          });
-        });
-        tinymceEditor.insertContent(html);
-      }
+  const insertImages = (items: any) => {
+    if (tinymceEditor && items) {
+      let html = '';
+      items.forEach((item: any) => {
+        html = html + '<img src="' + item.url + '" />';
+      });
+      tinymceEditor.insertContent(html);
     }
-
-    checkPictureForm.resetFields();
-    changePictureBoxOpen(false);
-  };
-
-  const closePictureBox = (e: any) => {
-    changePictureBoxOpen(false);
   };
 
   const editorExecCommand = (content: any, editor: any) => {
@@ -133,148 +67,12 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
       editor.execCommand('FormatBlock', false, 'p');
     }
     if (sessionStorage['editorCommand'] === 'multipleimage') {
-      changePictureBoxOpen(true);
-      getPictures();
-      checkPictureForm.resetFields();
+      setIsModalOpen(true);
       sessionStorage.removeItem('editorCommand');
     }
   };
 
-  const onSearchPicture = (values: any) => {
-    if (values['pictureSearchDate']) {
-      if (values['pictureSearchDate'][0] && values['pictureSearchDate'][1]) {
-        // 时间标准化
-        let dateStart = values['pictureSearchDate'][0].format(
-          'YYYY-MM-DD HH:mm:ss',
-        );
-        let dateEnd = values['pictureSearchDate'][1].format(
-          'YYYY-MM-DD HH:mm:ss',
-        );
-        // 先清空对象
-        values['pictureSearchDate'] = [];
-        // 重新赋值对象
-        values['pictureSearchDate'] = [dateStart, dateEnd];
-      }
-    }
-    getPictures(1, values);
-  };
-
-  // 分页切换
-  const changePagination = (page: any) => {
-    getPictures(page);
-  };
-
-  const onSelectAllPictures = () => {
-    let data: any = [];
-    picture.lists.forEach(function (item: any) {
-      data.push(item.id);
-    });
-    let checkPictures = checkPictureForm.getFieldValue('checkPictures');
-    if (checkPictures) {
-      if (checkPictures.length === picture.lists.length) {
-        checkPictureForm.resetFields();
-      } else {
-        checkPictureForm.setFieldsValue({ checkPictures: data });
-      }
-    } else {
-      checkPictureForm.setFieldsValue({ checkPictures: data });
-    }
-  };
-
-  const toggleChecked = (id: any) => {
-    let checkPictures = checkPictureForm.getFieldValue('checkPictures');
-    if (checkPictures) {
-      let pos = checkPictures.indexOf(id);
-      if (pos < 0) {
-        checkPictures.push(id);
-      } else {
-        checkPictures.splice(pos, 1);
-      }
-    } else {
-      checkPictures = [];
-      checkPictures.push(id);
-    }
-    let data: any = [];
-    checkPictures.forEach(function (item: any) {
-      data.push(item);
-    });
-    checkPictureForm.setFieldsValue({ checkPictures: data });
-  };
-
-  const onDeletePicture = async (id: any = null) => {
-    if (id === null) {
-      message.error('请选择数据', 3);
-      return false;
-    }
-    const result = await post({
-      url: '/api/admin/upload/image/delete',
-      data: {
-        id: id,
-      },
-    });
-    if (result.type === 'error') {
-      message.error(result.content, 3);
-    }
-    getPictures(1);
-    return true;
-  };
-
-  const onDeletePictures = async (e: any) => {
-    e.persist();
-    let ids = checkPictureForm.getFieldValue('checkPictures');
-    if (ids === null) {
-      message.error('请选择数据', 3);
-      return false;
-    }
-    const result = await post({
-      url: '/api/admin/upload/image/delete',
-      data: {
-        id: ids,
-      },
-    });
-    if (result.type === 'error') {
-      message.error(result.content, 3);
-    }
-    getPictures(1);
-    return true;
-  };
-
-  const onSubmitCrop = async () => {
-    const result = await post({
-      url: '/api/admin/upload/image/crop',
-      data: {
-        id: imgId,
-        file: cropper.getCroppedCanvas().toDataURL(),
-      },
-    });
-    if (result.type === 'success') {
-      changeCropBoxOpen(false);
-      message.success(result.content);
-    } else {
-      message.error(result.content, 3);
-    }
-    getPictures(1);
-  };
-
-  const closeCropBox = (e: any) => {
-    changeCropBoxOpen(false);
-  };
-
-  let menuItems: MenuProps['items'] = [
-    {
-      key: 0,
-      label: '所有图片',
-    },
-  ];
-
-  picture.categorys.forEach((item: any) => {
-    menuItems?.push({
-      key: item.id,
-      label: item.title,
-    });
-  });
-
-  const handleEditorPaste = async (e: any) => {
+  const onPaste = async (e: any) => {
     if (tinymceEditor) {
       const clipboardData = e.clipboardData || (window as any).clipboardData;
       // 剪贴板图片获取并上传
@@ -295,7 +93,7 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
             const formData = new FormData();
             formData.append('file', file);
             const result = await post({
-              url: '/api/admin/upload/image/handle',
+              url: imageUploadAction,
               data: formData,
             });
             if (result.type === 'success') {
@@ -311,10 +109,18 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
 
   return (
     <>
+      <ImageBox
+        open={isModalOpen}
+        onCancel={(e) => setIsModalOpen(false)}
+        onOk={(value: any) => {
+          setIsModalOpen(false);
+          insertImages(value);
+        }}
+      />
       <Editor
         value={value}
-        onEditorChange={onContentChange}
-        onPaste={handleEditorPaste}
+        onEditorChange={onEditorChange}
+        onPaste={onPaste}
         init={{
           language: 'zh_CN',
           height: height ? height : 500,
@@ -345,16 +151,16 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
             let filetype =
               '.pdf, .txt, .zip, .rar, .7z, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .mp3, .mp4';
             //后端接收上传文件的地址
-            let upurl = '/api/admin/upload/file/handle';
+            let upurl = fileUploadAction;
             //为不同插件指定文件类型及后端地址
             switch (meta.filetype) {
               case 'image':
                 filetype = '.jpg, .jpeg, .png, .gif';
-                upurl = '/api/admin/upload/image/handle';
+                upurl = imageUploadAction;
                 break;
               case 'media':
                 filetype = '.mp3, .mp4';
-                upurl = '/api/admin/upload/file/handle';
+                upurl = fileUploadAction;
                 break;
               case 'file':
               default:
@@ -398,315 +204,6 @@ const EditorPage: React.FC<any> = ({ value, onChange, height, width }) => {
         }}
         onExecCommand={editorExecCommand}
       />
-      <Modal
-        title="图片管理"
-        open={pictureBoxOpen}
-        onOk={insertPicture}
-        onCancel={closePictureBox}
-        width={1100}
-      >
-        <Row gutter={20} style={{ marginTop: 20 }}>
-          <Col span={4}>
-            <ConfigProvider prefixCls="editor-menu">
-              <Menu
-                style={{ width: '100%' }}
-                defaultSelectedKeys={['0']}
-                mode="inline"
-                items={menuItems}
-              />
-            </ConfigProvider>
-          </Col>
-          <Col span={20}>
-            <Row gutter={16}>
-              <Col span={24}>
-                <Form
-                  layout="inline"
-                  form={searchPictureForm}
-                  onFinish={onSearchPicture}
-                  style={{ float: 'left' }}
-                >
-                  <Form.Item>
-                    <Button onClick={onSelectAllPictures}>全选</Button>
-                  </Form.Item>
-                  <Form.Item name="pictureSearchDate">
-                    <RangePicker />
-                  </Form.Item>
-                  <Form.Item name="pictureSearchName">
-                    <Input placeholder="文件名称" />
-                  </Form.Item>
-                  <Form.Item>
-                    <Button htmlType="submit" type="primary">
-                      搜索
-                    </Button>
-                  </Form.Item>
-                </Form>
-                <Space style={{ float: 'right' }}>
-                  <Popconfirm
-                    title="确认要删除这些数据吗？"
-                    onConfirm={onDeletePictures}
-                    okText="确定"
-                    cancelText="取消"
-                  >
-                    <Button type="primary" danger>
-                      删除
-                    </Button>
-                  </Popconfirm>
-                  <Upload
-                    showUploadList={false}
-                    name={'file'}
-                    multiple={true}
-                    action={'/api/admin/upload/image/handle'}
-                    headers={{
-                      authorization: 'Bearer ' + localStorage['token'],
-                    }}
-                    onChange={(info: any) => {
-                      getPictures();
-                    }}
-                  >
-                    <Button type="primary" icon={<UploadOutlined />}>
-                      上传图片
-                    </Button>
-                  </Upload>
-                </Space>
-              </Col>
-            </Row>
-            <Divider />
-            <Form form={checkPictureForm} style={{ width: '100%' }}>
-              <Form.Item name="checkPictures" style={{ width: '100%' }}>
-                <Checkbox.Group style={{ width: '100%', display: 'block' }}>
-                  <Row gutter={[16, 16]}>
-                    {!!picture &&
-                      picture.lists.map((item: any, index: number) => {
-                        return (
-                          <Col key={index} span={6}>
-                            <Card
-                              hoverable={true}
-                              size={'small'}
-                              style={{ width: '100%' }}
-                              cover={
-                                <img
-                                  onClick={() => toggleChecked(item.id)}
-                                  style={{ objectFit: 'cover' }}
-                                  alt={item.name}
-                                  src={item.url}
-                                  width={'100%'}
-                                  height={120}
-                                />
-                              }
-                              actions={[
-                                <Checkbox key="checkbox" value={item.id}>
-                                  选择
-                                </Checkbox>,
-                                <span
-                                  key="edit"
-                                  onClick={() => {
-                                    changeCropBoxOpen(true);
-                                    setImgSrc(
-                                      item.url +
-                                        '?timestamp' +
-                                        new Date().getTime(),
-                                    );
-                                    setImgId(item.id);
-                                    setScaleX(1);
-                                    setScaleY(1);
-                                  }}
-                                >
-                                  <Iconfont type={'icon-edit'} /> 裁剪
-                                </span>,
-                                <Popconfirm
-                                  key="popconfirm"
-                                  title="确认要删除吗？"
-                                  onConfirm={() => onDeletePicture(item.id)}
-                                  okText="确定"
-                                  cancelText="取消"
-                                >
-                                  <Iconfont type={'icon-delete'} /> 删除
-                                </Popconfirm>,
-                              ]}
-                            >
-                              <Meta title={item.name} />
-                            </Card>
-                          </Col>
-                        );
-                      })}
-                  </Row>
-                </Checkbox.Group>
-              </Form.Item>
-            </Form>
-            <Divider />
-            <Row>
-              <Col span={24} style={{ textAlign: 'right' }}>
-                {picture ? (
-                  <Pagination
-                    style={{ margin: '0 auto' }}
-                    defaultCurrent={picture.pagination.defaultCurrent}
-                    pageSize={picture.pagination.pageSize}
-                    current={picture.pagination.current}
-                    total={picture.pagination.total}
-                    onChange={changePagination}
-                  />
-                ) : null}
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-      </Modal>
-
-      <Modal
-        title="图片裁剪"
-        open={cropBoxOpen}
-        onOk={onSubmitCrop}
-        onCancel={closeCropBox}
-        width={980}
-        footer={null}
-      >
-        <Cropper
-          src={imgSrc}
-          style={{ height: 400, width: '100%' }}
-          onInitialized={setCropper}
-          initialAspectRatio={16 / 9}
-          crop={onCrop}
-          ref={cropperRef}
-        />
-        <Row gutter={20} style={{ marginTop: 20 }}>
-          <Col span={24}>
-            <Space>
-              <Input.Group compact>
-                <Button
-                  icon={<DragOutlined />}
-                  size={'small'}
-                  onClick={() => cropper?.setDragMode('move')}
-                >
-                  画布
-                </Button>
-                <Button
-                  icon={<SelectOutlined />}
-                  size={'small'}
-                  onClick={() => cropper?.setDragMode('crop')}
-                >
-                  裁剪框
-                </Button>
-              </Input.Group>
-              <Input.Group compact>
-                <Button
-                  icon={<PlusCircleOutlined />}
-                  size={'small'}
-                  onClick={() => cropper?.zoom(0.1)}
-                >
-                  放大
-                </Button>
-                <Button
-                  icon={<MinusCircleOutlined />}
-                  size={'small'}
-                  onClick={() => cropper?.zoom(-0.1)}
-                >
-                  缩小
-                </Button>
-              </Input.Group>
-              <Input.Group compact>
-                <Button
-                  icon={<RotateLeftOutlined />}
-                  size={'small'}
-                  onClick={() => cropper?.rotate(45)}
-                >
-                  左旋
-                </Button>
-                <Button
-                  icon={<RotateRightOutlined />}
-                  size={'small'}
-                  onClick={() => cropper?.rotate(-45)}
-                >
-                  右旋
-                </Button>
-              </Input.Group>
-              <Input.Group compact>
-                <Button size={'small'}>
-                  <ArrowLeftOutlined onClick={() => cropper.move(-10, 0)} />
-                </Button>
-                <Button size={'small'}>
-                  <ArrowRightOutlined onClick={() => cropper.move(10, 0)} />
-                </Button>
-                <Button size={'small'}>
-                  <ArrowUpOutlined onClick={() => cropper.move(0, -10)} />
-                </Button>
-                <Button size={'small'}>
-                  <ArrowDownOutlined onClick={() => cropper.move(0, 10)} />
-                </Button>
-              </Input.Group>
-              <Input.Group compact>
-                <Button size={'small'}>
-                  <ColumnWidthOutlined
-                    onClick={() => {
-                      if (scaleX === 1) {
-                        cropper.scaleX(-1);
-                        setScaleX(-1);
-                      } else {
-                        cropper.scaleX(1);
-                        setScaleX(1);
-                      }
-                    }}
-                  />
-                </Button>
-                <Button size={'small'}>
-                  <ColumnHeightOutlined
-                    onClick={() => {
-                      if (scaleY === 1) {
-                        cropper?.scaleY(-1);
-                        setScaleY(-1);
-                      } else {
-                        cropper?.scaleY(1);
-                        setScaleY(1);
-                      }
-                    }}
-                  />
-                </Button>
-              </Input.Group>
-              <Input.Group compact>
-                <Button
-                  size={'small'}
-                  onClick={() => cropper?.setAspectRatio(16 / 9)}
-                >
-                  16:9
-                </Button>
-                <Button
-                  size={'small'}
-                  onClick={() => cropper?.setAspectRatio(4 / 3)}
-                >
-                  4:3
-                </Button>
-                <Button
-                  size={'small'}
-                  onClick={() => cropper?.setAspectRatio(1 / 1)}
-                >
-                  1:1
-                </Button>
-                <Button
-                  size={'small'}
-                  onClick={() => cropper?.setAspectRatio(2 / 3)}
-                >
-                  2:3
-                </Button>
-                <Button
-                  size={'small'}
-                  onClick={() => cropper?.setAspectRatio(NaN)}
-                >
-                  自由
-                </Button>
-              </Input.Group>
-              <Button size={'small'} onClick={() => cropper?.reset()}>
-                重置
-              </Button>
-              <Button
-                size={'small'}
-                onClick={() => onSubmitCrop()}
-                type="primary"
-              >
-                裁剪
-              </Button>
-            </Space>
-          </Col>
-        </Row>
-      </Modal>
     </>
   );
 };
