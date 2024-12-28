@@ -374,7 +374,7 @@ const ImageBox: React.FC<ImageBoxProps> = (props) => {
                                     );
                                   }}
                                 >
-                                  <Iconfont type={'icon-edit'} />{' '}
+                                  <Iconfont type={'icon-edit'} />
                                   {cropButtonText}
                                 </div>
                               </>,
@@ -385,7 +385,7 @@ const ImageBox: React.FC<ImageBoxProps> = (props) => {
                                 okText={popconfirmOkText}
                                 cancelText={popconfirmCancelText}
                               >
-                                <Iconfont type={'icon-delete'} />{' '}
+                                <Iconfont type={'icon-delete'} />
                                 {deleteButtonText}
                               </Popconfirm>,
                             ]}

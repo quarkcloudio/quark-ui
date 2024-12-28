@@ -1,27 +1,13 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { post } from '@/services/action';
-import { Input, Button, Upload, message, Modal, Row, Col, Space } from 'antd';
-import {
-  PlusOutlined,
-  PlusCircleOutlined,
-  MinusCircleOutlined,
-  RotateLeftOutlined,
-  RotateRightOutlined,
-  ArrowLeftOutlined,
-  ArrowRightOutlined,
-  ArrowUpOutlined,
-  ArrowDownOutlined,
-  SelectOutlined,
-  DragOutlined,
-  ColumnWidthOutlined,
-  ColumnHeightOutlined,
-} from '@ant-design/icons';
-import Cropper from 'react-cropper';
-import 'cropperjs/dist/cropper.css';
+import { Upload, message } from 'antd';
+import CropBox from '@/components/CropBox';
+import { PlusOutlined } from '@ant-design/icons';
 
 export interface ImageUploaderProps {
   button: string;
   action: string;
+  cropAction: string;
   limitType: [];
   limitSize: number;
   limitNum: number;
@@ -32,34 +18,43 @@ export interface ImageUploaderProps {
   mode: string;
   value?: any;
   disabled?: boolean;
+  typeErrorMsg: string;
+  sizeErrorMsg: string;
   onChange?: (value: any) => void;
 }
 
-const ImageUploader: React.FC<ImageUploaderProps> = ({
-  button,
-  action,
-  limitType,
-  limitSize,
-  limitNum,
-  limitWH,
-  mode,
-  value = null,
-  onChange,
-  disabled,
-}) => {
+const defaultProps = {
+  button: '上传图片',
+  action: '/api/admin/upload/image/handle',
+  cropAction: '/api/admin/upload/image/crop',
+  typeErrorMsg: '请上传正确格式的图片！',
+  sizeErrorMsg: '图片大小不可超过',
+} as ImageUploaderProps;
+
+const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
+  let {
+    button,
+    action,
+    cropAction,
+    limitType,
+    limitSize,
+    limitNum,
+    limitWH,
+    mode,
+    value = null,
+    disabled,
+    typeErrorMsg,
+    sizeErrorMsg,
+    onChange,
+  } = {
+    ...defaultProps,
+    ...props,
+  };
+
   const [getFileList, setGetFileList] = useState(null);
-  // 上传图片文件
-  const [cropBoxVisible, changeCropBoxVisible] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [imgSrc, setImgSrc] = useState('');
   const [imgId, setImgId] = useState('');
-  const cropperRef = useRef<HTMLImageElement>(null);
-  const [cropper, setCropper] = useState<any>(undefined);
-  const [scaleX, setScaleX] = useState<any>(1);
-  const [scaleY, setScaleY] = useState<any>(1);
-  const onCrop = () => {
-    const imageElement: any = cropperRef?.current;
-    const cropper: any = imageElement?.cropper;
-  };
 
   if (limitWH.width && limitWH.height) {
     action = action + '?limitW=' + limitWH.width + '&limitH=' + limitWH.height;
@@ -124,7 +119,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
 
     // 返回错误信息
     if (!canUpload) {
-      message.error('请上传正确格式的图片!');
+      message.error(typeErrorMsg);
       return false;
     }
 
@@ -133,7 +128,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
 
     // 返回错误信息
     if (!isLtSize) {
-      message.error('图片大小不可超过' + limitSize + 'MB!');
+      message.error(sizeErrorMsg + limitSize + 'MB!');
       return false;
     }
 
@@ -141,31 +136,27 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     return true;
   };
 
-  const onSubmitCrop = async () => {
+  const onCrop = async (value: any) => {
     const result = await post({
-      url: '/api/admin/upload/image/crop',
+      url: cropAction,
       data: {
         id: imgId,
-        file: cropper.getCroppedCanvas().toDataURL(),
+        file: value,
       },
     });
 
     if (result.type === 'success') {
       message.success(result.content);
-      changeCropBoxVisible(false);
+      setIsModalOpen(false);
     } else {
       message.error(result.content, 3);
     }
   };
 
   const handlePreview = async (file: any) => {
-    changeCropBoxVisible(true);
+    setIsModalOpen(true);
     setImgSrc(file.url + '?timestamp' + new Date().getTime());
     setImgId(file.id);
-  };
-
-  const closeCropBox = (e: any) => {
-    changeCropBoxVisible(false);
   };
 
   return (
@@ -251,161 +242,16 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
           {disabled && value && value.length ? null : uploadButton(button)}
         </Upload>
       )}
-      <Modal
-        title="查看图片"
-        open={cropBoxVisible}
-        onOk={onSubmitCrop}
-        onCancel={closeCropBox}
-        width={980}
-        footer={null}
-      >
-        <Cropper
-          src={imgSrc}
-          style={{ height: 400, width: '100%' }}
-          onInitialized={setCropper}
-          initialAspectRatio={16 / 9}
-          crop={onCrop}
-          ref={cropperRef}
-        />
-        <Row gutter={20} style={{ marginTop: 20 }}>
-          <Col span={24}>
-            <Space>
-              <Input.Group compact>
-                <Button
-                  icon={<DragOutlined />}
-                  size={'small'}
-                  onClick={() => cropper?.setDragMode('move')}
-                >
-                  画布
-                </Button>
-                <Button
-                  icon={<SelectOutlined />}
-                  size={'small'}
-                  onClick={() => cropper?.setDragMode('crop')}
-                >
-                  裁剪框
-                </Button>
-              </Input.Group>
-              <Input.Group compact>
-                <Button
-                  icon={<PlusCircleOutlined />}
-                  size={'small'}
-                  onClick={() => cropper?.zoom(0.1)}
-                >
-                  放大
-                </Button>
-                <Button
-                  icon={<MinusCircleOutlined />}
-                  size={'small'}
-                  onClick={() => cropper?.zoom(-0.1)}
-                >
-                  缩小
-                </Button>
-              </Input.Group>
-              <Input.Group compact>
-                <Button
-                  icon={<RotateLeftOutlined />}
-                  size={'small'}
-                  onClick={() => cropper?.rotate(45)}
-                >
-                  左旋
-                </Button>
-                <Button
-                  icon={<RotateRightOutlined />}
-                  size={'small'}
-                  onClick={() => cropper?.rotate(-45)}
-                >
-                  右旋
-                </Button>
-              </Input.Group>
-              <Input.Group compact>
-                <Button size={'small'}>
-                  <ArrowLeftOutlined onClick={() => cropper.move(-10, 0)} />
-                </Button>
-                <Button size={'small'}>
-                  <ArrowRightOutlined onClick={() => cropper.move(10, 0)} />
-                </Button>
-                <Button size={'small'}>
-                  <ArrowUpOutlined onClick={() => cropper.move(0, -10)} />
-                </Button>
-                <Button size={'small'}>
-                  <ArrowDownOutlined onClick={() => cropper.move(0, 10)} />
-                </Button>
-              </Input.Group>
-              <Input.Group compact>
-                <Button size={'small'}>
-                  <ColumnWidthOutlined
-                    onClick={() => {
-                      if (scaleX === 1) {
-                        cropper.scaleX(-1);
-                        setScaleX(-1);
-                      } else {
-                        cropper.scaleX(1);
-                        setScaleX(1);
-                      }
-                    }}
-                  />
-                </Button>
-                <Button size={'small'}>
-                  <ColumnHeightOutlined
-                    onClick={() => {
-                      if (scaleY === 1) {
-                        cropper?.scaleY(-1);
-                        setScaleY(-1);
-                      } else {
-                        cropper?.scaleY(1);
-                        setScaleY(1);
-                      }
-                    }}
-                  />
-                </Button>
-              </Input.Group>
-              <Input.Group compact>
-                <Button
-                  size={'small'}
-                  onClick={() => cropper?.setAspectRatio(16 / 9)}
-                >
-                  16:9
-                </Button>
-                <Button
-                  size={'small'}
-                  onClick={() => cropper?.setAspectRatio(4 / 3)}
-                >
-                  4:3
-                </Button>
-                <Button
-                  size={'small'}
-                  onClick={() => cropper?.setAspectRatio(1 / 1)}
-                >
-                  1:1
-                </Button>
-                <Button
-                  size={'small'}
-                  onClick={() => cropper?.setAspectRatio(2 / 3)}
-                >
-                  2:3
-                </Button>
-                <Button
-                  size={'small'}
-                  onClick={() => cropper?.setAspectRatio(NaN)}
-                >
-                  自由
-                </Button>
-              </Input.Group>
-              <Button size={'small'} onClick={() => cropper?.reset()}>
-                重置
-              </Button>
-              <Button
-                size={'small'}
-                onClick={() => onSubmitCrop()}
-                type="primary"
-              >
-                裁剪
-              </Button>
-            </Space>
-          </Col>
-        </Row>
-      </Modal>
+      <CropBox
+        open={isModalOpen}
+        src={imgSrc}
+        onOk={(value) => {
+          onCrop(value);
+        }}
+        onCancel={(e) => {
+          setIsModalOpen(false);
+        }}
+      />
     </>
   );
 };
