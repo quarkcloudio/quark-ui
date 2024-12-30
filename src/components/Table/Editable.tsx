@@ -21,7 +21,7 @@ interface EditableCellProps {
   children: React.ReactNode;
   dataIndex: string;
   record: any;
-  handleSave: (record: any, value?: any, editable?:any) => void;
+  handleSave: (record: any, value?: any, editable?: any) => void;
 }
 
 const EditableCell: React.FC<EditableCellProps> = ({
@@ -39,7 +39,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
 
   useEffect(() => {
     if (editing) {
-      inputRef.current.focus();
+      inputRef?.current?.focus();
     }
   }, [editing]);
 
@@ -85,9 +85,9 @@ const EditableCell: React.FC<EditableCellProps> = ({
       switch (editable.name) {
         case 'inputField':
           childNode = (
-          <Form.Item style={{ margin: 0 }} name={dataIndex}>
-            <Input ref={inputRef} onPressEnter={save} onBlur={save} />
-          </Form.Item>
+            <Form.Item style={{ margin: 0 }} name={dataIndex}>
+              <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+            </Form.Item>
           );
           break;
         case 'textField':
@@ -128,7 +128,11 @@ const EditableCell: React.FC<EditableCellProps> = ({
                 onChange={save}
                 checkedChildren={editable.options[1]}
                 unCheckedChildren={editable.options[0]}
-                checked={record[dataIndex] === 1 || record[dataIndex] === true ? true : false}
+                checked={
+                  record[dataIndex] === 1 || record[dataIndex] === true
+                    ? true
+                    : false
+                }
               />
             </Form.Item>
           );
@@ -149,14 +153,12 @@ const EditableCell: React.FC<EditableCellProps> = ({
           });
           break;
         case 'imagePickerField':
-            childNode = (
-              <Form.Item style={{ margin: 0 }} name={dataIndex}>
-                <ImagePicker
-                  onChange={save}
-                />
-              </Form.Item>
-            );
-            break;
+          childNode = (
+            <Form.Item style={{ margin: 0 }} name={dataIndex}>
+              <ImagePicker onChange={save} />
+            </Form.Item>
+          );
+          break;
         default:
           childNode = editing ? (
             <Form.Item style={{ margin: 0 }} name={dataIndex}>
@@ -174,7 +176,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
           break;
       }
     }
-    return childNode
+    return childNode;
   };
 
   return <td {...restProps}>{cellRender()}</td>;
