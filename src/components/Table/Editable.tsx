@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
-import { Switch, Form, Select, Input } from 'antd';
+import { Switch, Form, Select, Input, InputNumber } from 'antd';
 import ImagePicker from '@/components/Form/Field/ImagePicker';
 import styles from './Editable.less';
 
@@ -108,7 +108,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
         case 'inputNumberField':
           childNode = editing ? (
             <Form.Item style={{ margin: 0 }} name={dataIndex}>
-              <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+              <InputNumber ref={inputRef} onPressEnter={save} onBlur={save} />
             </Form.Item>
           ) : (
             <div
