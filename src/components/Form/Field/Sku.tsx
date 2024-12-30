@@ -20,8 +20,8 @@ export interface SkuProps {
   createAttrValueButtonText?: any;
   patchChangeButtonText?: any;
   patchClearButtonText?: any;
-  columns?: any;
-  checkedColumn?: {
+  items?: any;
+  checkedItem?: {
     title?: any;
     dataIndex?: any;
     valueType?: string;
@@ -30,7 +30,7 @@ export interface SkuProps {
     checkedChildren?: string;
     unCheckedChildren?: string;
   };
-  optionColumn?: {
+  optionItem?: {
     title?: any;
     dataIndex?: any;
     valueType?: string;
@@ -53,12 +53,12 @@ const defaultProps = {
   createAttrValueButtonText: '新建',
   patchChangeButtonText: '批量修改',
   patchClearButtonText: '清空',
-  columns: [
+  items: [
     {
       title: '图片',
       dataIndex: 'image',
       width: 140,
-      editable:{
+      editable: {
         name: 'imagePickerField',
       },
     },
@@ -66,7 +66,7 @@ const defaultProps = {
       title: '售价',
       dataIndex: 'price',
       width: 120,
-      editable:{
+      editable: {
         name: 'inputField',
       },
     },
@@ -74,7 +74,7 @@ const defaultProps = {
       title: '成本价',
       dataIndex: 'cost',
       width: 120,
-      editable:{
+      editable: {
         name: 'inputField',
       },
     },
@@ -82,7 +82,7 @@ const defaultProps = {
       title: '划线价',
       dataIndex: 'ot_price',
       width: 120,
-      editable:{
+      editable: {
         name: 'inputField',
       },
     },
@@ -90,18 +90,18 @@ const defaultProps = {
       title: '库存',
       dataIndex: 'stock',
       width: 120,
-      editable:{
+      editable: {
         name: 'inputField',
       },
     },
   ],
-  checkedColumn: {
+  checkedItem: {
     title: '默认选中规格',
     dataIndex: 'is_default',
     width: 120,
     fixed: 'right',
   },
-  optionColumn: {
+  optionItem: {
     title: '操作',
     dataIndex: 'is_show',
     width: 150,
@@ -122,16 +122,16 @@ const Sku: React.FC<SkuProps> = (props) => {
     createAttrValueButtonText,
     patchChangeButtonText,
     patchClearButtonText,
-    columns,
-    checkedColumn,
-    optionColumn,
+    items,
+    checkedItem,
+    optionItem,
     value,
     onChange,
   } = {
     ...defaultProps,
     ...props,
   };
-  const [itemColumns, setItemColumns] = useState<any[]>(() => []);
+  const [skuItems, setSkuItems] = useState<any[]>(() => []);
   const [dataSource, setDataSource] = useState<any>(() => value?.dataSource);
 
   const actionRef = useRef<
@@ -141,11 +141,11 @@ const Sku: React.FC<SkuProps> = (props) => {
   >();
 
   useEffect(() => {
-    changeItemColumns();
+    changeItems();
   }, [dataSource]);
 
   useEffect(() => {
-    changeItemColumns();
+    changeItems();
     changeDataSource();
   }, [actionRef.current?.getList()]);
 
@@ -157,7 +157,7 @@ const Sku: React.FC<SkuProps> = (props) => {
     triggerChange({ ...dataSource });
   };
 
-  function transformColumns(data: any) {
+  function transformItems(data: any) {
     // 存储最终结果
     const result: any = [];
     // 遍历当前属性的所有可选值
@@ -200,29 +200,29 @@ const Sku: React.FC<SkuProps> = (props) => {
     setDataSource(newData);
   };
 
-  // 更新 checkedColumn 状态并重置其他行
+  // 更新 checkedItem 状态并重置其他行
   const handleSwitchChange = (checked: boolean, row: any) => {
     const newData = dataSource.map((item: any) => {
       if (item.suk === row.suk) {
         // 如果当前行被选中，设置为选中状态
-        return { ...item, [checkedColumn?.dataIndex]: checked };
+        return { ...item, [checkedItem?.dataIndex]: checked };
       } else {
         // 否则，重置其他行为未选中状态
-        return { ...item, [checkedColumn?.dataIndex]: false };
+        return { ...item, [checkedItem?.dataIndex]: false };
       }
     });
     setDataSource(newData);
   };
 
   // 解析表格columns
-  const parseItemColumns: any = (attributes: any[], columns: any[]) => {
+  const parseItems: any = (attributes: any[], columns: any[]) => {
     if (!attributes?.length) {
       return [];
     }
     // 根据规格生成columns
-    let getColumns = transformColumns(attributes);
+    let getItems = transformItems(attributes);
     columns.forEach((column) => {
-      getColumns.push({
+      getItems.push({
         ...column,
         onCell: (record: any) => ({
           record,
@@ -235,19 +235,18 @@ const Sku: React.FC<SkuProps> = (props) => {
     });
 
     // 创建"默认选中规格"栏
-    getColumns.push({
-      ...checkedColumn,
+    getItems.push({
+      ...checkedItem,
       render: (_: any, row: any) => {
         if (row.isPatchAction) {
           return null;
         }
         return (
           <Switch
-            checkedChildren={checkedColumn?.checkedChildren}
-            unCheckedChildren={checkedColumn?.unCheckedChildren}
+            checkedChildren={checkedItem?.checkedChildren}
+            unCheckedChildren={checkedItem?.unCheckedChildren}
             checked={
-              row[checkedColumn?.dataIndex] ||
-              row[checkedColumn?.dataIndex] === 1
+              row[checkedItem?.dataIndex] || row[checkedItem?.dataIndex] === 1
             }
             onChange={(checked: boolean) => {
               handleSwitchChange(checked, row);
@@ -258,8 +257,8 @@ const Sku: React.FC<SkuProps> = (props) => {
     });
 
     // 创建"操作"栏
-    getColumns.push({
-      ...optionColumn,
+    getItems.push({
+      ...optionItem,
       render: (_: any, row: any) => {
         if (row.isPatchAction) {
           return (
@@ -276,25 +275,25 @@ const Sku: React.FC<SkuProps> = (props) => {
         }
         return (
           <Switch
-            checkedChildren={optionColumn?.checkedChildren}
-            unCheckedChildren={optionColumn?.unCheckedChildren}
+            checkedChildren={optionItem?.checkedChildren}
+            unCheckedChildren={optionItem?.unCheckedChildren}
             checked={
-              row[optionColumn?.dataIndex] || row[optionColumn?.dataIndex] === 1
+              row[optionItem?.dataIndex] || row[optionItem?.dataIndex] === 1
             }
             onChange={(checked: boolean) => {
-              handleSave({ ...row, [optionColumn?.dataIndex]: checked });
+              handleSave({ ...row, [optionItem?.dataIndex]: checked });
             }}
           />
         );
       },
     });
-    return getColumns;
+    return getItems;
   };
 
-  const changeItemColumns: any = () => {
+  const changeItems: any = () => {
     const attributes = actionRef.current?.getList();
-    const getItemColumns = parseItemColumns(attributes, columns);
-    setItemColumns(getItemColumns);
+    const getItemColumns = parseItems(attributes, items);
+    setSkuItems(getItemColumns);
     onSkuChange();
   };
 
@@ -349,7 +348,7 @@ const Sku: React.FC<SkuProps> = (props) => {
         (item: any) => item.suk === attribute.suk,
       );
       return updatedItem
-        ? { [optionColumn?.dataIndex]: true, ...attribute, ...updatedItem }
+        ? { [optionItem?.dataIndex]: true, ...attribute, ...updatedItem }
         : attribute;
     });
 
@@ -385,8 +384,8 @@ const Sku: React.FC<SkuProps> = (props) => {
         )}
         creatorRecord={{ name: '', items: [{ name: '' }] }}
         onAfterRemove={() => {
+          changeItems();
           changeDataSource();
-          changeItemColumns();
         }}
       >
         <ProFormText
@@ -396,12 +395,12 @@ const Sku: React.FC<SkuProps> = (props) => {
           label={attrNameLabel}
           fieldProps={{
             onPressEnter: () => {
+              changeItems();
               changeDataSource();
-              changeItemColumns();
             },
             onBlur: () => {
+              changeItems();
               changeDataSource();
-              changeItemColumns();
             },
           }}
         />
@@ -421,7 +420,7 @@ const Sku: React.FC<SkuProps> = (props) => {
             min={1}
             copyIconProps={false}
             onAfterRemove={() => {
-              changeItemColumns();
+              changeItems();
               changeDataSource();
             }}
             itemRender={({ listDom, action }) => (
@@ -442,11 +441,11 @@ const Sku: React.FC<SkuProps> = (props) => {
               name={['name']}
               fieldProps={{
                 onPressEnter: () => {
-                  changeItemColumns();
+                  changeItems();
                   changeDataSource();
                 },
                 onBlur: () => {
-                  changeItemColumns();
+                  changeItems();
                   changeDataSource();
                 },
               }}
@@ -460,7 +459,7 @@ const Sku: React.FC<SkuProps> = (props) => {
         label={dataSourceLabel}
       >
         <Table
-          columns={itemColumns}
+          columns={skuItems}
           rowKey="suk"
           scroll={{
             x: 960,

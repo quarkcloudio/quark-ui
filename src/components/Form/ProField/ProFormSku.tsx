@@ -59,9 +59,9 @@ const ProFormSku: React.FC<ProFormSkuProps> = ({
         createAttrValueButtonText={fieldProps.createAttrValueButtonText}
         patchChangeButtonText={fieldProps.patchChangeButtonText}
         patchClearButtonText={fieldProps.patchClearButtonText}
-        columns={fieldProps.columns}
-        checkedColumn={fieldProps.checkedColumn}
-        optionColumn={fieldProps.optionColumn}
+        items={fieldProps.items}
+        checkedItem={fieldProps.checkedItem}
+        optionItem={fieldProps.optionItem}
       />
     </ProFormItem>
   );
