@@ -21,6 +21,7 @@ interface EditableCellProps {
   children: React.ReactNode;
   dataIndex: string;
   record: any;
+  alwaysEditing?: boolean;
   handleSave: (record: any, value?: any, editable?: any) => void;
 }
 
@@ -30,10 +31,11 @@ const EditableCell: React.FC<EditableCellProps> = ({
   children,
   dataIndex,
   record,
+  alwaysEditing,
   handleSave,
   ...restProps
 }) => {
-  const [editing, setEditing] = useState(false);
+  const [editing, setEditing] = useState(alwaysEditing);
   const inputRef: any = useRef();
   const editableForm: any = useContext(EditableContext);
 
@@ -44,19 +46,17 @@ const EditableCell: React.FC<EditableCellProps> = ({
   }, [editing]);
 
   const toggleEdit = () => {
-    setEditing(!editing);
-    editableForm.setFieldsValue({ [dataIndex]: record[dataIndex] });
+    if (!alwaysEditing) {
+      setEditing(!editing);
+      editableForm.setFieldsValue({ [dataIndex]: record[dataIndex] });
+    }
   };
 
   // 保存数据
   const save = async (e: any) => {
     const values = await editableForm.getFieldsValue();
     let value = null;
-
     switch (editable.name) {
-      case 'inputField':
-        value = values[dataIndex];
-        break;
       case 'textField':
         toggleEdit();
         value = values[dataIndex];
@@ -81,20 +81,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
     let childNode = children;
     if (editable) {
       switch (editable.name) {
-        case 'skuTextField':
-          childNode = (
-            <Form.Item style={{ margin: 0 }} name={dataIndex}>
-              <Input ref={inputRef} onPressEnter={save} onBlur={save} />
-            </Form.Item>
-          );
-          break;
-        case 'skuInputNumberField':
-          childNode = (
-            <Form.Item style={{ margin: 0 }} name={dataIndex}>
-              <InputNumber ref={inputRef} onPressEnter={save} onBlur={save} />
-            </Form.Item>
-          );
-          break;
         case 'textField':
           childNode = editing ? (
             <Form.Item style={{ margin: 0 }} name={dataIndex}>
@@ -153,9 +139,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
               />
             </Form.Item>
           );
-          editableForm.setFieldsValue({
-            [dataIndex]: record[dataIndex],
-          });
           break;
         case 'imagePickerField':
           childNode = (

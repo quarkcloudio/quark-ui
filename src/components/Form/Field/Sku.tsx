@@ -67,7 +67,8 @@ const defaultProps = {
       dataIndex: 'price',
       width: 120,
       editable: {
-        name: 'skuInputNumberField',
+        name: 'inputNumberField',
+        defaultValue: 0,
       },
     },
     {
@@ -75,7 +76,8 @@ const defaultProps = {
       dataIndex: 'cost',
       width: 120,
       editable: {
-        name: 'skuInputNumberField',
+        name: 'inputNumberField',
+        defaultValue: 0,
       },
     },
     {
@@ -83,7 +85,8 @@ const defaultProps = {
       dataIndex: 'ot_price',
       width: 120,
       editable: {
-        name: 'skuInputNumberField',
+        name: 'inputNumberField',
+        defaultValue: 0,
       },
     },
     {
@@ -91,7 +94,8 @@ const defaultProps = {
       dataIndex: 'stock',
       width: 120,
       editable: {
-        name: 'skuInputNumberField',
+        name: 'inputNumberField',
+        defaultValue: 0,
       },
     },
   ],
@@ -226,6 +230,7 @@ const Sku: React.FC<SkuProps> = (props) => {
         ...column,
         onCell: (record: any) => ({
           record,
+          alwaysEditing: true,
           editable: column.editable,
           dataIndex: column.dataIndex,
           title: column.title,
