@@ -221,7 +221,7 @@ const Sku: React.FC<SkuProps> = (props) => {
     }
     // 根据规格生成columns
     let getItems = transformItems(attributes);
-    columns.forEach((column) => {
+    columns?.forEach((column) => {
       getItems.push({
         ...column,
         onCell: (record: any) => ({
