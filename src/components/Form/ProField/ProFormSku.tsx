@@ -40,6 +40,7 @@ const ProFormSku: React.FC<ProFormSkuProps> = ({
     <ProFormItem
       label={label}
       name={name}
+      noStyle={true}
       tooltip={tooltip}
       rules={rules}
       help={help}
