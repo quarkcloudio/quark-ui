@@ -58,7 +58,7 @@ const EditorPage: React.FC<EditorPageProps> = (props) => {
     }
   };
 
-  const editorExecCommand = (content: any, editor: any) => {
+  const onExecCommand = (content: any, editor: any) => {
     if (content.command === 'mceFocus') {
       setTinymceEditor(editor);
     }
@@ -201,7 +201,7 @@ const EditorPage: React.FC<EditorPageProps> = (props) => {
             };
           },
         }}
-        onExecCommand={editorExecCommand}
+        onExecCommand={onExecCommand}
       />
     </>
   );
