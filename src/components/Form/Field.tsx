@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useModel } from '@umijs/max';
 import { get } from '@/services/action';
 import {
@@ -34,6 +34,8 @@ import ProFormSearch from './ProField/ProFormSearch';
 import ProFormTransfer from './ProField/ProFormTransfer';
 import ProFormImageCaptcha from './ProField/ProFormImageCaptcha';
 import ProFormSmsCaptcha from './ProField/ProFormSmsCaptcha';
+import ProFormImagePicker from './ProField/ProFormImagePicker';
+import ProFormSku from './ProField/ProFormSku';
 import Selects from './Field/Selects';
 import tplEngine from '@/utils/template';
 
@@ -816,6 +818,41 @@ const Field: React.FC<any> = (props: any) => {
               status: currentProps.status,
               targetKeys: currentProps.targetKeys,
               titles: currentProps.titles,
+            }}
+          />
+        );
+        break;
+      case 'imagePickerField':
+        component = (
+          <ProFormImagePicker
+            {...baseProps(currentProps)}
+            fieldProps={{
+              mode: currentProps.mode,
+              size: currentProps.size,
+              button: currentProps.button,
+              limitNum: currentProps.limitNum,
+              disabled: currentProps.disabled,
+            }}
+          />
+        );
+        break;
+      case 'skuField':
+        component = (
+          <ProFormSku
+            {...baseProps(currentProps)}
+            fieldProps={{
+              attributesName: currentProps.attributesName,
+              attributesLabel: currentProps.attributesLabel,
+              dataSourceLabel: currentProps.dataSourceLabel,
+              attrNameLabel: currentProps.attrNameLabel,
+              attrValueLabel: currentProps.attrValueLabel,
+              createAttrButtonText: currentProps.createAttrButtonText,
+              createAttrValueButtonText: currentProps.createAttrValueButtonText,
+              patchChangeButtonText: currentProps.patchChangeButtonText,
+              patchClearButtonText: currentProps.patchClearButtonText,
+              columns: currentProps.columns,
+              checkedColumn: currentProps.checkedColumn,
+              optionColumn: currentProps.optionColumn,
             }}
           />
         );

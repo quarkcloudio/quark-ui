@@ -36,7 +36,7 @@ dateField|weekField|monthField|quarterField|yearField|datetimeField|\
 dateRangeField|datetimeRangeField|timeField|timeRangeField|displayField|\
 editorField|searchField|mapField|geofenceField|listField|groupField|selects|\
 treeSelectField|spaceField|compactField|fieldsetField|dependencyField|transferField|\
-imageCaptchaField|smsCaptchaField|';
+imageCaptchaField|smsCaptchaField|imagePickerField|skuField|';
 
 const components = [
   { name: 'page', component: <Page /> },
