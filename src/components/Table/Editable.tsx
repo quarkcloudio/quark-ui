@@ -155,7 +155,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
         case 'imagePickerField':
           childNode = (
             <Form.Item style={{ margin: 0 }} name={dataIndex}>
-              <ImagePicker onChange={save} />
+              <ImagePicker size="small" onChange={save} />
             </Form.Item>
           );
           break;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Upload, Image } from 'antd';
+import { ConfigProvider, Upload, Image } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import ImageBox from '@/components/ImageBox';
 import type { DragEndEvent } from '@dnd-kit/core';
@@ -63,26 +63,42 @@ export interface ImagePickerProps {
   value?: any;
   limitNum?: number;
   disabled?: boolean;
+  mode?: string;
+  size?: string; // default, small
   onChange?: (value: any) => void;
 }
 
 const defaultProps = {
   button: '上传',
   disabled: false,
+  mode: 'single',
+  size: 'default',
 } as ImagePickerProps;
 
 const ImagePicker: React.FC<ImagePickerProps> = (props) => {
-  const { button, value, limitNum, disabled, onChange } = {
+  let { button, value, limitNum, disabled, mode, size, onChange } = {
     ...defaultProps,
     ...props,
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [fileList, setFileList] = useState(value || []);
+  const [fileList, setFileList] = useState(() => {
+    if (mode === 'single' && value) {
+      return [value];
+    }
+    return value || [];
+  });
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
+  if (mode === 'single') {
+    limitNum = 1;
+  }
 
   const triggerChange = (changedValue: any) => {
     if (onChange) {
+      if (mode === 'single' && changedValue) {
+        onChange(changedValue?.[0]);
+        return;
+      }
       onChange(changedValue);
     }
   };
@@ -133,37 +149,51 @@ const ImagePicker: React.FC<ImagePickerProps> = (props) => {
           items={fileList?.map?.((i: any) => i.id)}
           strategy={verticalListSortingStrategy}
         >
-          <Upload
-            name={'file'}
-            disabled={disabled}
-            listType="picture-card"
-            fileList={fileList}
-            openFileDialogOnClick={false}
-            onPreview={handlePreview}
-            onChange={handleChange}
-            itemRender={(originNode, file) => (
-              <DraggableUploadListItem originNode={originNode} file={file} />
-            )}
+          <ConfigProvider
+            theme={
+              size === 'small'
+                ? {
+                    token: {
+                      controlHeightLG: 25,
+                      paddingXS: 5,
+                    },
+                  }
+                : undefined
+            }
           >
-            {limitNum && fileList.length >= limitNum ? null : (
-              <div
-                onClick={() => {
-                  setIsModalOpen(true);
-                }}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  display: 'grid',
-                  placeItems: 'center',
-                }}
-              >
-                <div>
-                  <PlusOutlined />
-                  <div>{button}</div>
+            <Upload
+              name={'file'}
+              disabled={disabled}
+              listType="picture-card"
+              fileList={fileList}
+              openFileDialogOnClick={false}
+              onPreview={handlePreview}
+              onChange={handleChange}
+              itemRender={(originNode, file) => (
+                <DraggableUploadListItem originNode={originNode} file={file} />
+              )}
+              style={size === 'small' ? { width: 30 } : undefined}
+            >
+              {limitNum && fileList.length >= limitNum ? null : (
+                <div
+                  onClick={() => {
+                    setIsModalOpen(true);
+                  }}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    display: 'grid',
+                    placeItems: 'center',
+                  }}
+                >
+                  <div>
+                    <PlusOutlined />
+                    <div>{button}</div>
+                  </div>
                 </div>
-              </div>
-            )}
-          </Upload>
+              )}
+            </Upload>
+          </ConfigProvider>
         </SortableContext>
       </DndContext>
       {previewImage && (
