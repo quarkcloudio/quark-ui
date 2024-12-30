@@ -83,10 +83,17 @@ const EditableCell: React.FC<EditableCellProps> = ({
     let childNode = children;
     if (editable) {
       switch (editable.name) {
-        case 'inputField':
+        case 'skuTextField':
           childNode = (
             <Form.Item style={{ margin: 0 }} name={dataIndex}>
               <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+            </Form.Item>
+          );
+          break;
+        case 'skuInputNumberField':
+          childNode = (
+            <Form.Item style={{ margin: 0 }} name={dataIndex}>
+              <InputNumber ref={inputRef} onPressEnter={save} onBlur={save} />
             </Form.Item>
           );
           break;

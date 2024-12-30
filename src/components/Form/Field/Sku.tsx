@@ -67,7 +67,7 @@ const defaultProps = {
       dataIndex: 'price',
       width: 120,
       editable: {
-        name: 'inputField',
+        name: 'skuInputNumberField',
       },
     },
     {
@@ -75,7 +75,7 @@ const defaultProps = {
       dataIndex: 'cost',
       width: 120,
       editable: {
-        name: 'inputField',
+        name: 'skuInputNumberField',
       },
     },
     {
@@ -83,7 +83,7 @@ const defaultProps = {
       dataIndex: 'ot_price',
       width: 120,
       editable: {
-        name: 'inputField',
+        name: 'skuInputNumberField',
       },
     },
     {
@@ -91,7 +91,7 @@ const defaultProps = {
       dataIndex: 'stock',
       width: 120,
       editable: {
-        name: 'inputField',
+        name: 'skuInputNumberField',
       },
     },
   ],
@@ -132,7 +132,7 @@ const Sku: React.FC<SkuProps> = (props) => {
     ...props,
   };
   const [skuItems, setSkuItems] = useState<any[]>(() => []);
-  const [dataSource, setDataSource] = useState<any>(() => value?.dataSource);
+  const [dataSource, setDataSource] = useState<any>(() => value);
 
   const actionRef = useRef<
     FormListActionType<{
@@ -149,7 +149,7 @@ const Sku: React.FC<SkuProps> = (props) => {
     changeDataSource();
   }, [actionRef.current?.getList()]);
 
-  const triggerChange = (changedValue: { dataSource?: any }) => {
+  const triggerChange = (changedValue: any) => {
     onChange?.({ ...value, ...changedValue });
   };
 
@@ -161,7 +161,7 @@ const Sku: React.FC<SkuProps> = (props) => {
     // 存储最终结果
     const result: any = [];
     // 遍历当前属性的所有可选值
-    data.forEach((attr: any, index: any) => {
+    data?.forEach((attr: any, index: any) => {
       const item: any = {
         title: attr.name,
         dataIndex: attr.name,
@@ -292,8 +292,8 @@ const Sku: React.FC<SkuProps> = (props) => {
 
   const changeItems: any = () => {
     const attributes = actionRef.current?.getList();
-    const getItemColumns = parseItems(attributes, items);
-    setSkuItems(getItemColumns);
+    const getItems = parseItems(attributes, items);
+    setSkuItems(getItems);
     onSkuChange();
   };
 

@@ -850,9 +850,9 @@ const Field: React.FC<any> = (props: any) => {
               createAttrValueButtonText: currentProps.createAttrValueButtonText,
               patchChangeButtonText: currentProps.patchChangeButtonText,
               patchClearButtonText: currentProps.patchClearButtonText,
-              columns: currentProps.columns,
-              checkedColumn: currentProps.checkedColumn,
-              optionColumn: currentProps.optionColumn,
+              items: currentProps.items,
+              checkedItem: currentProps.checkedItem,
+              optionItem: currentProps.optionItem,
             }}
           />
         );
