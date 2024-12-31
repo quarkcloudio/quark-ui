@@ -160,11 +160,12 @@ const Sku: React.FC<SkuProps> = (props) => {
   }, [actionRef.current?.getList()]);
 
   const triggerChange = (changedValue: any) => {
-    onChange?.({ ...value, ...changedValue });
+    onChange?.(changedValue);
   };
 
   const onSkuChange = () => {
-    triggerChange({ ...dataSource });
+    console.log(dataSource);
+    triggerChange(dataSource);
   };
 
   const onPatchSelectChange = (dataIndex: any, value: any, row: any) => {
@@ -287,7 +288,7 @@ const Sku: React.FC<SkuProps> = (props) => {
   // 解析表格columns
   const parseItems: any = (attributes: any[], columns: any[]) => {
     if (!attributes?.length) {
-      return [];
+      return undefined;
     }
     // 根据规格生成columns
     let getItems = transformItems(attributes);
@@ -408,7 +409,7 @@ const Sku: React.FC<SkuProps> = (props) => {
 
   const parseAttributes: any = (attributes: any[]) => {
     if (!attributes?.length) {
-      return [];
+      return undefined;
     }
     let getAttributes = transformAttributes(attributes);
 
