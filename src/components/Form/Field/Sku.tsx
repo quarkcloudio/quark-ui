@@ -137,6 +137,12 @@ const Sku: React.FC<SkuProps> = (props) => {
   };
   const [skuItems, setSkuItems] = useState<any[]>(() => []);
   const [dataSource, setDataSource] = useState<any>(() => value);
+  const [patchSeletedOptions, setPatchSeletedOptions] = useState<any>({});
+
+  const patchActionRow = {
+    suk: 'patchAction',
+    isPatchAction: true,
+  };
 
   const actionRef = useRef<
     FormListActionType<{
@@ -161,6 +167,57 @@ const Sku: React.FC<SkuProps> = (props) => {
     triggerChange({ ...dataSource });
   };
 
+  const onPatchSelectChange = (dataIndex: any, value: any, row: any) => {
+    setPatchSeletedOptions({ ...patchSeletedOptions, [dataIndex]: value });
+    handleSave({ ...row, [dataIndex]: value });
+  };
+
+  const onPatchChange = () => {
+    const newData = [...dataSource];
+    const index = newData.findIndex(
+      (item: any) => patchActionRow.suk === item.suk,
+    );
+    const item = newData[index];
+    const getPatchActionSuk = Object.values(patchSeletedOptions).join(',');
+    const result = newData.map((newItem) => {
+      if (newItem.suk !== patchActionRow.suk) {
+        if (
+          getPatchActionSuk === '' ||
+          newItem.suk.includes(getPatchActionSuk)
+        ) {
+          // 创建新的对象，并删除不需要的属性
+          const updatedItem = { ...item };
+          Object.keys(patchSeletedOptions).forEach((key: any) => {
+            delete updatedItem[key]; // 删除属性
+          });
+          delete updatedItem.suk; // 删除 suk 属性
+          delete updatedItem.isPatchAction; // 删除 isPatchAction 属性
+          return { ...newItem, ...updatedItem };
+        }
+      }
+      return newItem;
+    });
+    setDataSource(result);
+  };
+
+  const onPatchClear = () => {
+    const newData = [...dataSource];
+    const index = newData.findIndex(
+      (item: any) => patchActionRow.suk === item.suk,
+    );
+    const item = newData[index];
+    Object.keys(item).forEach((key) => {
+      if (key !== checkedItem?.dataIndex && key !== optionItem?.dataIndex) {
+        item[key] = undefined;
+      }
+    });
+    newData.splice(index, 1, {
+      ...item,
+      ...patchActionRow,
+    });
+    setDataSource(newData);
+  };
+
   function transformItems(data: any) {
     // 存储最终结果
     const result: any = [];
@@ -172,6 +229,7 @@ const Sku: React.FC<SkuProps> = (props) => {
         width: 150,
         fixed: 'left',
         render: (value: any, row: any) => {
+          // 解析批量操作列
           if (row?.isPatchAction) {
             let options: any = [];
             actionRef.current?.getList()?.forEach((getAttr: any) => {
@@ -182,7 +240,15 @@ const Sku: React.FC<SkuProps> = (props) => {
               }
             });
             return (
-              <Select allowClear style={{ width: 120 }} options={options} />
+              <Select
+                value={row[attr.name] || undefined}
+                onChange={(value) => {
+                  onPatchSelectChange(attr.name, value, row);
+                }}
+                options={options}
+                style={{ width: 120 }}
+                allowClear
+              />
             );
           }
           return <>{typeof value === 'string' && value}</>;
@@ -268,10 +334,10 @@ const Sku: React.FC<SkuProps> = (props) => {
         if (row.isPatchAction) {
           return (
             <Space>
-              <Button type="link" size="small">
+              <Button onClick={onPatchChange} type="link" size="small">
                 {patchChangeButtonText}
               </Button>
-              <Button type="link" size="small">
+              <Button onClick={onPatchClear} type="link" size="small">
                 {patchClearButtonText}
               </Button>
             </Space>
@@ -303,11 +369,7 @@ const Sku: React.FC<SkuProps> = (props) => {
 
   // 生成表格dataSource
   function transformAttributes(data: any) {
-    const result: any = [
-      {
-        isPatchAction: true,
-      },
-    ];
+    const result: any = [patchActionRow];
 
     // 获取所有属性项（例如，颜色、尺寸等）的名字
     const attributes = data?.map((attr: any) => attr.name);

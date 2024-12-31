@@ -40,6 +40,12 @@ const EditableCell: React.FC<EditableCellProps> = ({
   const editableForm: any = useContext(EditableContext);
 
   useEffect(() => {
+    if (dataIndex && record) {
+      editableForm?.setFieldsValue({ [dataIndex]: record[dataIndex] });
+    }
+  }, [record]);
+
+  useEffect(() => {
     if (editing) {
       inputRef?.current?.focus();
     }
@@ -82,38 +88,52 @@ const EditableCell: React.FC<EditableCellProps> = ({
     if (editable) {
       switch (editable.name) {
         case 'textField':
-          childNode = alwaysEditing || editing ? (
-            <Form.Item initialValue={editable?.defaultValue} style={{ margin: 0 }} name={dataIndex}>
-              <Input ref={inputRef} onPressEnter={save} onBlur={save} />
-            </Form.Item>
-          ) : (
-            <div
-              className={styles.editableCellValueWrap}
-              style={{ paddingRight: 24 }}
-              onClick={toggleEdit}
-            >
-              {children}
-            </div>
-          );
+          childNode =
+            alwaysEditing || editing ? (
+              <Form.Item
+                initialValue={editable?.defaultValue}
+                style={{ margin: 0 }}
+                name={dataIndex}
+              >
+                <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+              </Form.Item>
+            ) : (
+              <div
+                className={styles.editableCellValueWrap}
+                style={{ paddingRight: 24 }}
+                onClick={toggleEdit}
+              >
+                {children}
+              </div>
+            );
           break;
         case 'inputNumberField':
-          childNode = alwaysEditing || editing ? (
-            <Form.Item initialValue={editable?.defaultValue} style={{ margin: 0 }} name={dataIndex}>
-              <InputNumber ref={inputRef} onPressEnter={save} onBlur={save} />
-            </Form.Item>
-          ) : (
-            <div
-              className={styles.editableCellValueWrap}
-              style={{ paddingRight: 24 }}
-              onClick={toggleEdit}
-            >
-              {children}
-            </div>
-          );
+          childNode =
+            alwaysEditing || editing ? (
+              <Form.Item
+                initialValue={editable?.defaultValue}
+                style={{ margin: 0 }}
+                name={dataIndex}
+              >
+                <InputNumber ref={inputRef} onPressEnter={save} onBlur={save} />
+              </Form.Item>
+            ) : (
+              <div
+                className={styles.editableCellValueWrap}
+                style={{ paddingRight: 24 }}
+                onClick={toggleEdit}
+              >
+                {children}
+              </div>
+            );
           break;
         case 'switchField':
           childNode = (
-            <Form.Item initialValue={editable?.defaultValue} style={{ margin: 0 }} name={dataIndex}>
+            <Form.Item
+              initialValue={editable?.defaultValue}
+              style={{ margin: 0 }}
+              name={dataIndex}
+            >
               <Switch
                 ref={inputRef}
                 onChange={save}
@@ -130,7 +150,11 @@ const EditableCell: React.FC<EditableCellProps> = ({
           break;
         case 'selectField':
           childNode = (
-            <Form.Item initialValue={editable?.defaultValue} style={{ margin: 0 }} name={dataIndex}>
+            <Form.Item
+              initialValue={editable?.defaultValue}
+              style={{ margin: 0 }}
+              name={dataIndex}
+            >
               <Select
                 ref={inputRef}
                 onChange={save}
@@ -142,25 +166,34 @@ const EditableCell: React.FC<EditableCellProps> = ({
           break;
         case 'imagePickerField':
           childNode = (
-            <Form.Item initialValue={editable?.defaultValue} style={{ margin: 0 }} name={dataIndex}>
+            <Form.Item
+              initialValue={editable?.defaultValue}
+              style={{ margin: 0 }}
+              name={dataIndex}
+            >
               <ImagePicker size="small" onChange={save} />
             </Form.Item>
           );
           break;
         default:
-          childNode = alwaysEditing || editing ? (
-            <Form.Item initialValue={editable?.defaultValue} style={{ margin: 0 }} name={dataIndex}>
-              <Input ref={inputRef} onPressEnter={save} onBlur={save} />
-            </Form.Item>
-          ) : (
-            <div
-              className={styles.editableCellValueWrap}
-              style={{ paddingRight: 24 }}
-              onClick={toggleEdit}
-            >
-              {children}
-            </div>
-          );
+          childNode =
+            alwaysEditing || editing ? (
+              <Form.Item
+                initialValue={editable?.defaultValue}
+                style={{ margin: 0 }}
+                name={dataIndex}
+              >
+                <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+              </Form.Item>
+            ) : (
+              <div
+                className={styles.editableCellValueWrap}
+                style={{ paddingRight: 24 }}
+                onClick={toggleEdit}
+              >
+                {children}
+              </div>
+            );
           break;
       }
     }
