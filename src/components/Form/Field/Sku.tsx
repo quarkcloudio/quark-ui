@@ -171,12 +171,12 @@ const Sku: React.FC<SkuProps> = (props) => {
         dataIndex: attr.name,
         width: 150,
         fixed: 'left',
-        renderFormItem: (record: any, form: any) => {
-          if (record.entity.isPatchAction) {
+        render: (value: any, row: any) => {
+          if (row?.isPatchAction) {
             let options: any = [];
-            actionRef.current?.getList()?.forEach((attr: any) => {
-              if (attr.name === record.dataIndex) {
-                attr?.items?.forEach((attrItem: any) => {
+            actionRef.current?.getList()?.forEach((getAttr: any) => {
+              if (getAttr.name === attr.name) {
+                getAttr?.items?.forEach((attrItem: any) => {
                   options.push({ value: attrItem.name, label: attrItem.name });
                 });
               }
@@ -185,7 +185,7 @@ const Sku: React.FC<SkuProps> = (props) => {
               <Select allowClear style={{ width: 120 }} options={options} />
             );
           }
-          return <>{record.entity[record.dataIndex]}</>;
+          return <>{typeof value === 'string' && value}</>;
         },
       };
       result.push(item);
@@ -271,7 +271,6 @@ const Sku: React.FC<SkuProps> = (props) => {
               <Button type="link" size="small">
                 {patchChangeButtonText}
               </Button>
-              ,
               <Button type="link" size="small">
                 {patchClearButtonText}
               </Button>
@@ -304,7 +303,11 @@ const Sku: React.FC<SkuProps> = (props) => {
 
   // 生成表格dataSource
   function transformAttributes(data: any) {
-    const result: any = [];
+    const result: any = [
+      {
+        isPatchAction: true,
+      },
+    ];
 
     // 获取所有属性项（例如，颜色、尺寸等）的名字
     const attributes = data?.map((attr: any) => attr.name);
