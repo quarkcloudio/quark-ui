@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ConfigProvider, Upload, Image } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import ImageBox from '@/components/ImageBox';
@@ -93,14 +93,21 @@ const ImagePicker: React.FC<ImagePickerProps> = (props) => {
     limitNum = 1;
   }
 
-  const triggerChange = (changedValue: any) => {
-    if (onChange) {
-      if (mode === 'single' && changedValue) {
-        onChange(changedValue?.[0]);
-        return;
+  useEffect(() => {
+    setFileList(() => {
+      if (mode === 'single' && value) {
+        return [value];
       }
-      onChange(changedValue);
+      return value || [];
+    });
+  }, [value]);
+
+  const triggerChange = (changedValue: any) => {
+    if (mode === 'single' && changedValue) {
+      onChange?.(changedValue?.[0]);
+      return;
     }
+    onChange?.(changedValue);
   };
 
   const handlePreview = async (file: any) => {

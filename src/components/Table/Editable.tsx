@@ -73,6 +73,9 @@ const EditableCell: React.FC<EditableCellProps> = ({
       case 'selectField':
         value = values[dataIndex];
         break;
+      case 'imagePickerField':
+        value = values[dataIndex];
+        break;
       default:
         toggleEdit();
         value = values[dataIndex];
