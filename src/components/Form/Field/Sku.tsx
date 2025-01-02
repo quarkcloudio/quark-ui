@@ -385,7 +385,14 @@ const Sku: React.FC<SkuProps> = (props) => {
         const suk = attributes
           .map((attribute: any) => current[attribute])
           .join(',');
-        result.push({ ...current, suk });
+
+        // 创建 attr_value 对象
+        const attrValue = attributes.reduce((acc: any, attribute: any) => {
+          acc[attribute] = current[attribute];
+          return acc;
+        }, {});
+
+        result.push({ ...current, suk, attr_value: attrValue });
         return;
       }
 
