@@ -140,19 +140,24 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
         break;
       case 'text':
         if (typeof text === 'string' || typeof text === 'number') {
-          text = <Render body={text} data={row} callback={callback} />;
+          text = (
+            <Render
+              body={text}
+              data={{ ...query, ...row }}
+              callback={callback}
+            />
+          );
         }
         break;
     }
-
     return text;
   };
 
   // 行内编辑
-  const editableSave = async (record: any, value: any, editable:any) => {
+  const editableSave = async (record: any, value: any, editable: any) => {
     const result = await get({
       url: editable.action,
-      data: {id: record.id, ...value},
+      data: { id: record.id, ...value },
     });
     if (result.type === 'success') {
       actionRef.current.reload();
