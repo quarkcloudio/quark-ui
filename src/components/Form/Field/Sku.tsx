@@ -107,7 +107,7 @@ const defaultProps = {
   },
   optionItem: {
     title: '操作',
-    dataIndex: 'is_show',
+    dataIndex: 'status',
     width: 150,
     fixed: 'right',
     checkedChildren: '显示',
