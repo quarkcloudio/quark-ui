@@ -160,7 +160,11 @@ const Sku: React.FC<SkuProps> = (props) => {
   }, [actionRef.current?.getList()]);
 
   const triggerChange = (changedValue: any) => {
-    onChange?.(changedValue);
+    // 过滤批量修改的数据
+    const filteredData = changedValue.filter(
+      (item: any) => item.suk !== 'patchAction',
+    );
+    onChange?.(filteredData);
   };
 
   const onSkuChange = () => {
