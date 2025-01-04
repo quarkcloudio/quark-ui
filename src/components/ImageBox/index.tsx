@@ -246,6 +246,7 @@ const ImageBox: React.FC<ImageBoxProps> = (props) => {
             checkedItems.forEach((item: any) => {
               dataSource.lists.forEach((dataItem: any) => {
                 if (dataItem.id === item) {
+                  delete dataItem.type;
                   items.push(dataItem);
                 }
               });
@@ -366,12 +367,12 @@ const ImageBox: React.FC<ImageBoxProps> = (props) => {
                                 <div
                                   key="edit"
                                   onClick={() => {
-                                    setIsCropBoxModalOpen(true);
-                                    setCropImageSrc(
+                                    const imageUrl =
                                       item.url +
-                                        '?timestamp' +
-                                        new Date().getTime(),
-                                    );
+                                      '?timestamp' +
+                                      new Date().getTime();
+                                    setIsCropBoxModalOpen(true);
+                                    setCropImageSrc(imageUrl);
                                   }}
                                 >
                                   <Iconfont type={'icon-edit'} />
