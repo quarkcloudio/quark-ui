@@ -251,7 +251,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
         search: JSON.stringify(params),
         sorter: JSON.stringify(sorter),
         filter: JSON.stringify(filter),
-        activeKey: JSON.stringify(activeKey),
+        activeKey: activeKey,
         ...query,
       };
 
