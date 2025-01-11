@@ -27,6 +27,7 @@ import View from '@/components/View';
 import When from '@/components/When';
 import { DefaultFooter } from '@ant-design/pro-components';
 import Icon from '@/components/Icon';
+import Order from '@/components/Order';
 
 const fieldName =
   'textField|passwordField|textAreaField|inputNumberField|\
@@ -39,6 +40,7 @@ treeSelectField|spaceField|compactField|fieldsetField|dependencyField|transferFi
 imageCaptchaField|smsCaptchaField|imagePickerField|skuField|';
 
 const components = [
+  { name: fieldName, component: <Field /> },
   { name: 'page', component: <Page /> },
   { name: 'login', component: <Login /> },
   { name: 'layout', component: <Layout /> },
@@ -68,7 +70,7 @@ const components = [
   { name: 'view', component: <View /> },
   { name: 'when', component: <When /> },
   { name: 'icon', component: <Icon /> },
-  { name: fieldName, component: <Field /> },
+  { name: 'order', component: <Order /> },
 ];
 
 export default components;

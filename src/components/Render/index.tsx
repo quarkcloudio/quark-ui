@@ -1,7 +1,7 @@
 import React from 'react';
 import { Space } from 'antd';
 import { ProCard } from '@ant-design/pro-components';
-import components from '@/components/Render/components';
+import components from '@/components';
 import tplEngine from '@/utils/template';
 
 export interface RenderProps {
@@ -78,7 +78,7 @@ const parserComponent = (
 
   let component = getComponent(componentName);
   if (component) {
-    component = React.cloneElement(component, {
+    return React.cloneElement(component, {
       key: index,
       ...componentProps,
       data: data,
@@ -86,7 +86,7 @@ const parserComponent = (
     });
   }
 
-  return component;
+  return <>No {componentName} component found</>;
 };
 
 // 渲染组件

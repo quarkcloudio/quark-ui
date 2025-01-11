@@ -106,7 +106,6 @@ const CropBox: React.FC<CropBoxProps> = (props) => {
       open={isModalOpen}
       onCancel={(e) => {
         onCancel?.(e);
-        console.log('xxxxxxx');
       }}
       width={width}
       footer={null}
