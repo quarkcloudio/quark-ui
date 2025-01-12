@@ -1,6 +1,6 @@
 import React from 'react';
 import type { MenuProps } from 'antd';
-import { Dropdown as BaseDropdown, Button } from 'antd';
+import { Dropdown as BaseDropdown, Button, ConfigProvider } from 'antd';
 import Action from '@/components/Action';
 import tplEngine from '@/utils/template';
 import { DownOutlined, createFromIconfontCN } from '@ant-design/icons';
@@ -49,8 +49,29 @@ const Dropdown: React.FC<any> = (props: any) => {
       );
     }
     if (item.component === 'menuItem' || item.component === 'action') {
+      const action = (
+        <ConfigProvider
+          theme={{
+            components: {
+              Button: {
+                paddingInlineSM: 0,
+                contentLineHeightSM: 1,
+                colorLink: 'rgba(0,0,0,0.88)',
+                colorLinkActive: 'rgba(0,0,0,0.88)',
+                colorLinkHover: 'rgba(0,0,0,0.88)',
+              },
+            },
+          }}
+        >
+          <Action
+            {...item}
+            data={{ ...props.data }}
+            callback={props.callback}
+          />
+        </ConfigProvider>
+      );
       component = getItem(
-        <Action {...item} data={{ ...props.data }} callback={props.callback} />,
+        action,
         index,
         props.icon && <IconFont type={props.icon} />,
       );
@@ -86,7 +107,7 @@ const Dropdown: React.FC<any> = (props: any) => {
         subMenuOpenDelay: props.menu.subMenuOpenDelay,
         theme: props.menu.theme,
         triggerSubMenuAction: props.menu.triggerSubMenuAction,
-        items: props.menu.items ? componentRender(props.menu.items) : null,
+        items: props.menu.items && componentRender(props.menu.items),
       }}
     >
       <Button
