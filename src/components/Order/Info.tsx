@@ -1,16 +1,58 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
 import { Descriptions, Space } from 'antd';
 
 export interface InfoProps {
-  title?: string;
+  descriptions?: any[];
+  dataSource?: any;
 }
 
 const defaultProps = {
-  title: '订单详情',
+  descriptions: [
+    {
+      title: '用户信息',
+      column: 2,
+      layout: 'horizontal',
+      colon: true,
+      items: [
+        {
+          key: 'username',
+          label: '用户名',
+        },
+        {
+          key: 'phone',
+          label: '联系电话',
+        },
+      ],
+    },
+    {
+      title: '订单信息',
+      column: 4,
+      layout: 'horizontal',
+      colon: true,
+      items: [
+        {
+          key: 'createtime',
+          label: '创建时间',
+        },
+        {
+          key: 'num',
+          label: '商品总数',
+        },
+        {
+          key: 'total_price',
+          label: '商品总价',
+        },
+        {
+          key: 'pay_price',
+          label: '实际支付',
+        },
+      ],
+    },
+  ],
 } as InfoProps;
 
 const Info: React.FC<InfoProps> = (props) => {
-  const { title } = {
+  const { descriptions, dataSource } = {
     ...defaultProps,
     ...props,
   };
@@ -21,53 +63,35 @@ const Info: React.FC<InfoProps> = (props) => {
       size="large"
       style={{ display: 'flex', marginTop: 5 }}
     >
-      <Descriptions
-        title={
-          <div
-            style={{
-              lineHeight: '16px',
-              borderLeftColor: 'rgb(22, 119, 255)',
-              borderLeftStyle: 'solid',
-              borderLeftWidth: '2.4px',
-              paddingLeft: '10px',
-            }}
-          >
-            用户信息
-          </div>
-        }
-        column={2}
-      >
-        <Descriptions.Item label="用户名">裴明</Descriptions.Item>
-        <Descriptions.Item label="联系电话">17899999999</Descriptions.Item>
-      </Descriptions>
-      <Descriptions
-        title={
-          <div
-            style={{
-              lineHeight: '16px',
-              borderLeftColor: 'rgb(22, 119, 255)',
-              borderLeftStyle: 'solid',
-              borderLeftWidth: '2.4px',
-              paddingLeft: '10px',
-            }}
-          >
-            订单信息
-          </div>
-        }
-        column={3}
-      >
-        <Descriptions.Item label="创建时间">
-          2025-01-11 19:49:48
-        </Descriptions.Item>
-        <Descriptions.Item label="商品总数">3</Descriptions.Item>
-        <Descriptions.Item label="商品总价">15.00</Descriptions.Item>
-        <Descriptions.Item label="支付邮费">0.00</Descriptions.Item>
-        <Descriptions.Item label="优惠券金额">0.00</Descriptions.Item>
-        <Descriptions.Item label="积分抵扣">10.00</Descriptions.Item>
-        <Descriptions.Item label="用户等级优惠">0.75</Descriptions.Item>
-        <Descriptions.Item label="付费会员优惠">0.0</Descriptions.Item>
-        <Descriptions.Item label="实际支付">4.25</Descriptions.Item>
-      </Descriptions>
+      {descriptions?.map((description: any, index) => {
+        return (
+          <Descriptions
+            key={index}
+            title={
+              <div
+                style={{
+                  lineHeight: '16px',
+                  borderLeftColor: 'rgb(22, 119, 255)',
+                  borderLeftStyle: 'solid',
+                  borderLeftWidth: '2.4px',
+                  paddingLeft: '10px',
+                }}
+              >
+                {description?.title}
+              </div>
+            }
+            column={description?.column}
+            layout={description?.layout}
+            colon={description?.colon}
+            items={description?.items?.map((item: any) => {
+              return {
+                ...item,
+                children: dataSource?.[item.key] ? dataSource[item.key] : '-',
+              };
+            })}
+          />
+        );
+      })}
     </Space>
   );
 };
