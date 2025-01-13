@@ -5,6 +5,7 @@ import Detail from './Detail';
 import Table from './Table';
 
 export interface OrderProps {
+  initApi?: string;
   icon?: string;
   orderNoText?: string;
   orderDetailText?: string;
@@ -15,6 +16,7 @@ export interface OrderProps {
   detailInfo?: any;
   itemInfo?: any;
   statusInfo?: any;
+  data?: any;
 }
 
 const defaultProps = {
@@ -174,6 +176,7 @@ const IconSvg = () => (
 
 const Index: React.FC<OrderProps> = (props) => {
   const {
+    initApi,
     icon,
     orderNoText,
     orderDetailText,
@@ -184,6 +187,7 @@ const Index: React.FC<OrderProps> = (props) => {
     detailInfo,
     itemInfo,
     statusInfo,
+    data,
   } = {
     ...defaultProps,
     ...props,
