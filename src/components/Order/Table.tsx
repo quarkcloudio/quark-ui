@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table } from 'antd';
 
-export interface GoodsProps {
+export interface TableProps {
   columns?: any;
   dataSource?: any;
 }
@@ -24,9 +24,9 @@ const defaultProps = {
       key: 'address',
     },
   ],
-} as GoodsProps;
+} as TableProps;
 
-const Goods: React.FC<GoodsProps> = (props) => {
+const Index: React.FC<TableProps> = (props) => {
   const { columns, dataSource } = {
     ...defaultProps,
     ...props,
@@ -37,4 +37,4 @@ const Goods: React.FC<GoodsProps> = (props) => {
   );
 };
 
-export default Goods;
+export default Index;

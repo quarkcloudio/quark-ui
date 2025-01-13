@@ -1,19 +1,142 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Descriptions, Space, Tabs } from 'antd';
 import type { TabsProps } from 'antd';
-import Info from './Info';
-import Goods from './Goods';
-import Status from './Status';
+import Detail from './Detail';
+import Table from './Table';
 
 export interface OrderProps {
-  title?: string;
+  icon?: string;
+  orderNoText?: string;
+  orderDetailText?: string;
+  orderItemText?: string;
+  orderStatusText?: string;
+  orderNo?: string;
+  info?: any;
+  detailInfo?: any;
+  itemInfo?: any;
+  statusInfo?: any;
 }
 
 const defaultProps = {
-  title: '订单详情',
+  orderNoText: '订单号',
+  orderDetailText: '订单信息',
+  orderItemText: '商品信息',
+  orderStatusText: '订单记录',
+  info: {
+    column: 5,
+    layout: 'vertical',
+    colon: false,
+    items: [
+      {
+        key: 'status',
+        label: '订单状态',
+      },
+      {
+        key: 'total_price',
+        label: '实际支付',
+      },
+      {
+        key: 'refund_price',
+        label: '实际退款',
+      },
+      {
+        key: 'pay_type',
+        label: '支付方式',
+      },
+      {
+        key: 'createtime',
+        label: '支付时间',
+      },
+    ],
+  },
+  detailInfo: {
+    descriptions: [
+      {
+        title: '用户信息',
+        column: 2,
+        layout: 'horizontal',
+        colon: true,
+        items: [
+          {
+            key: 'username',
+            label: '用户名',
+          },
+          {
+            key: 'phone',
+            label: '联系电话',
+          },
+        ],
+      },
+      {
+        title: '订单信息',
+        column: 4,
+        layout: 'horizontal',
+        colon: true,
+        items: [
+          {
+            key: 'createtime',
+            label: '创建时间',
+          },
+          {
+            key: 'num',
+            label: '商品总数',
+          },
+          {
+            key: 'total_price',
+            label: '商品总价',
+          },
+          {
+            key: 'pay_price',
+            label: '实际支付',
+          },
+        ],
+      },
+    ],
+    dataSource: [],
+  },
+  itemInfo: {
+    columns: [
+      {
+        title: '商品信息',
+        dataIndex: 'name',
+        key: 'name',
+      },
+      {
+        title: '支付价格',
+        dataIndex: 'age',
+        key: 'age',
+      },
+      {
+        title: '购买数量',
+        dataIndex: 'address',
+        key: 'address',
+      },
+    ],
+    dataSource: [],
+  },
+  statusInfo: {
+    columns: [
+      {
+        title: '订单ID',
+        dataIndex: 'name',
+        key: 'name',
+      },
+      {
+        title: '操作记录',
+        dataIndex: 'age',
+        key: 'age',
+      },
+      {
+        title: '操作时间',
+        dataIndex: 'address',
+        key: 'address',
+      },
+    ],
+    dataSource: [],
+  },
 } as OrderProps;
 
-const LogoSvg = () => (
+const IconSvg = () => (
   <svg
     width="55"
     height="55"
@@ -50,50 +173,74 @@ const LogoSvg = () => (
 );
 
 const Index: React.FC<OrderProps> = (props) => {
-  const { title } = {
+  const {
+    icon,
+    orderNoText,
+    orderDetailText,
+    orderItemText,
+    orderStatusText,
+    orderNo,
+    info,
+    detailInfo,
+    itemInfo,
+    statusInfo,
+  } = {
     ...defaultProps,
     ...props,
   };
 
   const items: TabsProps['items'] = [
     {
-      key: '1',
-      label: '订单信息',
-      children: <Info />,
+      key: 'orderDetail',
+      label: orderDetailText,
+      children: (
+        <Detail
+          descriptions={detailInfo?.descriptions}
+          dataSource={detailInfo?.dataSource}
+        />
+      ),
     },
     {
-      key: '2',
-      label: '商品信息',
-      children: <Goods />,
+      key: 'orderItem',
+      label: orderItemText,
+      children: (
+        <Table columns={itemInfo?.columns} dataSource={itemInfo?.dataSource} />
+      ),
     },
     {
-      key: '3',
-      label: '订单记录',
-      children: <Status />,
+      key: 'orderStatus',
+      label: orderStatusText,
+      children: (
+        <Table
+          columns={statusInfo?.columns}
+          dataSource={statusInfo?.dataSource}
+        />
+      ),
     },
   ];
 
   return (
     <Space direction="vertical" size="large" style={{ display: 'flex' }}>
       <Space size="middle">
-        <LogoSvg />
-        <Descriptions column={2}>
-          <Descriptions.Item label="订单号">
-            401100405624274944
-          </Descriptions.Item>
-          <Descriptions.Item label="订单类型">普通订单</Descriptions.Item>
+        {icon ? <img src="icon" /> : <IconSvg />}
+        <Descriptions column={5}>
+          <Descriptions.Item label={orderNoText}>{orderNo}</Descriptions.Item>
         </Descriptions>
       </Space>
-      <Descriptions layout="vertical" colon={false} column={5}>
-        <Descriptions.Item label="订单状态">已退款</Descriptions.Item>
-        <Descriptions.Item label="实际支付">￥4.25</Descriptions.Item>
-        <Descriptions.Item label="实际退款">￥0.0</Descriptions.Item>
-        <Descriptions.Item label="支付方式">余额</Descriptions.Item>
-        <Descriptions.Item label="支付时间">
-          2025-01-11 19:49:5
-        </Descriptions.Item>
-      </Descriptions>
-      <Tabs defaultActiveKey="1" items={items} />
+      <Descriptions
+        layout={info?.layout}
+        colon={info?.colon}
+        column={info?.column}
+        items={info?.items?.map((item: any) => {
+          return {
+            ...item,
+            children: info?.dataSource?.[item.key]
+              ? info?.dataSource[item.key]
+              : '-',
+          };
+        })}
+      />
+      <Tabs defaultActiveKey="orderInfo" items={items} />
     </Space>
   );
 };
