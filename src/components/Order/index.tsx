@@ -199,7 +199,7 @@ const Index: React.FC<OrderProps> = (props) => {
       label: orderDetailText,
       children: (
         <Detail
-          descriptions={detailInfo?.descriptions}
+          infoItems={detailInfo?.descriptions}
           dataSource={detailInfo?.dataSource}
         />
       ),

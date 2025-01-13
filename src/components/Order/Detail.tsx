@@ -2,12 +2,12 @@ import React from 'react';
 import { Descriptions, Space } from 'antd';
 
 export interface InfoProps {
-  descriptions?: any[];
+  infoItems?: any[];
   dataSource?: any;
 }
 
 const defaultProps = {
-  descriptions: [
+  infoItems: [
     {
       title: '用户信息',
       column: 2,
@@ -52,7 +52,7 @@ const defaultProps = {
 } as InfoProps;
 
 const Info: React.FC<InfoProps> = (props) => {
-  const { descriptions, dataSource } = {
+  const { infoItems, dataSource } = {
     ...defaultProps,
     ...props,
   };
@@ -63,7 +63,7 @@ const Info: React.FC<InfoProps> = (props) => {
       size="large"
       style={{ display: 'flex', marginTop: 5 }}
     >
-      {descriptions?.map((description: any, index) => {
+      {infoItems?.map((infoItem: any, index) => {
         return (
           <Descriptions
             key={index}
@@ -77,13 +77,13 @@ const Info: React.FC<InfoProps> = (props) => {
                   paddingLeft: '10px',
                 }}
               >
-                {description?.title}
+                {infoItem?.title}
               </div>
             }
-            column={description?.column}
-            layout={description?.layout}
-            colon={description?.colon}
-            items={description?.items?.map((item: any) => {
+            column={infoItem?.column}
+            layout={infoItem?.layout}
+            colon={infoItem?.colon}
+            items={infoItem?.items?.map((item: any) => {
               return {
                 ...item,
                 children: dataSource?.[item.key] ? dataSource[item.key] : '-',
