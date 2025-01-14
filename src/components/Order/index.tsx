@@ -1,8 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Descriptions, Space, Tabs, Table } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Descriptions, Space, Tabs, Table, Spin, Image } from 'antd';
 import type { TabsProps } from 'antd';
 import { get } from '@/services/action';
 import tplEngine from '@/utils/template';
+import Render from '@/components/Render';
 
 export interface OrderProps {
   initApi?: string;
@@ -187,14 +188,50 @@ const Index: React.FC<OrderProps> = (props) => {
     ...defaultProps,
     ...props,
   };
+  const [initValues, setInitValues] = useState();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getInitValues();
   }, [initApi, data]);
 
   const getInitValues = async () => {
+    if (!initApi) {
+      return;
+    }
+    setLoading(true);
     let result = await get({
       url: tplEngine(initApi, data),
+    });
+    setInitValues(result.data);
+    setLoading(false);
+  };
+
+  // 渲染column
+  const columnRender = (column: any, row: any, text: any) => {
+    switch (column.valueType) {
+      case 'image':
+        if (typeof text === 'string') {
+          text = <Image src={text} />;
+        }
+        break;
+      case 'text':
+        if (typeof text === 'string' || typeof text === 'number') {
+          text = <Render body={text} data={{ ...row }} />;
+        }
+        break;
+    }
+    return text;
+  };
+
+  // 解析column
+  const parseColumns = (columns: any) => {
+    return columns.map((column: any) => {
+      column = {
+        ...column,
+        render: (text: any, row: any) => columnRender(column, row, text),
+      };
+      return column;
     });
   };
 
@@ -229,10 +266,12 @@ const Index: React.FC<OrderProps> = (props) => {
                 layout={info?.layout}
                 colon={info?.colon}
                 items={info?.items?.map((item: any) => {
+                  const dataSource =
+                    initValues?.[info.dataIndex] || info?.dataSource;
                   return {
                     ...item,
-                    children: info?.dataSource?.[item.key]
-                      ? info?.dataSource[item.key]
+                    children: dataSource?.[item.key]
+                      ? dataSource[item.key]
                       : '-',
                   };
                 })}
@@ -247,8 +286,8 @@ const Index: React.FC<OrderProps> = (props) => {
       label: orderItemText,
       children: (
         <Table<any>
-          columns={itemInfo?.columns}
-          dataSource={itemInfo?.dataSource}
+          columns={itemInfo?.columns && parseColumns(itemInfo?.columns)}
+          dataSource={initValues?.[itemInfo.dataIndex] || itemInfo?.dataSource}
           pagination={false}
         />
       ),
@@ -258,8 +297,10 @@ const Index: React.FC<OrderProps> = (props) => {
       label: orderStatusText,
       children: (
         <Table<any>
-          columns={statusInfo?.columns}
-          dataSource={statusInfo?.dataSource}
+          columns={statusInfo?.columns && parseColumns(statusInfo?.columns)}
+          dataSource={
+            initValues?.[statusInfo.dataIndex] || statusInfo?.dataSource
+          }
           pagination={false}
         />
       ),
@@ -267,30 +308,31 @@ const Index: React.FC<OrderProps> = (props) => {
   ];
 
   return (
-    <Space direction="vertical" size="large" style={{ display: 'flex' }}>
-      <Space size="middle">
-        {icon ? <img src="icon" /> : <IconSvg />}
-        <Descriptions column={5}>
-          <Descriptions.Item label={orderNoText}>
-            {data[orderNoName]}
-          </Descriptions.Item>
-        </Descriptions>
+    <Spin size="small" spinning={loading}>
+      <Space direction="vertical" size="large" style={{ display: 'flex' }}>
+        <Space size="middle">
+          {icon ? <img src="icon" /> : <IconSvg />}
+          <Descriptions column={5}>
+            <Descriptions.Item label={orderNoText}>
+              {data[orderNoName]}
+            </Descriptions.Item>
+          </Descriptions>
+        </Space>
+        <Descriptions
+          layout={info?.layout}
+          colon={info?.colon}
+          column={info?.column}
+          items={info?.items?.map((item: any) => {
+            const dataSource = initValues?.[info.dataIndex] || info?.dataSource;
+            return {
+              ...item,
+              children: dataSource?.[item.key] ? dataSource[item.key] : '-',
+            };
+          })}
+        />
+        <Tabs defaultActiveKey="orderInfo" items={items} />
       </Space>
-      <Descriptions
-        layout={info?.layout}
-        colon={info?.colon}
-        column={info?.column}
-        items={info?.items?.map((item: any) => {
-          return {
-            ...item,
-            children: info?.dataSource?.[item.key]
-              ? info?.dataSource[item.key]
-              : '-',
-          };
-        })}
-      />
-      <Tabs defaultActiveKey="orderInfo" items={items} />
-    </Space>
+    </Spin>
   );
 };
 
