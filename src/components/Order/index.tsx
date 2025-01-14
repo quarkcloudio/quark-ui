@@ -212,7 +212,7 @@ const Index: React.FC<OrderProps> = (props) => {
     switch (column.valueType) {
       case 'image':
         if (typeof text === 'string') {
-          text = <Image src={text} />;
+          text = <Image width={40} height={40} src={text} />;
         }
         break;
       case 'text':
