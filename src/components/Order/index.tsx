@@ -1,17 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Descriptions, Space, Tabs } from 'antd';
+import { Descriptions, Space, Tabs, Table } from 'antd';
 import type { TabsProps } from 'antd';
-import Detail from './Detail';
-import Table from './Table';
+import { get } from '@/services/action';
+import tplEngine from '@/utils/template';
 
 export interface OrderProps {
   initApi?: string;
   icon?: string;
   orderNoText?: string;
+  orderNoName: string;
   orderDetailText?: string;
   orderItemText?: string;
   orderStatusText?: string;
-  orderNo?: string;
   info?: any;
   detailInfo?: any;
   itemInfo?: any;
@@ -21,6 +21,7 @@ export interface OrderProps {
 
 const defaultProps = {
   orderNoText: '订单号',
+  orderNoName: 'order_no',
   orderDetailText: '订单信息',
   orderItemText: '商品信息',
   orderStatusText: '订单记录',
@@ -34,7 +35,7 @@ const defaultProps = {
         label: '订单状态',
       },
       {
-        key: 'total_price',
+        key: 'pay_price',
         label: '实际支付',
       },
       {
@@ -46,72 +47,69 @@ const defaultProps = {
         label: '支付方式',
       },
       {
-        key: 'createtime',
+        key: 'created_at',
         label: '支付时间',
       },
     ],
+    dataSource: {},
   },
-  detailInfo: {
-    descriptions: [
-      {
-        title: '用户信息',
-        column: 2,
-        layout: 'horizontal',
-        colon: true,
-        items: [
-          {
-            key: 'username',
-            label: '用户名',
-          },
-          {
-            key: 'phone',
-            label: '联系电话',
-          },
-        ],
-      },
-      {
-        title: '订单信息',
-        column: 4,
-        layout: 'horizontal',
-        colon: true,
-        items: [
-          {
-            key: 'createtime',
-            label: '创建时间',
-          },
-          {
-            key: 'num',
-            label: '商品总数',
-          },
-          {
-            key: 'total_price',
-            label: '商品总价',
-          },
-          {
-            key: 'pay_price',
-            label: '实际支付',
-          },
-        ],
-      },
-    ],
-    dataSource: [],
-  },
+  detailInfo: [
+    {
+      title: '用户信息',
+      column: 2,
+      layout: 'horizontal',
+      colon: true,
+      items: [
+        {
+          key: 'username',
+          label: '用户名',
+        },
+        {
+          key: 'phone',
+          label: '联系电话',
+        },
+      ],
+      dataSource: {},
+    },
+    {
+      title: '订单信息',
+      column: 4,
+      layout: 'horizontal',
+      colon: true,
+      items: [
+        {
+          key: 'created_at',
+          label: '创建时间',
+        },
+        {
+          key: 'pay_num',
+          label: '商品总数',
+        },
+        {
+          key: 'total_price',
+          label: '商品总价',
+        },
+        {
+          key: 'pay_price',
+          label: '实际支付',
+        },
+      ],
+      dataSource: {},
+    },
+  ],
   itemInfo: {
     columns: [
       {
         title: '商品信息',
         dataIndex: 'name',
-        key: 'name',
       },
       {
         title: '支付价格',
-        dataIndex: 'age',
-        key: 'age',
+        dataIndex: 'pay_price',
       },
       {
         title: '购买数量',
-        dataIndex: 'address',
-        key: 'address',
+        dataIndex: 'pay_num',
       },
     ],
     dataSource: [],
@@ -120,18 +118,15 @@ const defaultProps = {
     columns: [
       {
         title: '订单ID',
-        dataIndex: 'name',
-        key: 'name',
+        dataIndex: 'id',
       },
       {
         title: '操作记录',
-        dataIndex: 'age',
-        key: 'age',
+        dataIndex: 'change_message',
       },
       {
         title: '操作时间',
-        dataIndex: 'address',
-        key: 'address',
+        dataIndex: 'created_at',
       },
     ],
     dataSource: [],
@@ -179,10 +174,10 @@ const Index: React.FC<OrderProps> = (props) => {
     initApi,
     icon,
     orderNoText,
+    orderNoName,
     orderDetailText,
     orderItemText,
     orderStatusText,
-    orderNo,
     info,
     detailInfo,
     itemInfo,
@@ -193,31 +188,79 @@ const Index: React.FC<OrderProps> = (props) => {
     ...props,
   };
 
+  useEffect(() => {
+    getInitValues();
+  }, [initApi, data]);
+
+  const getInitValues = async () => {
+    let result = await get({
+      url: tplEngine(initApi, data),
+    });
+  };
+
   const items: TabsProps['items'] = [
     {
       key: 'orderDetail',
       label: orderDetailText,
       children: (
-        <Detail
-          infoItems={detailInfo?.descriptions}
-          dataSource={detailInfo?.dataSource}
-        />
+        <Space
+          direction="vertical"
+          size="large"
+          style={{ display: 'flex', marginTop: 5 }}
+        >
+          {detailInfo?.map((info: any, index: any) => {
+            return (
+              <Descriptions
+                key={index}
+                title={
+                  <div
+                    style={{
+                      lineHeight: '16px',
+                      borderLeftColor: 'rgb(22, 119, 255)',
+                      borderLeftStyle: 'solid',
+                      borderLeftWidth: '2.4px',
+                      paddingLeft: '10px',
+                    }}
+                  >
+                    {info?.title}
+                  </div>
+                }
+                column={info?.column}
+                layout={info?.layout}
+                colon={info?.colon}
+                items={info?.items?.map((item: any) => {
+                  return {
+                    ...item,
+                    children: info?.dataSource?.[item.key]
+                      ? info?.dataSource[item.key]
+                      : '-',
+                  };
+                })}
+              />
+            );
+          })}
+        </Space>
       ),
     },
     {
       key: 'orderItem',
       label: orderItemText,
       children: (
-        <Table columns={itemInfo?.columns} dataSource={itemInfo?.dataSource} />
+        <Table<any>
+          columns={itemInfo?.columns}
+          dataSource={itemInfo?.dataSource}
+          pagination={false}
+        />
       ),
     },
     {
       key: 'orderStatus',
       label: orderStatusText,
       children: (
-        <Table
+        <Table<any>
           columns={statusInfo?.columns}
           dataSource={statusInfo?.dataSource}
+          pagination={false}
         />
       ),
     },
@@ -228,7 +271,9 @@ const Index: React.FC<OrderProps> = (props) => {
       <Space size="middle">
         {icon ? <img src="icon" /> : <IconSvg />}
         <Descriptions column={5}>
-          <Descriptions.Item label={orderNoText}>{orderNo}</Descriptions.Item>
+          <Descriptions.Item label={orderNoText}>
+            {data[orderNoName]}
+          </Descriptions.Item>
         </Descriptions>
       </Space>
       <Descriptions
