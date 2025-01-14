@@ -22,7 +22,7 @@ export interface DescriptionsProps {
 }
 
 const defaultProps = {
-  column: 3,
+  column: 2,
   layout: 'horizontal',
   colon: true,
 } as DescriptionsProps;
@@ -76,7 +76,27 @@ const Descriptions: React.FC<DescriptionsProps> = (props) => {
         colon={colon}
         columns={columns && parseColumns(columns)}
         dataSource={dataSource}
-      />
+      >
+        {items?.map((item: any, index: number) => {
+          return (
+            <ProDescriptions.Item
+              key={index}
+              label={item.label}
+              tooltip={item.tooltip}
+              span={item.span}
+              valueType={item.valueType}
+              valueEnum={item.valueEnum}
+              dataIndex={item.dataIndex}
+              style={item.style}
+            >
+              <Render
+                body={{ component: item.component, body: item.value }}
+                data={props.data}
+              />
+            </ProDescriptions.Item>
+          );
+        })}
+      </ProDescriptions>
       {actions?.length > 0 && (
         <>
           <Divider style={{ marginTop: 0 }} />
