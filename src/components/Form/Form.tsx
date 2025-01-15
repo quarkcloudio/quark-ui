@@ -34,14 +34,6 @@ const defaultProps = {
 } as FormExtendProps;
 
 const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
-  const formRef = useRef<ProFormInstance<any>>();
-  const [spinning, setLoading] = useState(false);
-  const [submitResult, setSubmitResult] = useState(null);
-  const { buttonLoadings, setButtonLoadings } = useModel('buttonLoading');
-  const { object, setObject } = useModel('object'); // 全局对象
-  const { fields, setFields } = useModel('formFields'); // 全局表单字段
-  const { submit, setSubmit } = useModel('submit'); // 全局表单提交方法
-  const [random, setRandom] = useState(0); // hack
   const {
     componentkey,
     title,
@@ -72,6 +64,16 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
     buttonWrapperCol,
     callback,
   } = { ...defaultProps, ...props };
+
+  const formRef = useRef<ProFormInstance<any>>();
+  const [spinning, setLoading] = useState(false);
+  const [submitResult, setSubmitResult] = useState(null);
+  const { buttonLoadings, setButtonLoadings } = useModel('buttonLoading');
+  const { object, setObject } = useModel('object'); // 全局对象
+  const { fields, setFields } = useModel('formFields'); // 全局表单字段
+  const { submit, setSubmit } = useModel('submit'); // 全局表单提交方法
+  const [random, setRandom] = useState(0); // hack
+  const [initialData, setInitialData] = useState({}); // 初始化表单数据
 
   const formKey = componentkey ? componentkey : 'form';
   object[formKey] = formRef;
@@ -110,6 +112,7 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
         url: tplEngine(initApi, data),
       });
       object[formKey]?.current?.setFieldsValue(result.data);
+      setInitialData(result.data);
     }
     // 更新组件状态
     setRandom(Math.random);
@@ -278,7 +281,12 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
       >
         <Render
           body={fields[formKey]}
-          data={{ ...data, componentkey: formKey }}
+          data={{
+            ...object[formKey]?.current?.getFieldsValue(),
+            ...data,
+            ...initialData,
+            componentkey: formKey,
+          }}
           callback={callback}
         />
         {submitResult && (

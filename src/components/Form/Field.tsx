@@ -94,6 +94,7 @@ const Field: React.FC<any> = (props: any) => {
       label: props.label,
       tooltip: props.tooltip,
       rules: rules,
+      colon: props.colon,
       extra: props.extra,
       required: props.required,
       help: props.help && props.help,
@@ -540,9 +541,9 @@ const Field: React.FC<any> = (props: any) => {
         break;
       case 'displayField':
         component = (
-          <ProFormItem label={currentProps.label}>
+          <ProFormItem {...baseProps(currentProps)}>
             <span style={currentProps.style ? currentProps.style : []}>
-              {currentProps.value}
+              {tplEngine(currentProps.value, props.data)}
             </span>
           </ProFormItem>
         );

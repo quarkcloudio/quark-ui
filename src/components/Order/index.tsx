@@ -9,7 +9,7 @@ export interface OrderProps {
   initApi?: string;
   icon?: string;
   orderNoText?: string;
-  orderNoName: string;
+  orderNoName?: string;
   orderDetailText?: string;
   orderItemText?: string;
   orderStatusText?: string;
@@ -314,7 +314,7 @@ const Index: React.FC<OrderProps> = (props) => {
           {icon ? <img src="icon" /> : <IconSvg />}
           <Descriptions column={5}>
             <Descriptions.Item label={orderNoText}>
-              {data[orderNoName]}
+              {orderNoName && data[orderNoName]}
             </Descriptions.Item>
           </Descriptions>
         </Space>
