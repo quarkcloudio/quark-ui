@@ -49,6 +49,12 @@ const Dropdown: React.FC<any> = (props: any) => {
       );
     }
     if (item.component === 'menuItem' || item.component === 'action') {
+      if (
+        !tplEngine(item.label, props.data) ||
+        tplEngine(item.label, props.data) === 'false'
+      ) {
+        return;
+      }
       const action = (
         <ConfigProvider
           theme={{
@@ -85,11 +91,9 @@ const Dropdown: React.FC<any> = (props: any) => {
 
   // 渲染组件
   const componentRender = (items: any) => {
-    let component = items.map((item: any, index: number) => {
+    return items.map((item: any, index: number) => {
       return menuItemRender(item, index);
     });
-
-    return component;
   };
 
   return (

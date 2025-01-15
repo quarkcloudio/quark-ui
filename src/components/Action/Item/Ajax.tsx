@@ -98,6 +98,11 @@ const Ajax: React.FC<any> = (props) => {
     setSubmitResult(result);
   };
 
+  const label = tplEngine(props.label, props.data);
+  if (!label || label === 'false') {
+    return;
+  }
+
   let component = (
     <Button
       loading={props.withLoading && buttonLoadings[props.componentkey]}
@@ -114,7 +119,7 @@ const Ajax: React.FC<any> = (props) => {
         void (props.confirmTitle ? showConfirm(props.api) : handle(props.api));
       }}
     >
-      {tplEngine(props.label, props.data)}
+      {label}
     </Button>
   );
 
@@ -139,7 +144,7 @@ const Ajax: React.FC<any> = (props) => {
           type={props.type}
           icon={props.icon && <IconFont type={props.icon} />}
         >
-          {tplEngine(props.label, props.data)}
+          {label}
         </Button>
       </Popconfirm>
     );

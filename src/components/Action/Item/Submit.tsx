@@ -60,6 +60,11 @@ const Action: React.FC<any> = (props) => {
       });
   };
 
+  const label = tplEngine(props.label, props.data);
+  if (!label || label === 'false') {
+    return;
+  }
+
   let component = (
     <Button
       loading={buttonLoadings[formKey]}
@@ -80,7 +85,7 @@ const Action: React.FC<any> = (props) => {
         }
       }}
     >
-      {tplEngine(props.label, props.data)}
+      {label}
     </Button>
   );
 
@@ -105,7 +110,7 @@ const Action: React.FC<any> = (props) => {
           type={props.type}
           icon={props.icon && <IconFont type={props.icon} />}
         >
-          {tplEngine(props.label, props.data)}
+          {label}
         </Button>
       </Popconfirm>
     );

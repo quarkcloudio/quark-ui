@@ -4,11 +4,21 @@ import { createFromIconfontCN } from '@ant-design/icons';
 import tplEngine from '@/utils/template';
 
 const Link: React.FC<any> = (props) => {
-  const IconFont = createFromIconfontCN({ scriptUrl:'//at.alicdn.com/t/font_1615691_3pgkh5uyob.js' })
+  const IconFont = createFromIconfontCN({
+    scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js',
+  });
+  const label = tplEngine(props.label, props.data);
+  if (!label || label === 'false') {
+    return;
+  }
 
   return (
     <Button
-      style={props.type == "link" ? {color: "#1890ff",...props.style} : props.style }
+      style={
+        props.type === 'link'
+          ? { color: '#1890ff', ...props.style }
+          : props.style
+      }
       block={props.block}
       danger={props.danger}
       disabled={props.disabled}
@@ -18,11 +28,11 @@ const Link: React.FC<any> = (props) => {
       href={tplEngine(props.href, props.data)}
       target={props.target}
       type={props.type}
-      icon={props.icon ? <IconFont type={props.icon} /> : false}
+      icon={props.icon && <IconFont type={props.icon} />}
     >
-      {tplEngine(props.label, props.data)}
+      {label}
     </Button>
-  )
+  );
 };
 
 export default Link;
