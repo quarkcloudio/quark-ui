@@ -126,7 +126,6 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
     // 遍历每个字段项
     for (const item of fieldsCopy) {
       const value = object[formKey]?.current?.getFieldValue(item.name);
-
       if (value && item.load) {
         // 当存在需要加载的字段时，再次遍历 body
         for (const [key, subItem] of fieldsCopy.entries()) {

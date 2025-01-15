@@ -542,9 +542,12 @@ const Field: React.FC<any> = (props: any) => {
       case 'displayField':
         component = (
           <ProFormItem {...baseProps(currentProps)}>
-            <span style={currentProps.style ? currentProps.style : []}>
-              {tplEngine(currentProps.value, props.data)}
-            </span>
+            <span
+              style={currentProps.style && currentProps.style}
+              dangerouslySetInnerHTML={{
+                __html: tplEngine(currentProps.value, props.data),
+              }}
+            />
           </ProFormItem>
         );
         break;
