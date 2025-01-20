@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { ProTable, ProTableProps } from '@ant-design/pro-components';
-import { useModel, useLocation } from '@umijs/max';
+import { useModel, useLocation, history } from '@umijs/max';
 import { Button, Space, Card, message, Splitter, Input, Tree } from 'antd';
 import type { TreeDataNode, TreeProps } from 'antd';
 import qs from 'query-string';
@@ -248,11 +248,11 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
 
     if (apiType === 'GET') {
       data = {
+        ...query,
         search: JSON.stringify(params),
         sorter: JSON.stringify(sorter),
         filter: JSON.stringify(filter),
         activeKey: activeKey,
-        ...query,
       };
 
       if (treeBarSelectedKeys) {
@@ -266,11 +266,11 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
     }
     if (apiType === 'POST') {
       data = {
+        ...query,
         search: params,
         sorter: sorter,
         filter: filter,
         activeKey,
-        ...query,
       };
 
       if (treeBarSelectedKeys) {
@@ -338,6 +338,11 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
         ],
       }}
       onReset={() => {
+        const getApi = api ? api : query.api;
+        history.push({
+          pathname: location.pathname,
+          search: 'api=' + getApi,
+        });
         actionRef.current?.reload();
       }}
       components={{
