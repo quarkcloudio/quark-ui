@@ -245,7 +245,6 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
       table = null,
       data: any;
     const getApi = api ? api : query.api;
-
     if (apiType === 'GET') {
       data = {
         ...query,
@@ -254,11 +253,9 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
         filter: JSON.stringify(filter),
         activeKey: activeKey,
       };
-
       if (treeBarSelectedKeys) {
         data[treeBar.name] = JSON.stringify(treeBarSelectedKeys);
       }
-
       result = await get({
         url: getApi,
         data: data,
@@ -272,11 +269,9 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
         filter: filter,
         activeKey,
       };
-
       if (treeBarSelectedKeys) {
         data[treeBar.name] = treeBarSelectedKeys;
       }
-
       result = await post({
         url: getApi,
         data: data,
@@ -328,7 +323,6 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
                   formRef.current?.getFieldsFormatValue?.(),
                 );
                 getQuery['token'] = localStorage.getItem('token');
-
                 window.open(`${url}?${qs.stringify(getQuery)}`);
               }}
             >
@@ -338,11 +332,13 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
         ],
       }}
       onReset={() => {
-        const getApi = api ? api : query.api;
-        history.push({
-          pathname: location.pathname,
-          search: 'api=' + getApi,
-        });
+        if (!query?.resetQueryDisabled) {
+          const getApi = api ? api : query.api;
+          history.push({
+            pathname: location.pathname,
+            search: 'api=' + getApi,
+          });
+        }
         actionRef.current?.reload();
       }}
       components={{
