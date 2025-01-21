@@ -174,7 +174,6 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
         ...column,
         render: (text: any, row: any) => columnRender(column, row, text),
       };
-
       // 渲染可编辑
       if (column.editable) {
         column = {
@@ -188,7 +187,6 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
           }),
         };
       }
-
       return column;
     });
 
@@ -207,11 +205,9 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
             if (type === 'form') {
               return null;
             }
-
             // 将form对象注册到全局
             object[search.componentkey] = form;
             setObject(object);
-
             return (
               <SearchField
                 {...searchItem}
@@ -282,7 +278,6 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
     } else {
       table = getComponent(result, key);
     }
-
     return table;
   };
 
@@ -380,10 +375,8 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
           sorter,
           filter,
         );
-
         // 更新表头
         setColumns(table.columns);
-
         // 更新toolbar
         if (table.toolBar && table.toolBar.menu) {
           table.toolBar.menu.onChange = (key: any) => {
@@ -391,10 +384,8 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
           };
         }
         setToolBar(table.toolBar);
-
         // 更新树形
         setTreeBar(table.treeBar);
-
         // 返回数据
         return Promise.resolve({
           data: table.datasource,
