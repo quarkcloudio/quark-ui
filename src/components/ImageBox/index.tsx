@@ -101,7 +101,7 @@ const ImageBox: React.FC<ImageBoxProps> = (props) => {
   const [cropImageSrc, setCropImageSrc] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const [dataSource, setDataSource] = useState({
-    lists: [],
+    list: [],
     categorys: [],
     pagination: {
       defaultCurrent: 1,
@@ -144,11 +144,11 @@ const ImageBox: React.FC<ImageBoxProps> = (props) => {
 
   const onSelectAll = () => {
     let data: any = [];
-    dataSource.lists.forEach(function (item: any) {
+    dataSource.list.forEach(function (item: any) {
       data.push(item.id);
     });
     let checkedItems = checkedForm.getFieldValue('checkedItems');
-    if (checkedItems && checkedItems.length === dataSource.lists.length) {
+    if (checkedItems && checkedItems.length === dataSource.list.length) {
       checkedForm.resetFields();
       return;
     }
@@ -244,7 +244,7 @@ const ImageBox: React.FC<ImageBoxProps> = (props) => {
           const checkedItems = checkedForm.getFieldValue('checkedItems');
           if (checkedItems) {
             checkedItems.forEach((item: any) => {
-              dataSource.lists.forEach((dataItem: any) => {
+              dataSource.list.forEach((dataItem: any) => {
                 if (dataItem.id === item) {
                   delete dataItem.type;
                   items.push(dataItem);
@@ -332,7 +332,7 @@ const ImageBox: React.FC<ImageBoxProps> = (props) => {
               <Form.Item name="checkedItems" style={{ width: '100%' }}>
                 <Checkbox.Group style={{ width: '100%', display: 'block' }}>
                   <Row gutter={[16, 16]}>
-                    {dataSource?.lists?.map((item: any, index: number) => {
+                    {dataSource?.list?.map((item: any, index: number) => {
                       return (
                         <Col key={index} span={6}>
                           <Card
