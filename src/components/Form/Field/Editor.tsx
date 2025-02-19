@@ -177,7 +177,8 @@ const EditorPage: React.FC<EditorPageProps> = (props) => {
                 xhr.open('POST', upurl);
                 xhr.setRequestHeader(
                   'authorization',
-                  'Bearer ' + localStorage['token'],
+                  'Bearer ' +
+                    localStorage[process.env.UMI_APP_TOKEN ?? 'token'],
                 );
                 xhr.onload = function () {
                   if (xhr.status !== 200) {

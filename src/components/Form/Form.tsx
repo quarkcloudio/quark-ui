@@ -155,7 +155,9 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
       // 新页面打开
       if (targetBlank) {
         let url = tplEngine(api, data);
-        values['token'] = localStorage.getItem('token');
+        values['token'] = localStorage.getItem(
+          process.env.UMI_APP_TOKEN ?? 'token',
+        );
         if (api?.indexOf('http') === -1) {
           url = `${url}`;
         }
@@ -206,7 +208,9 @@ const Form: React.FC<ProFormProps & FormExtendProps> = (props) => {
           return;
         }
         if (returnUrl?.indexOf('http') !== -1) {
-          values['token'] = localStorage.getItem('token');
+          values['token'] = localStorage.getItem(
+            process.env.UMI_APP_TOKEN ?? 'token',
+          );
           window.open(`${returnUrl}?${qs.stringify(values)}`);
         } else {
           history.push(result.url);

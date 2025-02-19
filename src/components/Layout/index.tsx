@@ -127,7 +127,7 @@ const Layout: React.FC<ProLayoutProps & LayoutProps> = (props) => {
       url: '/api/admin/logout/index/handle',
     });
     if (result['status'] === 'success') {
-      localStorage.removeItem('token');
+      localStorage.removeItem(process.env.UMI_APP_TOKEN ?? 'token');
     }
     history.push('/');
   };

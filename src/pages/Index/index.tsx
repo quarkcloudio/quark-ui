@@ -14,8 +14,7 @@ const Index: React.FC = () => {
   const [api, setApi] = useState(String);
   dayjs.locale('zh-cn');
   const getApi = async () => {
-    const config = await request('./config.json');
-    let api = config.api.default;
+    let api: any = process.env.UMI_APP_DEFAULT_URL;
     if (query?.api) {
       api = query.api;
     }

@@ -317,7 +317,9 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
                 getQuery['search'] = JSON.stringify(
                   formRef.current?.getFieldsFormatValue?.(),
                 );
-                getQuery['token'] = localStorage.getItem('token');
+                getQuery['token'] = localStorage.getItem(
+                  process.env.UMI_APP_TOKEN ?? 'token',
+                );
                 window.open(`${url}?${qs.stringify(getQuery)}`);
               }}
             >

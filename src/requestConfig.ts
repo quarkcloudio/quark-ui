@@ -97,7 +97,9 @@ export const requestConfig: RequestConfig = {
     (config: RequestOptions) => {
       config.headers = {
         Accept: 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token') ?? ''}`,
+        Authorization: `Bearer ${
+          localStorage.getItem(process.env.UMI_APP_TOKEN ?? 'token') ?? ''
+        }`,
       };
       const url = config?.url;
       return { ...config, url };

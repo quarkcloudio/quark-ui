@@ -314,7 +314,9 @@ const ImageBox: React.FC<ImageBoxProps> = (props) => {
                     multiple={true}
                     action={uploadAction}
                     headers={{
-                      authorization: 'Bearer ' + localStorage['token'],
+                      authorization:
+                        'Bearer ' +
+                        localStorage[process.env.UMI_APP_TOKEN ?? 'token'],
                     }}
                     onChange={(info: any) => {
                       getList();

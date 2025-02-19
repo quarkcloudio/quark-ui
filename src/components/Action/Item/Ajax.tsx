@@ -66,7 +66,9 @@ const Ajax: React.FC<any> = (props) => {
           return;
         }
         if (returnUrl?.indexOf('http') !== -1) {
-          const values: any['token'] = localStorage.getItem('token');
+          const values: any['token'] = localStorage.getItem(
+            process.env.UMI_APP_TOKEN ?? 'token',
+          );
           window.open(`${returnUrl}?${qs.stringify(values)}`);
         } else {
           history.push(result.url);
@@ -79,7 +81,9 @@ const Ajax: React.FC<any> = (props) => {
           return;
         }
         if (redirectUrl?.indexOf('http') !== -1) {
-          const values: any['token'] = localStorage.getItem('token');
+          const values: any['token'] = localStorage.getItem(
+            process.env.UMI_APP_TOKEN ?? 'token',
+          );
           window.open(`${redirectUrl}?${qs.stringify(values)}`);
         } else {
           history.push(redirectUrl);

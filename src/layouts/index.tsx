@@ -41,9 +41,7 @@ const Layout: React.FC<any> = (props) => {
   const [layoutMenu, setLayoutMenu] = useState<any[]>([]);
   dayjs.locale('zh-cn');
   const getLayout = async () => {
-    const config = await request('./config.json');
-    let layoutApi = config.api.layout;
-
+    let layoutApi = process.env.UMI_APP_LAYOUT_URL;
     if (!layoutApi) {
       setComponent('The layout API cannot be null!');
       return;

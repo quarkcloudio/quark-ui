@@ -163,7 +163,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
           action={action}
           disabled={disabled}
           headers={{
-            authorization: 'Bearer ' + localStorage['token'],
+            authorization:
+              'Bearer ' + localStorage[process.env.UMI_APP_TOKEN ?? 'token'],
           }}
           beforeUpload={(file: any) => {
             return checkUpload(file);
@@ -197,7 +198,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
           action={action}
           disabled={disabled}
           headers={{
-            authorization: 'Bearer ' + localStorage['token'],
+            authorization:
+              'Bearer ' + localStorage[process.env.UMI_APP_TOKEN ?? 'token'],
           }}
           beforeUpload={(file: any) => {
             return checkUpload(file);
