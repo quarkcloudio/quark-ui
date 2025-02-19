@@ -155,7 +155,7 @@ const Layout: React.FC<ProLayoutProps & LayoutProps> = (props) => {
         <ProLayout
           {...props}
           loading={pageLoading}
-          logo={logo ? logo : defaultLogo}
+          logo={logo ?? defaultLogo}
           iconfontUrl={iconfontUrl}
           openKeys={menuOpenKeys}
           selectedKeys={menuSelectedKeys}
