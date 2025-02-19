@@ -57,7 +57,7 @@ const Layout: React.FC<ProLayoutProps & LayoutProps> = (props) => {
   const accountInfo = initialState?.accountInfo;
   const location = useLocation();
   const query = qs.parse(location.search);
-  const [innerTitle, setInnerTitle] = useState<string>(title ? title : '');
+  const [innerTitle, setInnerTitle] = useState<string>(title ?? '');
   const [menuOpenKeys, setMenuOpenKeys] = useState<any>([]);
   const [menuSelectedKeys, setMenuSelectedKeys] = useState(['']);
   const [collapsed, setCollapsed] = useState<boolean>(false);
