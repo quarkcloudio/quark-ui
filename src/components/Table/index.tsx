@@ -133,7 +133,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
         text = (
           <Render
             body={column.actions}
-            data={{ ...query, ...row }}
+            data={{ activeKey: activeKey, ...query, ...row }}
             callback={callback}
           />
         );
