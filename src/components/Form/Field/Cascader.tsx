@@ -29,7 +29,7 @@ const Cascader: React.FC<Search> = ({
 
   useEffect(() => {
     initOptions();
-  }, []);
+  }, [value]);
 
   const initOptions = async () => {
     if (api) {
@@ -49,11 +49,11 @@ const Cascader: React.FC<Search> = ({
     });
 
     let data = result.data;
-    if(!value) {
-      return data
+    if (!value) {
+      return data;
     }
     if (level >= value.length) {
-      return []
+      return [];
     }
 
     await Promise.all(
@@ -67,7 +67,7 @@ const Cascader: React.FC<Search> = ({
       }),
     );
 
-    return data
+    return data;
   };
 
   const triggerChange = (changedValue: any) => {
@@ -91,7 +91,7 @@ const Cascader: React.FC<Search> = ({
         data: {
           search: targetOption.value,
           level: selectedOptions.length,
-        }
+        },
       });
 
       targetOption.children = result.data;
@@ -104,7 +104,11 @@ const Cascader: React.FC<Search> = ({
 
   if (api) {
     return (
-      <Spin style={{background: "rgba(255,255,255,0.8)", ...style}} spinning={spinning} size="small">
+      <Spin
+        style={{ background: 'rgba(255,255,255,0.8)', ...style }}
+        spinning={spinning}
+        size="small"
+      >
         <AntCascader
           size={size}
           loadData={loadData}
