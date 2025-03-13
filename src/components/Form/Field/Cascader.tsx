@@ -32,7 +32,7 @@ const Cascader: React.FC<Search> = ({
   }, [value]);
 
   const initOptions = async () => {
-    if (api) {
+    if (api && selectOptions.length === 0) {
       const getOptions = await loadOptions();
       setSelectOptions(getOptions);
       setSpinning(false);
