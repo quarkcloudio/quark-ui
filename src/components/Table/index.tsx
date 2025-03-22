@@ -46,6 +46,9 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
   const [columns, setColumns] = useState(props.columns);
   const [toolBar, setToolBar] = useState(props.toolBar);
   const [treeBar, setTreeBar] = useState(props.treeBar);
+  const [tableExtraRender, setTableExtraRender] = useState(
+    props.tableExtraRender,
+  );
   const [activeKey, setActiveKey] = useState<any>(undefined);
   const [treeBarSelectedKeys, setTreeBarSelectedKeys] =
     useState<any>(undefined);
@@ -70,7 +73,6 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
     pagination,
     scroll,
     polling,
-    tableExtraRender,
     expandable,
   } = { ...defaultProps, ...props };
 
@@ -388,6 +390,8 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
         setToolBar(table.toolBar);
         // 更新树形
         setTreeBar(table.treeBar);
+        // 更新扩展数据
+        setTableExtraRender(table.tableExtraRender);
         // 返回数据
         return Promise.resolve({
           data: table.datasource,
