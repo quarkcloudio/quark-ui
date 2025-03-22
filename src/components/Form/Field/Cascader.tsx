@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Cascader as AntCascader, Spin } from 'antd';
 import { get } from '@/services/action';
 
-export interface Search {
+export interface CascaderProps {
   api?: any;
   size?: any;
   value?: any;
@@ -13,7 +13,7 @@ export interface Search {
   onChange?: (value: any) => void;
 }
 
-const Cascader: React.FC<Search> = ({
+const Cascader: React.FC<CascaderProps> = ({
   api = null,
   size = undefined,
   value = null,
@@ -24,19 +24,34 @@ const Cascader: React.FC<Search> = ({
   onChange,
 }) => {
   const [selectOptions, setSelectOptions] = useState(options);
+  const [level, setLevel] = useState(0);
   const [spinning, setSpinning] = useState(true);
   const [random, setRandom] = useState(0);
 
   useEffect(() => {
     initOptions();
+  }, []);
+
+  useEffect(() => {
+    initValueOptions();
   }, [value]);
 
   const initOptions = async () => {
-    if (api && selectOptions.length === 0) {
+    setSpinning(true);
+    if (api) {
       const getOptions = await loadOptions();
       setSelectOptions(getOptions);
-      setSpinning(false);
     }
+    setSpinning(false);
+  };
+
+  const initValueOptions = async () => {
+    setSpinning(true);
+    if (api && value && level < value.length - 1) {
+      const getOptions = await loadOptions();
+      setSelectOptions(getOptions);
+    }
+    setSpinning(false);
   };
 
   const loadOptions = async (level: any = 0) => {
@@ -49,6 +64,7 @@ const Cascader: React.FC<Search> = ({
     });
 
     let data = result.data;
+    setLevel(level);
     if (!value) {
       return data;
     }
