@@ -1,8 +1,10 @@
-import React from 'react';
-import { Space, Divider } from 'antd';
+import React, { useEffect, useState, useRef } from 'react';
+import { Space, Divider, Spin } from 'antd';
 import { ProDescriptions } from '@ant-design/pro-components';
-import Render from '@/components/Render';
+import { get } from '@/services/action';
 import Action from '@/components/Action';
+import Render from '@/components/Render';
+import tplEngine from '@/utils/template';
 
 export interface DescriptionsProps {
   title?: any;
@@ -14,6 +16,7 @@ export interface DescriptionsProps {
   layout?: 'horizontal' | 'vertical';
   colon?: boolean;
   columns?: any;
+  initApi?: any;
   items?: any;
   actions?: any;
   dataSource?: any;
@@ -40,13 +43,20 @@ const Descriptions: React.FC<DescriptionsProps> = (props) => {
     columns,
     items,
     actions,
-    dataSource,
+    initApi,
     data,
     callback,
   } = {
     ...defaultProps,
     ...props,
   };
+  const [spinning, setLoading] = useState(false);
+  const [random, setRandom] = useState(0); // hack
+  const [dataSource, setDataSource] = useState(props.dataSource); // 初始化表单数据
+
+  useEffect(() => {
+    setInitialValues();
+  }, [columns, initApi, items]);
 
   const parseColumns = (columns: any) => {
     columns.forEach((item: any, key: any) => {
@@ -63,8 +73,22 @@ const Descriptions: React.FC<DescriptionsProps> = (props) => {
     return columns;
   };
 
+  const setInitialValues = async () => {
+    setLoading(true);
+    // 从接口获取初始值
+    if (initApi) {
+      let result = await get({
+        url: tplEngine(initApi, data),
+      });
+      setDataSource(result.data);
+    }
+    // 更新组件状态
+    setRandom(Math.random);
+    setLoading(false);
+  };
+
   return (
-    <>
+    <Spin spinning={spinning}>
       <ProDescriptions
         title={title}
         tooltip={tooltip}
@@ -75,7 +99,7 @@ const Descriptions: React.FC<DescriptionsProps> = (props) => {
         layout={layout}
         colon={colon}
         columns={columns && parseColumns(columns)}
-        dataSource={dataSource}
+        dataSource={{ ...data, ...dataSource }}
       >
         {items?.map((item: any, index: number) => {
           return (
@@ -91,7 +115,7 @@ const Descriptions: React.FC<DescriptionsProps> = (props) => {
             >
               <Render
                 body={{ component: item.component, body: item.value }}
-                data={props.data}
+                data={{ ...data, ...dataSource }}
               />
             </ProDescriptions.Item>
           );
@@ -116,7 +140,7 @@ const Descriptions: React.FC<DescriptionsProps> = (props) => {
           </div>
         </>
       )}
-    </>
+    </Spin>
   );
 };
 
