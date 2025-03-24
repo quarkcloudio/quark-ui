@@ -12,12 +12,17 @@ import Link from '@/components/Action/Item/Link';
 import Reset from '@/components/Action/Item/Reset';
 import Submit from '@/components/Action/Item/Submit';
 import Step from '@/components/Action/Item/Step';
+import Switch from '@/components/Action/Item/Switch';
 
 const Action: React.FC<any> = (props) => {
   const IconFont = createFromIconfontCN({
     scriptUrl: '//at.alicdn.com/t/font_1615691_3pgkh5uyob.js',
   });
   let component;
+
+  if (props.actionType==='switch') {
+    return <Switch {...props} data={props.data} callback={props.callback} />;
+  }
 
   // 如果label为空，直接返回
   if (
