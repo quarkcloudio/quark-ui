@@ -68,6 +68,11 @@ const Descriptions: React.FC<DescriptionsProps> = (props) => {
           return text;
         };
       }
+      if (item.valueType === 'action') {
+        item.render = (text: any, row: any) => {
+          return <Render body={text} data={row} callback={callback} />;
+        };
+      }
       columns[key] = item;
     });
     return columns;
