@@ -131,15 +131,6 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
   // 渲染column
   const columnRender = (column: any, row: any, text: any) => {
     switch (column.valueType) {
-      case 'option':
-        text = (
-          <Render
-            body={column.actions}
-            data={{ activeKey: activeKey, ...query, ...row }}
-            callback={callback}
-          />
-        );
-        break;
       case 'text':
         if (typeof text === 'string' || typeof text === 'number') {
           text = (
@@ -150,6 +141,24 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
             />
           );
         }
+        break;
+      case 'option':
+        text = (
+          <Render
+            body={column.actions}
+            data={{ activeKey: activeKey, ...query, ...row }}
+            callback={callback}
+          />
+        );
+        break;
+      case 'action':
+        text = (
+          <Render
+            body={row[column.dataIndex]}
+            data={{ activeKey: activeKey, ...query, ...row }}
+            callback={callback}
+          />
+        );
         break;
     }
     return text;
