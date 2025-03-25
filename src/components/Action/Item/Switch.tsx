@@ -41,7 +41,7 @@ const Switch: React.FC<any> = (props) => {
     setRandom(Math.random);
 
     const result = await get({
-      url: tplEngine(api, props.data)+`&${props.fieldName}=${checked}`,
+      url: tplEngine(api, props.data) + `&${props.fieldName}=${checked}`,
     });
 
     buttonLoadings[props.componentkey] = false;
@@ -109,9 +109,14 @@ const Switch: React.FC<any> = (props) => {
       size={props.size}
       checkedChildren={props.checkedChildren}
       unCheckedChildren={props.unCheckedChildren}
-      checked={props?.data?.[props.fieldName]&&props.fieldValue==props.data[props.fieldName]}
+      checked={
+        props?.data?.[props.fieldName] &&
+        props.fieldValue == props.data[props.fieldName] // eslint-disable-line eqeqeq
+      }
       onChange={(checked: boolean) => {
-        void (props.confirmTitle ? showConfirm(props.api, checked) : handle(props.api, checked));
+        void (props.confirmTitle
+          ? showConfirm(props.api, checked)
+          : handle(props.api, checked));
       }}
     />
   );
