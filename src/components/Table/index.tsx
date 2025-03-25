@@ -394,6 +394,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
         if (table.toolBar && table.toolBar.menu) {
           table.toolBar.menu.onChange = (key: any) => {
             setActiveKey(key);
+            actionRef.current.clearSelected();
           };
         }
         setToolBar(table.toolBar);
