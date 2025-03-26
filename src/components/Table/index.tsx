@@ -46,6 +46,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
   const [columns, setColumns] = useState(props.columns);
   const [toolBar, setToolBar] = useState(props.toolBar);
   const [treeBar, setTreeBar] = useState(props.treeBar);
+  const [batchActions, setBatchActions] = useState(props.batchActions);
   const [tableExtraRender, setTableExtraRender] = useState(
     props.tableExtraRender,
   );
@@ -58,7 +59,6 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
     componentkey,
     api,
     apiType,
-    batchActions,
     search,
     striped,
     data,
@@ -402,6 +402,8 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
         setTreeBar(table.treeBar);
         // 更新扩展数据
         setTableExtraRender(table.tableExtraRender);
+        // 更新批量操作行为
+        setBatchActions(table.batchActions);
         // 返回数据
         return Promise.resolve({
           data: table.datasource,
