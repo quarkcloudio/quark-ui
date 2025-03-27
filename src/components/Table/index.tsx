@@ -136,7 +136,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
           text = (
             <Render
               body={text}
-              data={{ ...query, ...row }}
+              data={{ activeKey: activeKey, ...query, ...row }}
               callback={callback}
             />
           );
@@ -374,6 +374,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
                 ...data,
                 ids: selectedRowKeys,
                 id: selectedRowKeys,
+                activeKey: activeKey,
               }}
               callback={onCleanSelected}
             />
@@ -419,7 +420,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
           <Render
             key="toolBar"
             body={toolBar?.actions}
-            data={{ ...data, ...query }}
+            data={{ ...data, ...query, activeKey: activeKey }}
             callback={callback}
           />,
         ],
@@ -432,7 +433,7 @@ const Table: React.FC<ProTableProps<any, any, any> & TableExtendProps> = (
               <Card>
                 <Render
                   body={tableExtraRender}
-                  data={{ ...data, ...query }}
+                  data={{ ...data, ...query, activeKey: activeKey }}
                   callback={callback}
                 />
               </Card>
