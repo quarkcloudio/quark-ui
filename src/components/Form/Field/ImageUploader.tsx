@@ -181,9 +181,26 @@ const ImageUploader: React.FC<ImageUploaderProps> = (props) => {
         >
           {value ? (
             typeof value === 'string' ? (
-              <img src={value} width={80} />
+              <img
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'contain',
+                  padding: '8px',
+                }}
+                src={value}
+              />
             ) : (
-              <img src={value.url} alt={value.name} width={80} />
+              <img
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'contain',
+                  padding: '8px',
+                }}
+                src={value.url}
+                alt={value.name}
+              />
             )
           ) : (
             uploadButton(button)
