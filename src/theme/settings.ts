@@ -21,7 +21,7 @@ export const themeSettings: App.Theme.ThemeSetting = {
   layout: {
     mode: 'vertical',
     reverseHorizontalMix: false,
-    scrollMode: 'content'
+    scrollMode: 'wrapper'
   },
   otherColor: {
     error: '#f5222d',
@@ -31,7 +31,7 @@ export const themeSettings: App.Theme.ThemeSetting = {
   },
   page: {
     animate: true,
-    animateMode: 'fade'
+    animateMode: 'fade-slide'
   },
   recommendColor: false,
   sider: {
@@ -48,7 +48,7 @@ export const themeSettings: App.Theme.ThemeSetting = {
     mode: 'chrome',
     visible: true
   },
-  themeColor: '#646cff',
+  themeColor: '#1677ff',
   themeScheme: 'light',
   tokens: {
     dark: {
@@ -73,7 +73,7 @@ export const themeSettings: App.Theme.ThemeSetting = {
     }
   },
   watermark: {
-    text: 'SoybeanAdmin',
+    text: 'QuarkUI',
     visible: false
   }
 };
@@ -85,7 +85,7 @@ export const themeSettings: App.Theme.ThemeSetting = {
  */
 export const overrideThemeSettings: Partial<App.Theme.ThemeSetting> = {
   watermark: {
-    text: 'SoybeanAdmin',
+    text: 'QuarkUI',
     visible: false
   }
 };
