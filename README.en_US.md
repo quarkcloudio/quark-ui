@@ -1,6 +1,6 @@
 <div align="center">
 	<img src="./public/favicon.svg" width="160" />
-	<h1>QuarkUI AntDesignVue</h1>
+	<h1>QuarkUI AntDesignReact</h1>
   <span><a href="./README.md">中文</a> | English</span>
 </div>
 
