@@ -119,35 +119,37 @@ const PwdLogin = () => {
           >
             {t('common.confirm')}
           </AButton>
-          <div className="flex-y-center justify-between gap-12px">
-            <AButton
-              block
-              className="flex-1"
-              onClick={goCodeLogin}
-            >
-              {t(loginModuleRecord['code-login'])}
-            </AButton>
-            <AButton
-              block
-              className="flex-1"
-              onClick={goRegister}
-            >
-              {t(loginModuleRecord.register)}
-            </AButton>
-          </div>
-          <ADivider className="!m-0 !text-14px !text-#666">{t('page.login.pwdLogin.otherAccountLogin')}</ADivider>
-          <div className="flex-center gap-12px">
-            {accounts.map(item => {
-              return (
-                <AButton
-                  key={item.key}
-                  type="primary"
-                  onClick={() => handleAccountLogin(item)}
-                >
-                  {item.label}
-                </AButton>
-              );
-            })}
+          <div className="hidden">
+            <div className="flex-y-center justify-between gap-12px">
+              <AButton
+                block
+                className="flex-1"
+                onClick={goCodeLogin}
+              >
+                {t(loginModuleRecord['code-login'])}
+              </AButton>
+              <AButton
+                block
+                className="flex-1"
+                onClick={goRegister}
+              >
+                {t(loginModuleRecord.register)}
+              </AButton>
+            </div>
+            <ADivider className="!m-0 !text-14px !text-#666">{t('page.login.pwdLogin.otherAccountLogin')}</ADivider>
+            <div className="flex-center gap-12px">
+              {accounts.map(item => {
+                return (
+                  <AButton
+                    key={item.key}
+                    type="primary"
+                    onClick={() => handleAccountLogin(item)}
+                  >
+                    {item.label}
+                  </AButton>
+                );
+              })}
+            </div>
           </div>
         </ASpace>
       </AForm>
