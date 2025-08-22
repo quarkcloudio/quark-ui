@@ -6,7 +6,6 @@ import { MenuToggler } from '@/features/menu';
 import { ThemeSchemaSwitch } from '@/features/theme';
 
 import GlobalLogo from '../GlobalLogo';
-import GlobalSearch from '../global-search/GlobalSearch';
 
 import GlobalBreadcrumb from './components/Breadcrumb';
 import ThemeButton from './components/ThemeButton';
@@ -69,8 +68,6 @@ const GlobalHeader: FC<Props> = memo(({ isMobile, mode, reverse, siderWidth }) =
       </div>
 
       <div className="h-full flex-y-center justify-end">
-        <GlobalSearch />
-
         {!isMobile && (
           <FullScreen
             className="px-12px"
