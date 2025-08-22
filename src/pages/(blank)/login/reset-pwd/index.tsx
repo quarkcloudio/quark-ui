@@ -40,13 +40,19 @@ const ResetPwd = () => {
           name="phone"
           rules={formRules.phone}
         >
-          <AInput placeholder={t('page.login.common.phonePlaceholder')} />
+          <AInput
+            placeholder={t('page.login.common.phonePlaceholder')}
+            size="large"
+          />
         </AForm.Item>
         <AForm.Item
           name="code"
           rules={formRules.code}
         >
-          <AInput placeholder={t('page.login.common.codePlaceholder')} />
+          <AInput
+            placeholder={t('page.login.common.codePlaceholder')}
+            size="large"
+          />
         </AForm.Item>
         <AForm.Item
           name="password"
@@ -55,6 +61,7 @@ const ResetPwd = () => {
           <AInput.Password
             autoComplete="password"
             placeholder={t('page.login.common.passwordPlaceholder')}
+            size="large"
           />
         </AForm.Item>
         <AForm.Item
@@ -64,6 +71,7 @@ const ResetPwd = () => {
           <AInput.Password
             autoComplete="confirm-password"
             placeholder={t('page.login.common.confirmPasswordPlaceholder')}
+            size="large"
           />
         </AForm.Item>
         <ASpace

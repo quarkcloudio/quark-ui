@@ -85,14 +85,17 @@ const PwdLogin = () => {
           name="userName"
           rules={userNameRules}
         >
-          <AInput />
+          <AInput size="large" />
         </AForm.Item>
 
         <AForm.Item
           name="password"
           rules={pwd}
         >
-          <AInput.Password autoComplete="password" />
+          <AInput.Password
+            autoComplete="password"
+            size="large"
+          />
         </AForm.Item>
         <ASpace
           className="w-full"

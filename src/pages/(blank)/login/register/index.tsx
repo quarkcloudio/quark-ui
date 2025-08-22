@@ -46,14 +46,20 @@ const Register = () => {
           name="phone"
           rules={formRules.phone}
         >
-          <AInput placeholder={t('page.login.common.phonePlaceholder')} />
+          <AInput
+            placeholder={t('page.login.common.phonePlaceholder')}
+            size="large"
+          />
         </AForm.Item>
         <AForm.Item
           name="code"
           rules={formRules.code}
         >
           <div className="w-full flex-y-center gap-16px">
-            <AInput placeholder={t('page.login.common.codePlaceholder')} />
+            <AInput
+              placeholder={t('page.login.common.codePlaceholder')}
+              size="large"
+            />
             <AButton
               disabled={isCounting}
               loading={loading}
@@ -68,13 +74,19 @@ const Register = () => {
           name="password"
           rules={formRules.pwd}
         >
-          <AInput placeholder={t('page.login.common.passwordPlaceholder')} />
+          <AInput
+            placeholder={t('page.login.common.passwordPlaceholder')}
+            size="large"
+          />
         </AForm.Item>
         <AForm.Item
           name="confirmPassword"
           rules={createConfirmPwdRule(form)}
         >
-          <AInput placeholder={t('page.login.common.confirmPasswordPlaceholder')} />
+          <AInput
+            placeholder={t('page.login.common.confirmPasswordPlaceholder')}
+            size="large"
+          />
         </AForm.Item>
         <ASpace
           className="w-full"

@@ -44,7 +44,10 @@ const CodeLogin = () => {
           name="phone"
           rules={formRules.phone}
         >
-          <AInput placeholder={t('page.login.common.phonePlaceholder')} />
+          <AInput
+            placeholder={t('page.login.common.phonePlaceholder')}
+            size="large"
+          />
         </AForm.Item>
 
         <AForm.Item
@@ -52,7 +55,10 @@ const CodeLogin = () => {
           rules={formRules.code}
         >
           <div className="w-full flex-y-center gap-16px">
-            <AInput placeholder={t('page.login.common.codePlaceholder')} />
+            <AInput
+              placeholder={t('page.login.common.codePlaceholder')}
+              size="large"
+            />
             <AButton
               disabled={isCounting}
               loading={loading}
