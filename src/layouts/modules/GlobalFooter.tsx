@@ -4,11 +4,11 @@ const GlobalFooter = () => {
   return (
     <DarkModeContainer className="h-full flex-center">
       <a
-        href="https://github.com/honghuangdc/soybean-admin/blob/main/LICENSE"
+        href="https://quarkcloud.io"
         rel="noopener noreferrer"
         target="_blank"
       >
-        Copyright MIT © 2021 Soybean
+        Copyright MIT © 2025 QuarkCloud
       </a>
     </DarkModeContainer>
   );
