@@ -42,15 +42,10 @@ const PwdLogin = () => {
   const { loading, toLogin } = useInitAuth();
   const [form] = AForm.useForm<LoginParams>();
   const { bgColor, bgThemeColor } = useBgColor();
-  const navigate = useNavigate();
 
   const {
     formRules: { pwd, username: usernameRules }
   } = useFormRules();
-
-  function goResetPwd() {
-    navigate('reset-pwd');
-  }
 
   useKeyPress('enter', () => {
     form.submit();
@@ -99,13 +94,6 @@ const PwdLogin = () => {
               >
                 <div className="flex-y-center justify-between">
                   <ACheckbox>{t('page.login.pwdLogin.rememberMe')}</ACheckbox>
-
-                  <AButton
-                    type="text"
-                    onClick={goResetPwd}
-                  >
-                    {t('page.login.pwdLogin.forgetPassword')}
-                  </AButton>
                 </div>
                 <AButton
                   block
