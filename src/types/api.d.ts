@@ -60,9 +60,9 @@ declare namespace Api {
 
     interface UserInfo {
       buttons: string[];
+      id: string;
       roles: string[];
-      userId: string;
-      userName: string;
+      username: string;
     }
 
     type Info = {
@@ -129,13 +129,13 @@ declare namespace Api {
     /** user */
     type User = Common.CommonRecord<{
       /** user nick name */
-      nickName: string;
+      nickname: string;
       /** user email */
       userEmail: string;
       /** user gender */
       userGender: UserGender | null;
       /** user name */
-      userName: string;
+      username: string;
       /** user phone */
       userPhone: string;
       /** user role code collection */
@@ -144,7 +144,7 @@ declare namespace Api {
 
     /** user search params */
     type UserSearchParams = CommonType.RecordNullable<
-      Pick<Api.SystemManage.User, 'nickName' | 'status' | 'userEmail' | 'userGender' | 'userName' | 'userPhone'> &
+      Pick<Api.SystemManage.User, 'nickname' | 'status' | 'userEmail' | 'userGender' | 'username' | 'userPhone'> &
         CommonSearchParams
     >;
 

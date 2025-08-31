@@ -102,7 +102,7 @@ config/
 
 ```typescript
 // ✅ 正确示例
-const userName = 'admin';
+const username = 'admin';
 const userAge = 25;
 const isLoading = false;
 const hasPermission = true;
@@ -719,7 +719,7 @@ export const ROUTE_CONFIG = {};         // 不使用 UPPER_CASE
 |------|------|------|
 | 文件/文件夹 | kebab-case | `user-center/`, `global-header.tsx` |
 | React 组件 | PascalCase | `UserProfile`, `DataTable` |
-| 变量/函数 | camelCase | `userName`, `getUserInfo()` |
+| 变量/函数 | camelCase | `username`, `getUserInfo()` |
 | 常量 | UPPER_SNAKE_CASE | `MAX_RETRY_COUNT`, `API_BASE_URL` |
 | 类型/接口 | PascalCase | `UserInfo`, `ApiResponse<T>` |
 | CSS 类名 | kebab-case (BEM) | `.user-card__header--active` |

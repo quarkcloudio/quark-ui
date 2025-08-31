@@ -2,11 +2,11 @@ import { request } from '../request';
 
 export const api = [
   {
-    login: (userName: string, password: string) =>
+    login: (username: string, password: string) =>
       request<Api.Auth.LoginToken>({
         data: {
           password,
-          userName
+          username
         },
         method: 'post',
         url: '/auth/login'

@@ -13,10 +13,10 @@ interface OptionsProps {
 
 type Model = Pick<
   Api.SystemManage.User,
-  'nickName' | 'status' | 'userEmail' | 'userGender' | 'userName' | 'userPhone' | 'userRoles'
+  'nickname' | 'status' | 'userEmail' | 'userGender' | 'username' | 'userPhone' | 'userRoles'
 >;
 
-type RuleKey = Extract<keyof Model, 'status' | 'userName'>;
+type RuleKey = Extract<keyof Model, 'status' | 'username'>;
 
 function getOptions(item: Api.SystemManage.AllRole) {
   return {
@@ -38,7 +38,7 @@ const UserOperateDrawer: FC<Page.OperateDrawerProps> = ({ form, handleSubmit, on
 
   const rules: Record<RuleKey, App.Global.FormRule> = {
     status: defaultRequiredRule,
-    userName: defaultRequiredRule
+    username: defaultRequiredRule
   };
 
   useUpdateEffect(() => {
@@ -69,11 +69,11 @@ const UserOperateDrawer: FC<Page.OperateDrawerProps> = ({ form, handleSubmit, on
         layout="vertical"
       >
         <Form.Item
-          label={t('page.manage.user.userName')}
-          name="userName"
-          rules={[rules.userName]}
+          label={t('page.manage.user.username')}
+          name="username"
+          rules={[rules.username]}
         >
-          <Input placeholder={t('page.manage.user.form.userName')} />
+          <Input placeholder={t('page.manage.user.form.username')} />
         </Form.Item>
 
         <Form.Item
@@ -93,10 +93,10 @@ const UserOperateDrawer: FC<Page.OperateDrawerProps> = ({ form, handleSubmit, on
         </Form.Item>
 
         <Form.Item
-          label={t('page.manage.user.nickName')}
-          name="nickName"
+          label={t('page.manage.user.nickname')}
+          name="nickname"
         >
-          <Input placeholder={t('page.manage.user.form.nickName')} />
+          <Input placeholder={t('page.manage.user.form.nickname')} />
         </Form.Item>
 
         <Form.Item

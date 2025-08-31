@@ -359,7 +359,7 @@ const handleApiError = (error: ApiError) => {
 };
 
 // ❌ 错误示例
-const userName = 'admin'; // 用户名  <- 无意义的注释
+const username = 'admin'; // 用户名  <- 无意义的注释
 const age = 25; // 年龄是25  <- 重复代码内容
 // 这是一个函数  <- 太泛泛的注释
 function getData() {
@@ -632,7 +632,7 @@ const quickSort = (arr: number[]): number[] => {
 
 ```typescript
 // ❌ 不要重复代码
-const userName = 'admin'; // 设置用户名为admin
+const username = 'admin'; // 设置用户名为admin
 
 // ❌ 不要注释显而易见的代码
 const sum = a + b; // 把a和b相加

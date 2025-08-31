@@ -1,6 +1,11 @@
-import { loginModuleRecord } from '@/constants/app';
+import { getPaletteColorByNumber, mixColor } from '@sa/color';
+
+import WaveBg from '@/components/WaveBg';
 import { useInitAuth } from '@/features/auth/auth';
 import { useFormRules } from '@/features/form';
+import { getThemeSettings, useTheme } from '@/features/theme';
+
+import Header from './modules/Header';
 
 type AccountKey = 'admin' | 'super' | 'user';
 
@@ -8,61 +13,40 @@ interface Account {
   key: AccountKey;
   label: string;
   password: string;
-  userName: string;
+  username: string;
 }
 
-type LoginParams = Pick<Account, 'password' | 'userName'>;
+type LoginParams = Pick<Account, 'password' | 'username'>;
 
 const INITIAL_VALUES = {
   password: '123456',
-  userName: 'Soybean'
+  username: 'Soybean'
 };
+
+function useBgColor() {
+  const COLOR_WHITE = '#ffffff';
+  const { darkMode } = useTheme();
+  const { themeColor } = useAppSelector(getThemeSettings);
+  const bgThemeColor = darkMode ? getPaletteColorByNumber(themeColor, 600) : themeColor;
+  const ratio = darkMode ? 0.5 : 0.2;
+  const bgColor = mixColor(COLOR_WHITE, themeColor, ratio);
+
+  return {
+    bgColor,
+    bgThemeColor
+  };
+}
 
 const PwdLogin = () => {
   const { t } = useTranslation();
-
   const { loading, toLogin } = useInitAuth();
-
   const [form] = AForm.useForm<LoginParams>();
-
+  const { bgColor, bgThemeColor } = useBgColor();
   const navigate = useNavigate();
 
   const {
-    formRules: { pwd, userName: userNameRules }
+    formRules: { pwd, username: usernameRules }
   } = useFormRules();
-
-  const accounts: Account[] = [
-    {
-      key: 'super',
-      label: t('page.login.pwdLogin.superAdmin'),
-      password: '123456',
-      userName: 'Super'
-    },
-    {
-      key: 'admin',
-      label: t('page.login.pwdLogin.admin'),
-      password: '123456',
-      userName: 'Admin'
-    },
-    {
-      key: 'user',
-      label: t('page.login.pwdLogin.user'),
-      password: '123456',
-      userName: 'User'
-    }
-  ];
-
-  function handleAccountLogin(account: Account) {
-    toLogin(account);
-  }
-
-  function goCodeLogin() {
-    navigate('code-login');
-  }
-
-  function goRegister() {
-    navigate('register');
-  }
 
   function goResetPwd() {
     navigate('reset-pwd');
@@ -73,90 +57,72 @@ const PwdLogin = () => {
   });
 
   return (
-    <>
-      <h3 className="text-18px text-primary font-medium">{t('page.login.pwdLogin.title')}</h3>
-      <AForm
-        className="pt-24px"
-        form={form}
-        initialValues={INITIAL_VALUES}
-        onFinish={toLogin}
+    <div
+      className="relative size-full flex-center overflow-hidden bg-layout"
+      style={{ backgroundColor: bgColor }}
+    >
+      <WaveBg themeColor={bgThemeColor} />
+      <ACard
+        className="relative z-4 w-auto rd-8px"
+        styles={{ body: { flex: 1, overflow: 'hidden', padding: undefined } }}
+        variant="borderless"
       >
-        <AForm.Item
-          name="userName"
-          rules={userNameRules}
-        >
-          <AInput size="large" />
-        </AForm.Item>
-
-        <AForm.Item
-          name="password"
-          rules={pwd}
-        >
-          <AInput.Password
-            autoComplete="password"
-            size="large"
-          />
-        </AForm.Item>
-        <ASpace
-          className="w-full"
-          direction="vertical"
-          size={24}
-        >
-          <div className="flex-y-center justify-between">
-            <ACheckbox>{t('page.login.pwdLogin.rememberMe')}</ACheckbox>
-
-            <AButton
-              type="text"
-              onClick={goResetPwd}
+        <div className="w-400px lt-sm:w-300px">
+          <Header />
+          <main className="pt-24px">
+            <h3 className="text-18px text-primary font-medium">{t('page.login.pwdLogin.title')}</h3>
+            <AForm
+              className="pt-24px"
+              form={form}
+              initialValues={INITIAL_VALUES}
+              onFinish={toLogin}
             >
-              {t('page.login.pwdLogin.forgetPassword')}
-            </AButton>
-          </div>
-          <AButton
-            block
-            htmlType="submit"
-            loading={loading}
-            shape="round"
-            size="large"
-            type="primary"
-          >
-            {t('common.confirm')}
-          </AButton>
-          <div className="hidden">
-            <div className="flex-y-center justify-between gap-12px">
-              <AButton
-                block
-                className="flex-1"
-                onClick={goCodeLogin}
+              <AForm.Item
+                name="username"
+                rules={usernameRules}
               >
-                {t(loginModuleRecord['code-login'])}
-              </AButton>
-              <AButton
-                block
-                className="flex-1"
-                onClick={goRegister}
+                <AInput size="large" />
+              </AForm.Item>
+              <AForm.Item
+                name="password"
+                rules={pwd}
               >
-                {t(loginModuleRecord.register)}
-              </AButton>
-            </div>
-            <ADivider className="!m-0 !text-14px !text-#666">{t('page.login.pwdLogin.otherAccountLogin')}</ADivider>
-            <div className="flex-center gap-12px">
-              {accounts.map(item => {
-                return (
+                <AInput.Password
+                  autoComplete="password"
+                  size="large"
+                />
+              </AForm.Item>
+              <ASpace
+                className="w-full"
+                direction="vertical"
+                size={24}
+              >
+                <div className="flex-y-center justify-between">
+                  <ACheckbox>{t('page.login.pwdLogin.rememberMe')}</ACheckbox>
+
                   <AButton
-                    key={item.key}
-                    type="primary"
-                    onClick={() => handleAccountLogin(item)}
+                    type="text"
+                    onClick={goResetPwd}
                   >
-                    {item.label}
+                    {t('page.login.pwdLogin.forgetPassword')}
                   </AButton>
-                );
-              })}
-            </div>
-          </div>
-        </ASpace>
-      </AForm>
-    </>
+                </div>
+                <AButton
+                  block
+                  htmlType="submit"
+                  loading={loading}
+                  shape="round"
+                  size="large"
+                  type="primary"
+                >
+                  {t('common.confirm')}
+                </AButton>
+              </ASpace>
+            </AForm>
+          </main>
+        </div>
+      </ACard>
+    </div>
   );
 };
 

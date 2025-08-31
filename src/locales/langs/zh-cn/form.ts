@@ -20,7 +20,7 @@ const form: App.I18n.Schema['translation']['form'] = {
     required: '请输入密码'
   },
   required: '不能为空',
-  userName: {
+  username: {
     invalid: '用户名格式不正确',
     required: '请输入用户名'
   }

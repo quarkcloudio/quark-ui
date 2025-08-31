@@ -3,14 +3,14 @@ import { request } from '../request';
 /**
  * Login
  *
- * @param userName User name
+ * @param username User name
  * @param password Password
  */
-export function fetchLogin(userName: string, password: string) {
+export function fetchLogin(username: string, password: string) {
   return request<Api.Auth.LoginToken>({
     data: {
       password,
-      userName
+      username
     },
     method: 'post',
     url: '/auth/login'

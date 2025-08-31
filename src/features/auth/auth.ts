@@ -46,11 +46,11 @@ export function useInitAuth() {
 
   const redirectUrl = searchParams.get('redirect');
 
-  async function toLogin({ password, userName }: { password: string; userName: string }, redirect = true) {
+  async function toLogin({ password, username }: { password: string; username: string }, redirect = true) {
     if (loading) return;
 
     startLoading();
-    const { data: loginToken, error } = await fetchLogin(userName, password);
+    const { data: loginToken, error } = await fetchLogin(username, password);
 
     if (!error) {
       localStg.set('token', loginToken.token);
@@ -74,7 +74,7 @@ export function useInitAuth() {
         }
 
         window.$notification?.success({
-          description: t('page.login.common.welcomeBack', { userName: info.userName }),
+          description: t('page.login.common.welcomeBack', { username: info.username }),
           message: t('page.login.common.loginSuccess')
         });
       }

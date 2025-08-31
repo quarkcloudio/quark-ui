@@ -78,7 +78,7 @@ const UserAvatar = memo(() => {
             className="text-icon-large"
             icon="ph:user-circle"
           />
-          <span className="text-16px font-medium">{userInfo.userName}</span>
+          <span className="text-16px font-medium">{userInfo.username}</span>
         </ButtonIcon>
       </div>
     </ADropdown>

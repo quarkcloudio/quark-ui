@@ -30,10 +30,10 @@ const UserSearch: FC<Page.SearchProps> = memo(({ form, reset, search, searchPara
         >
           <Form.Item
             className="m-0"
-            label={t('page.manage.user.userName')}
-            name="userName"
+            label={t('page.manage.user.username')}
+            name="username"
           >
-            <Input placeholder={t('page.manage.user.form.userName')} />
+            <Input placeholder={t('page.manage.user.form.username')} />
           </Form.Item>
         </Col>
 
@@ -62,10 +62,10 @@ const UserSearch: FC<Page.SearchProps> = memo(({ form, reset, search, searchPara
         >
           <Form.Item
             className="m-0"
-            label={t('page.manage.user.nickName')}
-            name="nickName"
+            label={t('page.manage.user.nickname')}
+            name="nickname"
           >
-            <Input placeholder={t('page.manage.user.form.nickName')} />
+            <Input placeholder={t('page.manage.user.form.nickname')} />
           </Form.Item>
         </Col>
 

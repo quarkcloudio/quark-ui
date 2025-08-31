@@ -56,7 +56,7 @@ const page: App.I18n.Schema['translation']['page'] = {
     dealCount: '成交量',
     downloadCount: '下载量',
     entertainment: '娱乐',
-    greeting: '早安，{{userName}}, 今天又是充满活力的一天!',
+    greeting: '早安，{{username}}, 今天又是充满活力的一天!',
     message: '消息',
     projectCount: '项目数',
     projectNews: {
@@ -99,9 +99,9 @@ const page: App.I18n.Schema['translation']['page'] = {
       loginSuccess: '登录成功',
       passwordPlaceholder: '请输入密码',
       phonePlaceholder: '请输入手机号',
-      userNamePlaceholder: '请输入用户名',
+      usernamePlaceholder: '请输入用户名',
       validateSuccess: '验证成功',
-      welcomeBack: '欢迎回来，{{userName}} ！'
+      welcomeBack: '欢迎回来，{{username}} ！'
     },
     pwdLogin: {
       admin: '管理员',
@@ -227,10 +227,10 @@ const page: App.I18n.Schema['translation']['page'] = {
       addUser: '新增用户',
       editUser: '编辑用户',
       form: {
-        nickName: '请输入昵称',
+        nickname: '请输入昵称',
         userEmail: '请输入邮箱',
         userGender: '请选择性别',
-        userName: '请输入用户名',
+        username: '请输入用户名',
         userPhone: '请输入手机号',
         userRole: '请选择用户角色',
         userStatus: '请选择用户状态'
@@ -239,11 +239,11 @@ const page: App.I18n.Schema['translation']['page'] = {
         female: '女',
         male: '男'
       },
-      nickName: '昵称',
+      nickname: '昵称',
       title: '用户列表',
       userEmail: '邮箱',
       userGender: '性别',
-      userName: '用户名',
+      username: '用户名',
       userPhone: '手机号',
       userRole: '用户角色',
       userStatus: '用户状态'

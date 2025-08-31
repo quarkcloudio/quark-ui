@@ -28,14 +28,14 @@ const UserManage = () => {
       apiFn: fetchGetUserList,
       apiParams: {
         current: 1,
-        nickName: null,
+        nickname: null,
         size: 10,
         // if you want to use the searchParams in Form, you need to define the following properties, and the value is null
         // the value can not be undefined, otherwise the property in Form will not be reactive
         status: null,
         userEmail: null,
         userGender: null,
-        userName: null,
+        username: null,
         userPhone: null
       },
       columns: () => [
@@ -48,10 +48,10 @@ const UserManage = () => {
         },
         {
           align: 'center',
-          dataIndex: 'userName',
-          key: 'userName',
+          dataIndex: 'username',
+          key: 'username',
           minWidth: 100,
-          title: t('page.manage.user.userName')
+          title: t('page.manage.user.username')
         },
         {
           align: 'center',
@@ -71,10 +71,10 @@ const UserManage = () => {
         },
         {
           align: 'center',
-          dataIndex: 'nickName',
-          key: 'nickName',
+          dataIndex: 'nickname',
+          key: 'nickname',
           minWidth: 100,
-          title: t('page.manage.user.nickName')
+          title: t('page.manage.user.nickname')
         },
         {
           align: 'center',

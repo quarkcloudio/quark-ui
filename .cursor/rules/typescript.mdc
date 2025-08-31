@@ -353,7 +353,7 @@ type FullUserInfo = BaseUser & UserPermissions & UserActivity;
 
 // 使用工具类型修改现有类型
 type PartialUser = Partial<BaseUser>; // 所有属性可选
-type UserNameAndEmail = Pick<BaseUser, 'name' | 'email'>; // 只选择特定属性
+type usernameAndEmail = Pick<BaseUser, 'name' | 'email'>; // 只选择特定属性
 type UserWithoutId = Omit<BaseUser, 'id'>; // 排除特定属性
 type RequiredUser = Required<Partial<BaseUser>>; // 所有属性必填
 

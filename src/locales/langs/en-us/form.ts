@@ -20,7 +20,7 @@ const form: App.I18n.Schema['translation']['form'] = {
     required: 'Please enter password'
   },
   required: 'Cannot be empty',
-  userName: {
+  username: {
     invalid: 'User name format is incorrect',
     required: 'Please enter user name'
   }

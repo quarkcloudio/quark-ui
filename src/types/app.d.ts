@@ -345,7 +345,7 @@ declare namespace App {
           phone: FormMsg;
           pwd: FormMsg;
           required: string;
-          userName: FormMsg;
+          username: FormMsg;
         };
         icon: {
           collapse: string;
@@ -460,7 +460,7 @@ declare namespace App {
               loginSuccess: string;
               passwordPlaceholder: string;
               phonePlaceholder: string;
-              userNamePlaceholder: string;
+              usernamePlaceholder: string;
               validateSuccess: string;
               welcomeBack: string;
             };
@@ -587,10 +587,10 @@ declare namespace App {
               addUser: string;
               editUser: string;
               form: {
-                nickName: string;
+                nickname: string;
                 userEmail: string;
                 userGender: string;
-                userName: string;
+                username: string;
                 userPhone: string;
                 userRole: string;
                 userStatus: string;
@@ -599,11 +599,11 @@ declare namespace App {
                 female: string;
                 male: string;
               };
-              nickName: string;
+              nickname: string;
               title: string;
               userEmail: string;
               userGender: string;
-              userName: string;
+              username: string;
               userPhone: string;
               userRole: string;
               userStatus: string;

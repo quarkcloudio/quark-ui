@@ -56,7 +56,7 @@ const page: App.I18n.Schema['translation']['page'] = {
     dealCount: 'Deal Count',
     downloadCount: 'Download Count',
     entertainment: 'Entertainment',
-    greeting: 'Good morning, {{userName}}, today is another day full of vitality!',
+    greeting: 'Good morning, {{username}}, today is another day full of vitality!',
     message: 'Message',
     projectCount: 'Project Count',
     projectNews: {
@@ -99,9 +99,9 @@ const page: App.I18n.Schema['translation']['page'] = {
       loginSuccess: 'Login successfully',
       passwordPlaceholder: 'Please enter password',
       phonePlaceholder: 'Please enter phone number',
-      userNamePlaceholder: 'Please enter user name',
+      usernamePlaceholder: 'Please enter user name',
       validateSuccess: 'Verification passed',
-      welcomeBack: 'Welcome back, {{userName}} !'
+      welcomeBack: 'Welcome back, {{username}} !'
     },
     pwdLogin: {
       admin: 'Admin',
@@ -227,10 +227,10 @@ const page: App.I18n.Schema['translation']['page'] = {
       addUser: 'Add User',
       editUser: 'Edit User',
       form: {
-        nickName: 'Please enter nick name',
+        nickname: 'Please enter nick name',
         userEmail: 'Please enter email',
         userGender: 'Please select gender',
-        userName: 'Please enter user name',
+        username: 'Please enter user name',
         userPhone: 'Please enter phone number',
         userRole: 'Please select user role',
         userStatus: 'Please select user status'
@@ -239,11 +239,11 @@ const page: App.I18n.Schema['translation']['page'] = {
         female: 'Female',
         male: 'Male'
       },
-      nickName: 'Nick Name',
+      nickname: 'Nick Name',
       title: 'User List',
       userEmail: 'Email',
       userGender: 'Gender',
-      userName: 'User Name',
+      username: 'User Name',
       userPhone: 'Phone Number',
       userRole: 'User Role',
       userStatus: 'User Status'

@@ -47,7 +47,7 @@ const HeaderBanner = () => {
               />
             </div>
             <div className="pl-12px">
-              <h3 className="text-18px font-semibold">{t('page.home.greeting', { userName: userInfo.userName })}</h3>
+              <h3 className="text-18px font-semibold">{t('page.home.greeting', { username: userInfo.username })}</h3>
               <p className="text-#999 leading-30px">{t('page.home.weatherDesc')}</p>
             </div>
           </div>

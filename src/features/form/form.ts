@@ -25,8 +25,8 @@ export function useFormRules() {
       pattern: REG_PWD,
       validateTrigger: 'onChange'
     },
-    userName: {
-      message: $t('form.userName.invalid'),
+    username: {
+      message: $t('form.username.invalid'),
       pattern: REG_USER_NAME,
       validateTrigger: 'onChange'
     }
@@ -37,7 +37,7 @@ export function useFormRules() {
     email: [createRequiredRule($t('form.email.required')), patternRules.email],
     phone: [createRequiredRule($t('form.phone.required')), patternRules.phone],
     pwd: [createRequiredRule($t('form.pwd.required')), patternRules.pwd],
-    userName: [createRequiredRule($t('form.userName.required')), patternRules.userName]
+    username: [createRequiredRule($t('form.username.required')), patternRules.username]
   } satisfies Record<string, App.Global.FormRule[]>;
 
   /** the default required rule */

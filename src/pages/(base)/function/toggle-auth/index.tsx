@@ -14,7 +14,7 @@ interface Account {
   key: AccountKey;
   label: string;
   password: string;
-  userName: string;
+  username: string;
 }
 
 const ToggleAuth = () => {
@@ -37,19 +37,19 @@ const ToggleAuth = () => {
       key: 'super',
       label: t('page.login.pwdLogin.superAdmin'),
       password: '123456',
-      userName: 'Super'
+      username: 'Super'
     },
     {
       key: 'admin',
       label: t('page.login.pwdLogin.admin'),
       password: '123456',
-      userName: 'Admin'
+      username: 'Admin'
     },
     {
       key: 'user',
       label: t('page.login.pwdLogin.user'),
       password: '123456',
-      userName: 'User'
+      username: 'User'
     }
   ];
 
@@ -92,7 +92,7 @@ const ToggleAuth = () => {
 
     resetRoutes();
 
-    await toLogin({ password: account.password, userName: account.userName }, false);
+    await toLogin({ password: account.password, username: account.username }, false);
 
     initTab(themeSettings.tab.cache, updateTabs);
 
