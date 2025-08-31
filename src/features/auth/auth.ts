@@ -3,7 +3,7 @@ import { useLoading } from '@sa/hooks';
 import { globalConfig } from '@/config';
 import { getIsLogin, selectUserInfo } from '@/features/auth/authStore';
 import { usePreviousRoute, useRouter } from '@/features/router';
-import { fetchGetUserInfo, fetchLogin } from '@/service/api';
+import { fetchLogin, fetchUserInfo } from '@/service/api';
 import { localStg } from '@/utils/storage';
 
 import { useCacheTabs } from '../tab/tabHooks';
@@ -56,7 +56,7 @@ export function useInitAuth() {
       localStg.set('token', loginToken.token);
       localStg.set('refreshToken', loginToken.refreshToken);
 
-      const { data: info, error: userInfoError } = await fetchGetUserInfo();
+      const { data: info, error: userInfoError } = await fetchUserInfo('/api/admin/user/info');
 
       if (!userInfoError) {
         // 2. store user info

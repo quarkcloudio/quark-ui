@@ -53,6 +53,24 @@ declare namespace Api {
    * backend api module: "auth"
    */
   namespace Auth {
+    interface AuthComponent {
+      body?: any;
+      initialValues?: Record<string, any>;
+      loginApi: string;
+      logo?: string;
+      redirect?: string;
+      title?: string;
+      userInfoApi: string;
+      userRoutesApi: string;
+      values?: Record<string, any>;
+    }
+
+    type LoginCaptcha = {
+      captchaEnabled: boolean;
+      img: string;
+      uuid: string;
+    };
+
     interface LoginToken {
       refreshToken: string;
       token: string;

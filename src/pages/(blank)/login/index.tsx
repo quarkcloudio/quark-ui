@@ -1,11 +1,13 @@
 import { getPaletteColorByNumber, mixColor } from '@sa/color';
+import { useEffect, useState } from 'react';
 
+import SystemLogo from '@/components/SystemLogo';
 import WaveBg from '@/components/WaveBg';
 import { useInitAuth } from '@/features/auth/auth';
 import { useFormRules } from '@/features/form';
-import { getThemeSettings, useTheme } from '@/features/theme';
-
-import Header from './modules/Header';
+import { LangSwitch } from '@/features/lang';
+import { ThemeSchemaSwitch, getThemeSettings, useTheme } from '@/features/theme';
+import { fetchAuthComponent } from '@/service/api';
 
 type AccountKey = 'admin' | 'super' | 'user';
 
@@ -42,10 +44,26 @@ const PwdLogin = () => {
   const { loading, toLogin } = useInitAuth();
   const [form] = AForm.useForm<LoginParams>();
   const { bgColor, bgThemeColor } = useBgColor();
-
+  const [authComponent, setAuthComponent] = useState<Api.Auth.AuthComponent>({
+    loginApi: '/api/admin/login',
+    title: t('system.title'),
+    userInfoApi: '/api/admin/user/info',
+    userRoutesApi: '/api/admin/user/routes'
+  });
   const {
     formRules: { pwd, username: usernameRules }
   } = useFormRules();
+
+  useEffect(() => {
+    async function fetchData() {
+      const { data, error } = await fetchAuthComponent();
+      if (error) {
+        return;
+      }
+      setAuthComponent(data);
+    }
+    fetchData();
+  }, []);
 
   useKeyPress('enter', () => {
     form.submit();
@@ -63,7 +81,17 @@ const PwdLogin = () => {
         variant="borderless"
       >
         <div className="w-400px lt-sm:w-300px">
-          <Header />
+          <header className="flex-y-center justify-between">
+            <SystemLogo className="h-64px w-64px text-primary lt-sm:h-48px lt-sm:w-48px" />
+            <h3 className="text-28px text-primary font-500 lt-sm:text-22px">{authComponent.title}</h3>
+            <div className="i-flex-col">
+              <ThemeSchemaSwitch
+                className="text-20px lt-sm:text-18px"
+                showTooltip={false}
+              />
+              <LangSwitch showTooltip={false} />
+            </div>
+          </header>
           <main className="pt-24px">
             <h3 className="text-18px text-primary font-medium">{t('page.login.pwdLogin.title')}</h3>
             <AForm
