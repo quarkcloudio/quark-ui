@@ -1,19 +1,39 @@
 import { useLoading } from '@sa/hooks';
 
 import { globalConfig } from '@/config';
-import { getIsLogin, selectUserInfo } from '@/features/auth/authStore';
+import {
+  getIsLogin,
+  resetAuth as resetAuthAction,
+  selectAuthComponent,
+  selectUserInfo,
+  setAuthComponent,
+  setToken,
+  setUserInfo
+} from '@/features/auth/authStore';
 import { usePreviousRoute, useRouter } from '@/features/router';
 import { fetchLogin, fetchUserInfo } from '@/service/api';
 import { localStg } from '@/utils/storage';
 
 import { useCacheTabs } from '../tab/tabHooks';
 
-import { resetAuth as resetAuthAction, setToken, setUserInfo } from './authStore';
 import { clearAuthStorage } from './shared';
+
+export function useInitAuthComponent() {
+  const dispatch = useAppDispatch();
+  const authComponent = useAppSelector(selectAuthComponent);
+
+  async function initAuthComponent(data: Api.Auth.AuthComponent) {
+    dispatch(setAuthComponent(data));
+  }
+
+  return {
+    authComponent,
+    initAuthComponent
+  };
+}
 
 export function useAuth() {
   const userInfo = useAppSelector(selectUserInfo);
-
   const isLogin = useAppSelector(getIsLogin);
 
   function hasAuth(codes: string | string[]) {
@@ -35,28 +55,24 @@ export function useAuth() {
 
 export function useInitAuth() {
   const { endLoading, loading, startLoading } = useLoading();
-
   const [searchParams] = useSearchParams();
-
   const { t } = useTranslation();
-
   const dispatch = useAppDispatch();
-
   const { replace } = useRouter();
-
+  const authComponent = useAppSelector(selectAuthComponent);
   const redirectUrl = searchParams.get('redirect');
 
-  async function toLogin({ password, username }: { password: string; username: string }, redirect = true) {
+  async function toLogin(params?: any, redirect = true) {
     if (loading) return;
 
     startLoading();
-    const { data: loginToken, error } = await fetchLogin(username, password);
+    const { data: loginToken, error } = await fetchLogin(authComponent.loginApi, params);
 
     if (!error) {
       localStg.set('token', loginToken.token);
       localStg.set('refreshToken', loginToken.refreshToken);
 
-      const { data: info, error: userInfoError } = await fetchUserInfo('/api/admin/user/info');
+      const { data: info, error: userInfoError } = await fetchUserInfo(authComponent.userInfoApi);
 
       if (!userInfoError) {
         // 2. store user info
@@ -91,20 +107,14 @@ export function useInitAuth() {
 
 export function useResetAuth() {
   const dispatch = useAppDispatch();
-
   const previousRoute = usePreviousRoute();
-
   const cacheTabs = useCacheTabs();
-
   const { navigate, push, resetRoutes } = useRouter();
 
   function resetAuth() {
     clearAuthStorage();
-
     dispatch(resetAuthAction());
-
     resetRoutes();
-
     cacheTabs();
 
     if (!previousRoute?.handle?.constant) {

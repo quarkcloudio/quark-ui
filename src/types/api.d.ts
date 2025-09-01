@@ -54,7 +54,7 @@ declare namespace Api {
    */
   namespace Auth {
     interface AuthComponent {
-      body?: any;
+      body: any;
       initialValues?: Record<string, any>;
       loginApi: string;
       logo?: string;

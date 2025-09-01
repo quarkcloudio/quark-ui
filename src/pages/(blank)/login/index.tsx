@@ -1,29 +1,9 @@
 import { getPaletteColorByNumber, mixColor } from '@sa/color';
-import { useEffect, useState } from 'react';
 
-import SystemLogo from '@/components/SystemLogo';
-import WaveBg from '@/components/WaveBg';
-import { useInitAuth } from '@/features/auth/auth';
-import { useFormRules } from '@/features/form';
+import { useInitAuth, useInitAuthComponent } from '@/features/auth/auth';
 import { LangSwitch } from '@/features/lang';
 import { ThemeSchemaSwitch, getThemeSettings, useTheme } from '@/features/theme';
 import { fetchAuthComponent } from '@/service/api';
-
-type AccountKey = 'admin' | 'super' | 'user';
-
-interface Account {
-  key: AccountKey;
-  label: string;
-  password: string;
-  username: string;
-}
-
-type LoginParams = Pick<Account, 'password' | 'username'>;
-
-const INITIAL_VALUES = {
-  password: '123456',
-  username: 'Soybean'
-};
 
 function useBgColor() {
   const COLOR_WHITE = '#ffffff';
@@ -42,25 +22,16 @@ function useBgColor() {
 const PwdLogin = () => {
   const { t } = useTranslation();
   const { loading, toLogin } = useInitAuth();
-  const [form] = AForm.useForm<LoginParams>();
+  const { authComponent, initAuthComponent } = useInitAuthComponent();
+  const [form] = AForm.useForm<any>();
   const { bgColor, bgThemeColor } = useBgColor();
-  const [authComponent, setAuthComponent] = useState<Api.Auth.AuthComponent>({
-    loginApi: '/api/admin/login',
-    title: t('system.title'),
-    userInfoApi: '/api/admin/user/info',
-    userRoutesApi: '/api/admin/user/routes'
-  });
-  const {
-    formRules: { pwd, username: usernameRules }
-  } = useFormRules();
-
   useEffect(() => {
     async function fetchData() {
       const { data, error } = await fetchAuthComponent();
       if (error) {
         return;
       }
-      setAuthComponent(data);
+      initAuthComponent(data);
     }
     fetchData();
   }, []);
@@ -97,24 +68,18 @@ const PwdLogin = () => {
             <AForm
               className="pt-24px"
               form={form}
-              initialValues={INITIAL_VALUES}
               onFinish={toLogin}
             >
-              <AForm.Item
-                name="username"
-                rules={usernameRules}
-              >
-                <AInput size="large" />
-              </AForm.Item>
-              <AForm.Item
-                name="password"
-                rules={pwd}
-              >
-                <AInput.Password
-                  autoComplete="password"
-                  size="large"
+              {authComponent.body.map((item: any) => (
+                <ProFormField
+                  component={item.component}
+                  fieldProps={{ ...item }}
+                  key={item.componentkey}
+                  label={item.label}
+                  name={item.name}
+                  rules={item.rules}
                 />
-              </AForm.Item>
+              ))}
               <ASpace
                 className="w-full"
                 direction="vertical"

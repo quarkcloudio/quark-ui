@@ -4,6 +4,14 @@ import { createSelector, createSlice } from '@reduxjs/toolkit';
 import { getToken, getUserInfo } from './shared';
 
 const initialState = {
+  authComponent: {
+    body: [],
+    initialValues: {},
+    loginApi: '',
+    title: 'QuarkUI',
+    userInfoApi: '',
+    userRoutesApi: ''
+  },
   token: getToken(),
   userInfo: getUserInfo()
 };
@@ -13,22 +21,32 @@ export const authSlice = createSlice({
   name: 'auth',
   reducers: {
     resetAuth: () => initialState,
+    setAuthComponent: (state, { payload }: PayloadAction<Api.Auth.AuthComponent>) => {
+      state.authComponent = {
+        ...state.authComponent,
+        ...payload
+      };
+    },
     setToken: (state, { payload }: PayloadAction<string>) => {
       state.token = payload;
     },
     setUserInfo: (state, { payload }: PayloadAction<Api.Auth.UserInfo>) => {
-      state.userInfo = payload;
+      state.userInfo = {
+        ...state.userInfo,
+        ...payload
+      };
     }
   },
   selectors: {
+    selectAuthComponent: auth => auth.authComponent,
     selectToken: auth => auth.token,
     selectUserInfo: auth => auth.userInfo
   }
 });
 
-export const { resetAuth, setToken, setUserInfo } = authSlice.actions;
+export const { resetAuth, setAuthComponent, setToken, setUserInfo } = authSlice.actions;
 
-export const { selectToken, selectUserInfo } = authSlice.selectors;
+export const { selectAuthComponent, selectToken, selectUserInfo } = authSlice.selectors;
 
 /** Is login */
 export const getIsLogin = createSelector([selectToken], token => Boolean(token));
