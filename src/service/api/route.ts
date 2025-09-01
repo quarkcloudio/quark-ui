@@ -7,7 +7,7 @@ export function fetchGetConstantRoutes() {
 
 /** get user routes */
 export function fetchGetUserRoutes() {
-  return request<Api.Route.UserRoute>({ url: '/route/getReactUserRoutes' });
+  return request<Api.Route.UserRoute>({ url: '/api/admin/auth/index/userRoutes?type=react' });
 }
 
 /**
