@@ -241,23 +241,19 @@ export const generatedRoutes: ElegantConstRoute[] = [
             matchedFiles: [null, '/src/pages/(base)/multi-menu/index.tsx', null, null],
             name: '(base)_multi-menu',
             path: '/multi-menu',
-            handle: { constant: true, i18nKey: 'route.(base)_multi-menu', order: 5, title: 'multi-menu' },
+            handle: { i18nKey: 'route.(base)_multi-menu', title: '(base)_multi-menu' },
             children: [
               {
                 matchedFiles: [null, '/src/pages/(base)/multi-menu/first/index.tsx', null, null],
                 name: '(base)_multi-menu_first',
                 path: '/multi-menu/first',
-                handle: { constant: true, i18nKey: 'route.(base)_multi-menu_first', title: 'multi-menu_first' },
+                handle: { i18nKey: 'route.(base)_multi-menu_first', title: '(base)_multi-menu_first' },
                 children: [
                   {
                     matchedFiles: [null, '/src/pages/(base)/multi-menu/first/child/index.tsx', null, null],
                     name: '(base)_multi-menu_first_child',
                     path: '/multi-menu/first/child',
-                    handle: {
-                      constant: true,
-                      i18nKey: 'route.(base)_multi-menu_first_child',
-                      title: 'multi-menu_first_child'
-                    }
+                    handle: { i18nKey: 'route.(base)_multi-menu_first_child', title: '(base)_multi-menu_first_child' }
                   }
                 ]
               },

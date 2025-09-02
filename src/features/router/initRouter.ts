@@ -37,7 +37,6 @@ export async function initAuthRoutes(addRoutes: (parent: string | null, route: R
     // 动态模式
     const { data, error } = await fetchGetUserRoutes();
     if (error) {
-      console.error(error);
       return;
     }
     store.dispatch(setHomePath(data.home));
