@@ -4,10 +4,11 @@ import { authRoutes } from '@/router';
 import { fetchGetUserRoutes } from '@/service/api';
 import { store } from '@/store';
 
+import { transformElegantRoutesToReactRoutes } from '../../router/elegant/transform';
 import { isStaticSuper, selectUserInfo } from '../auth/authStore';
 
 import { setHomePath } from './routeStore';
-import { filterAuthRoutesByDynamic, filterAuthRoutesByRoles, mergeValuesByParent } from './shared';
+import { filterAuthRoutesByRoles, mergeValuesByParent } from './shared';
 
 export async function initAuthRoutes(addRoutes: (parent: string | null, route: RouteObject[]) => void) {
   const authRouteMode = import.meta.env.VITE_AUTH_ROUTE_MODE;
@@ -41,10 +42,8 @@ export async function initAuthRoutes(addRoutes: (parent: string | null, route: R
     }
     store.dispatch(setHomePath(data.home));
 
-    const filteredRoutes = filterAuthRoutesByDynamic(reactAuthRoutes, data.routes);
+    const getReactAuthRoutes = transformElegantRoutesToReactRoutes(data.routes);
 
-    filteredRoutes.forEach(({ parent, route }) => {
-      addRoutes(parent, route);
-    });
+    addRoutes('(base)', getReactAuthRoutes);
   }
 }

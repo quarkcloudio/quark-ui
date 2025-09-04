@@ -103,7 +103,7 @@ declare namespace Api {
 
     interface UserRoute {
       home: import('@soybean-react/vite-plugin-react-router').LastLevelRouteKey;
-      routes: string[];
+      routes: ElegantConstRoute[];
     }
   }
 
