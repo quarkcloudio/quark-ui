@@ -46,6 +46,7 @@ const route: App.I18n.Schema['translation']['route'] = {
   document_ui: 'UI',
   document_unocss: 'UnoCSS Document',
   document_vite: 'Vite Document',
+  'engine-page': 'Engine Page',
   exception: 'Exception',
   exception_403: '403',
   exception_404: '404',

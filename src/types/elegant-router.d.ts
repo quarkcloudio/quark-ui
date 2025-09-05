@@ -67,6 +67,7 @@ declare module "@soybean-react/vite-plugin-react-router" {
     "403": "/403";
     "404": "/404";
     "500": "/500";
+    "engine-page": "/engine-page";
     "iframe-page": "/iframe-page";
     "root": "/";
   };
@@ -117,6 +118,7 @@ declare module "@soybean-react/vite-plugin-react-router" {
     | "403"
     | "404"
     | "500"
+    | "engine-page"
     | "iframe-page"
     | "root"
   >;
@@ -177,6 +179,7 @@ declare module "@soybean-react/vite-plugin-react-router" {
     | "403"
     | "404"
     | "500"
+    | "engine-page"
     | "iframe-page"
     | "root"
     | "root"

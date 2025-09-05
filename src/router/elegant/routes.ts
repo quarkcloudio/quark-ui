@@ -400,6 +400,12 @@ export const generatedRoutes: ElegantConstRoute[] = [
         handle: { i18nKey: 'route.500', title: '500', constant: true }
       },
       {
+        matchedFiles: [null, '/src/pages/_builtin/engine-page/index.tsx', null, null],
+        name: 'engine-page',
+        path: '/engine-page',
+        handle: { i18nKey: 'route.engine-page', title: 'engine-page' }
+      },
+      {
         matchedFiles: [null, '/src/pages/_builtin/iframe-page/index.tsx', null, null],
         name: 'iframe-page',
         path: '/iframe-page',

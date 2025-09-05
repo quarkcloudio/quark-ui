@@ -66,6 +66,7 @@ export const routeMap: RouteMap = {
  "403": "/403",
  "404": "/404",
  "500": "/500",
+ "engine-page": "/engine-page",
  "iframe-page": "/iframe-page",
  "root": "/"
 };
