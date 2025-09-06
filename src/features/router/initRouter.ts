@@ -42,8 +42,41 @@ export async function initAuthRoutes(addRoutes: (parent: string | null, route: R
     }
     store.dispatch(setHomePath(data.home));
 
-    const getReactAuthRoutes = transformElegantRoutesToReactRoutes(data.routes);
+    const transformRoutes = data.routes.map(item => {
+      return transformRoute(item);
+    });
+
+    console.log(transformRoutes);
+
+    const getReactAuthRoutes = transformElegantRoutesToReactRoutes(transformRoutes);
 
     addRoutes('(base)', getReactAuthRoutes);
   }
+}
+
+/**
+ * 转换函数（树结构）
+ *
+ * @param node 树节点
+ * @param parentPath 父路径
+ * @returns 转换后的路由
+ */
+function transformRoute(node: any, parentPath = '') {
+  const fullPath = `${parentPath}/${node.path}`.replace(/\/+/g, '/');
+
+  const route: any = {
+    handle: node.meta,
+    name: `(base)${fullPath.replace('/', '_')}`,
+    path: fullPath
+  };
+
+  route.component = `/src/pages/(base)/${node.component}.tsx`;
+  route.matchedFiles = [null, node.component, null, null];
+
+  // 递归 children
+  if (node.children && node.children.length > 0) {
+    route.children = node.children.map((child: any) => transformRoute(child, fullPath));
+  }
+
+  return route;
 }
