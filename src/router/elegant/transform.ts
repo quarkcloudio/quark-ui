@@ -70,9 +70,10 @@ export function transformElegantRouteToReactRoute(route: ElegantConstRoute): Rou
          pageName = '404'
    };
 
+   const pageModules = import.meta.glob('/src/pages/**/*.tsx');
    if (matchedFiles[1] && (!children?.length||index)) {
-     const config = await views[pageName]();
-
+    //  const config = await views[pageName]();
+    let config = await pageModules[matchedFiles[1]]();
      return convertConfig(config);
    }
 

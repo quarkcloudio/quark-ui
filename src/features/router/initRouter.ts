@@ -46,8 +46,6 @@ export async function initAuthRoutes(addRoutes: (parent: string | null, route: R
       return transformRoute(item);
     });
 
-    console.log(transformRoutes);
-
     const getReactAuthRoutes = transformElegantRoutesToReactRoutes(transformRoutes);
 
     addRoutes('(base)', getReactAuthRoutes);
@@ -65,13 +63,23 @@ function transformRoute(node: any, parentPath = '') {
   const fullPath = `${parentPath}/${node.path}`.replace(/\/+/g, '/');
 
   const route: any = {
-    handle: node.meta,
+    handle: {
+      ...node.meta,
+      query: node.query
+    },
     name: `(base)${fullPath.replace('/', '_')}`,
     path: fullPath
   };
 
-  route.component = `/src/pages/(base)/${node.component}.tsx`;
-  route.matchedFiles = [null, node.component, null, null];
+  if (node.component) {
+    route.component = `/src/pages/(base)/${node.component}.tsx`;
+  }
+
+  if (node.type === 2) {
+    route.component = '/src/pages/_builtin/engine-page/index.tsx';
+  }
+
+  route.matchedFiles = [null, route.component, null, null];
 
   // 递归 children
   if (node.children && node.children.length > 0) {
