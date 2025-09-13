@@ -65,7 +65,7 @@ function transformRoute(node: any, parentPath = '') {
   const route: any = {
     handle: {
       ...node.meta,
-      query: node.query
+      query: JSON.parse(node.query || '{}')
     },
     name: `(base)${fullPath.replace('/', '_')}`,
     path: fullPath
