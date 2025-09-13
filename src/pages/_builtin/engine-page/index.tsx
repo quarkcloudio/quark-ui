@@ -1,11 +1,15 @@
 import { useRoute } from '@/features/router';
 
+interface QueryParams {
+  api?: string;
+}
+
 const EnginePage = () => {
   const {
     handle: { query }
-  } = useRoute();
+  } = useRoute() as { handle: { query: QueryParams } };
 
-  return query ? <div>{JSON.stringify(query)}</div> : null;
+  return <Engine api={query?.api} />;
 };
 
 export default EnginePage;

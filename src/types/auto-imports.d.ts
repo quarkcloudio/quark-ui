@@ -45,6 +45,7 @@ declare global {
   const BeyondHiding: typeof import('../components/BeyondHiding')['default']
   const ButtonIcon: typeof import('../components/ButtonIcon')['default']
   const DarkModeContainer: typeof import('../components/DarkModeContainer')['default']
+  const Engine: typeof import('../components/engine/Engine')['default']
   const ErrorBoundary: typeof import('../components/ErrorBoundary')['default']
   const ExceptionBase: typeof import('../components/ExceptionBase')['default']
   const FilpText: typeof import('../components/FilpText')['default']
