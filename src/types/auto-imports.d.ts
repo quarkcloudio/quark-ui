@@ -21,6 +21,7 @@ declare global {
   const AEmpty: typeof import('antd')['Empty']
   const AFlex: typeof import('antd')['Flex']
   const AForm: typeof import('antd')['Form']
+  const AImage: typeof import('antd')['Image']
   const AInput: typeof import('antd')['Input']
   const AList: typeof import('antd')['List']
   const AMenu: typeof import('antd')['Menu']

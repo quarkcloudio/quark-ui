@@ -15,12 +15,9 @@ const Render = (props: RenderProps) => {
         case 'view':
           return render(body.body, data, callback);
         case 'image':
-          return (
-            <img
-              alt={body.alt}
-              src={body.src}
-            />
-          );
+          return <AImage {...body} />;
+        case 'table':
+          return <ProTable {...body} />;
         default:
           // 处理未知组件类型
           return null;
