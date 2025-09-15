@@ -6,5 +6,5 @@ import { request } from '../request';
  * @param api Engine component api
  */
 export function fetchEngineComponent(api: string) {
-  return request<any>({ url: api });
+  return request<Api.Engine.EngineComponent>({ url: api });
 }
