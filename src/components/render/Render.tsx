@@ -20,7 +20,7 @@ const Render = (props: RenderProps) => {
           return <ProTable {...body} />;
         default:
           // 处理未知组件类型
-          return null;
+          return <div>Unknown Component: {body.component}.</div>;
       }
     }
     if (Array.isArray(body)) {
