@@ -1,11 +1,12 @@
 interface RenderProps {
   body: any;
-  callback?: (data: any) => void;
+  callback?: (data?: any) => void;
   data?: any;
 }
 
 const Render = (props: RenderProps) => {
-  const render = (body: any, data: any, callback?: (data: any) => void): any => {
+  // 递归渲染函数
+  const render = (body: any, data: any, callback?: (data?: any) => void): any => {
     if (typeof body === 'string' || typeof body === 'number') {
       return <span>{body}</span>;
     }
