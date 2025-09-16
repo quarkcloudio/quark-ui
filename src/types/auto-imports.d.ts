@@ -82,6 +82,7 @@ declare global {
   const ProFormField: typeof import('../components/pro-form/ProFormField')['default']
   const ProFormImageCaptcha: typeof import('../components/pro-form/pro-field/ProFormImageCaptcha')['default']
   const ProTable: typeof import('../components/pro-table/ProTable')['default']
+  const ProTableSearch: typeof import('../components/pro-table/ProTableSearch')['default']
   const Render: typeof import('../components/render/Render')['default']
   const Route: typeof import('react-router-dom')['Route']
   const Routes: typeof import('react-router-dom')['Routes']

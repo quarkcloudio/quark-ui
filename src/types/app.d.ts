@@ -308,6 +308,7 @@ declare namespace App {
           error: string;
           errorHint: string;
           expandColumn: string;
+          export: string;
           index: string;
           keywordSearch: string;
           logout: string;

@@ -17,6 +17,7 @@ const common: App.I18n.Schema['translation']['common'] = {
   error: '错误',
   errorHint: '出错了，请稍后再试',
   expandColumn: '展开列',
+  export: '导出',
   index: '序号',
   keywordSearch: '请输入关键词搜索',
   logout: '退出登录',

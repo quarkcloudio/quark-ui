@@ -17,6 +17,7 @@ const common: App.I18n.Schema['translation']['common'] = {
   error: 'Error',
   errorHint: 'Please try again later',
   expandColumn: 'Expand Column',
+  export: 'Export',
   index: 'Index',
   keywordSearch: 'Please enter keyword',
   logout: 'Logout',
