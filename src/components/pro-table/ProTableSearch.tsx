@@ -24,7 +24,7 @@ const ProTableSearch = (props: ProTableSearchProps) => {
       defaultActiveKey={defaultCollapsed ? ['1'] : undefined}
     >
       <ACollapse.Panel
-        header={searchText}
+        header={<span className="text-size-16px font-600">{searchText}</span>}
         key="1"
       >
         <AForm layout="inline">
