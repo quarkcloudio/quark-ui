@@ -20,7 +20,8 @@ const ProTableSearch = (props: ProTableSearchProps) => {
 
   return (
     <ACollapse
-      className="bg-white"
+      bordered={false}
+      className="card-wrapper"
       defaultActiveKey={defaultCollapsed ? ['1'] : undefined}
     >
       <ACollapse.Panel

@@ -1,3 +1,5 @@
+import { TableHeaderOperation } from '@/features/table';
+
 interface ProTableProps {
   columns: any[];
   datasource?: any[];
@@ -21,6 +23,23 @@ const ProTable = (props: ProTableProps) => {
       <ACard
         className="mt-16px"
         title={headerTitle}
+        extra={
+          <TableHeaderOperation
+            columns={[]}
+            add={() => {
+              throw new Error('Function not implemented.');
+            }}
+            refresh={() => {
+              throw new Error('Function not implemented.');
+            }}
+            setColumnChecks={(): void => {
+              throw new Error('Function not implemented.');
+            }}
+            onDelete={() => {
+              throw new Error('Function not implemented.');
+            }}
+          />
+        }
       >
         <ATable<any>
           columns={parsedColumns}
