@@ -59,6 +59,7 @@ declare global {
   const IconGridiconsFullscreen: typeof import('~icons/gridicons/fullscreen.tsx')['default']
   const IconGridiconsFullscreenExit: typeof import('~icons/gridicons/fullscreen-exit.tsx')['default']
   const IconIcRoundDelete: typeof import('~icons/ic/round-delete.tsx')['default']
+  const IconIcRoundDownload: typeof import('~icons/ic/round-download.tsx')['default']
   const IconIcRoundPlus: typeof import('~icons/ic/round-plus.tsx')['default']
   const IconIcRoundRefresh: typeof import('~icons/ic/round-refresh.tsx')['default']
   const IconIcRoundSearch: typeof import('~icons/ic/round-search.tsx')['default']
