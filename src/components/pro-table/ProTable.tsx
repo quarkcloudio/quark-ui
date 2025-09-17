@@ -9,11 +9,27 @@ interface ProTableProps {
 
 const ProTable = (props: ProTableProps) => {
   const { columns, datasource, headerTitle, search } = props;
-  const parsedColumns = columns.map((item: any) => {
-    const column: any = {};
-    column.key = item.dataIndex;
-    column.dataIndex = item.dataIndex;
-    column.title = item.title;
+  const parsedColumns = columns.map(item => {
+    const column: any = item;
+
+    // 解析筛选项
+    if (column.filters) {
+      column.filters = column?.fieldProps?.options?.map((option: any) => ({
+        text: option.label,
+        value: option.value
+      }));
+    }
+
+    // 解析渲染
+    column.render = (value: any) => {
+      if (column.valueType === 'radio' || column.valueType === 'select') {
+        return column.valueEnum[value];
+      }
+      if (column.valueType === 'option') {
+        return value;
+      }
+      return <Render body={value} />;
+    };
     return column;
   });
 

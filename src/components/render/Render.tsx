@@ -1,14 +1,15 @@
+import DOMPurify from 'dompurify';
+
 interface RenderProps {
   body: any;
   callback?: (data?: any) => void;
   data?: any;
 }
-
 const Render = (props: RenderProps) => {
   // 递归渲染函数
   const render = (body: any, data: any, callback?: (data?: any) => void): any => {
     if (typeof body === 'string' || typeof body === 'number') {
-      return <span>{body}</span>;
+      return <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(String(body)) }} />;
     }
     if (body?.component) {
       switch (body.component) {
