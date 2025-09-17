@@ -70,7 +70,7 @@ const TableHeaderOperation: FC<Props> = ({
         </>
       )}
       <Button
-        icon={<IconAntDesignRedoOutlined className={classNames('text-icon', { 'animate-spin': loading })} />}
+        icon={<IconAntDesignReloadOutlined className={classNames('text-icon', { 'animate-spin': loading })} />}
         size="small"
         onClick={refresh}
       >

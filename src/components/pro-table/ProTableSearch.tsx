@@ -62,7 +62,7 @@ const ProTableSearch = (props: ProTableSearchProps) => {
                   gap={12}
                   justify="end"
                 >
-                  <AButton icon={<IconAntDesignRedoOutlined />}>{resetText}</AButton>
+                  <AButton icon={<IconAntDesignReloadOutlined />}>{resetText}</AButton>
                   <AButton
                     ghost
                     icon={<IconAntDesignSearchOutlined />}
