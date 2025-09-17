@@ -46,7 +46,7 @@ const TableHeaderOperation: FC<Props> = ({
         <>
           <Button
             ghost
-            icon={<IconIcRoundPlus className="text-icon" />}
+            icon={<IconAntDesignPlusOutlined className="text-icon" />}
             size="small"
             type="primary"
             onClick={add}
@@ -61,7 +61,7 @@ const TableHeaderOperation: FC<Props> = ({
               danger
               ghost
               disabled={disabledDelete}
-              icon={<IconIcRoundDelete className="text-icon" />}
+              icon={<IconAntDesignDeleteOutlined className="text-icon" />}
               size="small"
             >
               {t('common.batchDelete')}
@@ -70,7 +70,7 @@ const TableHeaderOperation: FC<Props> = ({
         </>
       )}
       <Button
-        icon={<IconMdiRefresh className={classNames('text-icon', { 'animate-spin': loading })} />}
+        icon={<IconAntDesignRedoOutlined className={classNames('text-icon', { 'animate-spin': loading })} />}
         size="small"
         onClick={refresh}
       >

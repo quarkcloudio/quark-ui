@@ -62,10 +62,10 @@ const ProTableSearch = (props: ProTableSearchProps) => {
                   gap={12}
                   justify="end"
                 >
-                  <AButton icon={<IconIcRoundRefresh />}>{resetText}</AButton>
+                  <AButton icon={<IconAntDesignRedoOutlined />}>{resetText}</AButton>
                   <AButton
                     ghost
-                    icon={<IconIcRoundSearch />}
+                    icon={<IconAntDesignSearchOutlined />}
                     type="primary"
                   >
                     {searchText}
@@ -73,7 +73,7 @@ const ProTableSearch = (props: ProTableSearchProps) => {
                   {exportApi && (
                     <AButton
                       ghost
-                      icon={<IconIcRoundDownload />}
+                      icon={<IconAntDesignDownloadOutlined />}
                       type="primary"
                     >
                       {exportText}
