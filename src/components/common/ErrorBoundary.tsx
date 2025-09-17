@@ -3,7 +3,7 @@ import type { FallbackProps } from 'react-error-boundary';
 
 import { globalConfig } from '@/config';
 
-import { $t } from '../locales';
+import { $t } from '../../locales';
 
 const { Text, Title } = Typography;
 

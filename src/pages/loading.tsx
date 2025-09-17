@@ -2,7 +2,7 @@
 import { getRgb } from '@sa/color';
 import clsx from 'clsx';
 
-import SystemLogo from '@/components/SystemLogo';
+import SystemLogo from '@/components/common/SystemLogo';
 import { globalConfig } from '@/config';
 import { DARK_CLASS } from '@/constants/app';
 import { toggleHtmlClass } from '@/utils/common';

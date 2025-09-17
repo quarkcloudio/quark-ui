@@ -1,4 +1,4 @@
-import SystemLogo from '@/components/SystemLogo';
+import SystemLogo from '@/components/common/SystemLogo';
 import { LangSwitch } from '@/features/lang';
 import { ThemeSchemaSwitch } from '@/features/theme';
 

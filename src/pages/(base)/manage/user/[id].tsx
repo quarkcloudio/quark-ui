@@ -1,7 +1,7 @@
 import type { DescriptionsProps } from 'antd';
 import { type LoaderFunctionArgs, useLoaderData } from 'react-router-dom';
 
-import LookForward from '@/components/LookForward';
+import LookForward from '@/components/custom/LookForward';
 import { fetchGetUserList } from '@/service/api';
 
 type Item<T> = T extends any[] ? T[number] : T;

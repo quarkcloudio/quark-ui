@@ -1,4 +1,4 @@
-import { TypingAnimation } from '@/components/TypingAnimation';
+import { TypingAnimation } from '@/components/custom/TypingAnimation';
 import pkg from '~/package.json';
 
 import HeaderDescription from './modules/header-description';

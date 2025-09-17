@@ -1,4 +1,4 @@
-import ExceptionBase from '@/components/ExceptionBase';
+import ExceptionBase from '@/components/common/ExceptionBase';
 
 const NotFound = () => {
   return <ExceptionBase type="404" />;

@@ -1,4 +1,4 @@
-import ButtonIcon from '@/components/ButtonIcon';
+import ButtonIcon from '@/components/custom/ButtonIcon';
 
 import { useLang } from './langContext';
 

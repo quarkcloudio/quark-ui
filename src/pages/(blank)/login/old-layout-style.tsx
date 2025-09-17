@@ -1,7 +1,7 @@
 import { getPaletteColorByNumber, mixColor } from '@sa/color';
 import { Outlet } from 'react-router-dom';
 
-import WaveBg from '@/components/WaveBg';
+import WaveBg from '@/components/custom/WaveBg';
 import { getThemeSettings, useTheme } from '@/features/theme';
 
 import Header from './modules/Header';

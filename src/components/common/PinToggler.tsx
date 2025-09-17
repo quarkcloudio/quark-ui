@@ -1,7 +1,7 @@
 import React from 'react';
 
-import ButtonIcon from './ButtonIcon';
-import SvgIcon from './SvgIcon';
+import ButtonIcon from '@/components/custom/ButtonIcon';
+import SvgIcon from '@/components/custom/SvgIcon';
 
 interface Props {
   className: string;

@@ -1,4 +1,4 @@
-import ButtonIcon from './ButtonIcon';
+import ButtonIcon from '@/components/custom/ButtonIcon';
 
 interface Props {
   className?: string;

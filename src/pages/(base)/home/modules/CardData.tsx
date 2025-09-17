@@ -1,4 +1,4 @@
-import NumberTicker from '@/components/NumberTicker';
+import NumberTicker from '@/components/custom/NumberTicker';
 
 interface CardDataProps {
   color: {

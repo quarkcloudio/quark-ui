@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 import type { LinkProps } from 'react-router-dom';
 
-import SystemLogo from '@/components/SystemLogo';
+import SystemLogo from '@/components/common/SystemLogo';
 
 interface Props extends Omit<LinkProps, 'to'> {
   /** Whether to show the title */

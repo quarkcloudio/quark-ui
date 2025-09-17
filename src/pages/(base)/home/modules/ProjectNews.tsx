@@ -1,7 +1,7 @@
 import { useArray } from '@sa/hooks';
 import { AnimatePresence, motion } from 'framer-motion';
 
-import SoybeanAvatar from '@/components/SoybeanAvatar';
+import SoybeanAvatar from '@/components/custom/SoybeanAvatar';
 
 const variants = {
   exit: { opacity: 0, transition: { duration: 0.3 }, x: 200 },

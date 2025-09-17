@@ -1,4 +1,4 @@
-import DarkModeContainer from '@/components/DarkModeContainer';
+import DarkModeContainer from '@/components/common/DarkModeContainer';
 
 const GlobalFooter = () => {
   return (

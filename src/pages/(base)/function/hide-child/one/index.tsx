@@ -1,4 +1,4 @@
-import LookForward from '@/components/LookForward';
+import LookForward from '@/components/custom/LookForward';
 
 const HideChildOne = () => {
   return <LookForward />;

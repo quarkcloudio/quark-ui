@@ -1,6 +1,6 @@
 import { globalConfig } from '@/config';
 
-import SvgIcon from './SvgIcon';
+import SvgIcon from '../custom/SvgIcon';
 
 type ExceptionType = '403' | '404' | '500';
 

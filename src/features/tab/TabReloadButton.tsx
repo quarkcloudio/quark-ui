@@ -1,4 +1,4 @@
-import ButtonIcon from '@/components/ButtonIcon';
+import ButtonIcon from '@/components/custom/ButtonIcon';
 import { useReloadPage } from '@/layouts/layoutHook';
 
 const TabReloadButton = () => {

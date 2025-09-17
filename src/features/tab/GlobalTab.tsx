@@ -1,7 +1,7 @@
 import { PageTab } from '@sa/materials';
 import clsx from 'clsx';
 
-import BetterScroll from '@/components/BetterScroll';
+import BetterScroll from '@/components/custom/BetterScroll';
 import { getFullContent, toggleFullContent } from '@/layouts/appStore';
 import { isPC } from '@/utils/agent';
 

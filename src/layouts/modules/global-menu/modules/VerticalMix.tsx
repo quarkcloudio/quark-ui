@@ -1,8 +1,8 @@
 import classNames from 'clsx';
 import { createPortal } from 'react-dom';
 
-import DarkModeContainer from '@/components/DarkModeContainer';
-import PinToggler from '@/components/PinToggler';
+import DarkModeContainer from '@/components/common/DarkModeContainer';
+import PinToggler from '@/components/common/PinToggler';
 import { GLOBAL_SIDER_MENU_ID } from '@/constants/app';
 import { useMixMenuContext } from '@/features/menu';
 import { ThemeContext, getThemeSettings } from '@/features/theme';

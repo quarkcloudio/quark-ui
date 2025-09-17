@@ -1,4 +1,4 @@
-import ExceptionBase from '@/components/ExceptionBase';
+import ExceptionBase from '@/components/common/ExceptionBase';
 
 const GoWrong = () => {
   return <ExceptionBase type="500" />;

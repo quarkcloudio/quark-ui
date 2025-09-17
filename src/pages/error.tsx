@@ -1,4 +1,4 @@
-import ErrorBoundary from '@/components/ErrorBoundary';
+import ErrorBoundary from '@/components/common/ErrorBoundary';
 import { useRoute, useRouter } from '@/features/router';
 
 const ErrorPage = () => {

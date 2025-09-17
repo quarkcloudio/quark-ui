@@ -1,5 +1,5 @@
-import ButtonIcon from '@/components/ButtonIcon';
-import SvgIcon from '@/components/SvgIcon';
+import ButtonIcon from '@/components/custom/ButtonIcon';
+import SvgIcon from '@/components/custom/SvgIcon';
 import { getSiderCollapse, toggleSiderCollapse } from '@/layouts/appStore';
 
 interface Props {

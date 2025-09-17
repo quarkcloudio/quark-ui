@@ -1,6 +1,6 @@
 import type { RouteObject } from 'react-router-dom';
 
-import BeyondHiding from '@/components/BeyondHiding';
+import BeyondHiding from '@/components/common/BeyondHiding';
 import { $t } from '@/locales';
 
 /**

@@ -1,5 +1,5 @@
-import DarkModeContainer from '@/components/DarkModeContainer';
-import FullScreen from '@/components/FullScreen';
+import DarkModeContainer from '@/components/common/DarkModeContainer';
+import FullScreen from '@/components/common/FullScreen';
 import { GLOBAL_HEADER_MENU_ID } from '@/constants/app';
 import { LangSwitch } from '@/features/lang';
 import { MenuToggler } from '@/features/menu';
