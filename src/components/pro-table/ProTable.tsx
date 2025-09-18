@@ -1,4 +1,4 @@
-import { TableHeaderOperation } from '@/features/table';
+import ProTableHeaderOperation from './ProTableHeaderOperation';
 
 interface ProTableProps {
   columns: any[];
@@ -40,18 +40,12 @@ const ProTable = (props: ProTableProps) => {
         className="mt-16px"
         title={headerTitle}
         extra={
-          <TableHeaderOperation
+          <ProTableHeaderOperation
             columns={[]}
-            add={() => {
-              throw new Error('Function not implemented.');
-            }}
             refresh={() => {
               throw new Error('Function not implemented.');
             }}
             setColumnChecks={(): void => {
-              throw new Error('Function not implemented.');
-            }}
-            onDelete={() => {
               throw new Error('Function not implemented.');
             }}
           />
