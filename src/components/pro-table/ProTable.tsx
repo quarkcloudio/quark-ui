@@ -1,3 +1,6 @@
+import { useEngine } from '@/features/engine';
+import { fetchEngineComponent } from '@/service/api';
+
 import ProTableHeaderOperation from './ProTableHeaderOperation';
 
 interface ProTableProps {
@@ -8,30 +11,77 @@ interface ProTableProps {
 }
 
 const ProTable = (props: ProTableProps) => {
-  const { columns, datasource, headerTitle, search } = props;
-  const parsedColumns = columns.map(item => {
-    const column: any = item;
+  const { columns, headerTitle, search } = props;
+  const [datasource, setDatasource] = useState<any>(props.datasource || []);
+  const [loading, setLoading] = useState<boolean>(false);
+  const { engineApi } = useEngine();
 
-    // 解析筛选项
-    if (column.filters) {
-      column.filters = column?.fieldProps?.options?.map((option: any) => ({
-        text: option.label,
-        value: option.value
-      }));
+  const getColumnChecks = () => {
+    const checks: AntDesign.TableColumnCheck[] = [];
+    columns.forEach(column => {
+      if (column.dataIndex) {
+        checks.push({
+          checked: true,
+          key: column.dataIndex as string,
+          title: column.title as string
+        });
+      }
+    });
+    return checks;
+  };
+  const [columnChecks, setColumnChecks] = useState<AntDesign.TableColumnCheck[]>(getColumnChecks());
+
+  const getColumns = useCallback(() => {
+    const columnMap = new Map<string, any>();
+
+    columns.forEach(column => {
+      if (column.dataIndex) {
+        columnMap.set(column.dataIndex as string, column);
+      }
+    });
+
+    const filteredColumns = columnChecks?.filter(item => item.checked).map(check => columnMap.get(check.key));
+
+    return filteredColumns.map(item => {
+      const column: any = { ...item };
+
+      // 解析筛选项
+      if (column.filters) {
+        column.filters = column?.fieldProps?.options?.map((option: any) => ({
+          text: option.label,
+          value: option.value
+        }));
+      }
+
+      // 解析渲染
+      column.render = (value: any) => {
+        if (column.valueType === 'radio' || column.valueType === 'select') {
+          return column.valueEnum[value];
+        }
+        if (column.valueType === 'option') {
+          return value;
+        }
+        return <Render body={value} />;
+      };
+
+      return column;
+    });
+  }, [columns, columnChecks]); // 添加依赖项
+
+  const [parsedColumns, setParsedColumns] = useState<any[]>(getColumns());
+
+  useEffect(() => {
+    setParsedColumns(getColumns());
+  }, [getColumns]);
+
+  const onRequest = async () => {
+    setLoading(true);
+    if (engineApi) {
+      const { data }: any = await fetchEngineComponent(engineApi);
+      setDatasource(data?.datasource || []);
     }
-
-    // 解析渲染
-    column.render = (value: any) => {
-      if (column.valueType === 'radio' || column.valueType === 'select') {
-        return column.valueEnum[value];
-      }
-      if (column.valueType === 'option') {
-        return value;
-      }
-      return <Render body={value} />;
-    };
-    return column;
-  });
+    setLoading(false);
+  };
 
   return (
     <>
@@ -41,19 +91,16 @@ const ProTable = (props: ProTableProps) => {
         title={headerTitle}
         extra={
           <ProTableHeaderOperation
-            columns={[]}
-            refresh={() => {
-              throw new Error('Function not implemented.');
-            }}
-            setColumnChecks={(): void => {
-              throw new Error('Function not implemented.');
-            }}
+            columns={columnChecks}
+            refresh={onRequest}
+            setColumnChecks={setColumnChecks}
           />
         }
       >
         <ATable<any>
           columns={parsedColumns}
           dataSource={datasource}
+          loading={loading}
         />
       </ACard>
     </>

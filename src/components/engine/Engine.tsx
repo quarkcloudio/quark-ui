@@ -1,6 +1,7 @@
 import { useEffectOnActive } from 'keepalive-for-react';
 import { useState } from 'react';
 
+import { useEngine } from '@/features/engine';
 import { fetchEngineComponent } from '@/service/api';
 
 interface EngineProps {
@@ -11,12 +12,15 @@ const Engine = (props: EngineProps) => {
   const { api } = props;
   const [body, setBody] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
+  const { dispatchEngineApi, dispatchEngineComponent } = useEngine();
 
   useEffectOnActive(() => {
     if (api) {
       setLoading(true);
       fetchEngineComponent(api).then(res => {
         setBody(res.data);
+        dispatchEngineComponent(res.data);
+        dispatchEngineApi(api);
         setLoading(false);
       });
     }
