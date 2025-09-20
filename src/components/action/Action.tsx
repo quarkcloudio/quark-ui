@@ -19,7 +19,8 @@ interface ActionProps {
 }
 
 const Action = (props: ActionProps) => {
-  const { block, danger, data, disabled, ghost, href, label, loading, onClick, shape, size, target, type } = props;
+  const { block, danger, data, disabled, ghost, href, icon, label, loading, onClick, shape, size, target, type } =
+    props;
 
   return (
     <AButton
@@ -33,6 +34,14 @@ const Action = (props: ActionProps) => {
       size={size}
       target={target}
       type={type}
+      icon={
+        icon && (
+          <SvgIcon
+            className="text-icon"
+            icon={icon}
+          />
+        )
+      }
       onClick={onClick}
     >
       {tplEngine(label, data)}
