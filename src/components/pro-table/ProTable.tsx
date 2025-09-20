@@ -1,19 +1,24 @@
+import type { TableRowSelection } from 'antd/es/table/interface';
+
 import { useEngine } from '@/features/engine';
 import { fetchEngineComponent } from '@/service/api';
 
 import ProTableHeaderOperation from './ProTableHeaderOperation';
+import ProTableToolBar from './ProTableToolBar';
 
 interface ProTableProps {
   columns: any[];
   datasource?: any[];
   headerTitle?: string;
   search?: any;
+  toolBar?: any;
 }
 
 const ProTable = (props: ProTableProps) => {
-  const { columns, headerTitle, search } = props;
+  const { columns, headerTitle, search, toolBar } = props;
   const [datasource, setDatasource] = useState<any>(props.datasource || []);
   const [loading, setLoading] = useState<boolean>(false);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const { engineApi } = useEngine();
 
   const getColumnChecks = () => {
@@ -54,12 +59,20 @@ const ProTable = (props: ProTableProps) => {
       }
 
       // 解析渲染
-      column.render = (value: any) => {
+      column.render = (value: any, record: any) => {
         if (column.valueType === 'radio' || column.valueType === 'select') {
           return column.valueEnum[value];
         }
         if (column.valueType === 'option') {
-          return value;
+          return column?.actions?.map((action: any) => {
+            return (
+              <Action
+                key={action.component}
+                {...action}
+                data={record}
+              />
+            );
+          });
         }
         return <Render body={value} />;
       };
@@ -83,6 +96,15 @@ const ProTable = (props: ProTableProps) => {
     setLoading(false);
   };
 
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+
+  const rowSelection: TableRowSelection<any> = {
+    onChange: onSelectChange,
+    selectedRowKeys
+  };
+
   return (
     <>
       {search && <ProTableSearch {...search} />}
@@ -90,17 +112,22 @@ const ProTable = (props: ProTableProps) => {
         className="mt-16px"
         title={headerTitle}
         extra={
-          <ProTableHeaderOperation
-            columns={columnChecks}
-            refresh={onRequest}
-            setColumnChecks={setColumnChecks}
-          />
+          <div className="flex items-center gap-x-12px py-12px">
+            <ProTableToolBar actions={toolBar?.actions} />
+            <ProTableHeaderOperation
+              columns={columnChecks}
+              loading={loading}
+              refresh={onRequest}
+              setColumnChecks={setColumnChecks}
+            />
+          </div>
         }
       >
         <ATable<any>
           columns={parsedColumns}
           dataSource={datasource}
           loading={loading}
+          rowSelection={rowSelection}
         />
       </ACard>
     </>
