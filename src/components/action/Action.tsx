@@ -28,7 +28,7 @@ const Action = (props: ActionProps) => {
       danger={danger}
       disabled={disabled}
       ghost={ghost}
-      href={href}
+      href={tplEngine(href, data)}
       loading={loading}
       shape={shape}
       size={size}
