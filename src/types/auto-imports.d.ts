@@ -89,6 +89,7 @@ declare global {
   const NumberTicker: typeof import('../components/custom/NumberTicker')['default']
   const Outlet: typeof import('react-router-dom')['Outlet']
   const PinToggler: typeof import('../components/common/PinToggler')['default']
+  const ProCard: typeof import('../components/pro-card/ProCard')['default']
   const ProForm: typeof import('../components/pro-form/ProForm')['default']
   const ProFormField: typeof import('../components/pro-form/ProFormField')['default']
   const ProFormImageCaptcha: typeof import('../components/pro-form/pro-field/ProFormImageCaptcha')['default']
