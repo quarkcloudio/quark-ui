@@ -10,7 +10,7 @@ const ProTableToolBar = (props: Props) => {
       {actions?.map(action => (
         <Action
           {...action}
-          key={action.component}
+          key={action.componentKey}
         />
       ))}
     </div>

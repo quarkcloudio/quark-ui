@@ -9,12 +9,23 @@ interface EngineProps {
 }
 
 const Engine = (props: EngineProps) => {
-  const { api } = props;
   const [body, setBody] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
   const { dispatchEngineApi, dispatchEngineComponent } = useEngine();
+  const { search } = useLocation();
+  const apiFromSearch = useMemo(() => {
+    if (search?.includes('api=')) {
+      return search.split('api=')[1];
+    }
+    return null;
+  }, [search]);
 
   useEffectOnActive(() => {
+    let api = props.api;
+    if (apiFromSearch) {
+      api = apiFromSearch;
+    }
+
     if (api) {
       setLoading(true);
       fetchEngineComponent(api).then(res => {
@@ -24,7 +35,7 @@ const Engine = (props: EngineProps) => {
         setLoading(false);
       });
     }
-  }, []);
+  }, [apiFromSearch]);
 
   return (
     <div className="grid h-full w-full">

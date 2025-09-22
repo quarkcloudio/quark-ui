@@ -96,6 +96,7 @@ declare global {
   const ProTableDragContent: typeof import('../components/pro-table/ProTableDragContent')['default']
   const ProTableHeaderOperation: typeof import('../components/pro-table/ProTableHeaderOperation')['default']
   const ProTableSearch: typeof import('../components/pro-table/ProTableSearch')['default']
+  const ProTableToolBar: typeof import('../components/pro-table/ProTableToolBar')['default']
   const Render: typeof import('../components/render/Render')['default']
   const Route: typeof import('react-router-dom')['Route']
   const Routes: typeof import('react-router-dom')['Routes']

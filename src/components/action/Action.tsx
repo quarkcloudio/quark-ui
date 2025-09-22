@@ -2,6 +2,7 @@ import tplEngine from '@/utils/template';
 
 interface ActionProps {
   block?: boolean;
+  componentkey: string;
   danger?: boolean;
   data?: Record<string, any>;
   disabled?: boolean;
@@ -19,8 +20,25 @@ interface ActionProps {
 }
 
 const Action = (props: ActionProps) => {
-  const { block, danger, data, disabled, ghost, href, icon, label, loading, onClick, shape, size, target, type } =
-    props;
+  const {
+    block,
+    componentkey,
+    danger,
+    data,
+    disabled,
+    ghost,
+    href,
+    icon,
+    label,
+    loading,
+    onClick,
+    shape,
+    size,
+    target,
+    type
+  } = props;
+
+  const { pathname } = useLocation();
 
   return (
     <AButton
@@ -28,7 +46,8 @@ const Action = (props: ActionProps) => {
       danger={danger}
       disabled={disabled}
       ghost={ghost}
-      href={tplEngine(href, data)}
+      href={tplEngine(href, { ...data, enginePath: pathname })}
+      key={componentkey}
       loading={loading}
       shape={shape}
       size={size}
