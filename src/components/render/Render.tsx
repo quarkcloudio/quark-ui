@@ -19,6 +19,8 @@ const Render = (props: RenderProps) => {
           return <AImage {...body} />;
         case 'card':
           return <ProCard {...body} />;
+        case 'form':
+          return <ProForm {...body} />;
         case 'table':
           return <ProTable {...body} />;
         default:

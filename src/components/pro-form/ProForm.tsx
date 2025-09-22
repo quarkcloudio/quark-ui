@@ -1,4 +1,3 @@
-import { useFormRules } from '@/features/form';
 import { useRouter } from '@/features/router';
 
 type FormValues = {
@@ -6,14 +5,17 @@ type FormValues = {
   phone: string;
 };
 
-const ProForm = () => {
+interface Props {
+  body?: any;
+  component: string;
+  componentkey?: string;
+}
+
+const ProForm = (props: Props) => {
+  const { body } = props;
   const [form] = AForm.useForm<FormValues>();
 
-  const { getCaptcha, isCounting, label, loading } = useCaptcha();
-
   const { t } = useTranslation();
-
-  const { formRules } = useFormRules();
 
   const { navigateUp } = useRouter();
 
@@ -22,10 +24,6 @@ const ProForm = () => {
 
     // request to reset password
     window.$message?.success(t('page.login.common.validateSuccess'));
-  }
-
-  function sendCaptcha() {
-    getCaptcha('17260711111');
   }
 
   useKeyPress('enter', () => {
@@ -38,35 +36,16 @@ const ProForm = () => {
       form={form}
       onFinish={handleSubmit}
     >
-      <AForm.Item
-        name="phone"
-        rules={formRules.phone}
-      >
-        <AInput
-          placeholder={t('page.login.common.phonePlaceholder')}
-          size="large"
+      {body.map((item: any) => (
+        <ProFormField
+          component={item.component}
+          fieldProps={{ ...item }}
+          key={item.componentkey}
+          label={item.label}
+          name={item.name}
+          rules={item.rules}
         />
-      </AForm.Item>
-
-      <AForm.Item
-        name="code"
-        rules={formRules.code}
-      >
-        <div className="w-full flex-y-center gap-16px">
-          <AInput
-            placeholder={t('page.login.common.codePlaceholder')}
-            size="large"
-          />
-          <AButton
-            disabled={isCounting}
-            loading={loading}
-            size="large"
-            onClick={sendCaptcha}
-          >
-            {label}
-          </AButton>
-        </div>
-      </AForm.Item>
+      ))}
       <ASpace
         className="w-full"
         direction="vertical"
