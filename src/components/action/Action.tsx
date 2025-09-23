@@ -1,6 +1,9 @@
 import tplEngine from '@/utils/template';
 
+import Back from './item/Back';
+
 interface ActionProps {
+  actionType?: string;
   block?: boolean;
   componentkey: string;
   danger?: boolean;
@@ -21,6 +24,7 @@ interface ActionProps {
 
 const Action = (props: ActionProps) => {
   const {
+    actionType,
     block,
     componentkey,
     danger,
@@ -40,32 +44,55 @@ const Action = (props: ActionProps) => {
 
   const { pathname } = useLocation();
 
-  return (
-    <AButton
-      block={block}
-      danger={danger}
-      disabled={disabled}
-      ghost={ghost}
-      href={tplEngine(href, { ...data, enginePath: pathname })}
-      key={componentkey}
-      loading={loading}
-      shape={shape}
-      size={size}
-      target={target}
-      type={type}
-      icon={
-        icon && (
-          <SvgIcon
-            className="text-icon"
-            icon={icon}
-          />
-        )
-      }
-      onClick={onClick}
-    >
-      {tplEngine(label, data)}
-    </AButton>
-  );
+  switch (actionType) {
+    case 'back':
+      return (
+        <Back
+          block={block}
+          danger={danger}
+          disabled={disabled}
+          ghost={ghost}
+          icon={icon}
+          key={componentkey}
+          label={label}
+          loading={loading}
+          shape={shape}
+          size={size}
+          target={target}
+          type={type}
+        />
+      );
+      break;
+
+    default:
+      return (
+        <AButton
+          block={block}
+          danger={danger}
+          disabled={disabled}
+          ghost={ghost}
+          href={tplEngine(href, { ...data, enginePath: pathname })}
+          key={componentkey}
+          loading={loading}
+          shape={shape}
+          size={size}
+          target={target}
+          type={type}
+          icon={
+            icon && (
+              <SvgIcon
+                className="text-icon"
+                icon={icon}
+              />
+            )
+          }
+          onClick={onClick}
+        >
+          {tplEngine(label, data)}
+        </AButton>
+      );
+      break;
+  }
 };
 
 export default Action;
