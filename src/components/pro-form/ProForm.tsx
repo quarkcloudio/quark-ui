@@ -32,7 +32,6 @@ const ProForm = (props: Props) => {
 
   return (
     <AForm
-      className="pt-24px"
       form={form}
       onFinish={handleSubmit}
     >
@@ -46,29 +45,15 @@ const ProForm = (props: Props) => {
           rules={item.rules}
         />
       ))}
-      <ASpace
-        className="w-full"
-        direction="vertical"
-        size={18}
-      >
+      <ASpace className="w-full">
         <AButton
-          block
           htmlType="submit"
-          shape="round"
-          size="large"
           type="primary"
         >
           {t('common.confirm')}
         </AButton>
 
-        <AButton
-          block
-          shape="round"
-          size="large"
-          onClick={navigateUp}
-        >
-          {t('page.login.common.back')}
-        </AButton>
+        <AButton onClick={navigateUp}>{t('page.login.common.back')}</AButton>
       </ASpace>
     </AForm>
   );
