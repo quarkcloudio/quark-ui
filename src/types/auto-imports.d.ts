@@ -43,6 +43,7 @@ declare global {
   const ATypography: typeof import('antd')['Typography']
   const AWatermark: typeof import('antd')['Watermark']
   const Action: typeof import('../components/action/Action')['default']
+  const Back: typeof import('../components/action/item/Back')['default']
   const BetterScroll: typeof import('../components/custom/BetterScroll')['default']
   const BeyondHiding: typeof import('../components/common/BeyondHiding')['default']
   const ButtonIcon: typeof import('../components/custom/ButtonIcon')['default']

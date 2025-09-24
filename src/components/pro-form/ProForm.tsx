@@ -1,29 +1,40 @@
-import { useRouter } from '@/features/router';
-
-type FormValues = {
-  code: string;
-  phone: string;
-};
-
 interface Props {
+  actions?: any[];
   body?: any;
-  component: string;
-  componentkey?: string;
+  buttonWrapperCol?: any;
+  colon?: boolean;
+  componentkey: string;
+  disabled?: boolean;
+  hideRquiredMark?: boolean;
+  labelAlign?: 'left' | 'right';
+  labelCol?: any;
+  labelWrap?: boolean;
+  layout?: 'horizontal' | 'inline' | 'vertical';
+  name?: string;
+  scrollToFirstError?: boolean;
+  wrapperCol?: any;
 }
 
 const ProForm = (props: Props) => {
-  const { body } = props;
-  const [form] = AForm.useForm<FormValues>();
+  const {
+    actions,
+    body,
+    buttonWrapperCol,
+    colon,
+    componentkey,
+    disabled,
+    hideRquiredMark,
+    labelAlign,
+    labelCol,
+    labelWrap,
+    layout,
+    name,
+    scrollToFirstError
+  } = props;
+  const [form] = AForm.useForm<any>();
 
-  const { t } = useTranslation();
-
-  const { navigateUp } = useRouter();
-
-  function handleSubmit(params: FormValues) {
+  function handleSubmit(params: any) {
     console.log(params);
-
-    // request to reset password
-    window.$message?.success(t('page.login.common.validateSuccess'));
   }
 
   useKeyPress('enter', () => {
@@ -32,7 +43,17 @@ const ProForm = (props: Props) => {
 
   return (
     <AForm
+      colon={colon}
+      disabled={disabled}
       form={form}
+      hideRequiredMark={hideRquiredMark}
+      key={componentkey}
+      labelAlign={labelAlign}
+      labelCol={labelCol}
+      labelWrap={labelWrap}
+      layout={layout}
+      name={name}
+      scrollToFirstError={scrollToFirstError}
       onFinish={handleSubmit}
     >
       {body.map((item: any) => (
@@ -42,19 +63,19 @@ const ProForm = (props: Props) => {
           key={item.componentkey}
           label={item.label}
           name={item.name}
-          rules={item.rules}
+          rules={item.frontendRules}
         />
       ))}
-      <ASpace className="w-full">
-        <AButton
-          htmlType="submit"
-          type="primary"
-        >
-          {t('common.confirm')}
-        </AButton>
-
-        <AButton onClick={navigateUp}>{t('page.login.common.back')}</AButton>
-      </ASpace>
+      <AForm.Item wrapperCol={buttonWrapperCol}>
+        <ASpace className="w-full">
+          {actions?.map((item: any) => (
+            <Action
+              {...item}
+              key={item.componentkey}
+            />
+          ))}
+        </ASpace>
+      </AForm.Item>
     </AForm>
   );
 };
