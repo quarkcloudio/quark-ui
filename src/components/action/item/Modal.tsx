@@ -38,6 +38,16 @@ const Modal = (props: Props) => {
         closable={{ 'aria-label': 'Close Button' }}
         {...modal}
         open={open}
+        footer={
+          <ASpace>
+            {modal?.actions?.map((action: any) => (
+              <Action
+                key={action.componentkey}
+                {...action}
+              />
+            ))}
+          </ASpace>
+        }
         onCancel={handleCancel}
         onOk={handleOk}
       >
