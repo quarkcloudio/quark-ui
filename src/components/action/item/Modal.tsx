@@ -10,6 +10,7 @@ interface Props {
   icon?: string;
   label?: string;
   loading?: boolean;
+  modal?: any;
   shape?: 'circle' | 'round';
   size?: 'large' | 'middle' | 'small';
   target?: '_blank' | '_parent' | '_self' | '_top';
@@ -17,7 +18,7 @@ interface Props {
 }
 
 const Modal = (props: Props) => {
-  const { block, danger, data, disabled, ghost, icon, label, loading, shape, size, target, type } = props;
+  const { block, danger, data, disabled, ghost, icon, label, loading, modal, shape, size, target, type } = props;
   const [open, setOpen] = useState(false);
 
   const showModal = () => {
@@ -35,14 +36,12 @@ const Modal = (props: Props) => {
     <>
       <AModal
         closable={{ 'aria-label': 'Close Button' }}
+        {...modal}
         open={open}
-        title="Basic Modal"
         onCancel={handleCancel}
         onOk={handleOk}
       >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        <Render body={modal.body} />
       </AModal>
       <AButton
         block={block}

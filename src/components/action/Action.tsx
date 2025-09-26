@@ -9,12 +9,14 @@ interface ActionProps {
   danger?: boolean;
   data?: Record<string, any>;
   disabled?: boolean;
+  drawer?: any;
   ghost?: boolean;
   href?: string;
   htmlType?: 'button' | 'reset' | 'submit';
   icon?: string;
   label?: string;
   loading?: boolean;
+  modal?: any;
   onClick?: () => void;
   shape?: 'circle' | 'round';
   size?: 'large' | 'middle' | 'small';
@@ -30,11 +32,13 @@ const Action = (props: ActionProps) => {
     danger,
     data,
     disabled,
+    drawer,
     ghost,
     href,
     icon,
     label,
     loading,
+    modal,
     onClick,
     shape,
     size,
@@ -50,6 +54,7 @@ const Action = (props: ActionProps) => {
         <Back
           block={block}
           danger={danger}
+          data={data}
           disabled={disabled}
           ghost={ghost}
           icon={icon}
@@ -95,12 +100,14 @@ const Action = (props: ActionProps) => {
         <Modal
           block={block}
           danger={danger}
+          data={data}
           disabled={disabled}
           ghost={ghost}
           icon={icon}
           key={componentkey}
           label={label}
           loading={loading}
+          modal={modal}
           shape={shape}
           size={size}
           target={target}
@@ -113,7 +120,9 @@ const Action = (props: ActionProps) => {
         <Drawer
           block={block}
           danger={danger}
+          data={data}
           disabled={disabled}
+          drawer={drawer}
           ghost={ghost}
           icon={icon}
           key={componentkey}

@@ -6,6 +6,7 @@ interface Props {
   danger?: boolean;
   data?: Record<string, any>;
   disabled?: boolean;
+  drawer?: any;
   ghost?: boolean;
   icon?: string;
   label?: string;
@@ -17,7 +18,7 @@ interface Props {
 }
 
 const Drawer = (props: Props) => {
-  const { block, danger, data, disabled, ghost, icon, label, loading, shape, size, target, type } = props;
+  const { block, danger, data, disabled, drawer, ghost, icon, label, loading, shape, size, target, type } = props;
   const [open, setOpen] = useState(false);
 
   const showDrawer = () => {
@@ -31,13 +32,21 @@ const Drawer = (props: Props) => {
     <>
       <ADrawer
         closable={{ 'aria-label': 'Close Button' }}
+        {...drawer}
         open={open}
-        title="Basic Drawer"
+        footer={
+          <ASpace>
+            {drawer?.actions?.map((action: any) => (
+              <Action
+                key={action.componentkey}
+                {...action}
+              />
+            ))}
+          </ASpace>
+        }
         onClose={onClose}
       >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        <Render body={drawer.body} />
       </ADrawer>
       <AButton
         block={block}
