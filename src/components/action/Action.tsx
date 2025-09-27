@@ -68,6 +68,25 @@ const Action = (props: ActionProps) => {
         />
       );
 
+    case 'cancel':
+      return (
+        <Cancel
+          block={block}
+          danger={danger}
+          data={data}
+          disabled={disabled}
+          ghost={ghost}
+          icon={icon}
+          key={componentkey}
+          label={label}
+          loading={loading}
+          shape={shape}
+          size={size}
+          target={target}
+          type={type}
+          onClick={onClick}
+        />
+      );
     case 'link':
       return (
         <AButton
@@ -142,7 +161,6 @@ const Action = (props: ActionProps) => {
           danger={danger}
           disabled={disabled}
           ghost={ghost}
-          href={tplEngine(href, { ...data, enginePath: pathname })}
           key={componentkey}
           loading={loading}
           shape={shape}

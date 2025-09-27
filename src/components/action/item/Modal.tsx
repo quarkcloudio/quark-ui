@@ -44,6 +44,7 @@ const Modal = (props: Props) => {
               <Action
                 key={action.componentkey}
                 {...action}
+                onClick={handleOk}
               />
             ))}
           </ASpace>

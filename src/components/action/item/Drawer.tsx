@@ -40,6 +40,7 @@ const Drawer = (props: Props) => {
               <Action
                 key={action.componentkey}
                 {...action}
+                onClick={onClose}
               />
             ))}
           </ASpace>

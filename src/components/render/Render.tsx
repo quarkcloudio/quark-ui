@@ -1,20 +1,21 @@
+import type { AnyNsRecord } from 'node:dns';
+
 import DOMPurify from 'dompurify';
 
 interface RenderProps {
   body: any;
-  callback?: (data?: any) => void;
   data?: any;
 }
 const Render = (props: RenderProps) => {
   // 递归渲染函数
-  const render = (body: any, data: any, callback?: (data?: any) => void): any => {
+  const render = (body: any, data: AnyNsRecord): any => {
     if (typeof body === 'string' || typeof body === 'number') {
       return <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(String(body)) }} />;
     }
     if (body?.component) {
       switch (body.component) {
         case 'view':
-          return render(body.body, data, callback);
+          return render(body.body, data);
         case 'image':
           return <AImage {...body} />;
         case 'card':
@@ -29,13 +30,13 @@ const Render = (props: RenderProps) => {
       }
     }
     if (Array.isArray(body)) {
-      return body.map(item => render(item, data, callback));
+      return body.map(item => render(item, data));
     }
     // 确保所有路径都有返回值
     return null;
   };
 
-  return render(props.body, props.data, props.callback);
+  return render(props.body, props.data);
 };
 
 export default Render;
