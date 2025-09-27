@@ -10,12 +10,13 @@ interface ProTableProps {
   columns: any[];
   datasource?: any[];
   headerTitle?: string;
+  rowKey: string;
   search?: any;
   toolBar?: any;
 }
 
 const ProTable = (props: ProTableProps) => {
-  const { columns, headerTitle, search, toolBar } = props;
+  const { columns, headerTitle, rowKey, search, toolBar } = props;
   const [datasource, setDatasource] = useState<any>(props.datasource || []);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -116,6 +117,7 @@ const ProTable = (props: ProTableProps) => {
             <ProTableToolBar
               actions={toolBar?.actions}
               refresh={onRequest}
+              selectedRowKeys={selectedRowKeys}
             />
             <ProTableHeaderOperation
               columns={columnChecks}
@@ -130,6 +132,7 @@ const ProTable = (props: ProTableProps) => {
           columns={parsedColumns}
           dataSource={datasource}
           loading={loading}
+          rowKey={rowKey}
           rowSelection={rowSelection}
         />
       </ACard>
