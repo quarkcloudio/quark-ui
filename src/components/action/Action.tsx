@@ -15,7 +15,6 @@ interface ActionProps {
   htmlType?: 'button' | 'reset' | 'submit';
   icon?: string;
   label?: string;
-  loading?: boolean;
   modal?: any;
   onClick?: () => void;
   shape?: 'circle' | 'round';
@@ -37,7 +36,6 @@ const Action = (props: ActionProps) => {
     href,
     icon,
     label,
-    loading,
     modal,
     onClick,
     shape,
@@ -60,7 +58,6 @@ const Action = (props: ActionProps) => {
           icon={icon}
           key={componentkey}
           label={label}
-          loading={loading}
           shape={shape}
           size={size}
           target={target}
@@ -79,7 +76,6 @@ const Action = (props: ActionProps) => {
           icon={icon}
           key={componentkey}
           label={label}
-          loading={loading}
           shape={shape}
           size={size}
           target={target}
@@ -96,7 +92,6 @@ const Action = (props: ActionProps) => {
           ghost={ghost}
           href={tplEngine(href, { ...data, enginePath: pathname })}
           key={componentkey}
-          loading={loading}
           shape={shape}
           size={size}
           target={target}
@@ -125,7 +120,6 @@ const Action = (props: ActionProps) => {
           icon={icon}
           key={componentkey}
           label={label}
-          loading={loading}
           modal={modal}
           shape={shape}
           size={size}
@@ -146,7 +140,6 @@ const Action = (props: ActionProps) => {
           icon={icon}
           key={componentkey}
           label={label}
-          loading={loading}
           shape={shape}
           size={size}
           target={target}
@@ -162,7 +155,6 @@ const Action = (props: ActionProps) => {
           disabled={disabled}
           ghost={ghost}
           key={componentkey}
-          loading={loading}
           shape={shape}
           size={size}
           target={target}
