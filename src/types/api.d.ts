@@ -54,7 +54,11 @@ declare namespace Api {
    */
   namespace Engine {
     interface EngineComponent {
-      data: any;
+      [key: string]: any;
+    }
+
+    interface AjaxAction {
+      [key: string]: any;
     }
   }
 

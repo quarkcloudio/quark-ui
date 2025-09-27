@@ -10,7 +10,6 @@ interface Props {
   ghost?: boolean;
   icon?: string;
   label?: string;
-  loading?: boolean;
   shape?: 'circle' | 'round';
   size?: 'large' | 'middle' | 'small';
   target?: '_blank' | '_parent' | '_self' | '_top';
@@ -18,7 +17,7 @@ interface Props {
 }
 
 const Back = (props: Props) => {
-  const { block, danger, data, disabled, ghost, icon, label, loading, shape, size, target, type } = props;
+  const { block, danger, data, disabled, ghost, icon, label, shape, size, target, type } = props;
   const { go } = useRouter();
 
   const onClick = () => {
@@ -30,7 +29,6 @@ const Back = (props: Props) => {
       danger={danger}
       disabled={disabled}
       ghost={ghost}
-      loading={loading}
       shape={shape}
       size={size}
       target={target}

@@ -9,7 +9,6 @@ interface Props {
   ghost?: boolean;
   icon?: string;
   label?: string;
-  loading?: boolean;
   modal?: any;
   shape?: 'circle' | 'round';
   size?: 'large' | 'middle' | 'small';
@@ -18,7 +17,7 @@ interface Props {
 }
 
 const Modal = (props: Props) => {
-  const { block, danger, data, disabled, ghost, icon, label, loading, modal, shape, size, target, type } = props;
+  const { block, danger, data, disabled, ghost, icon, label, modal, shape, size, target, type } = props;
   const [open, setOpen] = useState(false);
 
   const showModal = () => {
@@ -59,7 +58,6 @@ const Modal = (props: Props) => {
         danger={danger}
         disabled={disabled}
         ghost={ghost}
-        loading={loading}
         shape={shape}
         size={size}
         target={target}

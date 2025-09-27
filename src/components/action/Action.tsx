@@ -4,6 +4,7 @@ import Back from './item/Back';
 
 interface ActionProps {
   actionType?: string;
+  api?: string;
   block?: boolean;
   componentkey: string;
   danger?: boolean;
@@ -26,6 +27,7 @@ interface ActionProps {
 const Action = (props: ActionProps) => {
   const {
     actionType,
+    api,
     block,
     componentkey,
     danger,
@@ -47,6 +49,25 @@ const Action = (props: ActionProps) => {
   const { pathname } = useLocation();
 
   switch (actionType) {
+    case 'ajax':
+      return (
+        <Ajax
+          api={api}
+          block={block}
+          danger={danger}
+          data={data}
+          disabled={disabled}
+          ghost={ghost}
+          icon={icon}
+          key={componentkey}
+          label={label}
+          shape={shape}
+          size={size}
+          target={target}
+          type={type}
+          onClick={onClick}
+        />
+      );
     case 'back':
       return (
         <Back

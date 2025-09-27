@@ -10,7 +10,6 @@ interface Props {
   ghost?: boolean;
   icon?: string;
   label?: string;
-  loading?: boolean;
   shape?: 'circle' | 'round';
   size?: 'large' | 'middle' | 'small';
   target?: '_blank' | '_parent' | '_self' | '_top';
@@ -18,7 +17,7 @@ interface Props {
 }
 
 const Drawer = (props: Props) => {
-  const { block, danger, data, disabled, drawer, ghost, icon, label, loading, shape, size, target, type } = props;
+  const { block, danger, data, disabled, drawer, ghost, icon, label, shape, size, target, type } = props;
   const [open, setOpen] = useState(false);
 
   const showDrawer = () => {
@@ -54,7 +53,6 @@ const Drawer = (props: Props) => {
         danger={danger}
         disabled={disabled}
         ghost={ghost}
-        loading={loading}
         shape={shape}
         size={size}
         target={target}

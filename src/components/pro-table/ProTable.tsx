@@ -113,7 +113,10 @@ const ProTable = (props: ProTableProps) => {
         title={headerTitle}
         extra={
           <div className="flex items-center gap-x-12px py-12px">
-            <ProTableToolBar actions={toolBar?.actions} />
+            <ProTableToolBar
+              actions={toolBar?.actions}
+              refresh={onRequest}
+            />
             <ProTableHeaderOperation
               columns={columnChecks}
               loading={loading}

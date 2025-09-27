@@ -1,7 +1,9 @@
+import { fetchAjaxAction } from '@/service/api';
 import tplEngine from '@/utils/template';
 
 interface Props {
   actionType?: string;
+  api?: string;
   block?: boolean;
   danger?: boolean;
   data?: Record<string, any>;
@@ -16,11 +18,19 @@ interface Props {
   type?: 'dashed' | 'default' | 'link' | 'primary' | 'text';
 }
 
-const Cancel = (props: Props) => {
-  const { block, danger, data, disabled, ghost, icon, label, onClick, shape, size, target, type } = props;
-
-  const onClickHandler = () => {
-    onClick?.();
+const Ajax = (props: Props) => {
+  const { api, block, danger, data, disabled, ghost, icon, label, onClick, shape, size, target, type } = props;
+  const [loading, setLoading] = useState(false);
+  const onClickHandler = async () => {
+    if (api) {
+      setLoading(true);
+      const res = await fetchAjaxAction(api);
+      setLoading(false);
+      if (!res.error) {
+        console.log(res.data);
+        onClick?.();
+      }
+    }
   };
   return (
     <AButton
@@ -28,6 +38,7 @@ const Cancel = (props: Props) => {
       danger={danger}
       disabled={disabled}
       ghost={ghost}
+      loading={loading}
       shape={shape}
       size={size}
       target={target}
@@ -47,4 +58,4 @@ const Cancel = (props: Props) => {
   );
 };
 
-export default Cancel;
+export default Ajax;
