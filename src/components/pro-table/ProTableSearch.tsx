@@ -3,6 +3,9 @@ interface ProTableSearchProps {
   exportApi?: string;
   exportText?: string;
   items?: any;
+  onExport?: (values: any) => void;
+  onReset?: () => void;
+  onSearch?: (values: any) => void;
   resetText?: string;
   searchText?: string;
 }
@@ -14,9 +17,29 @@ const ProTableSearch = (props: ProTableSearchProps) => {
     exportApi,
     exportText = t('common.export'),
     items,
+    onExport,
+    onReset,
+    onSearch,
     resetText = t('common.reset'),
     searchText = t('common.search')
   } = props;
+
+  const [form] = AForm.useForm();
+
+  const onHandleSearch = () => {
+    const values = form.getFieldsValue();
+    onSearch?.(values);
+  };
+
+  const onHandleReset = () => {
+    form.resetFields();
+    onReset?.();
+  };
+
+  const onHandleExport = () => {
+    const values = form.getFieldsValue();
+    onExport?.(values);
+  };
 
   return (
     <ACollapse
@@ -29,6 +52,7 @@ const ProTableSearch = (props: ProTableSearchProps) => {
         key="1"
       >
         <AForm
+          form={form}
           labelCol={{
             md: 7,
             span: 5
@@ -62,11 +86,17 @@ const ProTableSearch = (props: ProTableSearchProps) => {
                   gap={12}
                   justify="end"
                 >
-                  <AButton icon={<IconAntDesignReloadOutlined />}>{resetText}</AButton>
+                  <AButton
+                    icon={<IconAntDesignReloadOutlined />}
+                    onClick={onHandleReset}
+                  >
+                    {resetText}
+                  </AButton>
                   <AButton
                     ghost
                     icon={<IconAntDesignSearchOutlined />}
                     type="primary"
+                    onClick={onHandleSearch}
                   >
                     {searchText}
                   </AButton>
@@ -75,6 +105,7 @@ const ProTableSearch = (props: ProTableSearchProps) => {
                       ghost
                       icon={<IconAntDesignDownloadOutlined />}
                       type="primary"
+                      onClick={onHandleExport}
                     >
                       {exportText}
                     </AButton>

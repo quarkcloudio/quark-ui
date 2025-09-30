@@ -17,3 +17,13 @@ export function fetchEngineComponent(api: string) {
 export function fetchAjaxAction(api: string) {
   return request<Api.Engine.AjaxAction>({ url: api });
 }
+
+/**
+ * Get table data
+ *
+ * @param api Table data api
+ * @param queryParams Query params
+ */
+export function fetchTableData(api: string, queryParams: any) {
+  return request<Api.Engine.EngineComponent>({ params: queryParams, url: api });
+}
