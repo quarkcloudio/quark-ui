@@ -191,7 +191,6 @@ const ProTable = (props: ProTableProps) => {
             />
             <ProTableHeaderOperation
               columns={columnChecks}
-              loading={loading}
               refresh={() => onRequest()}
               setColumnChecks={setColumnChecks}
             />
