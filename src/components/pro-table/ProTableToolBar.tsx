@@ -19,6 +19,7 @@ const ProTableToolBar = (props: Props) => {
       {actions?.map(action => (
         <Action
           {...action}
+          data={{ id: selectedRowKeys }}
           disabled={batchActionDisabled(action)}
           key={action.componentKey}
           onClick={refresh}

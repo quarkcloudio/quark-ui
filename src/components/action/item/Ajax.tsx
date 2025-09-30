@@ -24,7 +24,7 @@ const Ajax = (props: Props) => {
   const onClickHandler = async () => {
     if (api) {
       setLoading(true);
-      const res = await fetchAjaxAction(api);
+      const res = await fetchAjaxAction(tplEngine(api, data));
       setLoading(false);
       if (!res.error) {
         console.log(res.data);
