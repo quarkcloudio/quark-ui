@@ -93,6 +93,7 @@ const ProTable = (props: ProTableProps) => {
     if (engineApi) {
       const { data }: any = await fetchEngineComponent(engineApi);
       setDatasource(data?.datasource || []);
+      setSelectedRowKeys([]);
     }
     setLoading(false);
   };
