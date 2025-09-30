@@ -64,27 +64,34 @@ const ProTable = (props: ProTableProps) => {
       ?.filter(item => item.checked)
       .map(check => {
         const col = { ...columnMap.get(check.key) };
+
+        // 解析筛选项
         if (col.filters) {
           col.filters = col?.fieldProps?.options?.map((option: any) => ({
             text: option.label,
             value: option.value
           }));
         }
+
+        // 自定义渲染
         col.render = (value: any, record: any) => {
-          if (col.valueType === 'radio' || col.valueType === 'select') {
-            return col.valueEnum[value];
+          switch (col.valueType) {
+            case 'radio':
+            case 'select':
+              return col.valueEnum?.[value] ?? value;
+            case 'option':
+              return col?.actions?.map((action: any) => (
+                <Action
+                  key={action.component}
+                  {...action}
+                  data={record}
+                />
+              ));
+            default:
+              return <Render body={value} />;
           }
-          if (col.valueType === 'option') {
-            return col?.actions?.map((action: any) => (
-              <Action
-                key={action.component}
-                {...action}
-                data={record}
-              />
-            ));
-          }
-          return <Render body={value} />;
         };
+
         return col;
       });
   }, [columns, columnChecks]);
