@@ -7,6 +7,9 @@ interface ActionProps {
   api?: string;
   block?: boolean;
   componentkey: string;
+  confirmText?: string;
+  confirmTitle?: string;
+  confirmType?: string;
   danger?: boolean;
   data?: Record<string, any>;
   disabled?: boolean;
@@ -30,6 +33,9 @@ const Action = (props: ActionProps) => {
     api,
     block,
     componentkey,
+    confirmText,
+    confirmTitle,
+    confirmType,
     danger,
     data,
     disabled,
@@ -54,6 +60,9 @@ const Action = (props: ActionProps) => {
         <Ajax
           api={api}
           block={block}
+          confirmText={confirmText}
+          confirmTitle={confirmTitle}
+          confirmType={confirmType}
           danger={danger}
           data={data}
           disabled={disabled}

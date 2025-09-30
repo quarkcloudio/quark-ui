@@ -1,3 +1,5 @@
+import { ExclamationCircleFilled } from '@ant-design/icons';
+
 import { fetchAjaxAction } from '@/service/api';
 import tplEngine from '@/utils/template';
 
@@ -5,6 +7,9 @@ interface Props {
   actionType?: string;
   api?: string;
   block?: boolean;
+  confirmText?: string;
+  confirmTitle?: string;
+  confirmType?: string;
   danger?: boolean;
   data?: Record<string, any>;
   disabled?: boolean;
@@ -19,19 +24,91 @@ interface Props {
 }
 
 const Ajax = (props: Props) => {
-  const { api, block, danger, data, disabled, ghost, icon, label, onClick, shape, size, target, type } = props;
+  const {
+    api,
+    block,
+    confirmText,
+    confirmTitle,
+    confirmType,
+    danger,
+    data,
+    disabled,
+    ghost,
+    icon,
+    label,
+    onClick,
+    shape,
+    size,
+    target,
+    type
+  } = props;
   const [loading, setLoading] = useState(false);
+
+  const showConfirm = () => {
+    AModal.confirm({
+      content: confirmText,
+      icon: <ExclamationCircleFilled />,
+      async onOk() {
+        if (api) {
+          setLoading(true);
+          const res = await fetchAjaxAction(tplEngine(api, data));
+          setLoading(false);
+          if (!res.error) {
+            onClick?.();
+          }
+        }
+      },
+      title: confirmTitle
+    });
+  };
+
   const onClickHandler = async () => {
+    if (confirmType === 'modal') {
+      showConfirm();
+      return;
+    }
     if (api) {
       setLoading(true);
       const res = await fetchAjaxAction(tplEngine(api, data));
       setLoading(false);
       if (!res.error) {
-        console.log(res.data);
         onClick?.();
       }
     }
   };
+
+  if (confirmType === 'pop') {
+    return (
+      <APopconfirm
+        description={confirmText}
+        title={confirmTitle}
+        onConfirm={onClickHandler}
+      >
+        <AButton
+          block={block}
+          danger={danger}
+          disabled={disabled}
+          ghost={ghost}
+          loading={loading}
+          shape={shape}
+          size={size}
+          target={target}
+          type={type}
+          icon={
+            icon && (
+              <SvgIcon
+                className="text-icon"
+                icon={icon}
+              />
+            )
+          }
+        >
+          {tplEngine(label, data)}
+        </AButton>
+      </APopconfirm>
+    );
+  }
+
   return (
     <AButton
       block={block}
