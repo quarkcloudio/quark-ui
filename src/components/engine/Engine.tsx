@@ -1,7 +1,7 @@
 import { useEffectOnActive } from 'keepalive-for-react';
 import { useState } from 'react';
 
-import { useEngine } from '@/features/engine';
+import { useEngine } from '@/hooks/common/engine';
 import { fetchEngineComponent } from '@/service/api';
 
 interface EngineProps {
@@ -11,7 +11,7 @@ interface EngineProps {
 const Engine = (props: EngineProps) => {
   const [body, setBody] = useState<any>();
   const [loading, setLoading] = useState<boolean>(false);
-  const { dispatchEngineApi, dispatchEngineComponent } = useEngine();
+  const { setEngineApi, setEngineComponent } = useEngine();
   const { search } = useLocation();
   const apiFromSearch = useMemo(() => {
     if (search?.includes('api=')) {
@@ -30,8 +30,8 @@ const Engine = (props: EngineProps) => {
       setLoading(true);
       fetchEngineComponent(api).then(res => {
         setBody(res.data);
-        dispatchEngineComponent(res.data);
-        dispatchEngineApi(api);
+        setEngineComponent(res.data);
+        setEngineApi(api);
         setLoading(false);
       });
     }

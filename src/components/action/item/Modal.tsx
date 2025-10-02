@@ -10,6 +10,7 @@ interface Props {
   icon?: string;
   label?: string;
   modal?: any;
+  onClick?: () => void;
   shape?: 'circle' | 'round';
   size?: 'large' | 'middle' | 'small';
   target?: '_blank' | '_parent' | '_self' | '_top';
@@ -17,7 +18,7 @@ interface Props {
 }
 
 const Modal = (props: Props) => {
-  const { block, danger, data, disabled, ghost, icon, label, modal, shape, size, target, type } = props;
+  const { block, danger, data, disabled, ghost, icon, label, modal, onClick, shape, size, target, type } = props;
   const [open, setOpen] = useState(false);
 
   const showModal = () => {
@@ -25,6 +26,9 @@ const Modal = (props: Props) => {
   };
 
   const handleOk = () => {
+    if (onClick) {
+      onClick();
+    }
     setOpen(false);
   };
 

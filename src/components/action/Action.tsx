@@ -155,6 +155,7 @@ const Action = (props: ActionProps) => {
           size={size}
           target={target}
           type={type}
+          onClick={onClick}
         />
       );
 
@@ -174,6 +175,29 @@ const Action = (props: ActionProps) => {
           size={size}
           target={target}
           type={type}
+          onClick={onClick}
+        />
+      );
+
+    case 'submit':
+      return (
+        <Submit
+          block={block}
+          confirmText={confirmText}
+          confirmTitle={confirmTitle}
+          confirmType={confirmType}
+          danger={danger}
+          data={data}
+          disabled={disabled}
+          ghost={ghost}
+          icon={icon}
+          key={componentkey}
+          label={label}
+          shape={shape}
+          size={size}
+          target={target}
+          type={type}
+          onClick={onClick}
         />
       );
 

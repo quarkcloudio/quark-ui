@@ -1,5 +1,8 @@
+import { useEngine } from '@/hooks/common/engine';
+
 interface Props {
   actions?: any[];
+  api?: string;
   body?: any;
   buttonWrapperCol?: any;
   colon?: boolean;
@@ -18,6 +21,7 @@ interface Props {
 const ProForm = (props: Props) => {
   const {
     actions,
+    api,
     body,
     buttonWrapperCol,
     colon,
@@ -32,15 +36,15 @@ const ProForm = (props: Props) => {
     scrollToFirstError
   } = props;
   const [form] = AForm.useForm<any>();
-
-  function handleSubmit(params: any) {
-    console.log(params);
-  }
-
-  useKeyPress('enter', () => {
-    form.submit();
-  });
-
+  const { setEngineFormApi, setEngineFormRef } = useEngine();
+  // 使用 useEffect 避免在渲染期间直接调用 dispatch
+  // 完善 useEffect 依赖项
+  useEffect(() => {
+    if (api) {
+      setEngineFormApi(api);
+    }
+    setEngineFormRef(form);
+  }, [api, form, setEngineFormApi, setEngineFormRef]);
   return (
     <AForm
       colon={colon}
@@ -54,7 +58,6 @@ const ProForm = (props: Props) => {
       layout={layout}
       name={name}
       scrollToFirstError={scrollToFirstError}
-      onFinish={handleSubmit}
     >
       {body.map((item: any) => (
         <ProFormField

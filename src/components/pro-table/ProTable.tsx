@@ -2,7 +2,7 @@ import type { TableProps } from 'antd';
 import type { TableRowSelection } from 'antd/es/table/interface';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { useEngine } from '@/features/engine';
+import { useEngine } from '@/hooks/common/engine';
 import { fetchTableData } from '@/service/api';
 
 import ProTableHeaderOperation from './ProTableHeaderOperation';
@@ -23,7 +23,7 @@ const ProTable = (props: ProTableProps) => {
   const [datasource, setDatasource] = useState<any>(props.datasource || []);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const { engineApi } = useEngine();
+  const { getEngineApi } = useEngine();
 
   const [pagination, setPagination] = useState<any>({
     current: props.pagination?.current || 1,
@@ -40,6 +40,16 @@ const ProTable = (props: ProTableProps) => {
     search: {},
     sorter: {}
   });
+
+  /** 重置 */
+  const onReset = useCallback(() => {
+    setQueryParams({
+      filters: {},
+      pagination: { current: 1, pageSize: pagination.pageSize },
+      search: {},
+      sorter: {}
+    });
+  }, [pagination.pageSize]);
 
   /** 初始化列显示配置 */
   const getColumnChecks = () => {
@@ -85,6 +95,7 @@ const ProTable = (props: ProTableProps) => {
                   key={action.component}
                   {...action}
                   data={record}
+                  onClick={() => onReset()}
                 />
               ));
             default:
@@ -94,9 +105,10 @@ const ProTable = (props: ProTableProps) => {
 
         return col;
       });
-  }, [columns, columnChecks]);
+  }, [columns, columnChecks, onReset]);
 
   /** 请求数据 */
+  const engineApi = getEngineApi();
   const onRequest = useCallback(
     async (params = queryParams) => {
       setLoading(true);
@@ -152,16 +164,6 @@ const ProTable = (props: ProTableProps) => {
       pagination: { current: 1, pageSize: pagination.pageSize },
       search: values
     }));
-  };
-
-  /** 重置 */
-  const onReset = () => {
-    setQueryParams({
-      filters: {},
-      pagination: { current: 1, pageSize: pagination.pageSize },
-      search: {},
-      sorter: {}
-    });
   };
 
   /** 导出（可以改成真正的导出逻辑） */

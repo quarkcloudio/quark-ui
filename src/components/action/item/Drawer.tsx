@@ -10,6 +10,7 @@ interface Props {
   ghost?: boolean;
   icon?: string;
   label?: string;
+  onClick?: () => void;
   shape?: 'circle' | 'round';
   size?: 'large' | 'middle' | 'small';
   target?: '_blank' | '_parent' | '_self' | '_top';
@@ -17,7 +18,7 @@ interface Props {
 }
 
 const Drawer = (props: Props) => {
-  const { block, danger, data, disabled, drawer, ghost, icon, label, shape, size, target, type } = props;
+  const { block, danger, data, disabled, drawer, ghost, icon, label, onClick, shape, size, target, type } = props;
   const [open, setOpen] = useState(false);
 
   const showDrawer = () => {
@@ -26,6 +27,13 @@ const Drawer = (props: Props) => {
 
   const onClose = () => {
     setOpen(false);
+  };
+
+  const onClickHandler = () => {
+    if (onClick) {
+      onClick();
+    }
+    onClose();
   };
   return (
     <>
@@ -39,7 +47,7 @@ const Drawer = (props: Props) => {
               <Action
                 key={action.componentkey}
                 {...action}
-                onClick={onClose}
+                onClick={onClickHandler}
               />
             ))}
           </ASpace>

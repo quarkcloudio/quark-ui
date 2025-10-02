@@ -60,6 +60,10 @@ declare namespace Api {
     interface AjaxAction {
       [key: string]: any;
     }
+
+    interface PostForm {
+      [key: string]: any;
+    }
   }
 
   /**
