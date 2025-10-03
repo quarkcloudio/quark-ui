@@ -9,6 +9,7 @@ interface Props {
   componentkey: string;
   disabled?: boolean;
   hideRquiredMark?: boolean;
+  initialValues?: any;
   labelAlign?: 'left' | 'right';
   labelCol?: any;
   labelWrap?: boolean;
@@ -28,17 +29,17 @@ const ProForm = (props: Props) => {
     componentkey,
     disabled,
     hideRquiredMark,
+    initialValues,
     labelAlign,
     labelCol,
     labelWrap,
     layout,
     name,
-    scrollToFirstError
+    scrollToFirstError,
+    wrapperCol
   } = props;
   const [form] = AForm.useForm<any>();
   const { setEngineFormApi, setEngineFormRef } = useEngine();
-  // 使用 useEffect 避免在渲染期间直接调用 dispatch
-  // 完善 useEffect 依赖项
   useEffect(() => {
     if (api) {
       setEngineFormApi(api);
@@ -51,6 +52,7 @@ const ProForm = (props: Props) => {
       disabled={disabled}
       form={form}
       hideRequiredMark={hideRquiredMark}
+      initialValues={initialValues}
       key={componentkey}
       labelAlign={labelAlign}
       labelCol={labelCol}
@@ -58,6 +60,7 @@ const ProForm = (props: Props) => {
       layout={layout}
       name={name}
       scrollToFirstError={scrollToFirstError}
+      wrapperCol={wrapperCol}
     >
       {body.map((item: any) => (
         <ProFormField
