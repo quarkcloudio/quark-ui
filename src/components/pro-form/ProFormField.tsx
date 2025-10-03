@@ -104,6 +104,20 @@ const ProFormField = (props: ProFormFieldProps) => {
             />
           </AForm.Item>
         );
+      case 'inputNumberField':
+      case 'inputNumber':
+        return (
+          <AForm.Item
+            label={label}
+            name={name}
+            rules={rules}
+          >
+            <AInputNumber
+              {...fieldProps}
+              prefix={renderPrefix()}
+            />
+          </AForm.Item>
+        );
       case 'imageCaptchaField':
       case 'imageCaptcha':
         return (
