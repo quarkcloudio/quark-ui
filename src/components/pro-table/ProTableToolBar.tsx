@@ -16,15 +16,22 @@ const ProTableToolBar = (props: Props) => {
 
   return (
     <div className="flex flex-wrap justify-end gap-x-12px gap-y-8px lt-sm:(w-200px py-12px)">
-      {actions?.map(action => (
-        <Action
-          {...action}
-          data={{ id: selectedRowKeys }}
-          disabled={batchActionDisabled(action)}
-          key={action.componentKey}
-          onClick={refresh}
-        />
-      ))}
+      {actions?.map(action =>
+        action.batch ? (
+          <Action
+            {...action}
+            data={{ id: selectedRowKeys }}
+            disabled={batchActionDisabled(action)}
+            key={action.key}
+          />
+        ) : (
+          <Action
+            {...action}
+            key={action.key}
+            onClick={refresh}
+          />
+        )
+      )}
     </div>
   );
 };
