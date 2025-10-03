@@ -1,4 +1,5 @@
 import { useEngine } from '@/hooks/common/engine';
+import tplEngine from '@/utils/template';
 
 interface Props {
   actions?: any[];
@@ -45,10 +46,10 @@ const ProForm = (props: Props) => {
   const { setEngineFormApi, setEngineFormRef } = useEngine();
   useEffect(() => {
     if (api) {
-      setEngineFormApi(api);
+      setEngineFormApi(tplEngine(api, { ...initialValues, ...data }));
     }
     setEngineFormRef(form);
-  }, [api, form, setEngineFormApi, setEngineFormRef]);
+  }, [api, initialValues, data, form, setEngineFormApi, setEngineFormRef]);
   return (
     <AForm
       colon={colon}

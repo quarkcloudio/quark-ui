@@ -59,7 +59,9 @@ const ProFormField = (props: ProFormFieldProps) => {
             />
           </AForm.Item>
         );
+      case 'textAreaField':
       case 'textArea':
+      case 'textareaField':
       case 'textarea':
         return (
           <AForm.Item
@@ -82,6 +84,21 @@ const ProFormField = (props: ProFormFieldProps) => {
             rules={rules}
           >
             <AInput.Password
+              {...fieldProps}
+              prefix={renderPrefix()}
+            />
+          </AForm.Item>
+        );
+      case 'idField':
+      case 'id':
+        return (
+          <AForm.Item
+            hidden
+            label={label}
+            name={name}
+            rules={rules}
+          >
+            <AInput
               {...fieldProps}
               prefix={renderPrefix()}
             />
