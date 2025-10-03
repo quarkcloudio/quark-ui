@@ -37,3 +37,12 @@ export function fetchTableData(api: string, queryParams: any) {
 export function fetchPostForm(api: string, data: any) {
   return request<Api.Engine.PostForm>({ data, method: 'POST', url: api });
 }
+
+/**
+ * Get form data
+ *
+ * @param api Form data api
+ */
+export function fetchFormData(api: string) {
+  return request<Api.Engine.EngineComponent>({ url: api });
+}

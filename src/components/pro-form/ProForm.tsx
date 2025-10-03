@@ -1,4 +1,5 @@
 import { useEngine } from '@/hooks/common/engine';
+import { fetchFormData } from '@/service/api';
 import tplEngine from '@/utils/template';
 
 interface Props {
@@ -33,6 +34,7 @@ const ProForm = (props: Props) => {
     data,
     disabled,
     hideRquiredMark,
+    initApi,
     initialValues,
     labelAlign,
     labelCol,
@@ -44,19 +46,23 @@ const ProForm = (props: Props) => {
   } = props;
   const [form] = AForm.useForm<any>();
   const { setEngineFormApi, setEngineFormRef } = useEngine();
+  const model = useMemo(() => ({ ...initialValues, ...data }), [initialValues, data]);
   useEffect(() => {
-    if (api) {
-      setEngineFormApi(tplEngine(api, { ...initialValues, ...data }));
-    }
+    setEngineFormApi(tplEngine(api, model));
     setEngineFormRef(form);
-  }, [api, initialValues, data, form, setEngineFormApi, setEngineFormRef]);
+    if (initApi) {
+      fetchFormData(tplEngine(initApi, model)).then((res: any) => {
+        form.setFieldsValue({ ...model, ...res.data });
+      });
+    }
+  }, [api, initApi, model, form, setEngineFormApi, setEngineFormRef]);
   return (
     <AForm
       colon={colon}
       disabled={disabled}
       form={form}
       hideRequiredMark={hideRquiredMark}
-      initialValues={{ ...initialValues, ...data }}
+      initialValues={model}
       key={componentkey}
       labelAlign={labelAlign}
       labelCol={labelCol}
