@@ -47,6 +47,7 @@ const Drawer = (props: Props) => {
               <Action
                 key={action.componentkey}
                 {...action}
+                data={data}
                 onClick={onClickHandler}
               />
             ))}
@@ -54,7 +55,10 @@ const Drawer = (props: Props) => {
         }
         onClose={onClose}
       >
-        <Render body={drawer.body} />
+        <Render
+          body={drawer.body}
+          data={data}
+        />
       </ADrawer>
       <AButton
         block={block}

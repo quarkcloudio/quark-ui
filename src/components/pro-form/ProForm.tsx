@@ -7,8 +7,10 @@ interface Props {
   buttonWrapperCol?: any;
   colon?: boolean;
   componentkey: string;
+  data?: any;
   disabled?: boolean;
   hideRquiredMark?: boolean;
+  initApi?: string;
   initialValues?: any;
   labelAlign?: 'left' | 'right';
   labelCol?: any;
@@ -27,6 +29,7 @@ const ProForm = (props: Props) => {
     buttonWrapperCol,
     colon,
     componentkey,
+    data,
     disabled,
     hideRquiredMark,
     initialValues,
@@ -52,7 +55,7 @@ const ProForm = (props: Props) => {
       disabled={disabled}
       form={form}
       hideRequiredMark={hideRquiredMark}
-      initialValues={initialValues}
+      initialValues={{ ...initialValues, ...data }}
       key={componentkey}
       labelAlign={labelAlign}
       labelCol={labelCol}

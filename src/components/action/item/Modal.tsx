@@ -47,6 +47,7 @@ const Modal = (props: Props) => {
               <Action
                 key={action.componentkey}
                 {...action}
+                data={data}
                 onClick={handleOk}
               />
             ))}
@@ -55,7 +56,10 @@ const Modal = (props: Props) => {
         onCancel={handleCancel}
         onOk={handleOk}
       >
-        <Render body={modal.body} />
+        <Render
+          body={modal.body}
+          data={data}
+        />
       </AModal>
       <AButton
         block={block}

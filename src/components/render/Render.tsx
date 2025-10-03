@@ -21,7 +21,12 @@ const Render = (props: RenderProps) => {
         case 'card':
           return <ProCard {...body} />;
         case 'form':
-          return <ProForm {...body} />;
+          return (
+            <ProForm
+              {...body}
+              data={data}
+            />
+          );
         case 'table':
           return <ProTable {...body} />;
         default:
