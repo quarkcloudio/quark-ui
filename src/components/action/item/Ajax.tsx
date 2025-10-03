@@ -46,7 +46,7 @@ const Ajax = (props: Props) => {
 
   const showConfirm = () => {
     AModal.confirm({
-      content: confirmText,
+      content: tplEngine(confirmText, data),
       icon: <ExclamationCircleFilled />,
       async onOk() {
         if (api) {
@@ -58,7 +58,7 @@ const Ajax = (props: Props) => {
           }
         }
       },
-      title: confirmTitle
+      title: tplEngine(confirmTitle, data)
     });
   };
 
@@ -80,8 +80,8 @@ const Ajax = (props: Props) => {
   if (confirmType === 'pop') {
     return (
       <APopconfirm
-        description={confirmText}
-        title={confirmTitle}
+        description={tplEngine(confirmText, data)}
+        title={tplEngine(confirmTitle, data)}
         onConfirm={onClickHandler}
       >
         <AButton
