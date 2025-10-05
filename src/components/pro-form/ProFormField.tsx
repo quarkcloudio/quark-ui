@@ -41,6 +41,7 @@ const ProFormField = (props: ProFormFieldProps) => {
     return fieldProps.prefix;
   };
 
+  // eslint-disable-next-line complexity
   const render = () => {
     switch (component) {
       case 'textField':
@@ -122,6 +123,18 @@ const ProFormField = (props: ProFormFieldProps) => {
       case 'icon':
         return (
           <AForm.Item
+            label={label}
+            name={name}
+            rules={rules}
+          >
+            <ProFormIcon fieldProps={fieldProps} />
+          </AForm.Item>
+        );
+      case 'hiddenField':
+      case 'hidden':
+        return (
+          <AForm.Item
+            hidden
             label={label}
             name={name}
             rules={rules}
