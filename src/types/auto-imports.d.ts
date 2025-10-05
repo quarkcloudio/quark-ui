@@ -98,6 +98,7 @@ declare global {
   const ProCard: typeof import('../components/pro-card/ProCard')['default']
   const ProForm: typeof import('../components/pro-form/ProForm')['default']
   const ProFormField: typeof import('../components/pro-form/ProFormField')['default']
+  const ProFormIcon: typeof import('../components/pro-form/pro-field/ProFormIcon')['default']
   const ProFormImageCaptcha: typeof import('../components/pro-form/pro-field/ProFormImageCaptcha')['default']
   const ProTable: typeof import('../components/pro-table/ProTable')['default']
   const ProTableDragContent: typeof import('../components/pro-table/ProTableDragContent')['default']
