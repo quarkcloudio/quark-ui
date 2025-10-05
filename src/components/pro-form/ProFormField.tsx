@@ -164,6 +164,20 @@ const ProFormField = (props: ProFormFieldProps) => {
             <ARadio.Group {...fieldProps} />
           </AForm.Item>
         );
+      case 'selectField':
+      case 'select':
+        return (
+          <AForm.Item
+            label={label}
+            name={name}
+            rules={rules}
+          >
+            <ASelect
+              {...fieldProps}
+              prefix={undefined}
+            />
+          </AForm.Item>
+        );
       case 'imageCaptchaField':
       case 'imageCaptcha':
         return (
