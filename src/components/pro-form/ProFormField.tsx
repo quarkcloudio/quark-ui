@@ -153,6 +153,17 @@ const ProFormField = (props: ProFormFieldProps) => {
             <ACheckbox.Group {...fieldProps} />
           </AForm.Item>
         );
+      case 'radioField':
+      case 'radio':
+        return (
+          <AForm.Item
+            label={label}
+            name={name}
+            rules={rules}
+          >
+            <ARadio.Group {...fieldProps} />
+          </AForm.Item>
+        );
       case 'imageCaptchaField':
       case 'imageCaptcha':
         return (
