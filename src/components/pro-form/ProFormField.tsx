@@ -142,6 +142,17 @@ const ProFormField = (props: ProFormFieldProps) => {
             <ProFormIcon fieldProps={fieldProps} />
           </AForm.Item>
         );
+      case 'checkboxField':
+      case 'checkbox':
+        return (
+          <AForm.Item
+            label={label}
+            name={name}
+            rules={rules}
+          >
+            <ACheckbox.Group {...fieldProps} />
+          </AForm.Item>
+        );
       case 'imageCaptchaField':
       case 'imageCaptcha':
         return (
