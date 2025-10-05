@@ -178,6 +178,17 @@ const ProFormField = (props: ProFormFieldProps) => {
             />
           </AForm.Item>
         );
+      case 'switchField':
+      case 'switch':
+        return (
+          <AForm.Item
+            label={label}
+            name={name}
+            rules={rules}
+          >
+            <ASwitch {...fieldProps} />
+          </AForm.Item>
+        );
       case 'imageCaptchaField':
       case 'imageCaptcha':
         return (
