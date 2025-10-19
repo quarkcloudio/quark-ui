@@ -125,7 +125,7 @@ const ProFormField = (props: ProFormFieldProps) => {
             name={currentProps.name}
             rules={currentProps.rules}
           >
-            <ProFormIcon {...currentProps.fieldProps} />
+            <ProFormIcon fieldProps={currentProps.fieldProps} />
           </AForm.Item>
         );
       case 'hiddenField':
@@ -195,7 +195,7 @@ const ProFormField = (props: ProFormFieldProps) => {
             name={currentProps.name}
             rules={currentProps.rules}
           >
-            <ProFormImageCaptcha {...currentProps.fieldProps} />
+            <ProFormImageCaptcha fieldProps={currentProps.fieldProps} />
           </AForm.Item>
         );
       case 'groupField':
