@@ -201,12 +201,32 @@ const ProFormField = (props: ProFormFieldProps) => {
       case 'groupField':
       case 'group':
         if (Object.hasOwn(currentProps.fieldProps?.body ?? {}, 'component')) {
-          return <ProFormGroup>{render(currentProps.fieldProps.body)}</ProFormGroup>;
+          return (
+            <ProFormGroup>
+              <ProFormField
+                component={currentProps.fieldProps.body.component}
+                fieldProps={{ ...currentProps.fieldProps.body }}
+                key={currentProps.fieldProps.body.componentkey}
+                label={currentProps.fieldProps.body.label}
+                name={currentProps.fieldProps.body.name}
+                rules={currentProps.fieldProps.body.frontendRules}
+              />
+            </ProFormGroup>
+          );
         }
         return (
           <ProFormGroup>
             {currentProps?.fieldProps?.body?.map((item: any) => {
-              return render(item);
+              return (
+                <ProFormField
+                  component={item.component}
+                  fieldProps={{ ...item }}
+                  key={item.componentkey}
+                  label={item.label}
+                  name={item.name}
+                  rules={item.frontendRules}
+                />
+              );
             })}
           </ProFormGroup>
         );
@@ -215,7 +235,7 @@ const ProFormField = (props: ProFormFieldProps) => {
         return (
           <ProFormDependency name={currentProps.fieldProps.names}>
             {(values: any) => {
-              return values?.join?.(',');
+              return <>{JSON.stringify(values)}</>;
             }}
           </ProFormDependency>
         );

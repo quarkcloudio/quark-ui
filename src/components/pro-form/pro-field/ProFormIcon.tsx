@@ -15,10 +15,11 @@ const ProFormIcon = (props: ProFormIconProps) => {
   return (
     <ASelect
       {...fieldProps}
+      options={undefined}
       value={value?.value}
       onChange={e => updateValue(e.target.value)}
     >
-      {fieldProps?.options?.map((item: any) => {
+      {fieldProps?.options?.map?.((item: any) => {
         return (
           <ASelect.Option
             key={item}

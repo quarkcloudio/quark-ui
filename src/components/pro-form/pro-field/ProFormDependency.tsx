@@ -6,7 +6,13 @@ interface ProFormDependencyProps {
 const ProFormDependency = (props: ProFormDependencyProps) => {
   const { children, name } = props;
   const { getEngineFormRef } = useEngine();
-  return children?.(getEngineFormRef()?.getFieldsValue(name));
+  const [formValues, setFormValues] = useState<any>({});
+
+  useEffect(() => {
+    setFormValues(getEngineFormRef()?.getFieldsValue(name));
+  }, []);
+
+  return children?.(formValues);
 };
 
 export default ProFormDependency;
