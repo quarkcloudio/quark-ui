@@ -235,7 +235,7 @@ const ProFormField = (props: ProFormFieldProps) => {
         return (
           <ProFormDependency name={currentProps.fieldProps.names}>
             {(values: any) => {
-              return <>{JSON.stringify(values)}</>;
+              return <div>{JSON.stringify(values)}</div>;
             }}
           </ProFormDependency>
         );
