@@ -1,18 +1,21 @@
 interface ProFormDependencyProps {
   children?: (values: any) => React.ReactNode;
   name?: string[];
+  onChange?: (val: any) => void;
 }
 
 const ProFormDependency = (props: ProFormDependencyProps) => {
   const { children, name } = props;
   const { getEngineFormRef } = useEngine();
-  const [formValues, setFormValues] = useState<any>({});
 
-  useEffect(() => {
-    setFormValues(getEngineFormRef()?.getFieldsValue(name));
-  }, []);
-
-  return children?.(formValues);
+  return (
+    <AForm.Item
+      noStyle={true}
+      shouldUpdate={true}
+    >
+      {() => children?.(getEngineFormRef()?.getFieldsValue(name))}
+    </AForm.Item>
+  );
 };
 
 export default ProFormDependency;
