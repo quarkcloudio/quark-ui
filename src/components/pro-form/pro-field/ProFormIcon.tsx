@@ -25,7 +25,9 @@ const ProFormIcon = (props: ProFormIconProps) => {
             key={item}
             value={item}
           >
-            <SvgIcon icon={item} /> {item}
+            <div className="flex items-center gap-2">
+              <SvgIcon icon={item} /> {item.replace('ant-design:', '').replace('-outlined', '')}
+            </div>
           </ASelect.Option>
         );
       })}
