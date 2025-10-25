@@ -1,5 +1,7 @@
 import React from 'react';
 
+import tplEngine from '@/utils/template';
+
 interface BaseFieldProps {
   className?: string;
   prefix?:
@@ -235,7 +237,23 @@ const ProFormField = (props: ProFormFieldProps) => {
         return (
           <ProFormDependency name={currentProps.fieldProps.names}>
             {(values: any) => {
-              return <div>{JSON.stringify(values)}</div>;
+              return currentProps?.fieldProps?.when?.items?.map((item: any) => {
+                if (tplEngine(item.condition, values) === 'true') {
+                  return item.body.map((subItem: any) => {
+                    return (
+                      <ProFormField
+                        component={subItem.component}
+                        fieldProps={{ ...subItem }}
+                        key={subItem.componentkey}
+                        label={subItem.label}
+                        name={subItem.name}
+                        rules={subItem.frontendRules}
+                      />
+                    );
+                  });
+                }
+                return null;
+              });
             }}
           </ProFormDependency>
         );
