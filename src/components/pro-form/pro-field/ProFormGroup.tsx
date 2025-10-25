@@ -5,7 +5,11 @@ interface ProFormGroupProps {
 const ProFormGroup = (props: ProFormGroupProps) => {
   const { children } = props;
 
-  return <ASpace>{children}</ASpace>;
+  return (
+    <div>
+      <ASpace size={[32, 0]}>{children}</ASpace>
+    </div>
+  );
 };
 
 export default ProFormGroup;
