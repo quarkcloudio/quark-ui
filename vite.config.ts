@@ -85,7 +85,7 @@ export default defineConfig(configEnv => {
     },
     plugins: setupVitePlugins(viteEnv, buildTime),
     preview: {
-      port: 8000
+      port: 8174
     },
     resolve: {
       alias: {
@@ -96,7 +96,7 @@ export default defineConfig(configEnv => {
     server: {
       host: '0.0.0.0',
       open: true,
-      port: 8000,
+      port: 8174,
       proxy: createViteProxy(viteEnv, enableProxy),
       warmup: {
         clientFiles: ['./index.html', './src/{pages,components}/*']
