@@ -8,16 +8,16 @@ const ProFormIcon = (props: ProFormIconProps) => {
   const { fieldProps, onChange, value } = props;
 
   /** 更新值 */
-  const updateValue = (val: any) => {
-    onChange?.(val);
+  const updateValue = (newValue: any) => {
+    onChange?.(newValue);
   };
 
   return (
     <ASelect
       {...fieldProps}
       options={undefined}
-      value={value?.value}
-      onChange={e => updateValue(e.target.value)}
+      value={value}
+      onChange={updateValue}
     >
       {fieldProps?.options?.map?.((item: any) => {
         return (
