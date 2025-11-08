@@ -1,16 +1,38 @@
+import type { InputProps } from 'antd';
+
 import { fetchLoginCaptcha } from '@/service/api';
 
 interface ProFormImageCaptchaProps {
-  fieldProps?: any;
+  captchaUrl: string;
   onChange?: (val: { uuid?: string; value?: string }) => void;
+  prefix?: any;
+  suffix?: any;
   value?: {
     uuid?: string;
     value?: string;
   };
 }
 
-const ProFormImageCaptcha = (props: ProFormImageCaptchaProps) => {
-  const { fieldProps, onChange, value } = props;
+const ProFormImageCaptcha = (props: ProFormImageCaptchaProps & InputProps) => {
+  const {
+    addonAfter,
+    addonBefore,
+    allowClear,
+    captchaUrl,
+    defaultValue,
+    disabled,
+    id,
+    maxLength,
+    onChange,
+    placeholder,
+    prefix,
+    showCount,
+    size,
+    status,
+    suffix,
+    type,
+    value
+  } = props;
   const [captcha, setCaptcha] = useState<Api.Auth.LoginCaptcha>({
     captchaEnabled: false,
     img: '',
@@ -19,7 +41,7 @@ const ProFormImageCaptcha = (props: ProFormImageCaptchaProps) => {
 
   /** 刷新验证码 */
   const refreshCaptcha = async () => {
-    const { data, error } = await fetchLoginCaptcha(fieldProps?.captchaUrl);
+    const { data, error } = await fetchLoginCaptcha(captchaUrl);
     if (!error) {
       setCaptcha(data);
     }
@@ -40,17 +62,38 @@ const ProFormImageCaptcha = (props: ProFormImageCaptchaProps) => {
   return (
     <ASpace.Compact className="w-full">
       <AInput
-        {...fieldProps}
+        addonAfter={addonAfter}
+        addonBefore={addonBefore}
+        allowClear={allowClear}
+        defaultValue={defaultValue}
+        disabled={disabled}
+        id={id}
+        maxLength={maxLength}
+        placeholder={placeholder}
+        showCount={showCount}
+        size={size}
+        status={status}
         style={{ width: '60%' }}
+        type={type}
         value={value?.value}
         prefix={
-          typeof fieldProps?.prefix === 'object' ? (
+          typeof prefix === 'object' ? (
             <SvgIcon
-              icon={fieldProps?.prefix?.type}
-              {...fieldProps?.prefix}
+              icon={prefix?.type}
+              {...prefix}
             />
           ) : (
-            fieldProps?.prefix
+            prefix
+          )
+        }
+        suffix={
+          typeof suffix === 'object' ? (
+            <SvgIcon
+              icon={suffix?.type}
+              {...suffix}
+            />
+          ) : (
+            suffix
           )
         }
         onChange={e => updateValue(e.target.value)}

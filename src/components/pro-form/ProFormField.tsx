@@ -1,23 +1,11 @@
-import React from 'react';
+import type { FormItemProps } from 'antd';
 
 import tplEngine from '@/utils/template';
-
-interface BaseFieldProps {
-  className?: string;
-  prefix?:
-    | {
-        type: string;
-        [key: string]: any;
-      }
-    | React.ReactNode;
-  style?: React.CSSProperties;
-  [key: string]: any;
-}
 
 interface ProFormFieldProps {
   component: string;
   componentkey?: string;
-  fieldProps?: BaseFieldProps;
+  fieldProps?: any;
   label?: string;
   name: string;
   onChange?: (value: any) => void;
@@ -25,8 +13,8 @@ interface ProFormFieldProps {
   value?: any;
 }
 
-const ProFormField = (props: ProFormFieldProps) => {
-  const renderPrefix = (fieldProps: BaseFieldProps) => {
+const ProFormField = (props: ProFormFieldProps & Partial<FormItemProps>) => {
+  const renderPrefix = (fieldProps: any) => {
     if (!fieldProps?.prefix) return null;
 
     if (typeof fieldProps.prefix === 'object' && fieldProps.prefix !== null && 'type' in fieldProps.prefix) {
@@ -127,7 +115,7 @@ const ProFormField = (props: ProFormFieldProps) => {
             name={currentProps.name}
             rules={currentProps.rules}
           >
-            <ProFormIcon fieldProps={currentProps.fieldProps} />
+            <ProFormIcon {...currentProps.fieldProps} />
           </AForm.Item>
         );
       case 'hiddenField':
@@ -197,7 +185,7 @@ const ProFormField = (props: ProFormFieldProps) => {
             name={currentProps.name}
             rules={currentProps.rules}
           >
-            <ProFormImageCaptcha fieldProps={currentProps.fieldProps} />
+            <ProFormImageCaptcha {...currentProps.fieldProps} />
           </AForm.Item>
         );
       case 'groupField':

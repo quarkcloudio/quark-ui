@@ -1,11 +1,13 @@
+import type { SelectProps } from 'antd';
+
 interface ProFormIconProps {
-  fieldProps?: any;
   onChange?: (val: any) => void;
+  opttions?: string[];
   value?: any;
 }
 
-const ProFormIcon = (props: ProFormIconProps) => {
-  const { fieldProps, onChange, value } = props;
+const ProFormIcon = (props: ProFormIconProps & SelectProps) => {
+  const { allowClear, defaultValue, disabled, onChange, options, placeholder, showSearch, size, style, value } = props;
 
   /** 更新值 */
   const updateValue = (newValue: any) => {
@@ -14,12 +16,18 @@ const ProFormIcon = (props: ProFormIconProps) => {
 
   return (
     <ASelect
-      {...fieldProps}
+      allowClear={allowClear}
+      defaultValue={defaultValue}
+      disabled={disabled}
       options={undefined}
+      placeholder={placeholder}
+      showSearch={showSearch}
+      size={size}
+      style={style}
       value={value}
       onChange={updateValue}
     >
-      {fieldProps?.options?.map?.((item: any) => {
+      {options?.map?.((item: any) => {
         return (
           <ASelect.Option
             key={item}
