@@ -152,6 +152,17 @@ const ProFormField = (props: ProFormFieldProps & Partial<FormItemProps>) => {
             <ARadio.Group {...currentProps.fieldProps} />
           </AForm.Item>
         );
+      case 'imageField':
+      case 'image':
+        return (
+          <AForm.Item
+            label={currentProps.label}
+            name={currentProps.name}
+            rules={currentProps.rules}
+          >
+            <ProFormImage {...currentProps.fieldProps} />
+          </AForm.Item>
+        );
       case 'selectField':
       case 'select':
         return (
