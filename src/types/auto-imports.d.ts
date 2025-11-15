@@ -42,6 +42,7 @@ declare global {
   const ATooltip: typeof import('antd')['Tooltip']
   const ATree: typeof import('antd')['Tree']
   const ATypography: typeof import('antd')['Typography']
+  const AUpload: typeof import('antd')['Upload']
   const AWatermark: typeof import('antd')['Watermark']
   const Action: typeof import('../components/action/Action')['default']
   const Ajax: typeof import('../components/action/item/Ajax')['default']
@@ -88,6 +89,7 @@ declare global {
   const IconMdiKeyboardReturn: typeof import('~icons/mdi/keyboard-return.tsx')['default']
   const IconMdiRefresh: typeof import('~icons/mdi/refresh.tsx')['default']
   const IconUilSearch: typeof import('~icons/uil/search.tsx')['default']
+  const ImageManager: typeof import('../components/image-manager/ImageManager')['default']
   const Link: typeof import('react-router-dom')['Link']
   const LookForward: typeof import('../components/custom/LookForward')['default']
   const Modal: typeof import('../components/action/item/Modal')['default']
@@ -100,6 +102,7 @@ declare global {
   const ProForm: typeof import('../components/pro-form/ProForm')['default']
   const ProFormDependency: typeof import('../components/pro-form/pro-field/ProFormDependency')['default']
   const ProFormField: typeof import('../components/pro-form/ProFormField')['default']
+  const ProFormFile: typeof import('../components/pro-form/pro-field/ProFormFile')['default']
   const ProFormGroup: typeof import('../components/pro-form/pro-field/ProFormGroup')['default']
   const ProFormIcon: typeof import('../components/pro-form/pro-field/ProFormIcon')['default']
   const ProFormImage: typeof import('../components/pro-form/pro-field/ProFormImage')['default']
@@ -254,6 +257,12 @@ declare global {
   export type { CropperProps } from '../components/cropper/Cropper'
   import('../components/cropper/Cropper')
   // @ts-ignore
-  export type { ImageUploaderProps } from '../components/pro-form/pro-field/ProFormImage'
+  export type { ImageManagerProps } from '../components/image-manager/ImageManager'
+  import('../components/image-manager/ImageManager')
+  // @ts-ignore
+  export type { FileProps } from '../components/pro-form/pro-field/ProFormFile'
+  import('../components/pro-form/pro-field/ProFormFile')
+  // @ts-ignore
+  export type { ImageProps } from '../components/pro-form/pro-field/ProFormImage'
   import('../components/pro-form/pro-field/ProFormImage')
 }

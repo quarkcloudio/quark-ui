@@ -1,5 +1,5 @@
 import { UploadOutlined } from '@ant-design/icons';
-import { Button, Upload, message } from 'antd';
+import { message } from 'antd';
 import { useState } from 'react';
 
 import { localStg } from '@/utils/storage';
@@ -48,7 +48,7 @@ const ProFormFile = (props: FileProps) => {
   };
 
   const uploadButton = (title: string) => {
-    return <Button icon={<UploadOutlined />}>{title}</Button>;
+    return <AButton icon={<UploadOutlined />}>{title}</AButton>;
   };
 
   // 判断是否符合上传条件
@@ -78,7 +78,7 @@ const ProFormFile = (props: FileProps) => {
   };
 
   return (
-    <Upload
+    <AUpload
       action={action}
       fileList={getFileList || value}
       multiple={true}
@@ -121,7 +121,7 @@ const ProFormFile = (props: FileProps) => {
       }}
     >
       {uploadButton(button)}
-    </Upload>
+    </AUpload>
   );
 };
 

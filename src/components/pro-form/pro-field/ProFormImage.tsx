@@ -1,9 +1,9 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Upload, message } from 'antd';
+import { message } from 'antd';
 import { useState } from 'react';
 
 import Cropper from '@/components/cropper/Cropper';
-import { fetchCropperData } from '@/service/api';
+import { fetchImageCrop } from '@/service/api';
 import { localStg } from '@/utils/storage';
 
 export interface ImageProps {
@@ -134,7 +134,7 @@ const ProFormImage = (props: ImageProps) => {
   };
 
   const onCrop = async (newValue: any) => {
-    fetchCropperData(cropAction, {
+    fetchImageCrop(cropAction, {
       data: {
         file: newValue,
         id: imgId
@@ -153,7 +153,7 @@ const ProFormImage = (props: ImageProps) => {
   return (
     <>
       {mode === 'single' ? (
-        <Upload
+        <AUpload
           action={action}
           disabled={disabled}
           listType="picture-card"
@@ -205,9 +205,9 @@ const ProFormImage = (props: ImageProps) => {
               />
             );
           })()}
-        </Upload>
+        </AUpload>
       ) : (
-        <Upload
+        <AUpload
           action={action}
           disabled={disabled}
           fileList={getFileList || value}
@@ -252,7 +252,7 @@ const ProFormImage = (props: ImageProps) => {
           }}
         >
           {disabled && value && value.length ? null : uploadButton(button)}
-        </Upload>
+        </AUpload>
       )}
       <Cropper
         open={isModalOpen}

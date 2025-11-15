@@ -48,11 +48,41 @@ export function fetchFormData(api: string) {
 }
 
 /**
- * Post cropper data
+ * Image crop
  *
- * @param api Cropper data api
- * @param data Cropper data
+ * @param api Image crop api
+ * @param data Image crop data
  */
-export function fetchCropperData(api: string, data: any) {
+export function fetchImageCrop(api: string, data: any) {
+  return request<Api.Engine.EngineComponent>({ data, method: 'POST', url: api });
+}
+
+/**
+ * Get image list
+ *
+ * @param api Image list api
+ * @param data Image list data
+ */
+export function fetchImageList(api: string, data: any) {
+  return request<Api.Engine.EngineComponent>({ data, method: 'GET', url: api });
+}
+
+/**
+ * Image delete
+ *
+ * @param api Image delete api
+ * @param data Image delete data
+ */
+export function fetchImageDelete(api: string, data: any) {
+  return request<Api.Engine.EngineComponent>({ data, method: 'POST', url: api });
+}
+
+/**
+ * Image batch delete
+ *
+ * @param api Image batch delete api
+ * @param data Image batch delete data
+ */
+export function fetchImageBatchDelete(api: string, data: any) {
   return request<Api.Engine.EngineComponent>({ data, method: 'POST', url: api });
 }
