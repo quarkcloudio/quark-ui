@@ -50,6 +50,7 @@ declare global {
   const BeyondHiding: typeof import('../components/common/BeyondHiding')['default']
   const ButtonIcon: typeof import('../components/custom/ButtonIcon')['default']
   const Cancel: typeof import('../components/action/item/Cancel')['default']
+  const Cropper: typeof import('../components/cropper/Cropper')['default']
   const DarkModeContainer: typeof import('../components/common/DarkModeContainer')['default']
   const Drawer: typeof import('../components/action/item/Drawer')['default']
   const Engine: typeof import('../components/engine/Engine')['default']
@@ -101,6 +102,7 @@ declare global {
   const ProFormField: typeof import('../components/pro-form/ProFormField')['default']
   const ProFormGroup: typeof import('../components/pro-form/pro-field/ProFormGroup')['default']
   const ProFormIcon: typeof import('../components/pro-form/pro-field/ProFormIcon')['default']
+  const ProFormImage: typeof import('../components/pro-form/pro-field/ProFormImage')['default']
   const ProFormImageCaptcha: typeof import('../components/pro-form/pro-field/ProFormImageCaptcha')['default']
   const ProTable: typeof import('../components/pro-table/ProTable')['default']
   const ProTableDragContent: typeof import('../components/pro-table/ProTableDragContent')['default']
@@ -248,4 +250,10 @@ declare global {
   // @ts-ignore
   export type { ECOption } from '../hooks/common/echarts'
   import('../hooks/common/echarts')
+  // @ts-ignore
+  export type { CropperProps } from '../components/cropper/Cropper'
+  import('../components/cropper/Cropper')
+  // @ts-ignore
+  export type { ImageUploaderProps } from '../components/pro-form/pro-field/ProFormImage'
+  import('../components/pro-form/pro-field/ProFormImage')
 }

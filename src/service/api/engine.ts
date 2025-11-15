@@ -46,3 +46,13 @@ export function fetchPostForm(api: string, data: any) {
 export function fetchFormData(api: string) {
   return request<Api.Engine.EngineComponent>({ url: api });
 }
+
+/**
+ * Post cropper data
+ *
+ * @param api Cropper data api
+ * @param data Cropper data
+ */
+export function fetchCropperData(api: string, data: any) {
+  return request<Api.Engine.EngineComponent>({ data, method: 'POST', url: api });
+}
