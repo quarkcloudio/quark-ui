@@ -41,6 +41,7 @@ declare global {
   const ATag: typeof import('antd')['Tag']
   const ATooltip: typeof import('antd')['Tooltip']
   const ATree: typeof import('antd')['Tree']
+  const ATreeSelect: typeof import('antd')['TreeSelect']
   const ATypography: typeof import('antd')['Typography']
   const AUpload: typeof import('antd')['Upload']
   const AWatermark: typeof import('antd')['Watermark']
@@ -107,6 +108,7 @@ declare global {
   const ProFormIcon: typeof import('../components/pro-form/pro-field/ProFormIcon')['default']
   const ProFormImage: typeof import('../components/pro-form/pro-field/ProFormImage')['default']
   const ProFormImageCaptcha: typeof import('../components/pro-form/pro-field/ProFormImageCaptcha')['default']
+  const ProFormTransfer: typeof import('../components/pro-form/pro-field/ProFormTransfer')['default']
   const ProTable: typeof import('../components/pro-table/ProTable')['default']
   const ProTableDragContent: typeof import('../components/pro-table/ProTableDragContent')['default']
   const ProTableHeaderOperation: typeof import('../components/pro-table/ProTableHeaderOperation')['default']
@@ -265,4 +267,7 @@ declare global {
   // @ts-ignore
   export type { ImageProps } from '../components/pro-form/pro-field/ProFormImage'
   import('../components/pro-form/pro-field/ProFormImage')
+  // @ts-ignore
+  export type { TransferProps } from '../components/pro-form/pro-field/ProFormTransfer'
+  import('../components/pro-form/pro-field/ProFormTransfer')
 }

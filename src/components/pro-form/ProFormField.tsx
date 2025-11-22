@@ -177,6 +177,20 @@ const ProFormField = (props: ProFormFieldProps & Partial<FormItemProps>) => {
             />
           </AForm.Item>
         );
+      case 'treeSelectField':
+      case 'treeSelect':
+        return (
+          <AForm.Item
+            label={currentProps.label}
+            name={currentProps.name}
+            rules={currentProps.rules}
+          >
+            <ATreeSelect
+              {...currentProps.fieldProps}
+              prefix={renderPrefix(currentProps.fieldProps)}
+            />
+          </AForm.Item>
+        );
       case 'switchField':
       case 'switch':
         return (
@@ -197,6 +211,17 @@ const ProFormField = (props: ProFormFieldProps & Partial<FormItemProps>) => {
             rules={currentProps.rules}
           >
             <ProFormImageCaptcha {...currentProps.fieldProps} />
+          </AForm.Item>
+        );
+      case 'transferField':
+      case 'transfer':
+        return (
+          <AForm.Item
+            label={currentProps.label}
+            name={currentProps.name}
+            rules={currentProps.rules}
+          >
+            <ProFormTransfer {...currentProps.fieldProps} />
           </AForm.Item>
         );
       case 'groupField':
