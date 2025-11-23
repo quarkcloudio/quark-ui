@@ -96,3 +96,13 @@ export function fetchImageBatchDelete(api: string, data: any) {
 export function fetchCascaderOptions(api: string, data: any) {
   return request<Api.Engine.EngineComponent>({ data, method: 'GET', url: api });
 }
+
+/**
+ * Get search options
+ *
+ * @param api api
+ * @param data data
+ */
+export function fetchSearchOptions(api: string, data: any) {
+  return request<Api.Engine.EngineComponent>({ data, method: 'GET', url: api });
+}
