@@ -61,6 +61,7 @@
     "@sa/hooks": "workspace:*",
     "@sa/materials": "workspace:*",
     "@sa/utils": "workspace:*",
+    "@tinymce/tinymce-react": "^6.3.0",
     "ahooks": "3.8.4",
     "antd": "5.24.1",
     "clsx": "2.1.1",

@@ -101,6 +101,7 @@ declare global {
   const PinToggler: typeof import('../components/common/PinToggler')['default']
   const ProCard: typeof import('../components/pro-card/ProCard')['default']
   const ProForm: typeof import('../components/pro-form/ProForm')['default']
+  const ProFormCascader: typeof import('../components/pro-form/pro-field/ProFormCascader')['default']
   const ProFormDependency: typeof import('../components/pro-form/pro-field/ProFormDependency')['default']
   const ProFormField: typeof import('../components/pro-form/ProFormField')['default']
   const ProFormFile: typeof import('../components/pro-form/pro-field/ProFormFile')['default']
@@ -108,6 +109,9 @@ declare global {
   const ProFormIcon: typeof import('../components/pro-form/pro-field/ProFormIcon')['default']
   const ProFormImage: typeof import('../components/pro-form/pro-field/ProFormImage')['default']
   const ProFormImageCaptcha: typeof import('../components/pro-form/pro-field/ProFormImageCaptcha')['default']
+  const ProFormImagePicker: typeof import('../components/pro-form/pro-field/ProFormImagePicker')['default']
+  const ProFormSearch: typeof import('../components/pro-form/pro-field/ProFormSearch')['default']
+  const ProFormSelects: typeof import('../components/pro-form/pro-field/ProFormSelects')['default']
   const ProFormTransfer: typeof import('../components/pro-form/pro-field/ProFormTransfer')['default']
   const ProTable: typeof import('../components/pro-table/ProTable')['default']
   const ProTableDragContent: typeof import('../components/pro-table/ProTableDragContent')['default']
@@ -262,11 +266,20 @@ declare global {
   export type { ImageManagerProps } from '../components/image-manager/ImageManager'
   import('../components/image-manager/ImageManager')
   // @ts-ignore
+  export type { CascaderProps } from '../components/pro-form/pro-field/ProFormCascader'
+  import('../components/pro-form/pro-field/ProFormCascader')
+  // @ts-ignore
   export type { FileProps } from '../components/pro-form/pro-field/ProFormFile'
   import('../components/pro-form/pro-field/ProFormFile')
   // @ts-ignore
   export type { ImageProps } from '../components/pro-form/pro-field/ProFormImage'
   import('../components/pro-form/pro-field/ProFormImage')
+  // @ts-ignore
+  export type { ImagePickerProps } from '../components/pro-form/pro-field/ProFormImagePicker'
+  import('../components/pro-form/pro-field/ProFormImagePicker')
+  // @ts-ignore
+  export type { SearchProps } from '../components/pro-form/pro-field/ProFormSearch'
+  import('../components/pro-form/pro-field/ProFormSearch')
   // @ts-ignore
   export type { TransferProps } from '../components/pro-form/pro-field/ProFormTransfer'
   import('../components/pro-form/pro-field/ProFormTransfer')
