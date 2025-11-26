@@ -103,6 +103,7 @@ declare global {
   const ProForm: typeof import('../components/pro-form/ProForm')['default']
   const ProFormCascader: typeof import('../components/pro-form/pro-field/ProFormCascader')['default']
   const ProFormDependency: typeof import('../components/pro-form/pro-field/ProFormDependency')['default']
+  const ProFormEditor: typeof import('../components/pro-form/pro-field/ProFormEditor')['default']
   const ProFormField: typeof import('../components/pro-form/ProFormField')['default']
   const ProFormFile: typeof import('../components/pro-form/pro-field/ProFormFile')['default']
   const ProFormGroup: typeof import('../components/pro-form/pro-field/ProFormGroup')['default']
