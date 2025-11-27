@@ -29,37 +29,8 @@ declare module "@soybean-react/vite-plugin-react-router" {
     "document_procomponents": "/document/procomponents";
     "document_antd": "/document/antd";
     "document_ui": "/document/ui";
-    "(base)_about": "/about";
     "(base)_demo": "/demo";
-    "(base)_function": "/function";
-    "(base)_function_event-bus": "/function/event-bus";
-    "(base)_function_hide-child": "/function/hide-child";
-    "(base)_function_hide-child_one": "/function/hide-child/one";
-    "(base)_function_hide-child_three": "/function/hide-child/three";
-    "(base)_function_hide-child_two": "/function/hide-child/two";
-    "(base)_function_multi-tab": "/function/multi-tab";
-    "(base)_function_request": "/function/request";
-    "(base)_function_super-page": "/function/super-page";
-    "(base)_function_tab": "/function/tab";
-    "(base)_function_toggle-auth": "/function/toggle-auth";
-    "(base)_function_use-request": "/function/use-request";
     "(base)_home": "/home";
-    "(base)_manage": "/manage";
-    "(base)_manage_role": "/manage/role";
-    "(base)_manage_role_[...slug]": "/manage/role/*";
-    "(base)_manage_user": "/manage/user";
-    "(base)_manage_user_[id]": "/manage/user/:id";
-    "(base)_multi-menu": "/multi-menu";
-    "(base)_multi-menu_first": "/multi-menu/first";
-    "(base)_multi-menu_first_child": "/multi-menu/first/child";
-    "(base)_multi-menu_second": "/multi-menu/second";
-    "(base)_multi-menu_second_child": "/multi-menu/second/child";
-    "(base)_multi-menu_second_child_home": "/multi-menu/second/child/home";
-    "(base)_projects": "/projects";
-    "(base)_projects_[pid]": "/projects/:pid";
-    "(base)_projects_[pid]_edit": "/projects/:pid/edit";
-    "(base)_projects_[pid]_edit_[id]": "/projects/:pid/edit/:id";
-    "(base)_user-center": "/user-center";
     "(blank)_login": "/login";
     "(blank)_login_code-login": "/login/code-login";
     "(blank)_login_register": "/login/register";
@@ -139,38 +110,9 @@ declare module "@soybean-react/vite-plugin-react-router" {
    */
   export type LastLevelRouteKey = Extract<
     RouteKey,
-    | "(base)_about"
     | "(base)_demo"
-    | "(base)_function_event-bus"
-    | "(base)_function_hide-child"
-    | "(base)_function_hide-child_one"
-    | "(base)_function_hide-child_three"
-    | "(base)_function_hide-child_two"
-    | "(base)_function"
-    | "(base)_function_multi-tab"
-    | "(base)_function_request"
-    | "(base)_function_super-page"
-    | "(base)_function_tab"
-    | "(base)_function_toggle-auth"
-    | "(base)_function_use-request"
     | "(base)_home"
     | "(base)"
-    | "(base)_manage"
-    | "(base)_manage_role_[...slug]"
-    | "(base)_manage_role"
-    | "(base)_manage_user_[id]"
-    | "(base)_manage_user"
-    | "(base)_multi-menu_first_child"
-    | "(base)_multi-menu_first"
-    | "(base)_multi-menu"
-    | "(base)_multi-menu_second_child_home"
-    | "(base)_multi-menu_second_child"
-    | "(base)_multi-menu_second"
-    | "(base)_projects_[pid]_edit_[id]"
-    | "(base)_projects_[pid]_edit"
-    | "(base)_projects_[pid]"
-    | "(base)_projects"
-    | "(base)_user-center"
     | "(blank)"
     | "(blank)_login-out"
     | "(blank)_login_code-login"
