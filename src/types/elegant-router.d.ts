@@ -30,6 +30,7 @@ declare module "@soybean-react/vite-plugin-react-router" {
     "document_antd": "/document/antd";
     "document_ui": "/document/ui";
     "(base)_about": "/about";
+    "(base)_demo": "/demo";
     "(base)_function": "/function";
     "(base)_function_event-bus": "/function/event-bus";
     "(base)_function_hide-child": "/function/hide-child";
@@ -139,6 +140,7 @@ declare module "@soybean-react/vite-plugin-react-router" {
   export type LastLevelRouteKey = Extract<
     RouteKey,
     | "(base)_about"
+    | "(base)_demo"
     | "(base)_function_event-bus"
     | "(base)_function_hide-child"
     | "(base)_function_hide-child_one"

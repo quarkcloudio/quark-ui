@@ -29,6 +29,7 @@ export const routeMap: RouteMap = {
  "document_antd": "/document/antd",
  "document_ui": "/document/ui",
  "(base)_about": "/about",
+ "(base)_demo": "/demo",
  "(base)_function": "/function",
  "(base)_function_event-bus": "/function/event-bus",
  "(base)_function_hide-child": "/function/hide-child",
