@@ -1,5 +1,5 @@
 const route: App.I18n.Schema['translation']['route'] = {
-  '(base)_demo': 'Demo',
+  '(base)_develop': 'Develop',
   '(base)_home': 'Home',
   '(blank)_login': 'Login',
   '(blank)_login_code-login': 'Code Login',
@@ -10,7 +10,7 @@ const route: App.I18n.Schema['translation']['route'] = {
   '404': 'Page Not Found',
   '500': 'Server Error',
   document: 'Document',
-  document_antd: 'Ant Design  Document',
+  document_antd: 'Ant Design Document',
   document_procomponents: 'ProComponents Document',
   document_project: 'Project Document',
   'document_project-link': 'Project Document(External Link)',

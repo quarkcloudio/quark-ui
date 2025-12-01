@@ -23,10 +23,10 @@ export const generatedRoutes: ElegantConstRoute[] = [
         name: '(base)',
         children: [
           {
-            matchedFiles: [null, '/src/pages/(base)/demo/index.tsx', null, null],
-            name: '(base)_demo',
-            path: '/demo',
-            handle: { i18nKey: 'route.(base)_demo', title: '(base)_demo' }
+            matchedFiles: [null, '/src/pages/(base)/develop/index.tsx', null, null],
+            name: '(base)_develop',
+            path: '/develop',
+            handle: { i18nKey: 'route.(base)_develop', title: '(base)_develop' }
           },
           {
             matchedFiles: [null, '/src/pages/(base)/home/index.tsx', null, null],

@@ -1,5 +1,5 @@
 const route: App.I18n.Schema['translation']['route'] = {
-  '(base)_demo': '演示',
+  '(base)_develop': '组件调试',
   '(base)_home': '首页',
   '(blank)_login': '登录',
   '(blank)_login_code-login': '验证码登录',

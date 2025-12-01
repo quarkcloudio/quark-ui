@@ -28,7 +28,7 @@ export const routeMap: RouteMap = {
  "document_procomponents": "/document/procomponents",
  "document_antd": "/document/antd",
  "document_ui": "/document/ui",
- "(base)_demo": "/demo",
+ "(base)_develop": "/develop",
  "(base)_home": "/home",
  "(blank)_login": "/login",
  "(blank)_login_code-login": "/login/code-login",
