@@ -1,4 +1,4 @@
-import type { RouteObject } from 'react-router-dom';
+import { type RouteObject } from 'react-router-dom';
 
 import { authRoutes } from '@/router';
 import { fetchGetUserRoutes } from '@/service/api';
@@ -79,11 +79,17 @@ function transformRoute(node: any, parentPath = '') {
     };
     route.component = '/src/pages/_builtin/engine-page/index.tsx';
   }
-
+  if (node.page_type === 3) {
+    route.handle = {
+      ...route.handle,
+      href: node.path
+    };
+    route.component = '/src/pages/_builtin/iframe-page/index.tsx';
+  }
   if (node.page_type === 4) {
     route.handle = {
       ...route.handle,
-      ...JSON.parse(node.query)
+      ...JSON.parse(node.query || '{}')
     };
     route.component = '/src/pages/_builtin/iframe-page/index.tsx';
   }
