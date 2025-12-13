@@ -75,7 +75,7 @@ function transformRoute(node: any, parentPath = '') {
     route.component = `/src/pages/(base)/${node.component}.tsx`;
   }
 
-  if (node.is_engine === 1) {
+  if (node.page_type === 2) {
     route.component = '/src/pages/_builtin/engine-page/index.tsx';
   }
 
