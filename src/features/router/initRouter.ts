@@ -63,10 +63,7 @@ function transformRoute(node: any, parentPath = '') {
   const fullPath = `${parentPath}/${node.path}`.replace(/\/+/g, '/');
 
   const route: any = {
-    handle: {
-      ...node.meta,
-      query: JSON.parse(node.query || '{}')
-    },
+    handle: node.meta,
     name: `(base)${fullPath.replace('/', '_')}`,
     path: fullPath
   };
@@ -76,7 +73,19 @@ function transformRoute(node: any, parentPath = '') {
   }
 
   if (node.page_type === 2) {
+    route.handle = {
+      ...route.handle,
+      query: JSON.parse(node.query || '{}')
+    };
     route.component = '/src/pages/_builtin/engine-page/index.tsx';
+  }
+
+  if (node.page_type === 4) {
+    route.handle = {
+      ...route.handle,
+      ...JSON.parse(node.query)
+    };
+    route.component = '/src/pages/_builtin/iframe-page/index.tsx';
   }
 
   route.matchedFiles = [null, route.component, null, null];
