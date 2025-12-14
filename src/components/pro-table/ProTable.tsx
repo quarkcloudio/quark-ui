@@ -63,6 +63,12 @@ const ProTable = (props: ProTableProps) => {
   };
   const [columnChecks, setColumnChecks] = useState<AntDesign.TableColumnCheck[]>(getColumnChecks());
 
+  // 获取 value 对应的 label
+  const getValueLabel = (options: any[], value: any) => {
+    const option = options.find(item => item.value === value);
+    return option ? option.label : value;
+  };
+
   /** 解析后的列 */
   const parsedColumns = useMemo(() => {
     const columnMap = new Map<string, any>();
@@ -77,18 +83,24 @@ const ProTable = (props: ProTableProps) => {
 
         // 解析筛选项
         if (col.filters) {
-          col.filters = col?.fieldProps?.options?.map((option: any) => ({
-            text: option.label,
-            value: option.value
+          col.filters = Object.entries(col.valueEnum || {}).map(([key, value]) => ({
+            text: value,
+            value: key
           }));
         }
 
         // 自定义渲染
         col.render = (value: any, record: any) => {
+          if (col.valueEnum?.[value]) {
+            return col.valueEnum?.[value];
+          }
           switch (col.valueType) {
             case 'radio':
+              return getValueLabel(col?.fieldProps?.options || [], value);
+            case 'checkbox':
+              return getValueLabel(col?.fieldProps?.options || [], value);
             case 'select':
-              return col.valueEnum?.[value] ?? value;
+              return getValueLabel(col?.fieldProps?.options || [], value);
             case 'option':
               return col?.actions?.map((action: any) => (
                 <Action
