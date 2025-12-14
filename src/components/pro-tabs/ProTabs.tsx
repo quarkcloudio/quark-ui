@@ -1,25 +1,50 @@
+import type { TabsProps } from 'antd';
+import { useMemo } from 'react';
+
 interface Props {
-  body?: any;
-  componentkey: string;
-  extra?: any[];
-  title?: string;
+  data?: any;
+  tabBarExtraContent?: any;
+  tabPanes?: any;
 }
 
-const ProTabs = (props: Props) => {
-  const { body, componentkey, extra, title } = props;
+const ProTabs = (props: Props & TabsProps) => {
+  const { data, defaultActiveKey, size, tabBarExtraContent, tabPanes, tabPosition, type } = props;
+
+  const items: TabsProps['items'] = tabPanes.map((tab: any, index: number) => {
+    return {
+      children: (
+        <Render
+          body={tab.body}
+          data={data}
+        />
+      ),
+      key: index,
+      label: tab.title
+    };
+  });
+
+  const action = useMemo(() => {
+    return tabBarExtraContent.map((item: any) => (
+      <Action
+        {...item}
+        key={item.componentkey}
+      />
+    ));
+  }, [tabBarExtraContent]);
 
   return (
     <ACard
-      key={componentkey}
-      title={title}
-      extra={extra?.map(item => (
-        <Action
-          {...item}
-          key={item.component}
-        />
-      ))}
+      style={{ border: 'none' }}
+      styles={{ body: { paddingTop: '10px' } }}
     >
-      <Render body={body} />
+      <ATabs
+        defaultActiveKey={defaultActiveKey}
+        items={items}
+        size={size}
+        tabBarExtraContent={{ right: action }}
+        tabPosition={tabPosition}
+        type={type}
+      />
     </ACard>
   );
 };

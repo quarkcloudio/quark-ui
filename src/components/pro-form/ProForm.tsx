@@ -21,6 +21,7 @@ interface Props {
   name?: string;
   scrollToFirstError?: boolean;
   wrapperCol?: any;
+  style?: any;
 }
 
 const ProForm = (props: Props) => {
@@ -42,7 +43,8 @@ const ProForm = (props: Props) => {
     layout,
     name,
     scrollToFirstError,
-    wrapperCol
+    wrapperCol,
+    style,
   } = props;
   const [form] = AForm.useForm<any>();
   const { setEngineFormApi, setEngineFormRef } = useEngine();
@@ -71,6 +73,7 @@ const ProForm = (props: Props) => {
       name={name}
       scrollToFirstError={scrollToFirstError}
       wrapperCol={wrapperCol}
+      style={style}
     >
       <Render body={body} />
       <AForm.Item wrapperCol={buttonWrapperCol}>

@@ -38,6 +38,7 @@ declare global {
   const AStatistic: typeof import('antd')['Statistic']
   const ASwitch: typeof import('antd')['Switch']
   const ATable: typeof import('antd')['Table']
+  const ATabs: typeof import('antd')['Tabs']
   const ATag: typeof import('antd')['Tag']
   const ATooltip: typeof import('antd')['Tooltip']
   const ATree: typeof import('antd')['Tree']
