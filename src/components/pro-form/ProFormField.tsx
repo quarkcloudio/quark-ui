@@ -29,6 +29,20 @@ const ProFormField = (props: ProFormFieldProps & Partial<FormItemProps>) => {
     return fieldProps.prefix;
   };
 
+  const baseProps = (currentProps: any) => {
+    return {
+      colon: currentProps?.colon,
+      extra: currentProps?.extra,
+      help: currentProps?.help,
+      label: currentProps?.label,
+      name: currentProps?.name,
+      required: currentProps?.required,
+      rules: currentProps?.rules,
+      tooltip: currentProps?.tooltip,
+      wrapperCol: currentProps?.wrapperCol
+    };
+  };
+
   // eslint-disable-next-line complexity
   const render = (currentProps: any) => {
     switch (currentProps.component) {
@@ -37,11 +51,7 @@ const ProFormField = (props: ProFormFieldProps & Partial<FormItemProps>) => {
       case 'inputField':
       case 'input':
         return (
-          <AForm.Item
-            label={currentProps.label}
-            name={currentProps.name}
-            rules={currentProps.rules}
-          >
+          <AForm.Item {...baseProps(currentProps)}>
             <AInput
               {...currentProps.fieldProps}
               prefix={renderPrefix(currentProps.fieldProps)}
@@ -53,11 +63,7 @@ const ProFormField = (props: ProFormFieldProps & Partial<FormItemProps>) => {
       case 'textareaField':
       case 'textarea':
         return (
-          <AForm.Item
-            label={currentProps.label}
-            name={currentProps.name}
-            rules={currentProps.rules}
-          >
+          <AForm.Item {...baseProps(currentProps)}>
             <AInput.TextArea
               {...currentProps.fieldProps}
               prefix={renderPrefix(currentProps.fieldProps)}
@@ -67,11 +73,7 @@ const ProFormField = (props: ProFormFieldProps & Partial<FormItemProps>) => {
       case 'passwordField':
       case 'password':
         return (
-          <AForm.Item
-            label={currentProps.label}
-            name={currentProps.name}
-            rules={currentProps.rules}
-          >
+          <AForm.Item {...baseProps(currentProps)}>
             <AInput.Password
               {...currentProps.fieldProps}
               prefix={renderPrefix(currentProps.fieldProps)}
@@ -81,11 +83,7 @@ const ProFormField = (props: ProFormFieldProps & Partial<FormItemProps>) => {
       case 'inputNumberField':
       case 'inputNumber':
         return (
-          <AForm.Item
-            label={currentProps.label}
-            name={currentProps.name}
-            rules={currentProps.rules}
-          >
+          <AForm.Item {...baseProps(currentProps)}>
             <AInputNumber
               {...currentProps.fieldProps}
               prefix={renderPrefix(currentProps.fieldProps)}
@@ -97,9 +95,7 @@ const ProFormField = (props: ProFormFieldProps & Partial<FormItemProps>) => {
         return (
           <AForm.Item
             hidden
-            label={currentProps.label}
-            name={currentProps.name}
-            rules={currentProps.rules}
+            {...baseProps(currentProps)}
           >
             <AInput
               {...currentProps.fieldProps}
@@ -110,11 +106,7 @@ const ProFormField = (props: ProFormFieldProps & Partial<FormItemProps>) => {
       case 'iconField':
       case 'icon':
         return (
-          <AForm.Item
-            label={currentProps.label}
-            name={currentProps.name}
-            rules={currentProps.rules}
-          >
+          <AForm.Item {...baseProps(currentProps)}>
             <ProFormIcon {...currentProps.fieldProps} />
           </AForm.Item>
         );
@@ -123,9 +115,7 @@ const ProFormField = (props: ProFormFieldProps & Partial<FormItemProps>) => {
         return (
           <AForm.Item
             hidden
-            label={currentProps.label}
-            name={currentProps.name}
-            rules={currentProps.rules}
+            {...baseProps(currentProps)}
           >
             <ProFormIcon {...currentProps.fieldProps} />
           </AForm.Item>
@@ -133,44 +123,28 @@ const ProFormField = (props: ProFormFieldProps & Partial<FormItemProps>) => {
       case 'checkboxField':
       case 'checkbox':
         return (
-          <AForm.Item
-            label={currentProps.label}
-            name={currentProps.name}
-            rules={currentProps.rules}
-          >
+          <AForm.Item {...baseProps(currentProps)}>
             <ACheckbox.Group {...currentProps.fieldProps} />
           </AForm.Item>
         );
       case 'radioField':
       case 'radio':
         return (
-          <AForm.Item
-            label={currentProps.label}
-            name={currentProps.name}
-            rules={currentProps.rules}
-          >
+          <AForm.Item {...baseProps(currentProps)}>
             <ARadio.Group {...currentProps.fieldProps} />
           </AForm.Item>
         );
       case 'imageField':
       case 'image':
         return (
-          <AForm.Item
-            label={currentProps.label}
-            name={currentProps.name}
-            rules={currentProps.rules}
-          >
+          <AForm.Item {...baseProps(currentProps)}>
             <ProFormImage {...currentProps.fieldProps} />
           </AForm.Item>
         );
       case 'selectField':
       case 'select':
         return (
-          <AForm.Item
-            label={currentProps.label}
-            name={currentProps.name}
-            rules={currentProps.rules}
-          >
+          <AForm.Item {...baseProps(currentProps)}>
             <ASelect
               {...currentProps.fieldProps}
               prefix={undefined}
@@ -180,11 +154,7 @@ const ProFormField = (props: ProFormFieldProps & Partial<FormItemProps>) => {
       case 'treeSelectField':
       case 'treeSelect':
         return (
-          <AForm.Item
-            label={currentProps.label}
-            name={currentProps.name}
-            rules={currentProps.rules}
-          >
+          <AForm.Item {...baseProps(currentProps)}>
             <ATreeSelect
               {...currentProps.fieldProps}
               prefix={renderPrefix(currentProps.fieldProps)}
@@ -194,33 +164,21 @@ const ProFormField = (props: ProFormFieldProps & Partial<FormItemProps>) => {
       case 'switchField':
       case 'switch':
         return (
-          <AForm.Item
-            label={currentProps.label}
-            name={currentProps.name}
-            rules={currentProps.rules}
-          >
+          <AForm.Item {...baseProps(currentProps)}>
             <ASwitch {...currentProps.fieldProps} />
           </AForm.Item>
         );
       case 'imageCaptchaField':
       case 'imageCaptcha':
         return (
-          <AForm.Item
-            label={currentProps.label}
-            name={currentProps.name}
-            rules={currentProps.rules}
-          >
+          <AForm.Item {...baseProps(currentProps)}>
             <ProFormImageCaptcha {...currentProps.fieldProps} />
           </AForm.Item>
         );
       case 'transferField':
       case 'transfer':
         return (
-          <AForm.Item
-            label={currentProps.label}
-            name={currentProps.name}
-            rules={currentProps.rules}
-          >
+          <AForm.Item {...baseProps(currentProps)}>
             <ProFormTransfer {...currentProps.fieldProps} />
           </AForm.Item>
         );
@@ -233,8 +191,7 @@ const ProFormField = (props: ProFormFieldProps & Partial<FormItemProps>) => {
                 component={currentProps.fieldProps.body.component}
                 fieldProps={{ ...currentProps.fieldProps.body }}
                 key={currentProps.fieldProps.body.componentkey}
-                label={currentProps.fieldProps.body.label}
-                name={currentProps.fieldProps.body.name}
+                {...baseProps(currentProps.fieldProps.body)}
                 rules={currentProps.fieldProps.body.frontendRules}
               />
             </ProFormGroup>
@@ -248,8 +205,7 @@ const ProFormField = (props: ProFormFieldProps & Partial<FormItemProps>) => {
                   component={item.component}
                   fieldProps={{ ...item }}
                   key={item.componentkey}
-                  label={item.label}
-                  name={item.name}
+                  {...baseProps(item)}
                   rules={item.frontendRules}
                 />
               );
@@ -269,8 +225,7 @@ const ProFormField = (props: ProFormFieldProps & Partial<FormItemProps>) => {
                         component={subItem.component}
                         fieldProps={{ ...subItem }}
                         key={subItem.componentkey}
-                        label={subItem.label}
-                        name={subItem.name}
+                        {...baseProps(subItem)}
                         rules={subItem.frontendRules}
                       />
                     );
