@@ -73,6 +73,7 @@ function transformRoute(node: any, parentPath = '') {
   }
 
   if (node.page_type === 2) {
+    // 引擎页面
     route.handle = {
       ...route.handle,
       query: JSON.parse(node.query || '{}')
@@ -80,6 +81,7 @@ function transformRoute(node: any, parentPath = '') {
     route.component = '/src/pages/_builtin/engine-page/index.tsx';
   }
   if (node.page_type === 3) {
+    // 外链页面
     route.handle = {
       ...route.handle,
       href: node.path
@@ -87,6 +89,7 @@ function transformRoute(node: any, parentPath = '') {
     route.component = '/src/pages/_builtin/iframe-page/index.tsx';
   }
   if (node.page_type === 4) {
+    // iframe页面
     route.handle = {
       ...route.handle,
       ...JSON.parse(node.query || '{}')
