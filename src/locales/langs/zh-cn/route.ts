@@ -9,6 +9,7 @@ const route: App.I18n.Schema['translation']['route'] = {
   '403': '无权限',
   '404': '页面不存在',
   '500': '服务器错误',
+  account_setting: '账户设置',
   'engine-page': '引擎页面',
   exception: '异常页',
   exception_403: '403',

@@ -28,7 +28,7 @@ const UserAvatar = memo(() => {
     if (key === '1') {
       logout();
     } else {
-      navigate('/user-center');
+      navigate('/account/setting');
     }
   }
 

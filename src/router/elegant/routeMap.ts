@@ -19,6 +19,7 @@ export const routeMap: RouteMap = {
  "exception_403": "/exception/403",
  "exception_404": "/exception/404",
  "exception_500": "/exception/500",
+ "account_setting": "/account/setting",
  "(base)_develop": "/develop",
  "(base)_home": "/home",
  "(blank)_login": "/login",
