@@ -72,22 +72,7 @@ const ProForm = (props: Props) => {
       scrollToFirstError={scrollToFirstError}
       wrapperCol={wrapperCol}
     >
-      {body.map((item: any) => (
-        <ProFormField
-          colon={item.colon}
-          component={item.component}
-          extra={item.extra}
-          fieldProps={{ ...item }}
-          help={item.help}
-          key={item.componentkey}
-          label={item.label}
-          name={item.name}
-          required={item.required}
-          rules={item.frontendRules}
-          tooltip={item.tooltip}
-          wrapperCol={item.wrapperCol}
-        />
-      ))}
+      <Render body={body} />
       <AForm.Item wrapperCol={buttonWrapperCol}>
         <ASpace className="w-full">
           {actions?.map((item: any) => (

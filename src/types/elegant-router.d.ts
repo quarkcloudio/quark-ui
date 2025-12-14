@@ -20,7 +20,15 @@ declare module "@soybean-react/vite-plugin-react-router" {
     "exception_403": "/exception/403";
     "exception_404": "/exception/404";
     "exception_500": "/exception/500";
-    "account_setting": "/account/setting",
+    "document": "/document";
+    "document_project": "/document/project";
+    "document_project-link": "/document/project-link";
+    "document_react": "/document/react";
+    "document_vite": "/document/vite";
+    "document_unocss": "/document/unocss";
+    "document_procomponents": "/document/procomponents";
+    "document_antd": "/document/antd";
+    "document_ui": "/document/ui";
     "(base)_develop": "/develop";
     "(base)_home": "/home";
     "(blank)_login": "/login";
@@ -56,6 +64,15 @@ declare module "@soybean-react/vite-plugin-react-router" {
     | "exception_403"
     | "exception_404"
     | "exception_500"
+    | "document"
+    | "document_project"
+    | "document_project-link"
+    | "document_react"
+    | "document_vite"
+    | "document_unocss"
+    | "document_procomponents"
+    | "document_antd"
+    | "document_ui"
   >;
 
   /**
@@ -85,6 +102,7 @@ declare module "@soybean-react/vite-plugin-react-router" {
     CustomRouteKey,
     | "not-found"
     | "exception"
+    | "document"
   >;
 
   /**
@@ -122,5 +140,13 @@ declare module "@soybean-react/vite-plugin-react-router" {
     | "exception_403"
     | "exception_404"
     | "exception_500"
+    | "document_project"
+    | "document_project-link"
+    | "document_react"
+    | "document_vite"
+    | "document_unocss"
+    | "document_procomponents"
+    | "document_antd"
+    | "document_ui"
   >;
 }

@@ -7,12 +7,77 @@ interface RenderProps {
   data?: any;
 }
 const Render = (props: RenderProps) => {
+  const fieldNames = [
+    'textField',
+    'passwordField',
+    'textAreaField',
+    'inputNumberField',
+    'iconField',
+    'idField',
+    'hiddenField',
+    'checkboxField',
+    'radioField',
+    'imageField',
+    'fileField',
+    'switchField',
+    'selectField',
+    'treeField',
+    'cascaderField',
+    'dateField',
+    'weekField',
+    'monthField',
+    'quarterField',
+    'yearField',
+    'datetimeField',
+    'dateRangeField',
+    'datetimeRangeField',
+    'timeField',
+    'timeRangeField',
+    'displayField',
+    'editorField',
+    'searchField',
+    'mapField',
+    'geofenceField',
+    'listField',
+    'groupField',
+    'selects',
+    'treeSelectField',
+    'spaceField',
+    'compactField',
+    'fieldsetField',
+    'dependencyField',
+    'transferField',
+    'imageCaptchaField',
+    'smsCaptchaField',
+    'imagePickerField',
+    'skuField'
+  ];
+
   // 递归渲染函数
   const render = (body: any, data: AnyNsRecord): any => {
     if (typeof body === 'string' || typeof body === 'number') {
       return <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(String(body)) }} />;
     }
     if (body?.component) {
+      if (fieldNames.includes(body.component)) {
+        return (
+          <ProFormField
+            colon={body.colon}
+            component={body.component}
+            extra={body.extra}
+            fieldProps={{ ...body }}
+            help={body.help}
+            key={body.componentkey}
+            label={body.label}
+            name={body.name}
+            required={body.required}
+            rules={body.frontendRules}
+            tooltip={body.tooltip}
+            wrapperCol={body.wrapperCol}
+          />
+        );
+      }
+
       switch (body.component) {
         case 'view':
           return render(body.body, data);
@@ -29,6 +94,8 @@ const Render = (props: RenderProps) => {
           );
         case 'table':
           return <ProTable {...body} />;
+        case 'tabs':
+          return <ProTabs {...body} />;
         default:
           // 处理未知组件类型
           return <div>Unknown Component: {body.component}.</div>;
