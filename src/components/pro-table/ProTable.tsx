@@ -102,9 +102,9 @@ const ProTable = (props: ProTableProps) => {
             case 'select':
               return getValueLabel(col?.fieldProps?.options || [], value);
             case 'option':
-              return col?.actions?.map((action: any) => (
+              return col?.actions?.map((action: any, index: number) => (
                 <Action
-                  key={action.component}
+                  key={index}
                   {...action}
                   data={record}
                   onClick={() => onReset()}
