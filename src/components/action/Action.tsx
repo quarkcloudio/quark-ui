@@ -25,6 +25,10 @@ interface ActionProps {
   size?: 'large' | 'middle' | 'small';
   target?: '_blank' | '_parent' | '_self' | '_top';
   type?: 'dashed' | 'default' | 'link' | 'primary' | 'text';
+  checkedChildren?: string;
+  unCheckedChildren?: string;
+  fieldName?: string;
+  fieldValue?: any;
 }
 
 const Action = (props: ActionProps) => {
@@ -49,7 +53,11 @@ const Action = (props: ActionProps) => {
     shape,
     size,
     target,
-    type
+    type,
+    checkedChildren,
+    unCheckedChildren,
+    fieldName,
+    fieldValue,
   } = props;
 
   const { pathname } = useLocation();
@@ -222,6 +230,24 @@ const Action = (props: ActionProps) => {
           onClick={onClick}
         />
       );
+
+      case 'switch':
+        return (
+          <Switch
+            api={api}
+            confirmText={confirmText}
+            confirmTitle={confirmTitle}
+            confirmType={confirmType}
+            checkedChildren={checkedChildren}
+            data={data}
+            fieldName={fieldName}
+            fieldValue={fieldValue}
+            unCheckedChildren={unCheckedChildren}
+            key={componentkey}
+            size={size}
+            onClick={onClick}
+          />
+        );
 
     default:
       return (

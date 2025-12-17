@@ -128,6 +128,7 @@ declare global {
   const SoybeanAvatar: typeof import('../components/custom/SoybeanAvatar')['default']
   const Submit: typeof import('../components/action/item/Submit')['default']
   const SvgIcon: typeof import('../components/custom/SvgIcon')['default']
+  const Switch: typeof import('../components/action/item/Switch')['default']
   const SystemLogo: typeof import('../components/common/SystemLogo')['default']
   const TypingAnimation: typeof import('../components/custom/TypingAnimation')['TypingAnimation']
   const WaveBg: typeof import('../components/custom/WaveBg')['default']
