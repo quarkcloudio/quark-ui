@@ -122,6 +122,7 @@ declare global {
   const ProTableToolBar: typeof import('../components/pro-table/ProTableToolBar')['default']
   const ProTabs: typeof import('../components/pro-tabs/ProTabs')['default']
   const Render: typeof import('../components/render/Render')['default']
+  const Reset: typeof import('../components/action/item/Reset')['default']
   const Route: typeof import('react-router-dom')['Route']
   const Routes: typeof import('react-router-dom')['Routes']
   const SoybeanAvatar: typeof import('../components/custom/SoybeanAvatar')['default']
