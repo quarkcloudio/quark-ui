@@ -1,4 +1,4 @@
-import type { TableProps } from 'antd';
+import type { TableProps, TreeProps } from 'antd';
 import type { TableRowSelection } from 'antd/es/table/interface';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
@@ -16,13 +16,15 @@ interface ProTableProps {
   rowKey: string;
   search?: any;
   toolBar?: any;
+  treeBar?: any;
 }
 
 const ProTable = (props: ProTableProps) => {
-  const { columns, headerTitle, rowKey, search, toolBar } = props;
+  const { columns, headerTitle, rowKey, search, toolBar, treeBar } = props;
   const [datasource, setDatasource] = useState<any>(props.datasource || []);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [treeBarSearchValue, setTreeBarSearchValue] = useState('');
   const { getEngineApi } = useEngine();
 
   const [pagination, setPagination] = useState<any>({
@@ -125,11 +127,14 @@ const ProTable = (props: ProTableProps) => {
     async (params = queryParams) => {
       setLoading(true);
       try {
-        const { data }: any = await fetchTableData(engineApi, {
-          filters: JSON.stringify(params.filters),
-          search: JSON.stringify({ ...params.search, ...params.pagination }),
-          sorter: JSON.stringify(params.sorter)
-        });
+        const queryData: any = {};
+        queryData[treeBar?.name || ''] = JSON.stringify(params[treeBar?.name || '']);
+        queryData.filters = JSON.stringify(params.filters);
+        queryData.sorter = JSON.stringify(params.sorter);
+        queryData.search = JSON.stringify(params.search);
+        queryData.pagination = JSON.stringify(params.pagination);
+
+        const { data }: any = await fetchTableData(engineApi, queryData);
 
         setDatasource(data?.datasource || []);
         setSelectedRowKeys([]);
@@ -183,6 +188,108 @@ const ProTable = (props: ProTableProps) => {
     await onRequest();
   };
 
+  const onTreeBarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setTreeBarSearchValue(value);
+  };
+
+  const onTreeBarSelect: TreeProps['onSelect'] = newSelectedKeys => {
+    const data: any = {};
+    data[treeBar?.name || ''] = newSelectedKeys;
+    setQueryParams((prev: any) => ({
+      ...prev,
+      pagination: { current: 1, pageSize: pagination.pageSize },
+      ...data
+    }));
+  };
+
+  const treeData = useMemo(() => {
+    const loop = (data: any): any =>
+      data?.reduce((acc: any, item: any) => {
+        const strTitle = item.title as string;
+        const index = strTitle.indexOf(treeBarSearchValue);
+
+        // 如果title中包含searchValue，保留节点
+        if (index > -1) {
+          acc.push({ ...item });
+        } else if (item.children) {
+          // 递归过滤子节点
+          const filteredChildren = loop(item.children);
+          if (filteredChildren.length > 0) {
+            // 如果有子节点包含searchValue，保留该节点并更新children
+            acc.push({ ...item, children: filteredChildren });
+          }
+        }
+        return acc;
+      }, []);
+
+    return loop(treeBar?.treeData);
+  }, [treeBarSearchValue]);
+
+  const tableComponent = (
+    <ACard
+      className="mt-16px"
+      title={headerTitle}
+      extra={
+        <div className="flex items-center gap-x-12px py-12px">
+          <ProTableToolBar
+            actions={toolBar?.actions}
+            refresh={() => onRequest()}
+            selectedRowKeys={selectedRowKeys}
+          />
+          <ProTableHeaderOperation
+            columns={columnChecks}
+            refresh={() => onRequest()}
+            setColumnChecks={setColumnChecks}
+          />
+        </div>
+      }
+    >
+      <ATable<any>
+        columns={parsedColumns}
+        dataSource={datasource}
+        loading={loading}
+        pagination={pagination}
+        rowKey={rowKey}
+        rowSelection={rowSelection}
+        onChange={handleTableChange}
+      />
+    </ACard>
+  );
+  if (treeBar?.treeData) {
+    return (
+      <ARow gutter={16}>
+        <ACol span={4}>
+          <ACard className="h-full w-full">
+            <AInput.Search
+              allowClear={true}
+              placeholder={treeBar?.placeholder}
+              style={{ marginBottom: 8 }}
+              onChange={onTreeBarChange}
+            />
+            <ATree
+              defaultExpandAll={treeBar?.defaultExpandAll}
+              showLine={treeBar?.showLine}
+              treeData={treeData}
+              onSelect={onTreeBarSelect}
+            />
+          </ACard>
+        </ACol>
+        <ACol span={20}>
+          {search && (
+            <ProTableSearch
+              {...search}
+              onExport={onExport}
+              onReset={onReset}
+              onSearch={onSearch}
+            />
+          )}
+          {tableComponent}
+        </ACol>
+      </ARow>
+    );
+  }
+
   return (
     <>
       {search && (
@@ -193,34 +300,7 @@ const ProTable = (props: ProTableProps) => {
           onSearch={onSearch}
         />
       )}
-      <ACard
-        className="mt-16px"
-        title={headerTitle}
-        extra={
-          <div className="flex items-center gap-x-12px py-12px">
-            <ProTableToolBar
-              actions={toolBar?.actions}
-              refresh={() => onRequest()}
-              selectedRowKeys={selectedRowKeys}
-            />
-            <ProTableHeaderOperation
-              columns={columnChecks}
-              refresh={() => onRequest()}
-              setColumnChecks={setColumnChecks}
-            />
-          </div>
-        }
-      >
-        <ATable<any>
-          columns={parsedColumns}
-          dataSource={datasource}
-          loading={loading}
-          pagination={pagination}
-          rowKey={rowKey}
-          rowSelection={rowSelection}
-          onChange={handleTableChange}
-        />
-      </ACard>
+      {tableComponent}
     </>
   );
 };

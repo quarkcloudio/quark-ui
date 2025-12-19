@@ -22,7 +22,7 @@ interface Props {
   type?: 'dashed' | 'default' | 'link' | 'primary' | 'text';
 }
 
-const Submit = (props: Props) => {
+const Reset = (props: Props) => {
   const {
     block,
     confirmText,
@@ -116,4 +116,4 @@ const Submit = (props: Props) => {
   );
 };
 
-export default Submit;
+export default Reset;
