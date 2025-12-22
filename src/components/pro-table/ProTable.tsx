@@ -3,7 +3,7 @@ import type { TableRowSelection } from 'antd/es/table/interface';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useEngine } from '@/hooks/common/engine';
-import { fetchTableData } from '@/service/api';
+import { fetchTableData, fetchTableEditableAction } from '@/service/api';
 
 import ProTableHeaderOperation from './ProTableHeaderOperation';
 import ProTableToolBar from './ProTableToolBar';
@@ -71,6 +71,43 @@ const ProTable = (props: ProTableProps) => {
     return option ? option.label : value;
   };
 
+  /** 请求数据 */
+  const engineApi = getEngineApi();
+  const onRequest = useCallback(
+    async (params = queryParams) => {
+      setLoading(true);
+      try {
+        const queryData: any = {};
+        queryData[treeBar?.name || ''] = JSON.stringify(params[treeBar?.name || '']);
+        queryData.filters = JSON.stringify(params.filters);
+        queryData.sorter = JSON.stringify(params.sorter);
+        queryData.search = JSON.stringify(params.search);
+        queryData.pagination = JSON.stringify(params.pagination);
+
+        const { data }: any = await fetchTableData(engineApi, queryData);
+
+        setDatasource(data?.datasource || []);
+        setSelectedRowKeys([]);
+        setPagination({ ...data.pagination, current: params.pagination.current });
+        return data;
+      } catch (e) {
+        console.error('fetch table data error', e);
+        return { datasource: [], pagination: {} };
+      } finally {
+        setLoading(false);
+      }
+    },
+    [engineApi, queryParams]
+  );
+
+  // 行内编辑
+  const editableSave = async (record: any, value: any, editable: any) => {
+    const res = await fetchTableEditableAction(editable.action, { id: record.id, ...value });
+    if (!res.error) {
+      onRequest();
+    }
+  };
+
   /** 解析后的列 */
   const parsedColumns = useMemo(() => {
     const columnMap = new Map<string, any>();
@@ -81,7 +118,7 @@ const ProTable = (props: ProTableProps) => {
     return columnChecks
       ?.filter(item => item.checked)
       .map(check => {
-        const col = { ...columnMap.get(check.key) };
+        let col = { ...columnMap.get(check.key) };
 
         // 解析筛选项
         if (col.filters) {
@@ -117,38 +154,23 @@ const ProTable = (props: ProTableProps) => {
           }
         };
 
+        // 可编辑
+        if (col.editable) {
+          col = {
+            ...col,
+            onCell: (record: any) => ({
+              dataIndex: col.dataIndex,
+              editable: col.editable,
+              handleSave: editableSave,
+              record,
+              title: col.title
+            })
+          };
+        }
+
         return col;
       });
   }, [columns, columnChecks, onReset]);
-
-  /** 请求数据 */
-  const engineApi = getEngineApi();
-  const onRequest = useCallback(
-    async (params = queryParams) => {
-      setLoading(true);
-      try {
-        const queryData: any = {};
-        queryData[treeBar?.name || ''] = JSON.stringify(params[treeBar?.name || '']);
-        queryData.filters = JSON.stringify(params.filters);
-        queryData.sorter = JSON.stringify(params.sorter);
-        queryData.search = JSON.stringify(params.search);
-        queryData.pagination = JSON.stringify(params.pagination);
-
-        const { data }: any = await fetchTableData(engineApi, queryData);
-
-        setDatasource(data?.datasource || []);
-        setSelectedRowKeys([]);
-        setPagination({ ...data.pagination, current: params.pagination.current });
-        return data;
-      } catch (e) {
-        console.error('fetch table data error', e);
-        return { datasource: [], pagination: {} };
-      } finally {
-        setLoading(false);
-      }
-    },
-    [engineApi, queryParams]
-  );
 
   /** queryParams 改变时自动请求 */
   useEffect(() => {
@@ -252,6 +274,12 @@ const ProTable = (props: ProTableProps) => {
         pagination={pagination}
         rowKey={rowKey}
         rowSelection={rowSelection}
+        components={{
+          body: {
+            cell: EditableCell,
+            row: EditableRow
+          }
+        }}
         onChange={handleTableChange}
       />
     </ACard>

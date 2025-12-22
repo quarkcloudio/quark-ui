@@ -57,6 +57,8 @@ declare global {
   const Cropper: typeof import('../components/cropper/Cropper')['default']
   const DarkModeContainer: typeof import('../components/common/DarkModeContainer')['default']
   const Drawer: typeof import('../components/action/item/Drawer')['default']
+  const EditableCell: typeof import('../components/pro-table/ProTableEditable')['EditableCell']
+  const EditableRow: typeof import('../components/pro-table/ProTableEditable')['EditableRow']
   const Engine: typeof import('../components/engine/Engine')['default']
   const ErrorBoundary: typeof import('../components/common/ErrorBoundary')['default']
   const ExceptionBase: typeof import('../components/common/ExceptionBase')['default']

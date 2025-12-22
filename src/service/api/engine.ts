@@ -19,6 +19,15 @@ export function fetchAjaxAction(api: string) {
 }
 
 /**
+ * handle table editable action
+ *
+ * @param api Table editable action api
+ */
+export function fetchTableEditableAction(api: string, queryParams: any) {
+  return request<Api.Engine.EngineComponent>({ params: queryParams, url: api });
+}
+
+/**
  * Get table data
  *
  * @param api Table data api
