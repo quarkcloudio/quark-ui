@@ -1,12 +1,13 @@
 interface Props {
   body?: any;
   componentkey: string;
+  data?: any;
   extra?: any[];
   title?: string;
 }
 
 const ProCard = (props: Props) => {
-  const { body, componentkey, extra, title } = props;
+  const { body, componentkey, data, extra, title } = props;
 
   return (
     <ACard
@@ -19,7 +20,10 @@ const ProCard = (props: Props) => {
         />
       ))}
     >
-      <Render body={body} />
+      <Render
+        body={body}
+        data={data}
+      />
     </ACard>
   );
 };

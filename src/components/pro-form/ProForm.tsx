@@ -20,8 +20,8 @@ interface Props {
   layout?: 'horizontal' | 'inline' | 'vertical';
   name?: string;
   scrollToFirstError?: boolean;
-  wrapperCol?: any;
   style?: any;
+  wrapperCol?: any;
 }
 
 const ProForm = (props: Props) => {
@@ -43,8 +43,8 @@ const ProForm = (props: Props) => {
     layout,
     name,
     scrollToFirstError,
-    wrapperCol,
     style,
+    wrapperCol
   } = props;
   const [form] = AForm.useForm<any>();
   const { setEngineFormApi, setEngineFormRef } = useEngine();
@@ -72,10 +72,13 @@ const ProForm = (props: Props) => {
       layout={layout}
       name={name}
       scrollToFirstError={scrollToFirstError}
-      wrapperCol={wrapperCol}
       style={style}
+      wrapperCol={wrapperCol}
     >
-      <Render body={body} />
+      <Render
+        body={body}
+        data={data}
+      />
       <AForm.Item wrapperCol={buttonWrapperCol}>
         <ASpace className="w-full">
           {actions?.map((item: any) => (

@@ -5,6 +5,7 @@ import tplEngine from '@/utils/template';
 interface ProFormFieldProps {
   component: string;
   componentkey?: string;
+  data?: any;
   fieldProps?: any;
   label?: string;
   name: string;
@@ -159,6 +160,130 @@ const ProFormField = (props: ProFormFieldProps & Partial<FormItemProps>) => {
               {...currentProps.fieldProps}
               prefix={renderPrefix(currentProps.fieldProps)}
             />
+          </AForm.Item>
+        );
+      case 'treeField':
+      case 'tree':
+        return (
+          <AForm.Item {...baseProps(currentProps)}>
+            <ATree
+              {...currentProps.fieldProps}
+              prefix={renderPrefix(currentProps.fieldProps)}
+            />
+          </AForm.Item>
+        );
+      case 'cascaderField':
+      case 'cascader':
+        return (
+          <AForm.Item {...baseProps(currentProps)}>
+            <ProFormCascader {...currentProps.fieldProps} />
+          </AForm.Item>
+        );
+      case 'dateField':
+      case 'date':
+        return (
+          <AForm.Item {...baseProps(currentProps)}>
+            <ADatePicker {...currentProps.fieldProps} />
+          </AForm.Item>
+        );
+      case 'weekField':
+      case 'week':
+        return (
+          <AForm.Item {...baseProps(currentProps)}>
+            <ADatePicker.WeekPicker {...currentProps.fieldProps} />
+          </AForm.Item>
+        );
+      case 'monthField':
+      case 'month':
+        return (
+          <AForm.Item {...baseProps(currentProps)}>
+            <ADatePicker.MonthPicker {...currentProps.fieldProps} />
+          </AForm.Item>
+        );
+      case 'quarterField':
+      case 'quarter':
+        return (
+          <AForm.Item {...baseProps(currentProps)}>
+            <ADatePicker.QuarterPicker {...currentProps.fieldProps} />
+          </AForm.Item>
+        );
+      case 'yearField':
+      case 'year':
+        return (
+          <AForm.Item {...baseProps(currentProps)}>
+            <ADatePicker.YearPicker {...currentProps.fieldProps} />
+          </AForm.Item>
+        );
+      case 'datetimeField':
+      case 'datetime':
+        return (
+          <AForm.Item {...baseProps(currentProps)}>
+            <ADatePicker
+              {...currentProps.fieldProps}
+              showTime
+            />
+          </AForm.Item>
+        );
+      case 'dateRangeField':
+      case 'dateRange':
+        return (
+          <AForm.Item {...baseProps(currentProps)}>
+            <ADatePicker.RangePicker {...currentProps.fieldProps} />
+          </AForm.Item>
+        );
+      case 'datetimeRangeField':
+      case 'datetimeRange':
+        return (
+          <AForm.Item {...baseProps(currentProps)}>
+            <ADatePicker.RangePicker
+              {...currentProps.fieldProps}
+              showTime
+            />
+          </AForm.Item>
+        );
+      case 'timeField':
+      case 'time':
+        return (
+          <AForm.Item {...baseProps(currentProps)}>
+            <ATimePicker {...currentProps.fieldProps} />
+          </AForm.Item>
+        );
+      case 'timeRangeField':
+      case 'timeRange':
+        return (
+          <AForm.Item {...baseProps(currentProps)}>
+            <ATimePicker.RangePicker {...currentProps.fieldProps} />
+          </AForm.Item>
+        );
+      case 'displayField':
+      case 'display':
+        return (
+          <span
+            style={currentProps.style && currentProps.style}
+            dangerouslySetInnerHTML={{
+              __html: tplEngine(currentProps.value, props.data)
+            }}
+          />
+        );
+      case 'editorField':
+      case 'editor':
+        return (
+          <AForm.Item {...baseProps(currentProps)}>
+            <ProFormEditor {...currentProps.fieldProps} />
+          </AForm.Item>
+        );
+      case 'searchField':
+      case 'search':
+        return (
+          <AForm.Item {...baseProps(currentProps)}>
+            <ProFormSearch {...currentProps.fieldProps} />
+          </AForm.Item>
+        );
+      case 'selectsField':
+      case 'selects':
+        return (
+          <AForm.Item {...baseProps(currentProps)}>
+            <ProFormSelects {...currentProps.fieldProps} />
           </AForm.Item>
         );
       case 'switchField':

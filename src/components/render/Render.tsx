@@ -64,6 +64,7 @@ const Render = (props: RenderProps) => {
           <ProFormField
             colon={body.colon}
             component={body.component}
+            data={data}
             extra={body.extra}
             fieldProps={{ ...body }}
             help={body.help}
@@ -84,7 +85,12 @@ const Render = (props: RenderProps) => {
         case 'image':
           return <AImage {...body} />;
         case 'card':
-          return <ProCard {...body} />;
+          return (
+            <ProCard
+              {...body}
+              data={data}
+            />
+          );
         case 'form':
           return (
             <ProForm
@@ -93,9 +99,19 @@ const Render = (props: RenderProps) => {
             />
           );
         case 'table':
-          return <ProTable {...body} />;
+          return (
+            <ProTable
+              {...body}
+              data={data}
+            />
+          );
         case 'tabs':
-          return <ProTabs {...body} />;
+          return (
+            <ProTabs
+              {...body}
+              data={data}
+            />
+          );
         default:
           // 处理未知组件类型
           return <div>Unknown Component: {body.component}.</div>;
