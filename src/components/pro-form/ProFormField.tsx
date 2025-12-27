@@ -1,4 +1,5 @@
 import type { FormItemProps } from 'antd';
+import dayjs from 'dayjs';
 
 import tplEngine from '@/utils/template';
 
@@ -182,42 +183,66 @@ const ProFormField = (props: ProFormFieldProps & Partial<FormItemProps>) => {
       case 'dateField':
       case 'date':
         return (
-          <AForm.Item {...baseProps(currentProps)}>
+          <AForm.Item
+            {...baseProps(currentProps)}
+            getValueProps={value => ({ value: value && dayjs(value, currentProps.fieldProps.format) })}
+            normalize={value => value && `${dayjs(value).format(currentProps.fieldProps.format)}`}
+          >
             <ADatePicker {...currentProps.fieldProps} />
           </AForm.Item>
         );
       case 'weekField':
       case 'week':
         return (
-          <AForm.Item {...baseProps(currentProps)}>
+          <AForm.Item
+            {...baseProps(currentProps)}
+            getValueProps={value => ({ value: value && dayjs(value, currentProps.fieldProps.format) })}
+            normalize={value => value && `${dayjs(value).format(currentProps.fieldProps.format)}`}
+          >
             <ADatePicker.WeekPicker {...currentProps.fieldProps} />
           </AForm.Item>
         );
       case 'monthField':
       case 'month':
         return (
-          <AForm.Item {...baseProps(currentProps)}>
+          <AForm.Item
+            {...baseProps(currentProps)}
+            getValueProps={value => ({ value: value && dayjs(value, currentProps.fieldProps.format) })}
+            normalize={value => value && `${dayjs(value).format(currentProps.fieldProps.format)}`}
+          >
             <ADatePicker.MonthPicker {...currentProps.fieldProps} />
           </AForm.Item>
         );
       case 'quarterField':
       case 'quarter':
         return (
-          <AForm.Item {...baseProps(currentProps)}>
+          <AForm.Item
+            {...baseProps(currentProps)}
+            getValueProps={value => ({ value: value && dayjs(value, currentProps.fieldProps.format) })}
+            normalize={value => value && `${dayjs(value).format(currentProps.fieldProps.format)}`}
+          >
             <ADatePicker.QuarterPicker {...currentProps.fieldProps} />
           </AForm.Item>
         );
       case 'yearField':
       case 'year':
         return (
-          <AForm.Item {...baseProps(currentProps)}>
+          <AForm.Item
+            {...baseProps(currentProps)}
+            getValueProps={value => ({ value: value && dayjs(value, currentProps.fieldProps.format) })}
+            normalize={value => value && `${dayjs(value).format(currentProps.fieldProps.format)}`}
+          >
             <ADatePicker.YearPicker {...currentProps.fieldProps} />
           </AForm.Item>
         );
       case 'datetimeField':
       case 'datetime':
         return (
-          <AForm.Item {...baseProps(currentProps)}>
+          <AForm.Item
+            {...baseProps(currentProps)}
+            getValueProps={value => ({ value: value && dayjs(value, currentProps.fieldProps.format) })}
+            normalize={value => value && `${dayjs(value).format(currentProps.fieldProps.format)}`}
+          >
             <ADatePicker
               {...currentProps.fieldProps}
               showTime
@@ -227,14 +252,42 @@ const ProFormField = (props: ProFormFieldProps & Partial<FormItemProps>) => {
       case 'dateRangeField':
       case 'dateRange':
         return (
-          <AForm.Item {...baseProps(currentProps)}>
+          <AForm.Item
+            {...baseProps(currentProps)}
+            getValueProps={value => ({
+              value: value && [
+                dayjs(value[0], currentProps.fieldProps.format),
+                dayjs(value[1], currentProps.fieldProps.format)
+              ]
+            })}
+            normalize={value =>
+              value && [
+                value[0] && dayjs(value[0]).format(currentProps.fieldProps.format),
+                value[1] && dayjs(value[1]).format(currentProps.fieldProps.format)
+              ]
+            }
+          >
             <ADatePicker.RangePicker {...currentProps.fieldProps} />
           </AForm.Item>
         );
       case 'datetimeRangeField':
       case 'datetimeRange':
         return (
-          <AForm.Item {...baseProps(currentProps)}>
+          <AForm.Item
+            {...baseProps(currentProps)}
+            getValueProps={value => ({
+              value: value && [
+                dayjs(value[0], currentProps.fieldProps.format),
+                dayjs(value[1], currentProps.fieldProps.format)
+              ]
+            })}
+            normalize={value =>
+              value && [
+                value[0] && dayjs(value[0]).format(currentProps.fieldProps.format),
+                value[1] && dayjs(value[1]).format(currentProps.fieldProps.format)
+              ]
+            }
+          >
             <ADatePicker.RangePicker
               {...currentProps.fieldProps}
               showTime
@@ -244,14 +297,32 @@ const ProFormField = (props: ProFormFieldProps & Partial<FormItemProps>) => {
       case 'timeField':
       case 'time':
         return (
-          <AForm.Item {...baseProps(currentProps)}>
+          <AForm.Item
+            {...baseProps(currentProps)}
+            getValueProps={value => ({ value: value && dayjs(value, currentProps.fieldProps.format) })}
+            normalize={value => value && `${dayjs(value).format(currentProps.fieldProps.format)}`}
+          >
             <ATimePicker {...currentProps.fieldProps} />
           </AForm.Item>
         );
       case 'timeRangeField':
       case 'timeRange':
         return (
-          <AForm.Item {...baseProps(currentProps)}>
+          <AForm.Item
+            {...baseProps(currentProps)}
+            getValueProps={value => ({
+              value: value && [
+                dayjs(value[0], currentProps.fieldProps.format),
+                dayjs(value[1], currentProps.fieldProps.format)
+              ]
+            })}
+            normalize={value =>
+              value && [
+                value[0] && dayjs(value[0]).format(currentProps.fieldProps.format),
+                value[1] && dayjs(value[1]).format(currentProps.fieldProps.format)
+              ]
+            }
+          >
             <ATimePicker.RangePicker {...currentProps.fieldProps} />
           </AForm.Item>
         );
