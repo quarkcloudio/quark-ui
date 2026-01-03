@@ -72,7 +72,7 @@ function transformRoute(node: any, parentPath = '') {
     route.component = `/src/pages/(base)/${node.component}.tsx`;
   }
 
-  if (node.page_type === 2) {
+  if (node?.page_type === 2 || node?.pageType === 2) {
     // 引擎页面
     route.handle = {
       ...route.handle,
@@ -80,7 +80,7 @@ function transformRoute(node: any, parentPath = '') {
     };
     route.component = '/src/pages/_builtin/engine-page/index.tsx';
   }
-  if (node.page_type === 3) {
+  if (node?.page_type === 3 || node?.pageType === 3) {
     // 外链页面
     route.handle = {
       ...route.handle,
@@ -88,7 +88,7 @@ function transformRoute(node: any, parentPath = '') {
     };
     route.component = '/src/pages/_builtin/iframe-page/index.tsx';
   }
-  if (node.page_type === 4) {
+  if (node?.page_type === 4 || node?.pageType === 4) {
     // iframe页面
     route.handle = {
       ...route.handle,
