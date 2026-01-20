@@ -415,17 +415,28 @@ const ProFormField = (props: ProFormFieldProps & Partial<FormItemProps>) => {
             {(values: any) => {
               return currentProps?.fieldProps?.when?.items?.map((item: any) => {
                 if (tplEngine(item.condition, values) === 'true') {
-                  return item.body.map((subItem: any) => {
-                    return (
-                      <ProFormField
-                        component={subItem.component}
-                        fieldProps={{ ...subItem }}
-                        key={subItem.componentkey}
-                        {...baseProps(subItem)}
-                        rules={subItem.frontendRules}
-                      />
-                    );
-                  });
+                  if (Array.isArray(item.body)) {
+                    return item.body.map((subItem: any) => {
+                      return (
+                        <ProFormField
+                          component={subItem.component}
+                          fieldProps={{ ...subItem }}
+                          key={subItem.componentkey}
+                          {...baseProps(subItem)}
+                          rules={subItem.frontendRules}
+                        />
+                      );
+                    });
+                  }
+                  return (
+                    <ProFormField
+                      component={item.body.component}
+                      fieldProps={{ ...item.body }}
+                      key={item.body.componentkey}
+                      {...baseProps(item.body)}
+                      rules={item.body.frontendRules}
+                    />
+                  );
                 }
                 return null;
               });
