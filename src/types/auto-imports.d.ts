@@ -107,6 +107,7 @@ declare global {
   const Outlet: typeof import('react-router-dom')['Outlet']
   const PinToggler: typeof import('../components/common/PinToggler')['default']
   const ProCard: typeof import('../components/pro-card/ProCard')['default']
+  const ProDescriptions: typeof import('../components/pro-descriptions/ProDescriptions')['default']
   const ProForm: typeof import('../components/pro-form/ProForm')['default']
   const ProFormCascader: typeof import('../components/pro-form/pro-field/ProFormCascader')['default']
   const ProFormDependency: typeof import('../components/pro-form/pro-field/ProFormDependency')['default']

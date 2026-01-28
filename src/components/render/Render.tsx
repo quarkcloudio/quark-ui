@@ -84,6 +84,16 @@ const Render = (props: RenderProps) => {
           return render(body.body, data);
         case 'image':
           return <AImage {...body} />;
+        case 'col':
+          return <ACol {...body}>{render(body.body, data)}</ACol>;
+        case 'row':
+          return <ARow {...body}>{render(body.body, data)}</ARow>;
+        case 'statistic':
+          return <AStatistic {...body} />;
+        case 'descriptions':
+          return <ProDescriptions {...body} />;
+        case 'text':
+          return <ATypography.Text {...body}>{render(body.body, data)}</ATypography.Text>;
         case 'card':
           return (
             <ProCard
