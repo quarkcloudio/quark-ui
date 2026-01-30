@@ -1,7 +1,11 @@
 import type { FormItemProps } from 'antd';
 import dayjs from 'dayjs';
+import { useRef } from 'react';
 
+import { useEngine } from '@/hooks/common/engine';
 import tplEngine from '@/utils/template';
+
+import type { ProFormImageCaptchaRef } from './pro-field/ProFormImageCaptcha';
 
 interface ProFormFieldProps {
   component: string;
@@ -16,6 +20,11 @@ interface ProFormFieldProps {
 }
 
 const ProFormField = (props: ProFormFieldProps & Partial<FormItemProps>) => {
+  const imageCaptchaRef = useRef<ProFormImageCaptchaRef>(null);
+  const { setEngineImageCaptchaRef } = useEngine();
+  useEffect(() => {
+    setEngineImageCaptchaRef(imageCaptchaRef);
+  }, [setEngineImageCaptchaRef]);
   const renderPrefix = (fieldProps: any) => {
     if (!fieldProps?.prefix) return null;
 
@@ -368,7 +377,10 @@ const ProFormField = (props: ProFormFieldProps & Partial<FormItemProps>) => {
       case 'imageCaptcha':
         return (
           <AForm.Item {...baseProps(currentProps)}>
-            <ProFormImageCaptcha {...currentProps.fieldProps} />
+            <ProFormImageCaptcha
+              ref={imageCaptchaRef}
+              {...currentProps.fieldProps}
+            />
           </AForm.Item>
         );
       case 'transferField':

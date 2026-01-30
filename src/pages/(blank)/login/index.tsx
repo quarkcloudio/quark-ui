@@ -3,6 +3,7 @@ import { getPaletteColorByNumber, mixColor } from '@sa/color';
 import { useInitAuth, useInitAuthComponent } from '@/features/auth/auth';
 import { LangSwitch } from '@/features/lang';
 import { ThemeSchemaSwitch, getThemeSettings, useTheme } from '@/features/theme';
+import { useEngine } from '@/hooks/common/engine';
 import { fetchAuthComponent } from '@/service/api';
 
 function useBgColor() {
@@ -25,6 +26,11 @@ const PwdLogin = () => {
   const { authComponent, initAuthComponent } = useInitAuthComponent();
   const [form] = AForm.useForm<any>();
   const { bgColor, bgThemeColor } = useBgColor();
+  const { getEngineImageCaptchaRef } = useEngine();
+  const onFinish = (values: any) => {
+    getEngineImageCaptchaRef()?.current?.refreshCaptcha();
+    toLogin(values);
+  };
   useEffect(() => {
     async function fetchData() {
       const { data, error } = await fetchAuthComponent();
@@ -68,7 +74,7 @@ const PwdLogin = () => {
             <AForm
               className="pt-24px"
               form={form}
-              onFinish={toLogin}
+              onFinish={onFinish}
             >
               {authComponent.body.map((item: any) => (
                 <ProFormField
@@ -77,7 +83,8 @@ const PwdLogin = () => {
                   key={item.componentkey}
                   label={item.label}
                   name={item.name}
-                  rules={item.rules}
+                  required={item.required}
+                  rules={item.frontendRules}
                 />
               ))}
               <ASpace

@@ -35,15 +35,25 @@ export const useEngine = () => {
     return globalEngine.engineFormRef;
   }, []);
 
+  const setEngineImageCaptchaRef = useCallback((value: any) => {
+    globalEngine.engineImageCaptchaRef = value;
+  }, []);
+
+  const getEngineImageCaptchaRef = useCallback(() => {
+    return globalEngine.engineImageCaptchaRef;
+  }, []);
+
   return {
     getEngineApi,
     getEngineComponent,
     getEngineFormApi,
     getEngineFormRef,
+    getEngineImageCaptchaRef,
     globalEngine,
     setEngineApi,
     setEngineComponent,
     setEngineFormApi,
-    setEngineFormRef
+    setEngineFormRef,
+    setEngineImageCaptchaRef
   };
 };
