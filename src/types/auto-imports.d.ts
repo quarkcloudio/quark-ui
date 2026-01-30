@@ -287,6 +287,9 @@ declare global {
   export type { ImageProps } from '../components/pro-form/pro-field/ProFormImage'
   import('../components/pro-form/pro-field/ProFormImage')
   // @ts-ignore
+  export type { ProFormImageCaptchaRef } from '../components/pro-form/pro-field/ProFormImageCaptcha'
+  import('../components/pro-form/pro-field/ProFormImageCaptcha')
+  // @ts-ignore
   export type { ImagePickerProps } from '../components/pro-form/pro-field/ProFormImagePicker'
   import('../components/pro-form/pro-field/ProFormImagePicker')
   // @ts-ignore

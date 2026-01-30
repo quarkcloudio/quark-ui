@@ -10,6 +10,8 @@ declare namespace StorageType {
   }
   type ThemeMode = import('ahooks/lib/useTheme').ThemeModeType;
   interface Local {
+    /** The app title */
+    appTitle: string;
     /** The backup theme setting before is mobile */
     backupThemeSettingBeforeIsMobile: {
       layout: UnionKey.ThemeLayoutMode;

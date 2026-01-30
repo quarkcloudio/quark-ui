@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 import type { LinkProps } from 'react-router-dom';
+import { localStg } from '@/utils/storage';
 
 import SystemLogo from '@/components/common/SystemLogo';
 
@@ -22,7 +23,7 @@ const GlobalLogo: FC<Props> = memo(({ className, showTitle = true, ...props }) =
         className="pl-8px text-16px text-primary font-bold transition duration-300 ease-in-out"
         style={{ display: showTitle ? 'block' : 'none' }}
       >
-        {t('system.title')}
+        {localStg.get("appTitle")??t('system.title')}
       </h2>
     </Link>
   );

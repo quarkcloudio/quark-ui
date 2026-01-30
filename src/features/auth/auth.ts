@@ -23,6 +23,7 @@ export function useInitAuthComponent() {
   const authComponent = useAppSelector(selectAuthComponent);
 
   async function initAuthComponent(data: Api.Auth.AuthComponent) {
+    localStg.set('appTitle', data?.title || '');
     dispatch(setAuthComponent(data));
   }
 
