@@ -11,6 +11,7 @@ import {
   setUserInfo
 } from '@/features/auth/authStore';
 import { usePreviousRoute, useRouter } from '@/features/router';
+import { useEngine } from '@/hooks/common/engine';
 import { fetchLogin, fetchUserInfo } from '@/service/api';
 import { localStg } from '@/utils/storage';
 
@@ -62,10 +63,11 @@ export function useInitAuth() {
   const { replace } = useRouter();
   const authComponent = useAppSelector(selectAuthComponent);
   const redirectUrl = searchParams.get('redirect');
+  const { getEngineImageCaptchaRef } = useEngine();
 
   async function toLogin(params?: any, redirect = true) {
     if (loading) return;
-
+    getEngineImageCaptchaRef()?.current?.refreshCaptcha();
     startLoading();
     const { data: loginToken, error } = await fetchLogin(authComponent.loginApi, params);
 
