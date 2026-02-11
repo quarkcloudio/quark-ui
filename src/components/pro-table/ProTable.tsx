@@ -20,7 +20,9 @@ interface ProTableProps {
 }
 
 const ProTable = (props: ProTableProps) => {
-  const { columns, headerTitle, rowKey, search, toolBar, treeBar } = props;
+  const { headerTitle, rowKey, search, treeBar } = props;
+  const [columns, setColumns] = useState<any>(props.columns || []);
+  const [toolBar, setToolBar] = useState<any>(props.toolBar || {});
   const [datasource, setDatasource] = useState<any>(props.datasource || []);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -86,6 +88,8 @@ const ProTable = (props: ProTableProps) => {
 
         const { data }: any = await fetchTableData(engineApi, queryData);
 
+        setColumns(data?.columns || []);
+        setToolBar(data?.toolBar || {});
         setDatasource(data?.datasource || []);
         setSelectedRowKeys([]);
         setPagination({ ...data.pagination, current: params.pagination.current });

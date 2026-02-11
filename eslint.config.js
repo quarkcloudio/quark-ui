@@ -14,6 +14,7 @@ export default defineConfig(
   sort.configs['flat/recommended'],
   {
     rules: {
+      'arrow-function-complexity': 'off',
       'import/newline-after-import': 'error',
       'import/no-absolute-path': 'warn',
       'import/no-empty-named-blocks': ['error'],
